@@ -1,27 +1,50 @@
 var services = angular.module('Services',['ngResource','ngCookies']);
-services.factory("Login",["$resource",'$location','$cookieStore',"$route",
-	function($resource,$location,$cookieStore,$route,Links){
-		/*var cred =$resource(Links.getLoginLink()).get(function(data){
-				$cookieStore.put('isLoggedin',true);
-				var user=data.data.login;
+services.factory("Links",[function(){
+	var baseUrl="http://127.0.0.1";
+	var path="/crmtool/web/app_dev.php/api";
+	var LoginLink=baseUrl+path+'/public/login';
+	
+	
+	this.getLoginLink=function()
+	{
+		return LoginLink;
+	}
+	
+	return this;
+}]);
+services.factory("Login",['$http','$location','$cookieStore',"$route","Links",
+	function($http,$location,$cookieStore,$route,Links){
+		this.doLogin=function(login,password,funcsucess,funcfailure)
+		{
+			postdata={
+				"grant_type":"password",
+				"password":password,
+				"login":login
+			};
+			$http({
+				method:"POST", 
+				url:Links.getLoginLink(),
+				data:postdata, 
+				headers: {'Content-Type': 'application/json'}
+			}).success(function (data, status, headers, config) {
+				var user={};
+				user.userinfo=data.user;
+				user.token=data.token;
 				$cookieStore.put('loggeduser',user);
+                funcsucess();
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+               		funcfailure(data.errors);
+               	else
+               		funcfailure("Please try again later");
+            });
 		
-			
-		});*/
-		this.isLogin=function(){
-			//return $cookieStore.get('isLoggedin')
-			return false;
-			
-		}
-		this.requireAuth=function(){
-			/*if(!$cookieStore.get('isLoggedin'))
-				window.open(Links.getLoginPageLink());*/
-
-				
 		}
 		this.getLoggedUser=function(){
-			//return $cookieStore.get('loggeduser');
-			return false;
+			if($cookieStore.get('loggeduser')!=null)
+				return $cookieStore.get('loggeduser');
+			else
+				return false;
 		}
 		this.logout=function(){
 			var cookies = document.cookie.split(";");
@@ -34,6 +57,15 @@ services.factory("Login",["$resource",'$location','$cookieStore',"$route",
 			window.open(Links.getLoginPageLink());
 			
 		}
+		this.haveAccess=function()
+		{
+			var role=$cookieStore.get('loggeduser').userinfo.roles[0];
+			if(role=="ROLE_ADMIN")
+				return true;
+			else
+				return false;
+		}
 		return this;
 		
 	}]);
+

@@ -2,6 +2,7 @@ var crmapp=angular.module("crmapp",[
 	'ngRoute',
 	'Services',
 	'directives',
+	'Controllers'
 	]);
 crmapp.config(["$routeProvider",
 	function($routeProvider){
@@ -9,7 +10,7 @@ crmapp.config(["$routeProvider",
 		$routeProvider.
 			when('/login',{
 				templateUrl:'partials/login.html',
-				//controller:'LoginCtrl'
+				controller:'LoginCtrl'
 			}).
 			when('/dashboard',{
 				templateUrl:'partials/dashboard.html',
@@ -23,14 +24,19 @@ crmapp.config(["$routeProvider",
 crmapp.run(['$rootScope', '$location', 'Login', function ($rootScope, $location, Login) {
     $rootScope.$on('$routeChangeStart', function (event) {
 
-        /*if (!Login.getLoggedUser()) {
-            console.log('DENY');
-            event.preventDefault();
+        if (!Login.getLoggedUser() && $location.path()!="/login") {
+           
             $location.path('/login');
         }
-        else {
-            console.log('ALLOW');
-            $location.path('/dashboard');
-        }*/
+        if(Login.getLoggedUser() && !Login.haveAccess())
+        {
+        	$location.path('/login');
+        }
+        if(Login.getLoggedUser() && $location.path()=="/login" && Login.haveAccess())
+        {
+        	$location.path("/dashboard");
+        	$location.replace();
+        }
+        
     });
 }]);
