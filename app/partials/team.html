@@ -1,0 +1,78 @@
+  <div id="wrapper">
+       <div side-bar>
+       </div>
+<div id="page-wrapper" class="gray-bg">
+            
+<div nav-menu></div>
+         
+             <!--header title-->
+            <div class="row wrapper border-bottom white-bg page-heading">
+                <div class="col-lg-9">
+                    <h2><i class="fa fa-users"></i> Team</h2>
+                    <ol class="breadcrumb">
+                        <li>
+                            flexwork.io
+                        </li>
+                        <li>
+                            Team
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            <!--end header title-->
+
+
+            <!--wrapper-->
+            <div class="wrapper wrapper-content animated fadeInRight">
+                <!--row2-->
+                <div class="row">
+                    <!--add ibox-->
+                    <div class="col-lg-3">
+                        <a data-toggle="modal" data-target="#add-user">
+                            <div class="ibox-users ibox-add-box float-e-margins">
+                                <div>
+                                    <span><i class="fa fa-user-plus"></i> Add Member</span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div ng-repeat="member in team">
+                        <!--user ibox-->
+                        <div class="col-lg-3">
+                            <div class="ibox-users float-e-margins">
+                                <div class="ibox-users-title">
+                                    <span class="ibox-users-picture">
+                                        <img width="48" heigth="48" class="img-circle" src="{{member.photo}}" alt="Picture">
+                                    </span>
+                                    <h5><span class="ibox-users-status"><i class="fa fa-circle"></i></span> {{member.surname}} {{member.name}}</h5>
+                                   <span class="ibox-users-job-title">{{member.role}}</span>
+                                    <span class="ibox-users-location">{{member.country}}, {{member.city}}</span>
+                                </div>
+                                <div class="ibox-users-content">
+                                    <div class="ibox-users-action">
+                                        <button type="button" class="btn btn-white btn-sm" data-toggle="modal" data-target="#change-picture"><i class="fa fa-camera"></i></button>
+                                        <button type="button" class="btn btn-white btn-sm" data-toggle="modal" data-target="#modal-away"><i class="fa fa-calendar"></i></button>
+                                        <button type="button" class="btn btn-white btn-sm" data-toggle="modal" data-target="#edit-user"><i class="fa fa-pencil"></i></button>
+                                        <span class="ibox-users-action-line"></span>
+                                        <button type="button" class="btn btn-white btn-sm" onclick="parent.location='team-profile-fxw.html'"><i class="fa fa-user"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <!--end row2-->
+            </div>
+            <!--end wrapper-->
+
+            <!--footer-->
+            <div class="footer">
+                <div>
+                     &copy;2015 &middot; <b>flexwork.io</b> &middot; <a href="privacy-terms-fxw.html">Privacy and Terms</a> &middot; <a href="imprint-fxw.html">Imprint</a>
+                </div>
+            </div>
+            <!--end footer-->
+   <div chat-window/> 
+        </div>
+</div>

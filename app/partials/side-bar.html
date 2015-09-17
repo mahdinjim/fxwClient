@@ -1,92 +1,94 @@
-<nav class="navbar-default navbar-static-side" role="navigation">
-<div class="sidebar-collapse">
-                <ul class="nav metismenu" id="side-menu">
-                    <li class="nav-logo">
-                        <div class="nav-logo-element">
-                            <a href="index.html">
-                                <img src="img/logo-flexwork@2.png" width="139" height="19" alt="flexwork.io" title="flexwork.io"/>
-                            </a>
-                        </div>
-                    </li>
+<div ng-controller="SideBarCtrl">
+    <nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="sidebar-collapse">
+                    <ul class="nav metismenu" id="side-menu">
+                        <li class="nav-logo">
+                            <div class="nav-logo-element">
+                                <a href="#/dashboard">
+                                    <img src="img/logo-flexwork@2.png" width="139" height="19" alt="flexwork.io" title="flexwork.io"/>
+                                </a>
+                            </div>
+                        </li>
 
-                    <!--mobile logo-->
-                    <li class="nav-logo">
-                        <div class="logo-element">
-                            <a href="index.html">
-                                <img src="img/logo-small-flexwork@2.png" width="60" height="14" alt="fxw.io" title="fxw.io"/>
-                            </a>
-                        </div>
-                    </li>
+                        <!--mobile logo-->
+                        <li class="nav-logo">
+                            <div class="logo-element">
+                                <a href="#/dashboard">
+                                    <img src="img/logo-small-flexwork@2.png" width="60" height="14" alt="fxw.io" title="fxw.io"/>
+                                </a>
+                            </div>
+                        </li>
 
-                    <li class="nav-header">
-                        <div class="dropdown profile-element"> 
-                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                                <span class="clear"> 
-                                    <span class="block m-t-xs"> <strong class="font-bold">adnatives</strong></span> 
-                                    <span class="text-muted text-xs block">Muhammed Demir</span> 
-                                    <span class="text-muted text-xs block">UI / UX Designer <b class="caret"></b></span> 
-                                </span> 
-                            </a>
+                        <li class="nav-header">
+                            <div class="dropdown profile-element"> 
+                                <a data-toggle="dropdown" class="dropdown-toggle">
+                                    <span class="clear"> 
+                                        <span class="block m-t-xs"> <strong class="font-bold">{{company}}</strong></span> 
+                                        <span class="text-muted text-xs block">{{surname}} {{name}} </span> 
+                                        <span class="text-muted text-xs block">{{title}}<b class="caret"></b></span> 
+                                    </span> 
+                                </a>
+                                
+                                <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                    <li><a href="profile-fxw.html">Profile</a></li>
+                                    <li><a href="settings-fxw.html">Settings</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="login-fxw.html">Log out</a></li>
+                                </ul>
+                            </div>
                             
-                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                        </li>
+
+                        <li class="add-project-button">
+                            <a data-toggle="modal" data-target="#add-project"><i class="fa fa-plus"></i> <span class="nav-label">Add Project</span></a>
+                        </li>
+
+                        <!--Mini Navbar Account-->
+                        <li class="mini-navbar-account">
+                            <a href="#"><i class="fa fa-user"></i> <span class="nav-label">Account</span><span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level collapse">
                                 <li><a href="profile-fxw.html">Profile</a></li>
                                 <li><a href="settings-fxw.html">Settings</a></li>
                                 <li class="divider"></li>
                                 <li><a href="login-fxw.html">Log out</a></li>
                             </ul>
-                        </div>
-                        
-                    </li>
+                        </li>
+                        <!--End-->
+                    
+                        <li class="active">
+                            <a><i class="fa fa-clone"></i> <span class="nav-label">Projects</span> <span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level collapse">
+                                <li class="active"><a href="#/dashboard">Dashboard</a></li>
+                                <li><a href="project-fxw.html">Captain</a></li>
+                                <li><a href="project-fxw.html">Website</a></li>
+                                <li><a href="project-fxw.html">Newsletter</a></li>
+                            </ul> 
+                        </li>
 
-                    <li class="add-project-button">
-                        <a data-toggle="modal" data-target="#add-project"><i class="fa fa-plus"></i> <span class="nav-label">Add Project</span></a>
-                    </li>
+                        <li>
+                            <a href="#/team"><i class="fa fa-users"></i> <span class="nav-label">Team</span></a>
+                        </li>
 
-                    <!--Mini Navbar Account-->
-                    <li class="mini-navbar-account">
-                        <a href="#"><i class="fa fa-user"></i> <span class="nav-label">Account</span><span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level collapse">
-                            <li><a href="profile-fxw.html">Profile</a></li>
-                            <li><a href="settings-fxw.html">Settings</a></li>
-                            <li class="divider"></li>
-                            <li><a href="login-fxw.html">Log out</a></li>
-                        </ul>
-                    </li>
-                    <!--End-->
-                
-                    <li class="active">
-                        <a href="index.html"><i class="fa fa-clone"></i> <span class="nav-label">Projects</span> <span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level collapse">
-                            <li class="active"><a href="index.html">Dashboard</a></li>
-                            <li><a href="project-fxw.html">Captain</a></li>
-                            <li><a href="project-fxw.html">Website</a></li>
-                            <li><a href="project-fxw.html">Newsletter</a></li>
-                        </ul> 
-                    </li>
+                        <li>
+                            <a href="client-fxw.html"><i class="fa fa-building"></i> <span class="nav-label">Client</span></a>
+                        </li>
 
-                    <li>
-                        <a href="team-fxw.html"><i class="fa fa-users"></i> <span class="nav-label">Team</span></a>
-                    </li>
+                        <li>
+                            <a href="user-fxw.html"><i class="fa fa-users"></i> <span class="nav-label">User</span></a>
+                        </li>
 
-                    <li>
-                        <a href="client-fxw.html"><i class="fa fa-building"></i> <span class="nav-label">Client</span></a>
-                    </li>
+                        <li>
+                            <a href="report-fxw.html"><i class="fa fa-check-square"></i> <span class="nav-label">Report</span></a>
+                        </li>
 
-                    <li>
-                        <a href="user-fxw.html"><i class="fa fa-users"></i> <span class="nav-label">User</span></a>
-                    </li>
+                        <li>
+                            <a href="invoice-fxw.html"><i class="fa fa-file-text"></i> <span class="nav-label">Invoice</span></a>
+                        </li>
 
-                    <li>
-                        <a href="report-fxw.html"><i class="fa fa-check-square"></i> <span class="nav-label">Report</span></a>
-                    </li>
-
-                    <li>
-                        <a href="invoice-fxw.html"><i class="fa fa-file-text"></i> <span class="nav-label">Invoice</span></a>
-                    </li>
-
-                     <li>
-                        <a href="faq-fxw.html"><i class="fa fa-question-circle"></i> <span class="nav-label">FAQ</span></a>
-                    </li>
-                </ul>
-            </div>
-</nav>
+                         <li>
+                            <a href="faq-fxw.html"><i class="fa fa-question-circle"></i> <span class="nav-label">FAQ</span></a>
+                        </li>
+                    </ul>
+                </div>
+    </nav>
+</div>

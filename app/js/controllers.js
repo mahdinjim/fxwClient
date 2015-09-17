@@ -33,3 +33,22 @@ Controllers.controller('LoginCtrl',['$scope','Login','$location',
 			
 		}
 	}]);
+Controllers.controller("SideBarCtrl",['$scope','Login',
+	function SideBarCtrl($scope,Login)
+	{
+		var userinf= Login.getLoggedUser().userinfo;
+		$scope.name=userinf.name;
+		$scope.surname=userinf.surname;
+		if(userinf.compnay_name!=undefined)
+			$scope.company=userinf.compnay_name;
+		else
+			$scope.company="adnatives/Disycs";
+		$scope.title=userinf.title;
+	}
+	]);
+Controllers.controller('TeamCtrl', ['$scope','Team', function ($scope,Team) {
+	var successfunc=function(data){
+		$scope.team=data;
+	};
+	Team.getAllteamMembers(successfunc);
+}]);

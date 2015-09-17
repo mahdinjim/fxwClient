@@ -16,6 +16,10 @@ crmapp.config(["$routeProvider",
 				templateUrl:'partials/dashboard.html',
 				//controller:'LoginCtrl'
 			}).
+			when('/team',{
+				templateUrl:'partials/team.html',
+				controller:'TeamCtrl'
+			}).
 			otherwise({
         		redirectTo: '/dashboard'
       		});
@@ -28,15 +32,20 @@ crmapp.run(['$rootScope', '$location', 'Login', function ($rootScope, $location,
            
             $location.path('/login');
         }
-        if(Login.getLoggedUser() && !Login.haveAccess())
+        else
         {
-        	$location.path('/login');
-        }
-        if(Login.getLoggedUser() && $location.path()=="/login" && Login.haveAccess())
-        {
-        	$location.path("/dashboard");
-        	$location.replace();
-        }
+
+        	Login.isTokenExpired()
+	        if(Login.getLoggedUser() && !Login.haveAccess())
+	        {
+	        	$location.path('/login');
+	        }
+	        if(Login.getLoggedUser() && $location.path()=="/login" && Login.haveAccess())
+	        {
+	        	$location.path("/dashboard");
+	        	$location.replace();
+	        }
+	    }
         
     });
 }]);
