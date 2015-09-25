@@ -137,3 +137,104 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",
 		}
 		return this;
 	}]);
+services.factory('Chat', ["$http","$location","$cookieStore",function ($http,$location,$cookieStore) {
+	this.loginToChat=function(code,chatstate){
+
+		var state=this.generateString();
+		var teamid="T09LA070W";
+		var client_id="9690007030.11132963923";
+		var client_secret="255fabd7768a518b3dc08be06dcdd883";
+		var redirecturl="http://127.0.0.1/crmtoolwebclient/app/%23"+$location.path();
+		console.log(redirecturl);
+		if(code===undefined && chatstate===undefined)
+		{
+			$cookieStore.put("chat_state",state);
+			$cookieStore.put("chat_location",redirecturl);
+			var url="https://slack.com/oauth/authorize?client_id="+client_id+"&redirect_uri="+redirecturl+"&team="+teamid+"&state="+state;
+			window.open(url,"_self");
+		}
+		else
+		{
+			state=$cookieStore.get("chat_state");
+			if(state==chatstate)
+			{
+				redirecturl=$cookieStore.get("chat_location");
+				console.log(code);
+				var apiurl="https://slack.com/api/oauth.access?client_id="+client_id+"&redirect_uri="+redirecturl+"&client_secret="+client_secret+"&code="+code;
+				console.log(apiurl);
+				$http({
+					method:"GET", 
+					url:apiurl,
+				}).success(function (data, status, headers, config) {
+					if(data.ok)
+					{
+						$cookieStore.put("chatloggedin",true);
+						$cookieStore.put("access_token",data.access_token);
+						$location.search("code",null);
+						$location.search("state",null);
+					}
+					
+	            }).error(function (data, status, headers, config) {
+	            	
+	            });
+			}
+		}
+	};
+	this.chatloggout=function(){
+		$cookieStore.put("chatloggedin",false);
+		$cookieStore.remove("access_token");
+		$cookieStore.remove("chat_location");
+		$cookieStore.remove("chat_state");
+	};
+	this.isUserLoggedIn=function()
+	{
+		var loggedin = $cookieStore.get("chatloggedin");
+		if(!loggedin || loggedin==null)
+			return false;
+		else
+			return true;
+	}
+	this.getChannels=function()
+	{
+		var url="https://slack.com/api/channels.list?token="+$cookieStore.get("access_token");
+		$http({
+					method:"GET", 
+					url:url,
+				}).success(function (data, status, headers, config) {
+					
+					if(data.ok)
+					{
+						var channels=data.channels;
+					}
+					
+	            }).error(function (data, status, headers, config) {
+	            	
+	            });
+
+	}
+	/*this.sendmsg=function(channel_id,msg)
+	{
+		var url="https://slack.com/api/chat.postMessage?token="+$cookieStore.get("access_token")+"&channel="channel_id+"&text="+msg+"&as_user=true";
+		$http({
+					method:"GET", 
+					url:url,
+				}).success(function (data, status, headers, config) {
+					
+					if(data.ok)
+					{
+						console.log(data);
+					}
+					
+	            }).error(function (data, status, headers, config) {
+	            	
+	            });
+	}*/
+	this.generateString=function(){
+		var text = "";
+    	var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	    for( var i=0; i < 5; i++ )
+	        text += possible.charAt(Math.floor(Math.random() * possible.length));
+	    return text;
+	}
+	return this;
+}])

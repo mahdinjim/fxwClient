@@ -25,7 +25,7 @@ crmapp.config(["$routeProvider",
       		});
 	}
 ]);      		
-crmapp.run(['$rootScope', '$location', 'Login', function ($rootScope, $location, Login) {
+crmapp.run(['$rootScope', '$location', 'Login','Chat', function ($rootScope, $location, Login,Chat) {
     $rootScope.$on('$routeChangeStart', function (event) {
 
         if (!Login.getLoggedUser() && $location.path()!="/login") {
@@ -45,6 +45,10 @@ crmapp.run(['$rootScope', '$location', 'Login', function ($rootScope, $location,
 	        	$location.path("/dashboard");
 	        	$location.replace();
 	        }
+	    }
+	    if($location.search().code!=undefined && $location.search().state!=undefined)
+	    {
+	    	Chat.loginToChat($location.search().code,$location.search().state);
 	    }
         
     });

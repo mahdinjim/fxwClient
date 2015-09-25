@@ -52,3 +52,19 @@ Controllers.controller('TeamCtrl', ['$scope','Team', function ($scope,Team) {
 	};
 	Team.getAllteamMembers(successfunc);
 }]);
+Controllers.controller('SettingsCtrl', ['$scope','Chat', function ($scope,Chat) {
+
+	$scope.connect_to_chat=Chat.isUserLoggedIn();
+	Chat.getChannels();
+	$scope.connectToChat=function()
+	{
+		if($scope.connect_to_chat)
+		{
+			Chat.loginToChat();
+		}
+		else{
+			Chat.chatloggout();
+		}
+	}
+	
+}])

@@ -1,4 +1,4 @@
-            <!-- right sidebar-->
+
             <div id="right-sidebar" class="sidebar-open animated fadeInRight">
                 <div class="sidebar-container">
 
@@ -253,9 +253,9 @@
                             </ul>
 
                         </div>
-
+                    
                         <div id="tab-3" class="tab-pane">
-
+                            <div ng-controller="SettingsCtrl">
                             <div class="sidebar-title">
                                 <h3><i class="fa fa-gears"></i> Settings</h3>
                                 <small><i class="fa fa-tim"></i> You have 14 projects. 10 not completed.</small>
@@ -277,11 +277,11 @@
                             </div>
                             <div class="setings-item">
                         <span>
-                            Disable Chat
+                            Connect to Chat
                         </span>
                                 <div class="switch">
                                     <div class="onoffswitch">
-                                        <input type="checkbox" name="collapsemenu" checked class="onoffswitch-checkbox" id="example2">
+                                        <input type="checkbox" name="collapsemenu" class="onoffswitch-checkbox" id="example2" ng-model="connect_to_chat" ng-click="connectToChat()">
                                         <label class="onoffswitch-label" for="example2">
                                             <span class="onoffswitch-inner"></span>
                                             <span class="onoffswitch-switch"></span>
@@ -368,8 +368,9 @@
                                     Over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
                                 </div>
                             </div>
-
+                            </div>
                         </div>
+                    
                     </div>
                 </div>
             </div>
