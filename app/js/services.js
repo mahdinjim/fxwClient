@@ -4,6 +4,7 @@ services.factory("Links",[function(){
 	var path="/crmtool/web/app_dev.php/api";
 	var LoginLink=baseUrl+path+'/public/login';
 	var AllteamMembersLink=baseUrl+path+'/private/team/all';
+	var createTeamLeaderLink=baseUrl+path+'/private/super/teamleader/create';
 	
 	this.getLoginLink=function()
 	{
@@ -12,6 +13,10 @@ services.factory("Links",[function(){
 	this.getAllteamMembersLink=function()
 	{
 		return AllteamMembersLink;
+	}
+	this.getcreateTeamLeaderLink=function()
+	{
+		return createTeamLeaderLink;
 	}
 	
 	return this;
@@ -99,15 +104,21 @@ services.factory("Login",['$http','$location','$cookieStore',"$route","Links",
     			this.setHours(this.getHours()+h);
     			return this;
 			}
-			exprirationdate=Date.parse($cookieStore.get('loggeduser').token.experationDate.date);
-			curentdate=new Date;
-			curentdate.setHours(curentdate.getHours()+1);
-			if(exprirationdate>curentdate)
+			if($cookieStore.get('loggeduser')!=null)
 			{
-				return false;
+				exprirationdate=Date.parse($cookieStore.get('loggeduser').token.experationDate.date);
+				curentdate=new Date;
+				curentdate.setHours(curentdate.getHours()+1);
+				if(exprirationdate>curentdate)
+				{
+					return false;
+				}
+				else
+					this.logout();
 			}
 			else
 				this.logout();
+
 		}
 		return this;
 		
@@ -134,6 +145,22 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",
 	            	
 	            });
 	        }
+		}
+		this.createTeamLeader=function(member,successFunc,failureFunc)
+		{
+			if(!Login.isTokenExpired())
+			{
+
+				$http({
+					method:"POST", 
+					url:Links.getcreateTeamLeaderLink(),
+					data:member, 
+					headers: {'Content-Type': 'application/json'}
+				}).success(function (data, status, headers, config) {
+				}).error(function (data, status, headers, config) {
+	            	
+	            });
+			}
 		}
 		return this;
 	}]);

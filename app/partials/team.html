@@ -76,3 +76,170 @@
    <div chat-window/> 
         </div>
 </div>
+<!--Add team member model-->
+<div class="modal inmodal fade" id="add-user" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"><i class="fa fa-user-plus modal-fa-icon"></i> Add Member</h4>
+                </div>
+                <div class="modal-body">
+                     <div class="row">
+                        <div class="col-md-6">
+                            <h4>Contact</h4>
+                            <div class="form-group">
+                                <input type="text" class="form-control login-first-name" placeholder="First Name" required="" ng-model="surname">
+                                <input type="text" class="form-control login-last-name" placeholder="Last Name" required="" ng-model="name">
+                                <div class="clear-both"></div>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Job Title" required="" ng-model="title">
+                            </div>
+                            <div class="form-group m-0">
+                                <!--select-->
+                                <div class="select-option f-left m-0" style="width: 30%; margin-right: 2.5% ! important;" ng-model="phonecode">
+                                    <select class="select2">
+                                        <option>+49</option>
+                                        <option>+90</option>
+                                        <option>+216</option>
+                                    </select>
+                                </div>
+                                <input type="text" class="form-control" data-mask="(999) 9999999" placeholder="Telephone" style="width: 67.5%;" ng-model="phonenumber">
+                            </div>
+                        </div><!--col-md-->
+
+                        <div class="col-md-6">
+                            <h4>Access</h4>
+
+                            <div class="form-group">
+                                <input type="email" class="form-control" placeholder="Email" required="" ng-model="email">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control" placeholder="Password" required="" ng-model="password">
+                            </div>
+
+                            <div class="form-group m-0">
+                                <!--select-->
+                                <div class="select-option m-0" style="width: 100%;">
+                                    <select class="select2" ng-model="role">
+                                        <option>Role</option>
+                                        <option>Key Account</option>
+                                        <option>Teamleader</option>
+                                        <option>Developer</option>
+                                        <option>Frontend Developer</option>
+                                        <option>Designer</option>
+                                        <option>Administrator</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div><!--col-md-->
+
+                        <div class="col-md-12">
+                            <div class="hr-line-solid"></div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h4>Location</h4>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="City" required="">
+                            </div>  
+                            <div class="form-group mb-0">
+                                <div class="select-option m-0" style="width: 100%;">
+                                    <select class="select2">
+                                        <option>Country</option>
+                                        <option>Turkey</option>
+                                        <option>Tunisia</option>
+                                        <option>Germany</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h4>Info</h4>
+                            <div class="form-group">
+                                <input type="number" class="form-control" placeholder="Capacity (Weekly)" required="">
+                            </div>
+                            <div class="form-group mb-0">
+                                <div class="select-option m-0" style="width: 100%;">
+                                    <select class="select2">
+                                        <option>Status</option>
+                                        <option>Team</option>
+                                        <option>Freelancer</option>
+                                        <option>Waiting</option>
+                                        <option>Break</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+
+                        <div class="col-md-12">
+                            <div class="hr-line-solid"></div>
+                            <h4>Skills</h4>
+                            <div class="form-group m-0">
+                                <select data-placeholder="Select Skills" class="chosen-select" multiple style="width:100%;" tabindex="2">
+                                    <optgroup label="OOP">
+                                        <option value="PHP">PHP</option>
+                                        <option value="Java">Java</option>
+                                        <option value="C#">C#</option>
+                                        <option value="Python">Python</option>
+                                        <option value="vb.net">vb.net</option>
+                                        <option value="Ruby on Rails">Ruby on Rails</option>
+                                        <option value="Objective C">Objective C</option>
+                                        <option value="Action Script">Action Script</option>
+                                        <option value="Pearl">Pearl</option>
+                                    </optgroup>
+                                    <optgroup label="Design">
+                                        <option value="Web Design">Web Design</option>
+                                        <option value="User Interface Design">User Interface Design</option>
+                                        <option value="User Experience Design">User Experience Design</option>
+                                        <option value="Mobile Design">Mobile Design</option>
+                                        <option value="Responsive Design">Responsive Design</option>
+                                        <option value="Graphic Design">Graphic Design</option>
+                                    </optgroup>
+                                    <optgroup label="Frontend Developement">
+                                        <option value="HTML 5 &amp; CSS 3">HTML 5 &amp; CSS 3</option>
+                                        <option value="jQuery">jQuery</option>
+                                        <option value="Javascript">Javascript</option>
+                                        <option value="Bootstrap Framework">Bootstrap Framework</option>
+                                        <option value="Gumby Framework">Gumby Framework</option>
+                                        <option value="WordPress Template">WordPress Template</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                            <div class="hr-line-solid"></div>
+                            <div class="form-group mb-0">
+                                <div class="row">
+                                    <label class="col-lg-6 add-user-label">Activate account?</label>
+                                    <div class="col-lg-6 add-user-switch">
+                                        <input type="checkbox" class="js-switch_3" checked/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!--col-md-->
+                     </div><!--row-->
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <div class="checkbox checkbox-primary mt-5 mb-5">
+                                    <input type="checkbox" id="checkbox3">
+                                    <label for="checkbox3">Send login information to user</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" ng-click="createTeamMember()">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+ 
