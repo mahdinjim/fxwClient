@@ -5,7 +5,11 @@ services.factory("Links",[function(){
 	var LoginLink=baseUrl+path+'/public/login';
 	var AllteamMembersLink=baseUrl+path+'/private/team/all';
 	var createTeamLeaderLink=baseUrl+path+'/private/super/teamleader/create';
-	
+	var createdeveloperLink=baseUrl+path+'/private/super/developer/create';
+	var createtesterLink=baseUrl+path+'/private/super/tester/create';
+	var createdesignerLink=baseUrl+path+'/private/super/designer/create';
+	var createsysadminLink=baseUrl+path+'/private/super/sysadmin/create';
+	var createkeyaccountLink=baseUrl+path+'/private/super/keyaccount/create';
 	this.getLoginLink=function()
 	{
 		return LoginLink;
@@ -18,7 +22,26 @@ services.factory("Links",[function(){
 	{
 		return createTeamLeaderLink;
 	}
-	
+	this.getCreatedeveloperLink=function()
+	{
+		return createdeveloperLink;
+	}
+	this.getCreatetesterLink=function()
+	{
+		return createtesterLink;
+	}
+	this.getCreatedesignerLink=function()
+	{
+		return createdesignerLink;
+	}
+	this.getCreatesysadminLink=function()
+	{
+		return createsysadminLink;
+	}
+	this.getCreatekeyaccountLink=function()
+	{
+		return createkeyaccountLink;
+	}
 	return this;
 }]);
 services.factory("Login",['$http','$location','$cookieStore',"$route","Links",
@@ -39,36 +62,6 @@ services.factory("Login",['$http','$location','$cookieStore',"$route","Links",
 				var user={};
 				user.userinfo=data.user;
 				user.token=data.token;
-				switch(user.userinfo.roles[0])
-				{
-					case "ROLE_ADMIN":
-						user.userinfo.title="Admin";
-						break;
-					case "ROLE_TEAMLEADER":
-						user.userinfo.title="Team Leader";
-						break;
-					case "ROLE_DEVELOPER":
-						user.userinfo.title="Developer";
-						break;
-					case "ROLE_TESTER":
-						user.userinfo.title="Tester";
-						break;
-					case "ROLE_DESIGNER":
-						user.userinfo.title="UI/UX Designer";
-						break;
-					case "ROLE_SYSADMIN":
-						user.userinfo.title="System Admin";
-						break;
-					case "ROLE_KEYACCOUNT":
-						user.userinfo.title="Account Manager";
-						break;
-					case "ROLE_CUSTOMER":
-						user.userinfo.title="Customer";
-						break;
-					case "ROLE_CUSER":
-						user.userinfo.title="Customer";
-						break;
-				}
 				$cookieStore.put('loggeduser',user);
                 funcsucess();
             }).error(function (data, status, headers, config) {
@@ -100,10 +93,6 @@ services.factory("Login",['$http','$location','$cookieStore',"$route","Links",
 		}
 		this.isTokenExpired=function()
 		{
-			Date.prototype.addHours= function(h){
-    			this.setHours(this.getHours()+h);
-    			return this;
-			}
 			if($cookieStore.get('loggeduser')!=null)
 			{
 				exprirationdate=Date.parse($cookieStore.get('loggeduser').token.experationDate.date);
@@ -148,17 +137,46 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",
 		}
 		this.createTeamLeader=function(member,successFunc,failureFunc)
 		{
+			this.addTeamMember(Links.getcreateTeamLeaderLink(),member,successFunc,failureFunc);
+		}
+		this.createDeveloper=function(member,successFunc,failureFunc)
+		{
+			this.addTeamMember(Links.getcreatedeveloperLink(),member,successFunc,failureFunc);
+		}
+		this.createDeveloper=function(member,successFunc,failureFunc)
+		{
+			this.addTeamMember(Links.getcreatedeveloperLink(),member,successFunc,failureFunc);
+		}
+		this.createTester=function(member,successFunc,failureFunc)
+		{
+			this.addTeamMember(Links.getcreatetesterLink(),member,successFunc,failureFunc);
+		}
+		this.createDesigner=function(member,successFunc,failureFunc)
+		{
+			this.addTeamMember(Links.getcreatedesignerLink(),member,successFunc,failureFunc);
+		}
+		this.createSysAdmin=function(member,successFunc,failureFunc)
+		{
+			this.addTeamMember(Links.getcreatesysadminLink(),member,successFunc,failureFunc);
+		}
+		this.createKeyAccount=function(member,successFunc,failureFunc)
+		{
+			this.addTeamMember(Links.getcreatekeyaccountLink(),member,successFunc,failureFunc);
+		}
+		this.addTeamMember=function(link,member,successFunc,failureFunc)
+		{
 			if(!Login.isTokenExpired())
 			{
 
 				$http({
 					method:"POST", 
-					url:Links.getcreateTeamLeaderLink(),
+					url:link,
 					data:member, 
-					headers: {'Content-Type': 'application/json'}
+					headers: {'Content-Type': 'application/json','x-crm-access-token': $cookieStore.get('loggeduser').token.token}
 				}).success(function (data, status, headers, config) {
+					successFunc();
 				}).error(function (data, status, headers, config) {
-	            	
+	            	failureFunc(data.errors);
 	            });
 			}
 		}

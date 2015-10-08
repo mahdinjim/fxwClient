@@ -47,89 +47,82 @@ Controllers.controller("SideBarCtrl",['$scope','Login',
 	}
 	]);
 Controllers.controller('TeamCtrl', ['$scope','Team', function ($scope,Team) {
-    var $image = $(".image-crop > img")
-    $($image).cropper({
-        aspectRatio:  4 / 3,
-        preview: ".img-preview",
-        done: function(data) {
-            // Output the result data for cropping image.
-        }
-    });
-
-    var $inputImage = $("#inputImage");
-    if (window.FileReader) {
-        $inputImage.change(function() {
-            var fileReader = new FileReader(),
-                    files = this.files,
-                    file;
-
-            if (!files.length) {
-                return;
-            }
-
-            file = files[0];
-
-            if (/^image\/\w+$/.test(file.type)) {
-                fileReader.readAsDataURL(file);
-                fileReader.onload = function () {
-                    $inputImage.val("");
-                    $image.cropper("reset", true).cropper("replace", this.result);
-                };
-            } else {
-                showMessage("Please choose an image file.");
-            }
-        });
-    } else {
-        $inputImage.addClass("hide");
-    }
-
-    $("#download").click(function() {
-        window.open($image.cropper("getDataURL"));
-    });
-
-    $("#zoomIn").click(function() {
-        $image.cropper("zoom", 0.1);
-    });
-
-    $("#zoomOut").click(function() {
-        $image.cropper("zoom", -0.1);
-    });
-
-    $("#rotateLeft").click(function() {
-        $image.cropper("rotate", 45);
-    });
-
-    $("#rotateRight").click(function() {
-        $image.cropper("rotate", -45);
-    });
-
-    $("#setDrag").click(function() {
-        $image.cropper("setDragMode", "crop");
-    });
-
-    $('#data_5 .input-daterange').datepicker({
-        keyboardNavigation: false,
-        forceParse: false,
-        autoclose: true
-    });
-
-    var elem_3 = document.querySelector('.js-switch_3');
-    var switchery_3 = new Switchery(elem_3, { color: '#1AB394' });
-    var elem_4 = document.querySelector('.js-switch_4');
-    var switchery_4 = new Switchery(elem_4, { color: '#1AB394' });
     
-
-    $('#datepicker').datepicker({
-    format: "dd/mm/yyyy"
-    });
-    //$('select').select2();
 	var successfunc=function(data){
 		$scope.team=data;
 	};
 	Team.getAllteamMembers(successfunc);
+	$scope.hideoptions=function()
+	{
+
+		if($scope.role==="Key Account")
+		{
+			$("#skillsselct").prop("disabled",true);
+			$("#capacityset").prop("disabled",true);
+		}
+		else
+		{
+			$("#skillsselct").prop("disabled",false);
+			$("#capacityset").prop("disabled",false);
+		}
+	}
 	$scope.createTeamMember=function()
 	{
-		alert("hello");
+		
+		if($scope.surname===undefined || $scope.name===undefined || $scope.title===undefined || $scope.phonecode===undefined || $scope.phonenumber===undefined || $scope.email===undefined || $scope.password===undefined || $scope.role===undefined || $scope.city===undefined || $scope.country===undefined  || $scope.status==undefined )
+		{
+			alert("Plaese complete all information");
+		}
+		else
+		{
+			var succesfunc=function()
+			{
+				$('#add-user').modal('hide');
+				alert("user created successfully");
+				Team.getAllteamMembers(successfunc);
+				$scope.email=undefined;
+				$scope.password=undefined;
+				$scope.name=undefined;
+				$scope.surname=undefined;
+				$scope.capacity=undefined;
+				$scope.phonecode=undefined;
+				$scope.phonenumber=undefined;
+				$scope.title=undefined;
+				$scope.city=undefined;
+				$scope.country=undefined;
+				$scope.status=undefined;
+			}
+			var failureFunction=function(msg)
+			{
+				alert(msg);
+			}
+			var member={
+				"email":$scope.email,
+				"login":$scope.email,
+				"password":$scope.password,
+				"name":$scope.name,
+				"surname":$scope.surname,
+				"capacity":$scope.capacity,
+				"skills":"" +$scope.skills,
+				"phone":$scope.phonecode+$scope.phonenumber,
+				"title":$scope.title,
+				"city":$scope.city,
+				"country":$scope.country,
+				"status":$scope.status 
+			};
+			if($scope.role==="Teamleader")
+				Team.createTeamLeader(member,succesfunc,failureFunction);
+			if($scope.role==="Developer")
+				Team.createDeveloper(member,succesfunc,failureFunction);
+			if($scope.role==="Administrator")
+				Team.createSysAdmin(member,succesfunc,failureFunction);
+			if($scope.role==="Tester")
+				Team.createTester(member,succesfunc,failureFunction);
+			if($scope.role==="Key Account")
+				Team.createKeyAccount(member,succesfunc,failureFunction);
+			if($scope.role==="Designer")
+				Team.createDesigner(member,succesfunc,failureFunction);
+		}
 	}
 }]);
 Controllers.controller('SettingsCtrl', ['$scope','Chat', function ($scope,Chat) {

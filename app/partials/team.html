@@ -1,3 +1,81 @@
+  <script type="text/javascript">
+  var $image = $(".image-crop > img")
+    $($image).cropper({
+        aspectRatio:  4 / 3,
+        preview: ".img-preview",
+        done: function(data) {
+            // Output the result data for cropping image.
+        }
+    });
+
+    var $inputImage = $("#inputImage");
+    if (window.FileReader) {
+        $inputImage.change(function() {
+            var fileReader = new FileReader(),
+                    files = this.files,
+                    file;
+
+            if (!files.length) {
+                return;
+            }
+
+            file = files[0];
+
+            if (/^image\/\w+$/.test(file.type)) {
+                fileReader.readAsDataURL(file);
+                fileReader.onload = function () {
+                    $inputImage.val("");
+                    $image.cropper("reset", true).cropper("replace", this.result);
+                };
+            } else {
+                showMessage("Please choose an image file.");
+            }
+        });
+    } else {
+        $inputImage.addClass("hide");
+    }
+
+    $("#download").click(function() {
+        window.open($image.cropper("getDataURL"));
+    });
+
+    $("#zoomIn").click(function() {
+        $image.cropper("zoom", 0.1);
+    });
+
+    $("#zoomOut").click(function() {
+        $image.cropper("zoom", -0.1);
+    });
+
+    $("#rotateLeft").click(function() {
+        $image.cropper("rotate", 45);
+    });
+
+    $("#rotateRight").click(function() {
+        $image.cropper("rotate", -45);
+    });
+
+    $("#setDrag").click(function() {
+        $image.cropper("setDragMode", "crop");
+    });
+
+    $('#data_5 .input-daterange').datepicker({
+        keyboardNavigation: false,
+        forceParse: false,
+        autoclose: true
+    });
+
+    var elem_3 = document.querySelector('.js-switch_3');
+    var switchery_3 = new Switchery(elem_3, { color: '#1AB394' });
+    var elem_4 = document.querySelector('.js-switch_4');
+    var switchery_4 = new Switchery(elem_4, { color: '#1AB394' });
+    
+
+    $('#datepicker').datepicker({
+    format: "dd/mm/yyyy"
+    });
+    jQuery('select').select2();
+  </script>
   <div id="wrapper">
        <div side-bar>
        </div>
@@ -98,8 +176,8 @@
                             </div>
                             <div class="form-group m-0">
                                 <!--select-->
-                                <div class="select-option f-left m-0" style="width: 30%; margin-right: 2.5% ! important;" ng-model="phonecode">
-                                    <select class="select2">
+                                <div class="select-option f-left m-0" style="width: 30%; margin-right: 2.5% ! important;" >
+                                    <select class="select2" ng-model="phonecode">
                                         <option>+49</option>
                                         <option>+90</option>
                                         <option>+216</option>
@@ -122,12 +200,12 @@
                             <div class="form-group m-0">
                                 <!--select-->
                                 <div class="select-option m-0" style="width: 100%;">
-                                    <select class="select2" ng-model="role">
+                                    <select class="select2" ng-model="role" ng-change="hideoptions()">
                                         <option>Role</option>
                                         <option>Key Account</option>
                                         <option>Teamleader</option>
                                         <option>Developer</option>
-                                        <option>Frontend Developer</option>
+                                        <option>Tester</option>
                                         <option>Designer</option>
                                         <option>Administrator</option>
                                     </select>
@@ -142,11 +220,11 @@
                         <div class="col-md-6">
                             <h4>Location</h4>
                             <div class="form-group">
-                                <input type="text" class="form-control" placeholder="City" required="">
+                                <input type="text" class="form-control" placeholder="City" required="" ng-model="city">
                             </div>  
                             <div class="form-group mb-0">
                                 <div class="select-option m-0" style="width: 100%;">
-                                    <select class="select2">
+                                    <select class="select2" ng-model="country">
                                         <option>Country</option>
                                         <option>Turkey</option>
                                         <option>Tunisia</option>
@@ -159,11 +237,11 @@
                         <div class="col-md-6">
                             <h4>Info</h4>
                             <div class="form-group">
-                                <input type="number" class="form-control" placeholder="Capacity (Weekly)" required="">
+                                <input type="number" class="form-control" placeholder="Capacity (Weekly)" required="" ng-model="capacity" id="capacityset">
                             </div>
                             <div class="form-group mb-0">
                                 <div class="select-option m-0" style="width: 100%;">
-                                    <select class="select2">
+                                    <select class="select2" ng-model="status">
                                         <option>Status</option>
                                         <option>Team</option>
                                         <option>Freelancer</option>
@@ -180,7 +258,7 @@
                             <div class="hr-line-solid"></div>
                             <h4>Skills</h4>
                             <div class="form-group m-0">
-                                <select data-placeholder="Select Skills" class="chosen-select" multiple style="width:100%;" tabindex="2">
+                                <select data-placeholder="Select Skills" class="chosen-select" multiple style="width:100%;" tabindex="2" ng-model="skills" id="skillsselct">
                                     <optgroup label="OOP">
                                         <option value="PHP">PHP</option>
                                         <option value="Java">Java</option>
