@@ -1,5 +1,5 @@
  <!--top header-->
-            <div class="row border-bottom">
+            <div class="row border-bottom" ng-controller="MenuNavCtrl">
                 <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
                     <div class="navbar-header">
                         <a class="navbar-minimalize minimalize-styl-2 btn btn-primary "><i class="fa fa-bars"></i> </a>
@@ -62,7 +62,7 @@
                             </ul>
                         </li>
                         <li class="top-log-out">
-                            <a href="login-fxw.html">
+                            <a ng-click="logout()">
                                 <i class="fa fa-sign-out"></i> Log out
                             </a>
                         </li>

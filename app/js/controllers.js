@@ -11,6 +11,17 @@ Controllers.controller('LoginCtrl',['$scope','Login','$location',
 					
 					$location.path('/dashboard');
 					$scope.errors="";
+					setTimeout(function() {
+			                toastr.options = {
+			                    closeButton: true,
+			                    progressBar: true,
+			                    showMethod: 'slideDown',
+			                    timeOut: 4000
+			                };
+			                toastr.success('Create your project & start your task', 'Welcome to flexwork.io');
+
+			            }, 1300);
+        
 				};
 				var failureFunction=function(mess)
 				{
@@ -33,6 +44,14 @@ Controllers.controller('LoginCtrl',['$scope','Login','$location',
 			
 		}
 	}]);
+Controllers.controller("MenuNavCtrl",['$scope','Login',
+	function SideBarCtrl($scope,Login)
+	{
+		$scope.logout=function(){
+			Login.logout();
+		}
+	}
+	]);
 Controllers.controller("SideBarCtrl",['$scope','Login',
 	function SideBarCtrl($scope,Login)
 	{
@@ -44,15 +63,23 @@ Controllers.controller("SideBarCtrl",['$scope','Login',
 		else
 			$scope.company="adnatives/Disycs";
 		$scope.title=userinf.title;
+		$scope.logout=function(){
+			Login.logout();
+		}
 	}
 	]);
-Controllers.controller('TeamCtrl', ['$scope','Team', function ($scope,Team) {
+Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', function ($scope,Team,Params,$location) {
     
 	var successfunc=function(data){
 		$scope.team=data;
 	};
 	Team.getAllteamMembers(successfunc);
 	$scope.send=false;
+	$scope.openProfile=function(member)
+	{
+		Params.setTeamMember(member);
+		$location.path("/teamprofile");
+	}
 	var validateForm=function()
 	{
 		var messages =[];
@@ -302,7 +329,62 @@ Controllers.controller('TeamCtrl', ['$scope','Team', function ($scope,Team) {
 		if($scope.role==="Designer")
 			Team.deleteDesigner(member,succesfunc,failureFunction);
 	}
+	$scope.uploadImage=function(member)
+	{
+		  var $image = $(".image-crop > img")
+		  var successFunc=function()
+		  {
+		  	$("#change-picture").modal("hide");
+		  	Team.getAllteamMembers(successfunc);
+		  }
+		  var failurefunc=function(msg)
+		  {
+		  	$("#failure").modal('show');
+			$('#failure').find('p').html("Couldn't uplaod picture please try again later");
+		  }
+		  Team.uploadMemberImage(member.id,member.role,$image.cropper("getDataURL"),successFunc,failurefunc)
+
+	}
+	$scope.openImageUplaoder=function(member)
+	{
+		$("#change-picture").modal("show");
+		$scope.oldmember=member;
+
+	}
+	
 }]);
+Controllers.controller('TeamProfilCtrl', ['$scope','Params', function ($scope,Params) {
+	var member=Params.getTeamMember();
+	$scope.email=member.email;
+	$scope.name=member.name;
+	$scope.surname=member.surname;
+	
+	$scope.title=member.title;
+	$scope.city=member.city;
+	$scope.phonenumber=member.phonenumber;
+	$scope.phonecode=member.phonecode;
+	$scope.country=member.country;
+	$scope.status=member.status;
+	$scope.photo=member.photo;
+	if(member.role!="Key Account")
+	{
+		var skills=member.skills.split(",");
+		$scope.skills=skills;
+		$scope.capacity=member.capacity;
+	}
+	else
+	{
+		$scope.capacity=40;
+	}
+	$scope.call=function()
+	{
+		parent.location='tel:'+member.phonecode+member.phonenumber;
+	}
+	$scope.sendemail=function()
+	{
+		parent.location='mailto:'+member.email;
+	}
+	}])
 Controllers.controller('SettingsCtrl', ['$scope','Chat', function ($scope,Chat) {
 
 	$scope.connect_to_chat=Chat.isUserLoggedIn();

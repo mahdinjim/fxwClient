@@ -185,8 +185,18 @@ a.ibox-link{
   text-align: center;
 }
 
+.ibox-member-status{
+  display: block;
+  text-align: right;
+}
+
 .ibox-users-picture{
   display:block;
+  margin-top: -15px;
+}
+
+.ibox-users-picture.users{
+  margin-top: 0px;
 }
 
 .ibox-users-title h5{
@@ -436,6 +446,16 @@ a.delete-date{
   text-align: right;
 }
 
+.label.tags.channels{
+  display: block;
+  margin-bottom: 5px;
+  padding: 7px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 300;
+  background: #f6f6f6;
+}
+
 
 @media (max-width: 785px) {
   #right-sidebar {
@@ -544,12 +564,24 @@ a.delete-date{
   margin-bottom: 15px !important;
 }
 
-
 /*margins*/
+
+/* paddings */
 
 .p-0{
   padding: 0px !important;
 }
+
+/* paddings */
+
+
+/* borders */
+
+.b-0{
+  border: 0px !important;
+}
+
+/* borders */
 
 .btn-question{
   margin: 0px 10px;
@@ -876,6 +908,201 @@ b, strong {
   border-color: #1ab394;
   color: #ffffff;
 }
+
+
+/* MESSAGES / CHAT */
+
+.ibox.chat-view{
+
+}
+
+.chat-discussion{
+  height: -o-calc(100vh - 390px); /* opera */
+  height: -webkit-calc(100vh - 390px); /* google, safari */
+  height: -moz-calc(100vh - 390px); /* firefox */
+}
+
+.chat-users{
+  height: -o-calc(100vh - 390px); /* opera */
+  height: -webkit-calc(100vh - 390px); /* google, safari */
+  height: -moz-calc(100vh - 390px); /* firefox */
+}
+
+.label-channel-notification{
+  margin-right: 5px;
+  margin-top: -15px;
+}
+
+.message{
+  padding: 0 10px;
+  border: 0px;
+  background: transparent;
+}
+
+.chat-discussion {
+  background: #fff none repeat scroll 0 0;
+}
+
+.chat-message {
+  padding: 10px 0;
+}
+
+.message-avatar {
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+}
+
+.chat-avatar{
+  margin-right: 15px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;  
+}
+
+.chat-user a{
+  color: inherit;
+  display: block;
+  height: 36px;
+}
+
+.chat-user-box{
+  border-top: 1px solid #eee;
+}
+
+.ibox-box-title.channel h5{
+  color: #333;
+  font-weight: 700;
+}
+
+.ibox-content.chat-message-box{
+  border: 0px;
+}
+
+.ibox-box-title.channel h5 span{
+  color: #676a6c;
+  font-weight: 300;
+}
+
+a.message-author{
+  color: #333;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.chat-discussion .chat-message.left .message-date {
+  float: inherit;
+  font-size: 12px;
+}
+
+.message-content {
+  color: #000;
+  display: block;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.message-divider{
+  padding: 10px 0;
+  margin: 10px 0px;
+} 
+
+.message-line-divider {
+  border-top: 1px solid #ddd;
+  left: 1.5rem;
+  margin: 0;
+  right: 18px;
+  top: 1.1rem;
+}
+
+.message-label-divider {
+  background: #fff none repeat scroll 0 0;
+  color: #333;
+  display: table;
+  font-size: 14px;
+  font-weight: bold;
+  margin: -11px auto 0;
+  padding: 0 1rem;
+  position: relative;
+  text-align: center;
+}
+
+.message-line-divider.new {
+  border-top: 1px solid #ed5565;
+}
+
+.message-label-divider.new {
+  color: #ed5565;
+}
+
+.chat-message-form{
+  padding: 20px 20px 0;
+}
+
+.chat-message-form .mentions{
+  padding:20px 0px;
+}
+
+.message-input {
+  height: 55px !important;
+  padding: 15px;
+  border: 2px solid #e5e6e7;
+  resize: none;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+
+.chat-user-name{
+  padding: 0px;
+  font-size: 16px;
+  font-weight: 300;
+}
+
+.chat-users-job-title{
+  color: #999;
+  display: block;
+  margin-bottom: 5px;
+  font-size: 10px
+}
+
+.ibox-users-status.chat{
+  top: -3px;
+}
+
+.chat-user.away .ibox-users-status .fa{
+  color: #ed5565;
+  font-size: 12px;
+  position: relative;
+  top: 1px;
+}
+
+.mentions a{
+  background: #eee;
+  color: #676a6c;
+  padding: 5px;
+  border-radius: 3px;
+}
+
+.ibox-box-title.channel h5{
+  display: inline-block;
+}
+
+
+.notification-away{
+  background:#f6f6f6;
+  margin-top:10px;
+  padding:10px;
+  font-size:10px;
+}
+
+
+/* NAV SECOND LEVEL */
+
+.nav-second-level li a {
+  padding: 7px 20px 7px 52px;
+}
+
 
 /* MOBILE */
 @media (max-width: 350px) {

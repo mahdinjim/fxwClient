@@ -4,7 +4,7 @@
         aspectRatio:  4 / 3,
         preview: ".img-preview",
         done: function(data) {
-            // Output the result data for cropping image.
+          
         }
     });
 
@@ -119,20 +119,23 @@
                         <div class="col-lg-3">
                             <div class="ibox-users float-e-margins">
                                 <div class="ibox-users-title">
+                                    <span class="ibox-member-status" ng-if="member.status=='Team'"><span class="label">Team</span></span>
+                                    <span class="ibox-member-status"><span class="label label-success" ng-if="member.status=='Freelancer'">Freelancer</span></span>
+                                    <span class="ibox-member-status"><span class="label label-danger" ng-if="member.status=='Pool'">Pool</span></span>
                                     <span class="ibox-users-picture">
                                         <img width="48" heigth="48" class="img-circle" src="{{member.photo}}" alt="Picture">
                                     </span>
-                                    <h5><span class="ibox-users-status"><i class="fa fa-circle"></i></span> {{member.surname}} {{member.name}}</h5>
+                                    <h5>{{member.surname}} {{member.name}}</h5>
                                    <span class="ibox-users-job-title">{{member.role}}</span>
                                     <span class="ibox-users-location">{{member.country}}, {{member.city}}</span>
                                 </div>
                                 <div class="ibox-users-content">
                                     <div class="ibox-users-action">
-                                        <button type="button" class="btn btn-white btn-sm" data-toggle="modal" data-target="#change-picture"><i class="fa fa-camera"></i></button>
+                                        <button type="button" class="btn btn-white btn-sm" data-toggle="modal" ng-click="openImageUplaoder(member)"><i class="fa fa-camera"></i></button>
                                         <button type="button" class="btn btn-white btn-sm" data-toggle="modal" data-target="#modal-away"><i class="fa fa-calendar"></i></button>
                                         <button type="button" class="btn btn-white btn-sm" ng-click="openmemberForm(member)"><i class="fa fa-pencil"></i></button>
                                         <span class="ibox-users-action-line"></span>
-                                        <button type="button" class="btn btn-white btn-sm" onclick="parent.location='team-profile-fxw.html'"><i class="fa fa-user"></i></button>
+                                        <button type="button" class="btn btn-white btn-sm" ng-click="openProfile(member)"><i class="fa fa-user"></i></button>
                                     </div>
                                 </div>
                             </div>
@@ -151,7 +154,7 @@
                 </div>
             </div>
             <!--end footer-->
-   <div chat-window/> 
+
         </div>
 </div>
 <!--Add team member model-->
@@ -385,6 +388,56 @@
                    <p class="modal-content-center m-0"></p>
                 </div>
                 
+            </div>
+        </div>
+    </div> 
+ <!--modal change picture-->
+    <div class="modal inmodal fade" id="change-picture" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"><i class="fa fa-camera modal-fa-icon"></i> Change Picture</h4>
+                </div>
+                <div class="modal-body">
+                   <div class="row">
+                        <div class="col-md-6">
+                                <div class="image-crop">
+                                    <img src="img/users/big-image.jpg">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h4>Preview image</h4>
+                                <div class="img-preview img-preview-sm"></div>
+                                <h4>Comon method</h4>
+                                <p>
+                                    You can upload new image to crop container and easy download new cropped image.
+                                </p>
+                                <div class="btn-group">
+                                    <label title="Upload image file" for="inputImage" class="btn btn-primary">
+                                        <input type="file" accept="image/*" name="file" id="inputImage" class="hide">
+                                        Upload new image
+                                    </label>
+                                    <label title="Donload image" id="download" class="btn btn-primary">Download</label>
+                                </div>
+                                <h4>Other method</h4>
+                                <p>
+                                    You may set cropper options with <code>$({image}).cropper(options)</code>
+                                </p>
+                                <div class="btn-group">
+                                    <button class="btn btn-white" id="zoomIn" type="button">Zoom In</button>
+                                    <button class="btn btn-white" id="zoomOut" type="button">Zoom Out</button>
+                                    <button class="btn btn-white" id="rotateLeft" type="button">Rotate Left</button>
+                                    <button class="btn btn-white" id="rotateRight" type="button">Rotate Right</button>
+                                    <button class="btn btn-warning" id="setDrag" type="button">New crop</button>
+                                </div>
+                            </div>
+                   </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" ng-click="uploadImage(oldmember)">Save</button>
+                </div>
             </div>
         </div>
     </div> 

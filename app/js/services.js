@@ -22,6 +22,7 @@ services.factory("Links",[function(){
 	var deletetesterLink=baseUrl+path+'/private/super/tester/delete';
 	var deletesysadminLink=baseUrl+path+'/private/super/sysadmin/delete';
 	var deletedesignerLink=baseUrl+path+'/private/super/designer/delete';
+	var uploadImageLink=baseUrl+path+'/private/team/upload/photo'
 	this.getLoginLink=function()
 	{
 		return LoginLink;
@@ -101,6 +102,10 @@ services.factory("Links",[function(){
 	this.getDeletekeyaccountLink=function()
 	{
 		return deletekeyaccountLink;
+	}
+	this.getImageUplaodLink=function()
+	{
+		return uploadImageLink;
 	}
 
 	return this;
@@ -301,6 +306,23 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",
 	            });
 			}
 		}
+		this.uploadMemberImage=function(id,role,image,successFunc,failurefunc)
+		{
+			if(!Login.isTokenExpired())
+			{
+
+				$http({
+					method:"post", 
+					url:Links.getImageUplaodLink()+"/"+id+"/"+role,
+					data:image,
+					headers: {'Content-Type': 'application/json','x-crm-access-token': $cookieStore.get('loggeduser').token.token}
+				}).success(function (data, status, headers, config) {
+					successFunc();
+				}).error(function (data, status, headers, config) {
+	            	failurefunc(data.errors);
+	            });
+			}
+		}
 		return this;
 	}]);
 services.factory('Chat', ["$http","$location","$cookieStore",function ($http,$location,$cookieStore) {
@@ -404,3 +426,15 @@ services.factory('Chat', ["$http","$location","$cookieStore",function ($http,$lo
 	}
 	return this;
 }])
+services.factory('Params',function(){
+	var teamMember={};
+	return {
+		setTeamMember:function(data){
+			teamMember=data;
+		},
+		getTeamMember:function()
+		{
+			return teamMember;
+		}
+	}
+})
