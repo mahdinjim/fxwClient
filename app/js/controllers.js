@@ -52,6 +52,67 @@ Controllers.controller('TeamCtrl', ['$scope','Team', function ($scope,Team) {
 		$scope.team=data;
 	};
 	Team.getAllteamMembers(successfunc);
+	$scope.send=false;
+	var validateForm=function()
+	{
+		var messages =[];
+		if($scope.surname===undefined)
+		{
+			messages.push("Please fill the surname");
+		}
+		if($scope.name===undefined)
+		{
+			messages.push("Please fill the name");
+		}
+		if($scope.title===undefined)
+		{
+			messages.push("Please fill the title");
+		}
+		if($scope.phonecode===undefined)
+		{
+			messages.push("Please fill the phone code");
+		}
+		if($scope.phonenumber===undefined)
+		{
+			messages.push("Please fill the phone number");
+		}
+		if($scope.email===undefined)
+		{
+			messages.push("Please fill the email");
+		}
+		if($scope.password===undefined)
+		{
+			messages.push("Please fill the password");
+		}
+		if($scope.city===undefined)
+		{
+			messages.push("Please fill the city");
+		}
+		if($scope.country===undefined)
+		{
+			messages.push("Please fill the country");
+		}
+		if($scope.role===undefined)
+		{
+			messages.push("Please fill the role");
+		}
+		if($scope.status===undefined)
+		{
+			messages.push("Please fill the status");
+		}
+		if($scope.role!=undefined)
+		{
+			if($scope.role!="Key Account" && $scope.skills===undefined)
+			{
+				if($scope.skills===undefined)
+					messages.push("Please fill the skills");
+				if($scope.capacity===undefined)
+					messages.push("Please fill the capacity");
+			}
+		}
+		return messages;
+		
+	}
 	$scope.hideoptions=function()
 	{
 
@@ -66,63 +127,180 @@ Controllers.controller('TeamCtrl', ['$scope','Team', function ($scope,Team) {
 			$("#capacityset").prop("disabled",false);
 		}
 	}
-	$scope.createTeamMember=function()
+	$scope.openmemberForm=function(member)
 	{
-		
-		if($scope.surname===undefined || $scope.name===undefined || $scope.title===undefined || $scope.phonecode===undefined || $scope.phonenumber===undefined || $scope.email===undefined || $scope.password===undefined || $scope.role===undefined || $scope.city===undefined || $scope.country===undefined  || $scope.status==undefined )
+		//BAD: Is not a very good solution to use jquery to initiate values
+		if(member!=null)
 		{
-			alert("Plaese complete all information");
+			$scope.email=member.email;
+			$scope.password="******";
+			$scope.name=member.name;
+			$scope.surname=member.surname;
+			$scope.capacity=parseInt(member.capacity);
+			$scope.title=member.title;
+			$scope.city=member.city;
+			$scope.phonenumber=member.phonenumber;
+			$scope.phonecode=member.phonecode;
+			$("#phonecodeselect").select2("val",member.phonecode);
+			$scope.country=member.country;
+			$("#countryselect").select2("val",member.country);
+			$scope.status=member.status;
+			$("#statusselct").select2("val",member.status);
+			$scope.role=member.role;
+			$("#roleselect").select2("val",member.role);
+			$("#roleselect").prop("disabled",true);
+			if(member.role!="Key Account")
+			{
+				var skills=member.skills.split(",");
+				$scope.skills=skills;
+				$("#skillsselct").select2("val",skills);
+				$("#capacityset").val(member.capacity);
+				$("#skillsselct").prop("disabled",false);
+				$("#capacityset").prop("disabled",false);
+			}
+			else
+			{
+				$("#skillsselct").prop("disabled",true);
+				$("#capacityset").prop("disabled",true);
+			}
+			$scope.isedit=true;
+			$scope.oldmember=member;
+
+			
+		}
+		else{
+			cleanForm();
+			$scope.isedit=false;
+
+		}
+		$('#add-user').modal('show');
+	}
+	function cleanForm()
+	{
+		$scope.email=undefined;
+		$scope.password=undefined;
+		$scope.name=undefined;
+		$scope.surname=undefined;
+		$scope.capacity=undefined;
+		$scope.phonecode=undefined;
+		$scope.phonenumber=undefined;
+		$scope.title=undefined;
+		$scope.city=undefined;
+		$scope.country=undefined;
+		$scope.status=undefined;
+		$scope.skills=undefined;
+		$("#roleselect").prop("disabled",false);
+		$("#capacityset").val("");
+		$("#phonecodeselect").select2("val","+49");
+		$("#countryselect").select2("val","Country");
+		$("#statusselct").select2("val","Status");
+		$("#roleselect").select2("val","Role");
+		$("#skillsselct").select2("val","");
+	}
+	$scope.createTeamMember=function(oldmember)
+	{
+		var messages=validateForm();
+		if(messages.length>0)
+		{
+			
+			$("#warning").modal('show');
+			$('#warning').find('p').html(messages);
 		}
 		else
 		{
 			var succesfunc=function()
 			{
 				$('#add-user').modal('hide');
-				alert("user created successfully");
+				
+				$("#success").modal('show');
+				$('#success').find('p').html('Member created successfully');
 				Team.getAllteamMembers(successfunc);
-				$scope.email=undefined;
-				$scope.password=undefined;
-				$scope.name=undefined;
-				$scope.surname=undefined;
-				$scope.capacity=undefined;
-				$scope.phonecode=undefined;
-				$scope.phonenumber=undefined;
-				$scope.title=undefined;
-				$scope.city=undefined;
-				$scope.country=undefined;
-				$scope.status=undefined;
+				cleanForm();
+
 			}
 			var failureFunction=function(msg)
 			{
-				alert(msg);
+				$("#failure").modal('show');
+				$('#failure').find('p').html(msg);
 			}
 			var member={
 				"email":$scope.email,
 				"login":$scope.email,
-				"password":$scope.password,
 				"name":$scope.name,
 				"surname":$scope.surname,
 				"capacity":$scope.capacity,
 				"skills":"" +$scope.skills,
-				"phone":$scope.phonecode+$scope.phonenumber,
+				"phonecode":$scope.phonecode,
+				"phonenumber":$scope.phonenumber,
 				"title":$scope.title,
 				"city":$scope.city,
 				"country":$scope.country,
-				"status":$scope.status 
+				"status":$scope.status,
+				"dosend":$scope.send,
 			};
-			if($scope.role==="Teamleader")
-				Team.createTeamLeader(member,succesfunc,failureFunction);
-			if($scope.role==="Developer")
-				Team.createDeveloper(member,succesfunc,failureFunction);
-			if($scope.role==="Administrator")
-				Team.createSysAdmin(member,succesfunc,failureFunction);
-			if($scope.role==="Tester")
-				Team.createTester(member,succesfunc,failureFunction);
-			if($scope.role==="Key Account")
-				Team.createKeyAccount(member,succesfunc,failureFunction);
-			if($scope.role==="Designer")
-				Team.createDesigner(member,succesfunc,failureFunction);
+			if($scope.password!="******")
+				member.password=$scope.password;
+			if(oldmember==null){
+				if($scope.role==="Teamleader")
+					Team.createTeamLeader(member,succesfunc,failureFunction);
+				if($scope.role==="Developer")
+					Team.createDeveloper(member,succesfunc,failureFunction);
+				if($scope.role==="Administrator")
+					Team.createSysAdmin(member,succesfunc,failureFunction);
+				if($scope.role==="Tester")
+					Team.createTester(member,succesfunc,failureFunction);
+				if($scope.role==="Key Account")
+					Team.createKeyAccount(member,succesfunc,failureFunction);
+				if($scope.role==="Designer")
+					Team.createDesigner(member,succesfunc,failureFunction);
+			}
+			else
+			{
+				member["id"]=oldmember.id;
+				if($scope.role==="Teamleader")
+					Team.updateTeamLeader(member,succesfunc,failureFunction);
+				if($scope.role==="Developer")
+					Team.updateDeveloper(member,succesfunc,failureFunction);
+				if($scope.role==="Administrator")
+					Team.updateSysAdmin(member,succesfunc,failureFunction);
+				if($scope.role==="Tester")
+					Team.updateTester(member,succesfunc,failureFunction);
+				if($scope.role==="Key Account")
+					Team.updateKeyAccount(member,succesfunc,failureFunction);
+				if($scope.role==="Designer")
+					Team.updateDesigner(member,succesfunc,failureFunction);
+			}
 		}
+	}
+	$scope.deleteMember=function(member)
+	{
+		var succesfunc=function()
+		{
+			$('#delete').modal('hide');
+			$('#add-user').modal('hide');
+			$("#success").modal('show');
+			$('#success').find('p').html('Member deleted successfully');
+			Team.getAllteamMembers(successfunc);
+			cleanForm();
+
+		}
+		var failureFunction=function(msg)
+		{
+			$("#failure").modal('show');
+			$('#failure').find('p').html(msg);
+		}
+		if($scope.role==="Teamleader")
+			Team.deleteTeamLeader(member,succesfunc,failureFunction);
+		if($scope.role==="Developer")
+			Team.deleteDeveloper(member,succesfunc,failureFunction);
+		if($scope.role==="Administrator")
+			Team.deleteSysAdmin(member,succesfunc,failureFunction);
+		if($scope.role==="Tester")
+			Team.deleteTester(member,succesfunc,failureFunction);
+		if($scope.role==="Key Account")
+			Team.deleteKeyAccount(member,succesfunc,failureFunction);
+		if($scope.role==="Designer")
+			Team.deleteDesigner(member,succesfunc,failureFunction);
 	}
 }]);
 Controllers.controller('SettingsCtrl', ['$scope','Chat', function ($scope,Chat) {

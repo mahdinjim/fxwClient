@@ -10,6 +10,18 @@ services.factory("Links",[function(){
 	var createdesignerLink=baseUrl+path+'/private/super/designer/create';
 	var createsysadminLink=baseUrl+path+'/private/super/sysadmin/create';
 	var createkeyaccountLink=baseUrl+path+'/private/super/keyaccount/create';
+	var updatekeyaccountLink=baseUrl+path+'/private/keyaccount/update';
+	var updateteamleadertLink=baseUrl+path+'/private/teamleader/update';
+	var updatedevelopertLink=baseUrl+path+'/private/developer/update';
+	var updatetesterLink=baseUrl+path+'/private/tester/update';
+	var updatesysadminLink=baseUrl+path+'/private/sysadmin/update';
+	var updatedesignerLink=baseUrl+path+'/private/designer/update';
+	var deletekeyaccountLink=baseUrl+path+'/private/super/keyaccount/delete';
+	var deleteteamleadertLink=baseUrl+path+'/private/super/teamleader/delete';
+	var deletedevelopertLink=baseUrl+path+'/private/super/developer/delete';
+	var deletetesterLink=baseUrl+path+'/private/super/tester/delete';
+	var deletesysadminLink=baseUrl+path+'/private/super/sysadmin/delete';
+	var deletedesignerLink=baseUrl+path+'/private/super/designer/delete';
 	this.getLoginLink=function()
 	{
 		return LoginLink;
@@ -42,6 +54,55 @@ services.factory("Links",[function(){
 	{
 		return createkeyaccountLink;
 	}
+	this.getUpdateTeamLeaderLink=function()
+	{
+		return updateteamleadertLink;
+	}
+	this.getUpdatedeveloperLink=function()
+	{
+		return updatedevelopertLink;
+	}
+	this.getUpdatetesterLink=function()
+	{
+		return updatetesterLink;
+	}
+	this.getUpdatedesignerLink=function()
+	{
+		return updatedesignerLink;
+	}
+	this.getUpdatesysadminLink=function()
+	{
+		return updatesysadminLink;
+	}
+	this.getUpdatekeyaccountLink=function()
+	{
+		return updatekeyaccountLink;
+	}
+	this.getDeleteTeamLeaderLink=function()
+	{
+		return deleteteamleadertLink;
+	}
+	this.getDeletedeveloperLink=function()
+	{
+		return deletedevelopertLink;
+	}
+	this.getDeletetesterLink=function()
+	{
+		return deletetesterLink;
+	}
+	this.getDeletedesignerLink=function()
+	{
+		return deletedesignerLink;
+	}
+	this.getDeletesysadminLink=function()
+	{
+		return deletesysadminLink;
+	}
+	this.getDeletekeyaccountLink=function()
+	{
+		return deletekeyaccountLink;
+	}
+
 	return this;
 }]);
 services.factory("Login",['$http','$location','$cookieStore',"$route","Links",
@@ -137,41 +198,101 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",
 		}
 		this.createTeamLeader=function(member,successFunc,failureFunc)
 		{
-			this.addTeamMember(Links.getcreateTeamLeaderLink(),member,successFunc,failureFunc);
+			this.addTeamMember(Links.getcreateTeamLeaderLink(),member,successFunc,failureFunc,"POST");
 		}
 		this.createDeveloper=function(member,successFunc,failureFunc)
 		{
-			this.addTeamMember(Links.getcreatedeveloperLink(),member,successFunc,failureFunc);
-		}
-		this.createDeveloper=function(member,successFunc,failureFunc)
-		{
-			this.addTeamMember(Links.getcreatedeveloperLink(),member,successFunc,failureFunc);
+			this.addTeamMember(Links.getCreatedeveloperLink(),member,successFunc,failureFunc,"POST");
 		}
 		this.createTester=function(member,successFunc,failureFunc)
 		{
-			this.addTeamMember(Links.getcreatetesterLink(),member,successFunc,failureFunc);
+			this.addTeamMember(Links.getCreatetesterLink(),member,successFunc,failureFunc,"POST");
 		}
 		this.createDesigner=function(member,successFunc,failureFunc)
 		{
-			this.addTeamMember(Links.getcreatedesignerLink(),member,successFunc,failureFunc);
+			this.addTeamMember(Links.getCreatedesignerLink(),member,successFunc,failureFunc,"POST");
 		}
 		this.createSysAdmin=function(member,successFunc,failureFunc)
 		{
-			this.addTeamMember(Links.getcreatesysadminLink(),member,successFunc,failureFunc);
+			this.addTeamMember(Links.getCreatesysadminLink(),member,successFunc,failureFunc,"POST");
 		}
 		this.createKeyAccount=function(member,successFunc,failureFunc)
 		{
-			this.addTeamMember(Links.getcreatekeyaccountLink(),member,successFunc,failureFunc);
+			this.addTeamMember(Links.getCreatekeyaccountLink(),member,successFunc,failureFunc,"POST");
 		}
-		this.addTeamMember=function(link,member,successFunc,failureFunc)
+		this.updateTeamLeader=function(member,successFunc,failureFunc)
+		{
+			this.addTeamMember(Links.getUpdateTeamLeaderLink(),member,successFunc,failureFunc,"PUT");
+		}
+		this.updateDeveloper=function(member,successFunc,failureFunc)
+		{
+			this.addTeamMember(Links.getUpdatedeveloperLink(),member,successFunc,failureFunc,"PUT");
+		}
+		this.updateTester=function(member,successFunc,failureFunc)
+		{
+			this.addTeamMember(Links.getUpdatetesterLink(),member,successFunc,failureFunc,"PUT");
+		}
+		this.updateDesigner=function(member,successFunc,failureFunc)
+		{
+			this.addTeamMember(Links.getUpdatedesignerLink(),member,successFunc,failureFunc,"PUT");
+		}
+		this.updateSysAdmin=function(member,successFunc,failureFunc)
+		{
+			this.addTeamMember(Links.getUpdatesysadminLink(),member,successFunc,failureFunc,"PUT");
+		}
+		this.updateKeyAccount=function(member,successFunc,failureFunc)
+		{
+			this.addTeamMember(Links.getUpdatekeyaccountLink(),member,successFunc,failureFunc,"PUT");
+		}
+		this.deleteTeamLeader=function(member,successFunc,failureFunc)
+		{
+			this.deleteTeamMember(Links.getDeleteTeamLeaderLink(),member,successFunc,failureFunc);
+		}
+		this.deleteDeveloper=function(member,successFunc,failureFunc)
+		{
+			this.deleteTeamMember(Links.getDeletedeveloperLink(),member,successFunc,failureFunc);
+		}
+		this.deleteTester=function(member,successFunc,failureFunc)
+		{
+			this.deleteTeamMember(Links.getDeletetesterLink(),member,successFunc,failureFunc);
+		}
+		this.deleteDesigner=function(member,successFunc,failureFunc)
+		{
+			this.deleteTeamMember(Links.getDeletedesignerLink(),member,successFunc,failureFunc);
+		}
+		this.deleteSysAdmin=function(member,successFunc,failureFunc)
+		{
+			this.deleteTeamMember(Links.getDeletesysadminLink(),member,successFunc,failureFunc);
+		}
+		this.deleteKeyAccount=function(member,successFunc,failureFunc)
+		{
+			this.deleteTeamMember(Links.getDeletekeyaccountLink(),member,successFunc,failureFunc);
+		}
+		this.addTeamMember=function(link,member,successFunc,failureFunc,method)
 		{
 			if(!Login.isTokenExpired())
 			{
 
 				$http({
-					method:"POST", 
+					method:method, 
 					url:link,
 					data:member, 
+					headers: {'Content-Type': 'application/json','x-crm-access-token': $cookieStore.get('loggeduser').token.token}
+				}).success(function (data, status, headers, config) {
+					successFunc();
+				}).error(function (data, status, headers, config) {
+	            	failureFunc(data.errors);
+	            });
+			}
+		}
+		this.deleteTeamMember=function(link,member,successFunc,failureFunc)
+		{
+			if(!Login.isTokenExpired())
+			{
+
+				$http({
+					method:"delete", 
+					url:link+"/"+member.id,
 					headers: {'Content-Type': 'application/json','x-crm-access-token': $cookieStore.get('loggeduser').token.token}
 				}).success(function (data, status, headers, config) {
 					successFunc();

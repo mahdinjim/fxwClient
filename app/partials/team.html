@@ -106,7 +106,7 @@
                 <div class="row">
                     <!--add ibox-->
                     <div class="col-lg-3">
-                        <a data-toggle="modal" data-target="#add-user">
+                        <a ng-click="openmemberForm(null)">
                             <div class="ibox-users ibox-add-box float-e-margins">
                                 <div>
                                     <span><i class="fa fa-user-plus"></i> Add Member</span>
@@ -130,7 +130,7 @@
                                     <div class="ibox-users-action">
                                         <button type="button" class="btn btn-white btn-sm" data-toggle="modal" data-target="#change-picture"><i class="fa fa-camera"></i></button>
                                         <button type="button" class="btn btn-white btn-sm" data-toggle="modal" data-target="#modal-away"><i class="fa fa-calendar"></i></button>
-                                        <button type="button" class="btn btn-white btn-sm" data-toggle="modal" data-target="#edit-user"><i class="fa fa-pencil"></i></button>
+                                        <button type="button" class="btn btn-white btn-sm" ng-click="openmemberForm(member)"><i class="fa fa-pencil"></i></button>
                                         <span class="ibox-users-action-line"></span>
                                         <button type="button" class="btn btn-white btn-sm" onclick="parent.location='team-profile-fxw.html'"><i class="fa fa-user"></i></button>
                                     </div>
@@ -177,13 +177,13 @@
                             <div class="form-group m-0">
                                 <!--select-->
                                 <div class="select-option f-left m-0" style="width: 30%; margin-right: 2.5% ! important;" >
-                                    <select class="select2" ng-model="phonecode">
+                                    <select class="select2" ng-model="phonecode" id="phonecodeselect">
                                         <option>+49</option>
                                         <option>+90</option>
                                         <option>+216</option>
                                     </select>
                                 </div>
-                                <input type="text" class="form-control" data-mask="(999) 9999999" placeholder="Telephone" style="width: 67.5%;" ng-model="phonenumber">
+                                <input type="text" class="form-control" placeholder="Telephone" style="width: 67.5%;" ng-model="phonenumber">
                             </div>
                         </div><!--col-md-->
 
@@ -200,7 +200,7 @@
                             <div class="form-group m-0">
                                 <!--select-->
                                 <div class="select-option m-0" style="width: 100%;">
-                                    <select class="select2" ng-model="role" ng-change="hideoptions()">
+                                    <select class="select2" ng-model="role" ng-change="hideoptions()" id="roleselect">
                                         <option>Role</option>
                                         <option>Key Account</option>
                                         <option>Teamleader</option>
@@ -224,7 +224,7 @@
                             </div>  
                             <div class="form-group mb-0">
                                 <div class="select-option m-0" style="width: 100%;">
-                                    <select class="select2" ng-model="country">
+                                    <select class="select2" ng-model="country" id="countryselect">
                                         <option>Country</option>
                                         <option>Turkey</option>
                                         <option>Tunisia</option>
@@ -241,7 +241,7 @@
                             </div>
                             <div class="form-group mb-0">
                                 <div class="select-option m-0" style="width: 100%;">
-                                    <select class="select2" ng-model="status">
+                                    <select class="select2" ng-model="status" id="statusselct">
                                         <option>Status</option>
                                         <option>Team</option>
                                         <option>Freelancer</option>
@@ -293,7 +293,7 @@
                                 <div class="row">
                                     <label class="col-lg-6 add-user-label">Activate account?</label>
                                     <div class="col-lg-6 add-user-switch">
-                                        <input type="checkbox" class="js-switch_3" checked/>
+                                        <input type="checkbox" class="js-switch_3" ng-value="active" checked/>
                                     </div>
                                 </div>
                             </div>
@@ -301,23 +301,92 @@
                      </div><!--row-->
                 </div>
                 <div class="modal-footer">
-                    <div class="row">
+
+                    <div class="row" ng-if="!isedit">
                         <div class="col-md-6">
                             <div class="input-group">
                                 <div class="checkbox checkbox-primary mt-5 mb-5">
-                                    <input type="checkbox" id="checkbox3">
+                                    <input type="checkbox" id="checkbox3" ng-model="send">
                                     <label for="checkbox3">Send login information to user</label>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" ng-click="createTeamMember()">Save</button>
+                            <button type="button" class="btn btn-primary" ng-click="createTeamMember(null)">Save</button>
                         </div>
+                    </div>
+                    <div ng-if="isedit">
+                        <a class="f-left mt-5" data-toggle="modal" data-target="#delete"><small>Delete Account</small></a>
+                        <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" ng-click="createTeamMember(oldmember)">Save</button>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-
+</div>
+ <!--modal delete-->
+    <div class="modal inmodal fade" id="delete" tabindex="-1" role="dialog"  aria-hidden="true" style="top:150px;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"><i class="fa fa-trash modal-fa-icon"></i> Delete</h4>
+                </div>
+                <div class="modal-body">
+                   <p class="modal-content-center m-0">Do you really want to delete it?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" ng-click="deleteMember(oldmember)">Delete</button>
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div> 
+<!--success modal-->
+    <div class="modal inmodal fade" id="success" tabindex="-1" role="dialog"  aria-hidden="true" style="top:150px;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <div class="modal-title"><i class="glyphicon glyphicon-ok-circle"> Alright :)</i></div>
+                </div>
+                <div class="modal-body">
+                   <p class="modal-content-center m-0"></p>
+                </div>
+                
+            </div>
+        </div>
+    </div> 
+<!--failure modal-->
+    <div class="modal inmodal fade" id="failure" tabindex="-1" role="dialog"  aria-hidden="true" style="top:150px;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <div class="modal-title"><i class="glyphicon glyphicon-remove-circle"> Oopss :(</i></div>
+                </div>
+                <div class="modal-body">
+                   <p class="modal-content-center m-0"></p>
+                </div>
+                
+            </div>
+        </div>
+    </div> 
+<!--warning modal-->
+    <div class="modal inmodal fade" id="warning" tabindex="-1" role="dialog"  aria-hidden="true" style="top:150px;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <div class="modal-title"><i class="glyphicon glyphicon-warning-sign"> Hey hey!!</i></div>
+                </div>
+                <div class="modal-body">
+                   <p class="modal-content-center m-0"></p>
+                </div>
+                
+            </div>
+        </div>
+    </div> 
+ 
  
