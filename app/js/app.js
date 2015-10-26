@@ -24,6 +24,10 @@ crmapp.config(["$routeProvider",
 				templateUrl:'partials/memberprofile.html',
 				controller:'TeamProfilCtrl'
 			}).
+			when('/client',{
+				templateUrl:'partials/client.html',
+				controller:'ClientCtrl'
+			}).
 			otherwise({
         		redirectTo: '/dashboard'
       		});

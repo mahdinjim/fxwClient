@@ -385,6 +385,9 @@ Controllers.controller('TeamProfilCtrl', ['$scope','Params', function ($scope,Pa
 		parent.location='mailto:'+member.email;
 	}
 	}])
+Controllers.controller('ClientCtrl', ['$scope',function($scope){
+
+}])
 Controllers.controller('SettingsCtrl', ['$scope','Chat', function ($scope,Chat) {
 
 	$scope.connect_to_chat=Chat.isUserLoggedIn();

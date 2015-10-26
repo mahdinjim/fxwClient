@@ -1,0 +1,171 @@
+  <script>
+        $(document).ready(function() {
+            $('.footable').footable();
+        });
+    </script>
+
+    <!-- select2 -->
+    <script>
+        $('select').select2();
+    </script>
+ <div id="wrapper">
+ 	 <div side-bar></div>
+
+ 	 <div id="page-wrapper" class="gray-bg">
+ 	 	<div nav-menu></div>
+ 	 	 <!--header title-->
+            <div class="row wrapper border-bottom white-bg page-heading">
+                <div class="col-lg-12">
+                    <h2><i class="fa fa fa-building"></i> Client</h2>
+                    <ol class="breadcrumb">
+                        <li>
+                            flexwork.io
+                        </li>
+                        <li>
+                            Client
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            <!--end header title-->
+    <!--main content-->
+            <div class="wrapper wrapper-content animated fadeInRight ecommerce">
+                <div class="ibox-content m-b-sm border-bottom">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group table-filter-form-group">
+                                <div class="calander f-left mr-10">
+                                    <div class="select-icon-calander ml-0 mb-0"><i class="fa fa-calendar"></i></div>
+                                    <div class="select-month mb-0">
+                                        <select class="select2">
+                                        <option>All Months</option>
+                                        <optgroup label="Monate">
+                                        <option>Januar</option>
+                                        <option>Februar</option>
+                                        <option>März</option>
+                                        <option>April</option>
+                                        <option>Mai</option>
+                                        <option>Juni</option>
+                                        <option>Juli</option>
+                                        <option>August</option>
+                                        <option>September</option>
+                                        <option>Oktober</option>
+                                        <option>November</option>
+                                        <option>Dezember</option>  
+                                        </optgroup>          
+                                        </select>
+                                    </div>
+                                    <div class="select-year mb-0">
+                                        <select class="select2">
+                                        <optgroup label="Jahre">
+                                        <option>2015</option>
+                                        <option>2014</option>
+                                        <option>2013</option>
+                                        <option>2012</option>
+                                        <option>2011</option>
+                                        <option>2010</option>
+                                        </optgroup>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!--select-->
+                                <div class="input-group f-left mb-0 mr-10">
+                                    <div class="select-option" style="width:200px;">
+                                        <select class="select2">
+                                            <option selected="selected">All Projects</option>
+                                            <option>Captain</option>
+                                            <option>Website</option>
+                                            <option>Newsletter</option>
+                                            </optgroup>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox">
+                        <div class="ibox-content">
+
+                             <input type="text" class="form-control input-sm m-b-xs" id="filter"
+                                   placeholder="Search in table">
+
+                            <table class="footable table table-stripped" data-page-size="10" data-filter=#filter>
+                                <thead>
+                                <tr>
+                                    <th data-hide="phone" data-sort-ignore="true" width="100">ID</th>
+                                    <th data-hide="" data-sort-ignore="true">Client</th>
+                                    <th data-hide="phone" data-sort-ignore="true">Name</th>
+                                    <th data-hide="" data-sort-ignore="true">Email</th>
+                                    <th data-hide="phone" data-sort-ignore="true">Telephone</th>
+                                    <th data-hide="" data-sort-ignore="true" >Projects / Tasks</th>
+                                    <th data-hide="" data-sort-ignore="true" width="100">Users</th>
+                                    <th data-hide="phone" class="text-right" width="250" data-sort-ignore="true">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                    <!--customer item-->
+                                    <tr>
+                                        <td>
+                                           0001
+                                        </td>
+                                        <td>
+                                            23media.de
+                                        </td>
+                                        <td>
+                                            Stefan Rehn
+                                        </td>
+                                        <td>
+                                            st@23media.de
+                                        </td>
+                                        <td>
+                                            +49 178 1234567
+                                        </td>
+                                        <td>
+                                            <span class="label label-primary"><i class="fa fa-clone"></i> 3</span>
+                                            <span class="label label-default"><i class="fa fa-square-o"></i> 38</span>
+                                        </td>
+                                         <td>
+                                            <span class="label label-default"><i class="fa fa-users"></i> 3</span>
+                                        </td>
+                                        <td class="text-right">
+                                             <div class="btn-table-mobile">
+                                                <button class="btn btn-white btn-bitbucket btn-sm" type="button"><i class="fa fa-pencil"></i> Edit</button>
+                                                <button class="btn btn-white btn-bitbucket btn-sm" type="button"><i class="fa fa-users"></i> Users</button>
+                                                <button class="btn btn-white btn-bitbucket btn-sm" type="button"><i class="fa fa-clone"></i> Projects</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <td colspan="8">
+                                        <ul class="pagination pull-right"></ul>
+                                    </td>
+                                </tr>
+                                </tfoot>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--end main content-->
+
+            <!--footer-->
+            <div class="footer">
+                <div>
+                     &copy;2015 &middot; <b>flexwork.io</b> &middot; <a href="privacy-terms-fxw.html">Privacy and Terms</a> &middot; <a href="imprint-fxw.html">Imprint</a>
+                </div>
+            </div>
+            <!--end footer-->
+   
+        </div>
+        <!--end page wrapper-->
+
+    </div>
