@@ -6,7 +6,7 @@
 
     <!-- select2 -->
     <script>
-        $('select').select2();
+        $('.select2').select2();
     </script>
  <div id="wrapper">
  	 <div side-bar></div>
@@ -33,58 +33,11 @@
                 <div class="ibox-content m-b-sm border-bottom">
                     <div class="row">
                         <div class="col-sm-12">
-                            <div class="form-group table-filter-form-group">
-                                <div class="calander f-left mr-10">
-                                    <div class="select-icon-calander ml-0 mb-0"><i class="fa fa-calendar"></i></div>
-                                    <div class="select-month mb-0">
-                                        <select class="select2">
-                                        <option>All Months</option>
-                                        <optgroup label="Monate">
-                                        <option>Januar</option>
-                                        <option>Februar</option>
-                                        <option>März</option>
-                                        <option>April</option>
-                                        <option>Mai</option>
-                                        <option>Juni</option>
-                                        <option>Juli</option>
-                                        <option>August</option>
-                                        <option>September</option>
-                                        <option>Oktober</option>
-                                        <option>November</option>
-                                        <option>Dezember</option>  
-                                        </optgroup>          
-                                        </select>
-                                    </div>
-                                    <div class="select-year mb-0">
-                                        <select class="select2">
-                                        <optgroup label="Jahre">
-                                        <option>2015</option>
-                                        <option>2014</option>
-                                        <option>2013</option>
-                                        <option>2012</option>
-                                        <option>2011</option>
-                                        <option>2010</option>
-                                        </optgroup>
-                                        </select>
-                                    </div>
-                                </div>
-                                <!--select-->
-                                <div class="input-group f-left mb-0 mr-10">
-                                    <div class="select-option" style="width:200px;">
-                                        <select class="select2">
-                                            <option selected="selected">All Projects</option>
-                                            <option>Captain</option>
-                                            <option>Website</option>
-                                            <option>Newsletter</option>
-                                            </optgroup>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
+                            <button ng-click="OpenCreateModal(null)" type="button" class="btn btn-primary btn-bitbucket"><i class="fa fa-plus"></i> Add Client</button>
+                        </div>
                     </div>
                 </div>
             </div>
-
             <div class="row">
                 <div class="col-lg-12">
                     <div class="ibox">
@@ -169,3 +122,165 @@
         <!--end page wrapper-->
 
     </div>
+    <!--modal add client-->
+    <div class="modal inmodal fade" id="add-client" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"><i class="fa fa-user-plus modal-fa-icon"></i> Add Client</h4>
+                </div>
+                <div class="modal-body">
+                     <div class="row">
+                        <div class="col-md-6">
+                            <h4>Contact</h4>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Company Name" required="" ng-model="companyname">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control login-first-name" placeholder="First Name" required="" ng-model="name">
+                                <input type="text" class="form-control login-last-name" placeholder="Last Name" required="" ng-model="surname">
+                                <div class="clear-both"></div>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Vat" required="" ng-model="vat">
+                            </div>
+                            <div class="form-group m-0">
+                                <!--select-->
+                                <div class="select-option f-left m-0" style="width: 30%; margin-right: 2.5% ! important;" >
+                                    <select class="select2" ng-model="phonecode">
+                                        <option>+49</option>
+                                        <option>+90</option>
+                                        <option>+216</option>
+                                    </select>
+                                </div>
+                                <input type="text" class="form-control" ng-model="phonenumber" placeholder="Telephone" style="width: 67.5%;">
+                            </div>
+
+                        </div><!--col-md-->
+
+                        <div class="col-md-6">
+                            <h4>Location</h4>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="City" required="" ng-model="city">
+                            </div> 
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Zip" required="" ng-model="zipcode">
+                            </div> 
+                            <div class="form-group">
+                                <div class="select-option m-0" style="width: 100%;">
+                                    <select class="select2" ng-model="country">
+                                        <option>Country</option>
+                                        <option>Turkey</option>
+                                        <option>Tunisia</option>
+                                        <option>Germany</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group mb-0">
+                                <textarea class="form-control" placeholder="Address" style="height:83px;" ng-model="address"></textarea>
+                            </div> 
+                        </div><!--col-md-->
+
+                        <div class="col-md-12">
+                            <div class="hr-line-solid"></div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h4>Access</h4>
+
+                            <div class="form-group">
+                                <input type="email" class="form-control" placeholder="Email" required="" ng-model="email">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control" placeholder="Password" required="" ng-model="password">
+                            </div>
+
+                            <div class="form-group m-0">
+                                <!--select-->
+                                <div class="select-option m-0" style="width: 100%;">
+                                    <select class="select2" disabled="disabled">
+                                        <option>Role</option>
+                                        <option selected="selected">Administrator</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div><!--col-md-->
+
+                        <div class="col-md-6">
+                            <h4>Key Account</h4>
+                            <div class="form-group mb-0">
+                                <div class="select-option m-0" style="width: 100%;">
+                                    <select class="select2" id="keyaccountselect" ng-model="selectedKeyaccount">
+                                        <option ng-repeat="keyaccount in keyaccounts" value="{{keyaccount.id}}">{{keyaccount.name}} {{keyaccount.surname}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                        </div>
+                     </div><!--row-->
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <div class="checkbox checkbox-primary mt-5 mb-5">
+                                    <input type="checkbox" id="checkbox3" ng-model="isSent">
+                                    <label for="checkbox3">Send login information to user</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" ng-click="createClient(null)">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+<!--success modal-->
+    <div class="modal inmodal fade" id="success" tabindex="-1" role="dialog"  aria-hidden="true" style="top:150px;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <div class="modal-title"><i class="glyphicon glyphicon-ok-circle"> Alright :)</i></div>
+                </div>
+                <div class="modal-body">
+                   <p class="modal-content-center m-0"></p>
+                </div>
+                
+            </div>
+        </div>
+    </div> 
+<!--failure modal-->
+    <div class="modal inmodal fade" id="failure" tabindex="-1" role="dialog"  aria-hidden="true" style="top:150px;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <div class="modal-title"><i class="glyphicon glyphicon-remove-circle"> Oopss :(</i></div>
+                </div>
+                <div class="modal-body">
+                   <p class="modal-content-center m-0"></p>
+                </div>
+                
+            </div>
+        </div>
+    </div> 
+<!--warning modal-->
+    <div class="modal inmodal fade" id="warning" tabindex="-1" role="dialog"  aria-hidden="true" style="top:150px;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <div class="modal-title"><i class="glyphicon glyphicon-warning-sign"> Hey hey!!</i></div>
+                </div>
+                <div class="modal-body">
+                   <p class="modal-content-center m-0"></p>
+                </div>
+                
+            </div>
+        </div>
+    </div> 

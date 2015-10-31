@@ -385,9 +385,81 @@ Controllers.controller('TeamProfilCtrl', ['$scope','Params', function ($scope,Pa
 		parent.location='mailto:'+member.email;
 	}
 	}])
-Controllers.controller('ClientCtrl', ['$scope',function($scope){
 
-}])
+Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scope,Client,Login) {
+	$scope.isSent=false;
+	if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN")
+	{
+		successfunc=function(data)
+		{
+			$scope.keyaccounts=data;
+			console.log(data[0].name+ " "+data[0].surname);
+			$("#keyaccountselect").select2("val",data[0].name+ " "+data[0].surname);
+			selectedKeyaccount=data[0].id;
+		}
+		failurefunc=function(data)
+		{
+			$scope.keyaccounts={};
+		}
+		Client.getAllKeyAccounts(successfunc,failurefunc,1);
+	}
+	else
+	{
+		$("#keyaccountselect").prop("disabled",true);
+	}
+	$scope.OpenCreateModal=function(client)
+	{
+		if(client!=null)
+		{
+
+		}
+		$("#add-client").modal('show');
+	}
+	$scope.createClient=function(client_id)
+	{
+		var address={
+			"city":$scope.city,
+			"country":$scope.country,
+			"zipcode":$scope.zipcode,
+			"state":$scope.city,
+			"address":$scope.address
+		};
+		var client={
+			"email":$scope.email,
+			"password":$scope.password,
+			"login":$scope.email,
+			"name":$scope.name,
+			"companyname":$scope.companyname,
+			"surname":$scope.surname,
+			"phonecode":$scope.phonecode,
+			"telnumber":$scope.phonenumber,
+			"vat":$scope.vat,
+			"address":address
+		};
+		if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN")
+		{
+			client.keyaccount_id=$scope.selectedKeyaccount;
+		}
+
+		var failureFunction=function(msg)
+		{
+			$("#failure").modal('show');
+			$('#failure').find('p').html(msg);
+		}
+		if(client_id==null)
+		{
+			var succesfunc=function()
+			{
+				$('#delete').modal('hide');
+				$('#add-client').modal('hide');
+				$("#success").modal('show');
+				$('#success').find('p').html('Client added successfully');
+
+			}
+			Client.addClient(client,succesfunc,failureFunction,"POST");
+		}
+	}
+}]);
 Controllers.controller('SettingsCtrl', ['$scope','Chat', function ($scope,Chat) {
 
 	$scope.connect_to_chat=Chat.isUserLoggedIn();

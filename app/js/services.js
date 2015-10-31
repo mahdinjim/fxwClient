@@ -1,7 +1,16 @@
 var services = angular.module('Services',['ngResource','ngCookies']);
 services.factory("Links",[function(){
-	var baseUrl="http://127.0.0.1";
-	var path="/crmtool/web/app_dev.php/api";
+	var env="dev";
+	if(env=="dev")
+	{
+		var baseUrl="http://127.0.0.1";
+		var path="/crmtool/web/app_dev.php/api";
+	}
+	else
+	{
+		var baseUrl="http://www.dev.fxw.io";
+		var path="/backend/web/app.php/api";
+	}
 	var LoginLink=baseUrl+path+'/public/login';
 	var AllteamMembersLink=baseUrl+path+'/private/team/all';
 	var createTeamLeaderLink=baseUrl+path+'/private/super/teamleader/create';
@@ -22,7 +31,9 @@ services.factory("Links",[function(){
 	var deletetesterLink=baseUrl+path+'/private/super/tester/delete';
 	var deletesysadminLink=baseUrl+path+'/private/super/sysadmin/delete';
 	var deletedesignerLink=baseUrl+path+'/private/super/designer/delete';
-	var uploadImageLink=baseUrl+path+'/private/team/upload/photo'
+	var uploadImageLink=baseUrl+path+'/private/team/upload/photo';
+	var accountManngerListLink=baseUrl+path+'/private/super/keyaccount/all';
+	var createClientLink=baseUrl+path+"/private/keyaccount/customer/create";
 	this.getLoginLink=function()
 	{
 		return LoginLink;
@@ -106,6 +117,14 @@ services.factory("Links",[function(){
 	this.getImageUplaodLink=function()
 	{
 		return uploadImageLink;
+	}
+	this.getAccountManagersListLink=function()
+	{
+		return accountManngerListLink;
+	}
+	this.getCreateClientLink=function()
+	{
+		return createClientLink;
 	}
 
 	return this;
@@ -424,6 +443,43 @@ services.factory('Chat', ["$http","$location","$cookieStore",function ($http,$lo
 	        text += possible.charAt(Math.floor(Math.random() * possible.length));
 	    return text;
 	}
+	return this;
+}]);
+services.factory('Client', ['$http','Login',"Links",function ($http,Login,Links) {
+	
+	this.getAllKeyAccounts=function(successFunc,failureFunc,page)
+	{
+		if(!Login.isTokenExpired())
+			{
+				$http({
+					method:"GET", 
+					url:Links.getAccountManagersListLink()+"/"+page,
+					headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+				}).success(function (data, status, headers, config) {
+					
+	                successFunc(data.users);
+	            }).error(function (data, status, headers, config) {
+	            	failureFunc();
+	            });
+	        }
+	}
+	this.addClient=function(client,successFunc,failureFunc,method)
+		{
+			if(!Login.isTokenExpired())
+			{
+
+				$http({
+					method:method, 
+					url:Links.getCreateClientLink(),
+					data:client, 
+					headers: {'Content-Type': 'application/json','x-crm-access-token': Login.getLoggedUser().token.token}
+				}).success(function (data, status, headers, config) {
+					successFunc();
+				}).error(function (data, status, headers, config) {
+	            	failureFunc(data.errors);
+	            });
+			}
+		}
 	return this;
 }])
 services.factory('Params',function(){
