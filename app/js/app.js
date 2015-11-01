@@ -28,6 +28,10 @@ crmapp.config(["$routeProvider",
 				templateUrl:'partials/client.html',
 				controller:'ClientCtrl'
 			}).
+			when('/cuser',{
+				templateUrl:'partials/cuser.html',
+				controller:'CuserCtrl'
+			}).
 			otherwise({
         		redirectTo: '/dashboard'
       		});

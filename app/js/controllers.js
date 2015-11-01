@@ -641,6 +641,159 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 		Client.deleteClient(oldclient,succesfunc,failureFunction);
 	}
 }]);
+Controllers.controller('CuserCtrl',['$scope','Login','Cuser',function($scope,Login,Cuser){
+	$scope.isSent=false;
+	$scope.isEdit=false;
+	var updateView=function()
+	{
+		var successfunc=function(cusers)
+		{
+			$scope.cusers=cusers;
+		}
+		Cuser.getAllUsers(successfunc,null,1);
+	}
+	updateView();
+	$scope.openmemberForm=function(member)
+	{
+		//BAD: Is not a very good solution to use jquery to initiate values
+		if(member!=null)
+		{
+			$scope.email=member.email;
+			$scope.password="******";
+			$scope.name=member.name;
+			$scope.surname=member.surname;
+			$scope.title=member.title;
+			$scope.phonenumber=member.phonenumber;
+			$scope.phonecode=member.phonecode;
+			$("#phonecodeselect").select2("val",member.phonecode);
+			$scope.isEdit=true;
+			$scope.olduser=member;
+		}
+		else{
+			cleanForm();
+			$scope.isEdit=false;
+
+		}
+		$('#add-user').modal('show');
+	}
+	function cleanForm()
+	{
+		$scope.email=undefined;
+		$scope.password=undefined;
+		$scope.name=undefined;
+		$scope.surname=undefined;
+		$scope.phonecode=undefined;
+		$scope.phonenumber=undefined;
+		$scope.title=undefined;
+		$("#phonecodeselect").select2("val","+49");
+		$scope.issent=false;
+		
+	}
+	var validateForm=function()
+	{
+		var messages =[];
+		if($scope.surname===undefined)
+		{
+			messages.push("Please fill the surname");
+		}
+		if($scope.name===undefined)
+		{
+			messages.push("Please fill the name");
+		}
+		if($scope.title===undefined)
+		{
+			messages.push("Please fill the title");
+		}
+		if($scope.phonecode===undefined)
+		{
+			messages.push("Please fill the phone code");
+		}
+		if($scope.phonenumber===undefined)
+		{
+			messages.push("Please fill the phone number");
+		}
+		if($scope.email===undefined)
+		{
+			messages.push("Please fill the email");
+		}
+		if($scope.password===undefined)
+		{
+			messages.push("Please fill the password");
+		}
+		return messages;
+		
+	}
+	$scope.createClient=function(olduser)
+	{
+		var messages=validateForm();
+		if(messages.length>0)
+		{
+			
+			$("#warning").modal('show');
+			$('#warning').find('p').html(messages);
+		}
+		else{
+			var user={
+				"email":$scope.email,
+				"login":$scope.email,
+				"name":$scope.name,
+				"title":$scope.title,
+				"surname":$scope.surname,
+				"phonecode":$scope.phonecode,
+				"phonenumber":$scope.phonenumber,
+				"isSent":$scope.issent
+			};
+
+			var failureFunction=function(msg)
+			{
+				$("#failure").modal('show');
+				$('#failure').find('p').html(msg);
+			}
+			var succesfunc=function(msg)
+				{
+					$('#delete').modal('hide');
+					$('#add-user').modal('hide');
+					$("#success").modal('show');
+					$('#success').find('p').html(msg);
+					updateView();
+					clearForm();
+				}
+			if(olduser==null)
+			{
+				user.password=$scope.password;
+				Cuser.addUser(user,succesfunc,failureFunction,"POST");
+			}
+			else
+			{
+				if($scope.password!="******")
+					user.password=$scope.password;
+				user.id=olduser.id;
+				Cuser.addUser(user,succesfunc,failureFunction,"PUT");
+			}
+		}
+		
+	}
+	$scope.deleteUser=function(olduser)
+	{
+		var succesfunc=function()
+		{
+			$('#delete').modal('hide');
+			$('#add-user').modal('hide');
+			$("#success").modal('show');
+			$('#success').find('p').html('Member deleted successfully');
+			updateView();
+			cleanForm();
+
+		}
+		var failureFunction=function(msg)
+		{
+			$("#failure").modal('show');
+			$('#failure').find('p').html(msg);
+		}
+		Cuser.deleteUser(olduser,succesfunc,failureFunction);
+	}
+
+}]);
 Controllers.controller('SettingsCtrl', ['$scope','Chat', function ($scope,Chat) {
 
 	$scope.connect_to_chat=Chat.isUserLoggedIn();

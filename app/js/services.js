@@ -37,6 +37,10 @@ services.factory("Links",[function(){
 	var listcustomersLink=baseUrl+path+"/private/keyaccount/customer/all";
 	var updateCustomerLink=baseUrl+path+"/private/customer/update";
 	var deleteClientLink=baseUrl+path+"/private/keyaccount/customer/delete";
+	var createCuserLink=baseUrl+path+"/private/customer/users/create";
+	var updateCuserLink=baseUrl+path+"/private/customer/users/update";
+	var listCuserLink=baseUrl+path+"/private/customer/users/all";
+	var deleteCuserLink=baseUrl+path+"/private/customer/users/delete";
 	this.getLoginLink=function()
 	{
 		return LoginLink;
@@ -141,6 +145,22 @@ services.factory("Links",[function(){
 	{
 		return deleteClientLink;
 	}
+	this.getCreateCuserLink=function()
+	{
+		return createCuserLink;
+	}
+	this.getUpdateCuserLink=function()
+	{
+		return updateCuserLink;
+	}
+	this.getListCuserLink=function()
+	{
+		return listCuserLink;
+	}
+	this.getdeleteCuserLink=function()
+	{
+		return deleteCuserLink;
+	}
 	return this;
 }]);
 services.factory("Login",['$http','$location','$cookieStore',"$route","Links",
@@ -190,7 +210,10 @@ services.factory("Login",['$http','$location','$cookieStore',"$route","Links",
 			{
 				path=$location.path();
 			}
-			var role=$cookieStore.get('loggeduser').userinfo.roles[0];
+			if($cookieStore.get('loggeduser')!=undefined)
+				var role=$cookieStore.get('loggeduser').userinfo.roles[0];
+			else
+				return false;
 			if(role=="ROLE_ADMIN")
 			{
 				if(Admin_Access.indexOf(path)>0 )
@@ -527,7 +550,7 @@ services.factory('Client', ['$http','Login',"Links",function ($http,Login,Links)
 			{
 				$http({
 					method:"GET", 
-					url:Links.getListCustomersLink()+"/"+page,
+					url:Links.listCuserLink()+"/"+page,
 					headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 				}).success(function (data, status, headers, config) {
 					
@@ -544,7 +567,7 @@ services.factory('Client', ['$http','Login',"Links",function ($http,Login,Links)
 
 				$http({
 					method:"delete", 
-					url:Links.getDeleteClientLink()+"/"+client.id,
+					url:Links.deleteCuserLink()+"/"+client.id,
 					headers: {'Content-Type': 'application/json','x-crm-access-token': Login.getLoggedUser().token.token}
 				}).success(function (data, status, headers, config) {
 					successFunc();
@@ -554,6 +577,68 @@ services.factory('Client', ['$http','Login',"Links",function ($http,Login,Links)
 			}
 		}
 	return this;
+}]);
+services.factory("Cuser",["$http",'Login','Links',function($http,Login,Links){
+	this.addUser=function(user,successFunc,failureFunc,method)
+		{
+			if(!Login.isTokenExpired())
+			{
+				if(method=="POST")
+					var link =Links.getCreateCuserLink();
+				else
+					var link=Links.getUpdateCuserLink();
+				$http({
+					method:method, 
+					url:link,
+					data:user, 
+					headers: {'Content-Type': 'application/json','x-crm-access-token': Login.getLoggedUser().token.token}
+				}).success(function (data, status, headers, config) {
+					if(method=="POST")
+						successFunc("User added successfully");
+					else
+						successFunc("User updated successfully");
+				}).error(function (data, status, headers, config) {
+	            	failureFunc(data.errors);
+	            });
+			}
+		}
+		this.getAllUsers=function(successFunc,failureFunc,page)
+		{
+			if(!Login.isTokenExpired())
+				{
+					$http({
+						method:"GET", 
+						url:Links.getListCuserLink()+"/"+page,
+						headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+					}).success(function (data, status, headers, config) {
+						for(i=0;i<data.users.length;i++)
+						{
+							if(data.users[i].photo==null)
+								data.users[i].photo="img/users/profile_default_small.jpg"
+						}
+		                successFunc(data.users);
+		            }).error(function (data, status, headers, config) {
+		            	
+		            });
+		        }
+		}
+		this.deleteUser=function(user,successFunc,failureFunc)
+			{
+				if(!Login.isTokenExpired())
+				{
+
+					$http({
+						method:"delete", 
+						url:Links.getdeleteCuserLink()+"/"+user.id,
+						headers: {'Content-Type': 'application/json','x-crm-access-token': Login.getLoggedUser().token.token}
+					}).success(function (data, status, headers, config) {
+						successFunc();
+					}).error(function (data, status, headers, config) {
+		            	failureFunc(data.errors);
+		            });
+				}
+			}
+		return this;
 }])
 services.factory('Params',function(){
 	var teamMember={};
