@@ -34,6 +34,7 @@ services.factory("Links",[function(){
 	var uploadImageLink=baseUrl+path+'/private/team/upload/photo';
 	var accountManngerListLink=baseUrl+path+'/private/super/keyaccount/all';
 	var createClientLink=baseUrl+path+"/private/keyaccount/customer/create";
+	var listcustomersLink=baseUrl+path+"/private/keyaccount/customer/all";
 	this.getLoginLink=function()
 	{
 		return LoginLink;
@@ -125,6 +126,10 @@ services.factory("Links",[function(){
 	this.getCreateClientLink=function()
 	{
 		return createClientLink;
+	}
+	this.getListCustomersLink=function()
+	{
+		return listcustomersLink;
 	}
 
 	return this;
@@ -474,12 +479,31 @@ services.factory('Client', ['$http','Login',"Links",function ($http,Login,Links)
 					data:client, 
 					headers: {'Content-Type': 'application/json','x-crm-access-token': Login.getLoggedUser().token.token}
 				}).success(function (data, status, headers, config) {
-					successFunc();
+					if(method=="POST")
+						successFunc("Client added successfully");
+					else
+						successFunc("Client updated successfully");
 				}).error(function (data, status, headers, config) {
 	            	failureFunc(data.errors);
 	            });
 			}
 		}
+	this.getAllClients=function(successFunc,failureFunc,page)
+	{
+		if(!Login.isTokenExpired())
+			{
+				$http({
+					method:"GET", 
+					url:Links.getListCustomersLink()+"/"+page,
+					headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+				}).success(function (data, status, headers, config) {
+					
+	                successFunc(data.users,data.totalpages,data.current_page);
+	            }).error(function (data, status, headers, config) {
+	            	
+	            });
+	        }
+	}
 	return this;
 }])
 services.factory('Params',function(){

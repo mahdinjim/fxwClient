@@ -146,7 +146,7 @@
 .footable > thead > tr > th > span.footable-sort-indicator:before {
   content: "\e022";
 }
-.footable > tfoot .pagination {
+.footable > tfoot .fpagination {
   margin: 0;
 }
 .footable.no-paging .hide-if-no-paging {

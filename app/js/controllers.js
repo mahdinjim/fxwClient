@@ -388,6 +388,47 @@ Controllers.controller('TeamProfilCtrl', ['$scope','Params', function ($scope,Pa
 
 Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scope,Client,Login) {
 	$scope.isSent=false;
+	$scope.currentpage=1;
+	var updateView=function(page){
+		var successfunc=function(customers,pagecount,currentpage)
+		{
+			$scope.customers=customers;
+			$scope.currentpage=currentpage;
+			$scope.endpage=pagecount;
+			var pages = new Array();
+			pages.push(">>");
+			pages.push(">");
+			
+			for (var i = pagecount-1; i<=0; i++) {
+					pages.push(i+1);
+			};
+			
+			pages.push("<");
+			pages.push("<<");
+			$scope.pagecount=pages;
+		}
+		Client.getAllClients(successfunc,null,page);
+	}
+	updateView($scope.currentpage);
+	$scope.nextpage=function()
+	{
+		if($scope.currentpage<scope.endpage)
+			updateView(parseInt($scope.currentpage)+1);
+	}
+	$scope.prevouispage=function()
+	{
+		if($scope.currentpage>1)
+			updateView(parseInt($scope.currentpage)-1);
+	}
+	$scope.firstpage=function(){
+		updateView(1);
+	};
+	$scope.lastpage=function(){
+		updateView($scope.endpage);
+	};
+	$scope.navigatetopage=function(page){
+		updateView(page);
+	};
 	if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN")
 	{
 		successfunc=function(data)
@@ -415,49 +456,136 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 		}
 		$("#add-client").modal('show');
 	}
+	var clearForm=function()
+	{
+		$scope.email=undefined;
+		$scope.password=undefined;
+		$scope.name=undefined;
+		$scope.surname=undefined;
+		$scope.vat=undefined;
+		$scope.phonecode=undefined;
+		$scope.phonenumber=undefined;
+		$scope.address=undefined;
+		$scope.city=undefined;
+		$scope.country=undefined;
+		$scope.companyname=undefined;
+		$scope.zipcode=undefined;
+		$scope.selectedKeyaccount===undefined
+		$("#keyaccountselect").select2("val","Key Account");
+		$("#phonecode").select2("val","+49");
+	}
+	var verifyForm=function()
+	{
+		var messages =[];
+		if($scope.surname===undefined)
+		{
+			messages.push("Please fill the surname");
+		}
+		if($scope.name===undefined)
+		{
+			messages.push("Please fill the name");
+		}
+		if($scope.vat===undefined)
+		{
+			messages.push("Please fill the vat");
+		}
+		if($scope.phonecode===undefined)
+		{
+			messages.push("Please fill the phone code");
+		}
+		if($scope.phonenumber===undefined)
+		{
+			messages.push("Please fill the phone number");
+		}
+		if($scope.email===undefined)
+		{
+			messages.push("Please fill the email");
+		}
+		if($scope.password===undefined)
+		{
+			messages.push("Please fill the password");
+		}
+		if($scope.city===undefined)
+		{
+			messages.push("Please fill the city");
+		}
+		if($scope.country===undefined)
+		{
+			messages.push("Please fill the country");
+		}
+		if($scope.companyname===undefined)
+		{
+			messages.push("Please fill the compnay name");
+		}
+		if($scope.selectedKeyaccount===undefined && Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN")
+		{
+			messages.push("Please choose a key account");
+		}
+		if($scope.address===undefined)
+		{
+			messages.push("Please fill the address field");
+		}
+		if($scope.zipcode===undefined)
+		{
+			messages.push("Please fill the zipcode field");
+		}
+		return messages;
+	}
 	$scope.createClient=function(client_id)
 	{
-		var address={
+		var messages=verifyForm();
+		if(messages.length>0)
+		{
+			
+			$("#warning").modal('show');
+			$('#warning').find('p').html(messages);
+		}
+		else{
+			var address={
 			"city":$scope.city,
 			"country":$scope.country,
 			"zipcode":$scope.zipcode,
 			"state":$scope.city,
 			"address":$scope.address
-		};
-		var client={
-			"email":$scope.email,
-			"password":$scope.password,
-			"login":$scope.email,
-			"name":$scope.name,
-			"companyname":$scope.companyname,
-			"surname":$scope.surname,
-			"phonecode":$scope.phonecode,
-			"telnumber":$scope.phonenumber,
-			"vat":$scope.vat,
-			"address":address
-		};
-		if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN")
-		{
-			client.keyaccount_id=$scope.selectedKeyaccount;
-		}
-
-		var failureFunction=function(msg)
-		{
-			$("#failure").modal('show');
-			$('#failure').find('p').html(msg);
-		}
-		if(client_id==null)
-		{
-			var succesfunc=function()
+			};
+			var client={
+				"email":$scope.email,
+				"password":$scope.password,
+				"login":$scope.email,
+				"name":$scope.name,
+				"companyname":$scope.companyname,
+				"surname":$scope.surname,
+				"phonecode":$scope.phonecode,
+				"telnumber":$scope.phonenumber,
+				"vat":$scope.vat,
+				"address":address,
+				"isSent":$scope.isSent
+			};
+			if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN")
 			{
-				$('#delete').modal('hide');
-				$('#add-client').modal('hide');
-				$("#success").modal('show');
-				$('#success').find('p').html('Client added successfully');
-
+				client.keyaccount_id=$scope.selectedKeyaccount;
 			}
-			Client.addClient(client,succesfunc,failureFunction,"POST");
+
+			var failureFunction=function(msg)
+			{
+				$("#failure").modal('show');
+				$('#failure').find('p').html(msg);
+			}
+			var succesfunc=function(msg)
+				{
+					$('#delete').modal('hide');
+					$('#add-client').modal('hide');
+					$("#success").modal('show');
+					$('#success').find('p').html(msg);
+					updateView($scope.currentpage);
+					clearForm();
+				}
+			if(client_id==null)
+			{
+				Client.addClient(client,succesfunc,failureFunction,"POST");
+			}
 		}
+		
 	}
 }]);
 Controllers.controller('SettingsCtrl', ['$scope','Chat', function ($scope,Chat) {

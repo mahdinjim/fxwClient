@@ -59,35 +59,35 @@
                                     <th data-hide="phone" class="text-right" width="250" data-sort-ignore="true">Action</th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody ng-repeat="client in customers">
 
                                     <!--customer item-->
                                     <tr>
                                         <td>
-                                           0001
+                                           {{client.id}}
                                         </td>
                                         <td>
-                                            23media.de
+                                            {{client.companyname}}
                                         </td>
                                         <td>
-                                            Stefan Rehn
+                                            {{client.name}} {{client.surname}}
                                         </td>
                                         <td>
-                                            st@23media.de
+                                            {{client.email}}
                                         </td>
                                         <td>
-                                            +49 178 1234567
+                                            {{client.phonecode}} {{client.telnumber}}
                                         </td>
                                         <td>
-                                            <span class="label label-primary"><i class="fa fa-clone"></i> 3</span>
+                                            <span class="label label-primary"><i class="fa fa-clone"></i>{{client.projectNumber}}</span>
                                             <span class="label label-default"><i class="fa fa-square-o"></i> 38</span>
                                         </td>
                                          <td>
-                                            <span class="label label-default"><i class="fa fa-users"></i> 3</span>
+                                            <span class="label label-default"><i class="fa fa-users"></i> {{client.userNumber}}</span>
                                         </td>
                                         <td class="text-right">
                                              <div class="btn-table-mobile">
-                                                <button class="btn btn-white btn-bitbucket btn-sm" type="button"><i class="fa fa-pencil"></i> Edit</button>
+                                                <button class="btn btn-white btn-bitbucket btn-sm" type="button" ng-click="OpenCreateModal(client)"><i class="fa fa-pencil"></i> Edit</button>
                                                 <button class="btn btn-white btn-bitbucket btn-sm" type="button"><i class="fa fa-users"></i> Users</button>
                                                 <button class="btn btn-white btn-bitbucket btn-sm" type="button"><i class="fa fa-clone"></i> Projects</button>
                                             </div>
@@ -98,7 +98,22 @@
                                 <tfoot>
                                 <tr>
                                     <td colspan="8">
-                                        <ul class="pagination pull-right"></ul>
+                                        <ul class="pagination pagination-sm pull-right" ng-repeat="page in pagecount">
+                                            
+                                            <li ng-if="page==currentpage" class="active">
+                                                <a ng-if="page=='<<'" ng-click="firstpage()">{{page}}</a>
+                                                <a ng-if="page=='<'" ng-click="prevouispage()">{{page}}</a>
+                                                <a ng-if="page=='>'" ng-click="nextpage()">{{page}}</a>
+                                                 <a ng-if="page=='>>'" ng-click="lastpage()">{{page}}</a>
+                                                 <a ng-if="page!='>>' && page!='>' && page!='<' && page!='<<'" ng-click="navigatetopage(page)">{{page}}</a>
+                                            </li>
+                                            <li ng-if="page!=currentpage"><a ng-if="page=='<<'" ng-click="firstpage()">{{page}}</a>
+                                                <a ng-if="page=='<'" ng-click="prevouispage()">{{page}}</a>
+                                                <a ng-if="page=='>'" ng-click="nextpage()">{{page}}</a>
+                                                 <a ng-if="page=='>>'" ng-click="lastpage()">{{page}}</a>
+                                                 <a ng-if="page!='>>' && page!='>' && page!='<' && page!='<<'" ng-click="navigatetopage(page)">{{page}}</a></li>
+                                                                                     
+                                        </ul>
                                     </td>
                                 </tr>
                                 </tfoot>
@@ -148,7 +163,7 @@
                             <div class="form-group m-0">
                                 <!--select-->
                                 <div class="select-option f-left m-0" style="width: 30%; margin-right: 2.5% ! important;" >
-                                    <select class="select2" ng-model="phonecode">
+                                    <select class="select2" ng-model="phonecode" id="phonecode">
                                         <option>+49</option>
                                         <option>+90</option>
                                         <option>+216</option>
