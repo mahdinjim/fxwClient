@@ -35,6 +35,8 @@ services.factory("Links",[function(){
 	var accountManngerListLink=baseUrl+path+'/private/super/keyaccount/all';
 	var createClientLink=baseUrl+path+"/private/keyaccount/customer/create";
 	var listcustomersLink=baseUrl+path+"/private/keyaccount/customer/all";
+	var updateCustomerLink=baseUrl+path+"/private/customer/update";
+	var deleteClientLink=baseUrl+path+"/private/keyaccount/customer/delete";
 	this.getLoginLink=function()
 	{
 		return LoginLink;
@@ -131,7 +133,14 @@ services.factory("Links",[function(){
 	{
 		return listcustomersLink;
 	}
-
+	this.getUpdateCustomerLink=function()
+	{
+		return updateCustomerLink;
+	}
+	this.getDeleteClientLink=function()
+	{
+		return deleteClientLink;
+	}
 	return this;
 }]);
 services.factory("Login",['$http','$location','$cookieStore',"$route","Links",
@@ -472,10 +481,13 @@ services.factory('Client', ['$http','Login',"Links",function ($http,Login,Links)
 		{
 			if(!Login.isTokenExpired())
 			{
-
+				if(method=="POST")
+					var link =Links.getCreateClientLink();
+				else
+					var link=Links.getUpdateCustomerLink();
 				$http({
 					method:method, 
-					url:Links.getCreateClientLink(),
+					url:link,
 					data:client, 
 					headers: {'Content-Type': 'application/json','x-crm-access-token': Login.getLoggedUser().token.token}
 				}).success(function (data, status, headers, config) {
@@ -504,6 +516,22 @@ services.factory('Client', ['$http','Login',"Links",function ($http,Login,Links)
 	            });
 	        }
 	}
+	this.deleteClient=function(client,successFunc,failureFunc)
+		{
+			if(!Login.isTokenExpired())
+			{
+
+				$http({
+					method:"delete", 
+					url:Links.getDeleteClientLink()+"/"+client.id,
+					headers: {'Content-Type': 'application/json','x-crm-access-token': Login.getLoggedUser().token.token}
+				}).success(function (data, status, headers, config) {
+					successFunc();
+				}).error(function (data, status, headers, config) {
+	            	failureFunc(data.errors);
+	            });
+			}
+		}
 	return this;
 }])
 services.factory('Params',function(){

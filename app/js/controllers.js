@@ -435,7 +435,6 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 		successfunc=function(data)
 		{
 			$scope.keyaccounts=data;
-			console.log();
 			var selectdata={"id":0,text:data[0].name+ " "+data[0].surname};
 			$("#keyaccountselect").select2("data",selectdata);
 			selectedKeyaccount=data[0].id;
@@ -466,9 +465,10 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 			$scope.country=client.address.country;
 			$scope.companyname=client.companyname;
 			$scope.zipcode=client.address.zipcode;
-			$scope.selectedKeyaccount==client.keyaccount.id;
+			
 			var data={"id":0,text:client.keyaccount.name+" "+client.keyaccount.surname};
 			$("#keyaccountselect").select2("data",data);
+			$scope.selectedKeyaccount=client.keyaccount.id;
 			$("#phonecode").select2("val",client.phonecode);
 			$scope.isEdit=true;
 			$scope.oldclient=client;
@@ -554,7 +554,7 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 		}
 		return messages;
 	}
-	$scope.createClient=function(client_id)
+	$scope.createClient=function(oldclient)
 	{
 		var messages=verifyForm();
 		if(messages.length>0)
@@ -573,7 +573,6 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 			};
 			var client={
 				"email":$scope.email,
-				"password":$scope.password,
 				"login":$scope.email,
 				"name":$scope.name,
 				"companyname":$scope.companyname,
@@ -603,12 +602,39 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 					updateView($scope.currentpage);
 					clearForm();
 				}
-			if(client_id==null)
+			if(oldclient==null)
 			{
+				client.password=$scope.password;
 				Client.addClient(client,succesfunc,failureFunction,"POST");
+			}
+			else
+			{
+				if($scope.password!="******")
+					client.password=$scope.password;
+				client.id=oldclient.id;
+				Client.addClient(client,succesfunc,failureFunction,"PUT");
 			}
 		}
 		
+	}
+	$scope.deleteClient=function(oldclient)
+	{
+		var succesfunc=function()
+		{
+			$('#delete').modal('hide');
+			$('#add-client').modal('hide');
+			$("#success").modal('show');
+			$('#success').find('p').html('Member deleted successfully');
+			updateView($scope.currentpage);
+			clearForm();
+
+		}
+		var failureFunction=function(msg)
+		{
+			$("#failure").modal('show');
+			$('#failure').find('p').html(msg);
+		}
+		Client.deleteClient(oldclient,succesfunc,failureFunction);
 	}
 }]);
 Controllers.controller('SettingsCtrl', ['$scope','Chat', function ($scope,Chat) {
