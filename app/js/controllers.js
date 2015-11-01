@@ -389,6 +389,7 @@ Controllers.controller('TeamProfilCtrl', ['$scope','Params', function ($scope,Pa
 Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scope,Client,Login) {
 	$scope.isSent=false;
 	$scope.currentpage=1;
+	$scope.isEdit=false;
 	var updateView=function(page){
 		var successfunc=function(customers,pagecount,currentpage)
 		{
@@ -434,8 +435,9 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 		successfunc=function(data)
 		{
 			$scope.keyaccounts=data;
-			console.log(data[0].name+ " "+data[0].surname);
-			$("#keyaccountselect").select2("val",data[0].name+ " "+data[0].surname);
+			console.log();
+			var selectdata={"id":0,text:data[0].name+ " "+data[0].surname};
+			$("#keyaccountselect").select2("data",selectdata);
 			selectedKeyaccount=data[0].id;
 		}
 		failurefunc=function(data)
@@ -452,7 +454,28 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 	{
 		if(client!=null)
 		{
-
+			$scope.email=client.email;
+			$scope.password="******";
+			$scope.name=client.name;
+			$scope.surname=client.surname;
+			$scope.vat=client.vat;
+			$scope.phonecode=client.phonecode;
+			$scope.phonenumber=client.telnumber;
+			$scope.address=client.address.address;
+			$scope.city=client.address.city;
+			$scope.country=client.address.country;
+			$scope.companyname=client.companyname;
+			$scope.zipcode=client.address.zipcode;
+			$scope.selectedKeyaccount==client.keyaccount.id;
+			var data={"id":0,text:client.keyaccount.name+" "+client.keyaccount.surname};
+			$("#keyaccountselect").select2("data",data);
+			$("#phonecode").select2("val",client.phonecode);
+			$scope.isEdit=true;
+			$scope.oldclient=client;
+		}
+		else
+		{
+			$scope.isEdit=false;
 		}
 		$("#add-client").modal('show');
 	}
