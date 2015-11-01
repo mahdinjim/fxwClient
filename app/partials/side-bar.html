@@ -51,7 +51,7 @@
                     </li>
                     <!--End-->
                 
-                    <li >
+                    <li ng-if="doDisplay('/dashboard')">
                         <a href="#/dashboard"><i class="fa fa-clone"></i> <span class="nav-label">Projects</span> <span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level collapse">
                             <li><a href="index.html">Dashboard</a></li>
@@ -71,23 +71,23 @@
                         </ul> 
                     </li>
 
-                    <li >
+                    <li ng-if="doDisplay('/team')">
                         <a href="#/team"><i class="fa fa-users"></i> <span class="nav-label">Team</span></a>
                     </li>
 
-                    <li>
+                    <li  ng-if="doDisplay('/client')">
                         <a href="#/client"><i class="fa fa-building"></i> <span class="nav-label">Client</span></a>
                     </li>
 
-                    <li>
+                    <li ng-if="doDisplay('/cuser')">
                         <a href="user-fxw.html"><i class="fa fa-users"></i> <span class="nav-label">User</span></a>
                     </li>
 
-                    <li>
+                    <li ng-if="doDisplay('/report')">
                         <a href="report-fxw.html"><i class="fa fa-check-square"></i> <span class="nav-label">Report</span></a>
                     </li>
 
-                    <li>
+                    <li ng-if="doDisplay('/invoice')">
                         <a href="invoice-fxw.html"><i class="fa fa-file-text"></i> <span class="nav-label">Invoice</span></a>
                     </li>
 

@@ -66,6 +66,10 @@ Controllers.controller("SideBarCtrl",['$scope','Login',
 		$scope.logout=function(){
 			Login.logout();
 		}
+		$scope.doDisplay=function(path)
+		{
+			return Login.haveAccess(path);
+		}
 	}
 	]);
 Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', function ($scope,Team,Params,$location) {

@@ -145,6 +145,8 @@ services.factory("Links",[function(){
 }]);
 services.factory("Login",['$http','$location','$cookieStore',"$route","Links",
 	function($http,$location,$cookieStore,$route,Links){
+		var Admin_Access=["/login","/dashboard","/client","/teamprofile","/team"];
+		var Client_Access=["/login","/dashboard","/cuser"];
 		this.doLogin=function(login,password,funcsucess,funcfailure)
 		{
 			postdata={
@@ -182,13 +184,32 @@ services.factory("Login",['$http','$location','$cookieStore',"$route","Links",
 			$location.path('/login');
 			
 		}
-		this.haveAccess=function()
+		this.haveAccess=function(path)
 		{
+			if(path==undefined)
+			{
+				path=$location.path();
+			}
 			var role=$cookieStore.get('loggeduser').userinfo.roles[0];
 			if(role=="ROLE_ADMIN")
-				return true;
+			{
+				if(Admin_Access.indexOf(path)>0 )
+					return true;
+				else
+					return false;
+			}
+			else if(role=="ROLE_CUSTOMER" || role=="ROLE_CUSER")
+			{
+				if(Client_Access.indexOf(path)>0 )
+					return true;
+				else
+					return false;
+			}
 			else
+			{
 				return false;
+			}
+
 		}
 		this.isTokenExpired=function()
 		{
