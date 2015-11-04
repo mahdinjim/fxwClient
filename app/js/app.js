@@ -22,7 +22,7 @@ crmapp.config(["$routeProvider",
 			}).
 			when('/teamprofile',{
 				templateUrl:'partials/memberprofile.html',
-				controller:'TeamProfilCtrl'
+				controller:'TeamCtrl'
 			}).
 			when('/client',{
 				templateUrl:'partials/client.html',
@@ -30,6 +30,10 @@ crmapp.config(["$routeProvider",
 			}).
 			when('/cuser',{
 				templateUrl:'partials/cuser.html',
+				controller:'CuserCtrl'
+			}).
+			when('/cuserprofile',{
+				templateUrl:'partials/cuserprofile.html',
 				controller:'CuserCtrl'
 			}).
 			otherwise({

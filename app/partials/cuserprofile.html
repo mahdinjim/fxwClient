@@ -1,4 +1,4 @@
-    <!-- image cropper script-->
+  <!-- image cropper script-->
     <script>
         $(document).ready(function(){
 
@@ -92,17 +92,19 @@
         <div id="page-wrapper" class="gray-bg">
             <div nav-menu></div>
           
-         
-             <!--header title-->
+            <!--header title-->
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-lg-9">
-                    <h2><i class="fa fa-users"></i> User</h2>
+                    <h2><i class="fa fa-user"></i> Profile</h2>
                     <ol class="breadcrumb">
                         <li>
                             flexwork.io
                         </li>
                         <li>
                             User
+                        </li>
+                        <li>
+                           {{name}} {{surname}}
                         </li>
                     </ol>
                 </div>
@@ -114,42 +116,182 @@
             <div class="wrapper wrapper-content animated fadeInRight">
                 <!--row2-->
                 <div class="row">
-                    <!--add ibox-->
-                    <div class="col-lg-3">
-                        <a  ng-click="openmemberForm(null)">
-                            <div class="ibox-users ibox-add-box float-e-margins">
-                                <div>
-                                    <span><i class="fa fa-user-plus"></i> Add User</span>
+
+                    <!--user ibox-->
+                    <div class="col-lg-4">
+                        <div class="col-lg-12 p-0">
+                            <div class="ibox-users float-e-margins mb-15">
+                            <div class="ibox-users-title">
+                                <span class="ibox-users-picture users">
+                                    <img width="48" heigth="48" class="img-circle" src="{{photo}}" alt="Picture">
+                                </span>
+                                <h5>{{name}} {{surname}}</h5>
+                                <span class="ibox-users-job-title">{{title}}</span>
+                                <span class="ibox-users-email">{{email}}</span>
+                            </div>
+                            <div class="ibox-users-content">
+                                <div class="ibox-users-action">
+                                    <button type="button" class="btn btn-white btn-sm" ng-click="openImageUplaoder(olduser)"><i class="fa fa-camera"></i></button>
+                                    <button type="button" class="btn btn-white btn-sm" ng-click="openmemberForm(olduser)"><i class="fa fa-pencil"></i></button>
+                                    <span class="ibox-users-action-line"></span>
+                                    <button onclick="parent.location='tel:{{phonecode}}{{phonenumber}}'" class="btn btn-white btn-sm" type="button"><i class="fa fa-phone"></i></button>
+                                    <button onclick="parent.location='mailto:{{email}}'" class="btn btn-white btn-sm" type="button"><i class="fa fa-envelope"></i></button>
                                 </div>
                             </div>
-                        </a>
-                    </div>
-                    <!--user ibox-->
-                    <div ng-repeat="user in cusers">
-	                    <div class="col-lg-3">
-	                        <div class="ibox-users float-e-margins">
-	                            <div class="ibox-users-title">
-	                                <span class="ibox-users-picture users">
-	                                    <img width="48" heigth="48" class="img-circle" src="{{user.photo}}" alt="Picture">
-	                                </span>
-	                                <h5>{{user.surname}} {{user.name}}</h5>
-	                                <span class="ibox-users-job-title">{{user.title}}</span>
-	                                <span class="ibox-users-email">{{user.email}}</span>
-	                            </div>
-	                            <div class="ibox-users-content">
-	                                <div class="ibox-users-action">
-	                                    <button type="button" class="btn btn-white btn-sm" ng-click="openImageUplaoder(user)"><i class="fa fa-camera"></i></button>
-	                                    <button type="button" class="btn btn-white btn-sm" ng-click="openmemberForm(user)"><i class="fa fa-pencil"></i></button>
-	                                    <span class="ibox-users-action-line"></span>
-	                                    <button type="button" class="btn btn-white btn-sm" ng-click="openProfile(user)"><i class="fa fa-user"></i></button>
-	                                </div>
-	                            </div>
-	                        </div>
-	                    </div>
-	                </div>
-                  
+                            </div>
+                        </div><!--col-lg-->
 
-                    
+                        <div class="col-lg-12 p-0">
+                            <div class="col-lg-12 p-0">
+                                <div class="ibox-box float-e-margins mb-15">
+                                    <div class="ibox-box-title">
+                                        <h5><i class="fa fa-clone"></i> Projects</h5>
+                                    </div>
+                                    <div class="ibox-box-content">
+                                        <span class="label label-default">Captain 13</span>
+                                        <span class="label label-default">Website 24</span>
+                                        <span class="label label-default">Newsletter 0</span>
+                                    </div>
+                                </div>
+                            </div>
+                           
+                        </div><!--col-lg-->
+
+                    </div><!--col-lg-->
+
+                    <div class="col-lg-8">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5>Activites</h5>
+                            </div>
+                            <div class="ibox-content">
+
+                                <div>
+                                    <div class="feed-activity-list">
+
+                                        <div class="feed-element">
+                                            <a href="#" class="pull-left">
+                                                <img width="38" heigth="38" class="img-circle" src="img/users/profile_default_small.jpg" alt="Picture">
+                                            </a>
+                                            <div class="media-body ">
+                                                <small class="pull-right">10m ago</small>
+                                                <strong>Stefan</strong> create new task <a href=""><strong>flexwork.io &raquo; Backend &raquo; Team</strong></a>. <br>
+                                                <small class="text-muted">Today 4:21 pm - 12.06.2014</small>
+                                            </div>
+                                        </div>
+
+                                        <div class="feed-element">
+                                            <a href="#" class="pull-left">
+                                                <img width="38" heigth="38" class="img-circle" src="img/users/profile_default_small.jpg" alt="Picture">
+                                            </a>
+                                            <div class="media-body ">
+                                                <small class="pull-right">10m ago</small>
+                                                <strong>Stefan</strong> create new task <a href=""><strong>flexwork.io &raquo; Backend &raquo; User</strong></a>. <br>
+                                                <small class="text-muted">Today 4:21 pm - 12.06.2014</small>
+                                            </div>
+                                        </div>
+
+                                        <div class="feed-element">
+                                            <a href="#" class="pull-left">
+                                                <img width="38" heigth="38" class="img-circle" src="img/users/profile_default_small.jpg" alt="Picture">
+                                            </a>
+                                            <div class="media-body ">
+                                                <small class="pull-right text-navy">1m ago</small>
+                                                <strong>Stefan</strong> started the task <a href=""><strong>23media.de &raquo; Captain &raquo; User Profile</strong></a>. <br>
+                                                <small class="text-muted">Today 4:21 pm - 12.06.2014</small>
+                                            </div>
+                                        </div>
+
+                                        <div class="feed-element">
+                                            <a href="#" class="pull-left">
+                                                <img width="38" heigth="38" class="img-circle" src="img/users/profile_default_small.jpg" alt="Picture">
+                                            </a>
+                                            <div class="media-body ">
+                                                <small class="pull-right">5m ago</small>
+                                                <strong>Stefan</strong> create new task <a href=""><strong>23media.de &raquo; Captain &raquo; UI-Design</strong></a>. <br>
+                                                <small class="text-muted">Today 4:21 pm - 12.06.2014</small>
+                                            </div>
+                                        </div>
+
+                                        <div class="feed-element">
+                                            <a href="#" class="pull-left">
+                                                <img width="38" heigth="38" class="img-circle" src="img/users/profile_default_small.jpg" alt="Picture">
+                                            </a>
+                                            <div class="media-body ">
+                                                <small class="pull-right">10m ago</small>
+                                                <strong>Stefan</strong> create new project <a href=""><strong>flexwork.io &raquo; Backend</strong></a>. <br>
+                                                <small class="text-muted">Today 4:21 pm - 12.06.2014</small>
+                                            </div>
+                                        </div>
+
+                                        <div class="feed-element">
+                                            <a href="#" class="pull-left">
+                                                <img width="38" heigth="38" class="img-circle" src="img/users/profile_default_small.jpg" alt="Picture">
+                                            </a>
+                                            <div class="media-body ">
+                                                <small class="pull-right">2h ago</small>
+                                                <strong>Stefan</strong> posted message on <a href=""><strong>23media.de &raquo; Captain &raquo; UI-Design</strong></a>. <br>
+                                                <small class="text-muted">Today 2:10 pm - 12.06.2014</small>
+                                                <div class="well">
+                                                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+                                                    Over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="feed-element">
+                                            <a href="#" class="pull-left">
+                                                <img width="38" heigth="38" class="img-circle" src="img/users/profile_default_small.jpg" alt="Picture">
+                                            </a>
+                                            <div class="media-body ">
+                                                <small class="pull-right">1m ago</small>
+                                                <strong>Stefan</strong> started the task <a href=""><strong>23media.de &raquo; Captain &raquo; Bugs</strong></a>. <br>
+                                                <small class="text-muted">Today 4:21 pm - 12.06.2014</small>
+                                            </div>
+                                        </div>
+
+                                        <div class="feed-element">
+                                            <a href="#" class="pull-left">
+                                                <img width="38" heigth="38" class="img-circle" src="img/users/profile_default_small.jpg" alt="Picture">
+                                            </a>
+                                            <div class="media-body ">
+                                                <small class="pull-right">5m ago</small>
+                                                <strong>Stefan</strong> create new task <a href=""><strong>23media.de &raquo; Captain &raquo; Change Hardware List</strong></a>. <br>
+                                                <small class="text-muted">Today 4:21 pm - 12.06.2014</small>
+                                            </div>
+                                        </div>
+
+                                        <div class="feed-element">
+                                            <a href="#" class="pull-left">
+                                                <img width="38" heigth="38" class="img-circle" src="img/users/profile_default_small.jpg" alt="Picture">
+                                            </a>
+                                            <div class="media-body ">
+                                                <small class="pull-right">10m ago</small>
+                                                <strong>Stefan</strong> create new project <a href=""><strong>23media.de &raquo; Captain &raquo; Icons</strong></a>. <br>
+                                                <small class="text-muted">Today 4:21 pm - 12.06.2014</small>
+                                            </div>
+                                        </div>
+                                        <div class="feed-element">
+                                            <a href="#" class="pull-left">
+                                                <img width="38" heigth="38" class="img-circle" src="img/users/profile_default_small.jpg" alt="Picture">
+                                            </a>
+                                            <div class="media-body ">
+                                                <small class="pull-right">2h ago</small>
+                                                <strong>Stefan</strong> posted message on <a href=""><strong>23media.de &raquo; Captain &raquo; UI-Design</strong></a>. <br>
+                                                <small class="text-muted">Today 2:10 pm - 12.06.2014</small>
+                                                <div class="well">
+                                                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+                                                    Over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <button class="btn btn-primary btn-block m"><i class="fa fa-arrow-down"></i> Show More</button>
+                                </div>
+                            </div>
+                        </div> 
+                    </div><!--col-lg-->
                 </div>
                 <!--end row2-->
             </div>
@@ -164,9 +306,7 @@
             <!--end footer-->
    
         </div>
-        <!--end page wrapper-->
-      <!--modal add user-->
-    <div class="modal inmodal fade" id="add-user" tabindex="-1" role="dialog"  aria-hidden="true">
+  <div class="modal inmodal fade" id="add-user" tabindex="-1" role="dialog"  aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

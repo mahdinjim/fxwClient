@@ -1,3 +1,81 @@
+ <script type="text/javascript">
+  var $image = $(".image-crop > img")
+    $($image).cropper({
+        aspectRatio:  4 / 3,
+        preview: ".img-preview",
+        done: function(data) {
+          
+        }
+    });
+
+    var $inputImage = $("#inputImage");
+    if (window.FileReader) {
+        $inputImage.change(function() {
+            var fileReader = new FileReader(),
+                    files = this.files,
+                    file;
+
+            if (!files.length) {
+                return;
+            }
+
+            file = files[0];
+
+            if (/^image\/\w+$/.test(file.type)) {
+                fileReader.readAsDataURL(file);
+                fileReader.onload = function () {
+                    $inputImage.val("");
+                    $image.cropper("reset", true).cropper("replace", this.result);
+                };
+            } else {
+                showMessage("Please choose an image file.");
+            }
+        });
+    } else {
+        $inputImage.addClass("hide");
+    }
+
+    $("#download").click(function() {
+        window.open($image.cropper("getDataURL"));
+    });
+
+    $("#zoomIn").click(function() {
+        $image.cropper("zoom", 0.1);
+    });
+
+    $("#zoomOut").click(function() {
+        $image.cropper("zoom", -0.1);
+    });
+
+    $("#rotateLeft").click(function() {
+        $image.cropper("rotate", 45);
+    });
+
+    $("#rotateRight").click(function() {
+        $image.cropper("rotate", -45);
+    });
+
+    $("#setDrag").click(function() {
+        $image.cropper("setDragMode", "crop");
+    });
+
+    $('#data_5 .input-daterange').datepicker({
+        keyboardNavigation: false,
+        forceParse: false,
+        autoclose: true
+    });
+
+    var elem_3 = document.querySelector('.js-switch_3');
+    var switchery_3 = new Switchery(elem_3, { color: '#1AB394' });
+    var elem_4 = document.querySelector('.js-switch_4');
+    var switchery_4 = new Switchery(elem_4, { color: '#1AB394' });
+    
+
+    $('#datepicker').datepicker({
+    format: "dd/mm/yyyy"
+    });
+    jQuery('select').select2();
+  </script>
  <div id="wrapper">
        <div side-bar>
        </div>
@@ -43,8 +121,8 @@
                             </div>
                             <div class="ibox-users-content">
                                 <div class="ibox-users-action">
-                                    <button type="button" class="btn btn-white btn-sm" data-toggle="modal" data-target="#change-picture"><i class="fa fa-camera"></i></button>
-                                    <button type="button" class="btn btn-white btn-sm" data-toggle="modal" data-target="#edit-user"><i class="fa fa-pencil"></i></button>
+                                    <button type="button" class="btn btn-white btn-sm" ng-click="openImageUplaoder(oldmember)"><i class="fa fa-camera"></i></button>
+                                    <button type="button" class="btn btn-white btn-sm"  ng-click="openmemberForm(oldmember)"><i class="fa fa-pencil"></i></button>
                                     <span class="ibox-users-action-line"></span>
                                     <button ng-click="call()" class="btn btn-white btn-sm" type="button"><i class="fa fa-phone"></i></button>
                                     <button ng-click="sendemail()" class="btn btn-white btn-sm" type="button"><i class="fa fa-envelope"></i></button>
@@ -284,3 +362,287 @@
 
     </div>
 </div>
+<!--Add team member model-->
+<div class="modal inmodal fade" id="add-user" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"><i class="fa fa-user-plus modal-fa-icon"></i> Add Member</h4>
+                </div>
+                <div class="modal-body">
+                     <div class="row">
+                        <div class="col-md-6">
+                            <h4>Contact</h4>
+                            <div class="form-group">
+                                <input type="text" class="form-control login-first-name" placeholder="First Name" required="" ng-model="surname">
+                                <input type="text" class="form-control login-last-name" placeholder="Last Name" required="" ng-model="name">
+                                <div class="clear-both"></div>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Job Title" required="" ng-model="title">
+                            </div>
+                            <div class="form-group m-0">
+                                <!--select-->
+                                <div class="select-option f-left m-0" style="width: 30%; margin-right: 2.5% ! important;" >
+                                    <select class="select2" ng-model="phonecode" id="phonecodeselect">
+                                        <option>+49</option>
+                                        <option>+90</option>
+                                        <option>+216</option>
+                                    </select>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Telephone" style="width: 67.5%;" ng-model="phonenumber">
+                            </div>
+                        </div><!--col-md-->
+
+                        <div class="col-md-6">
+                            <h4>Access</h4>
+
+                            <div class="form-group">
+                                <input type="email" class="form-control" placeholder="Email" required="" ng-model="email">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control" placeholder="Password" required="" ng-model="password">
+                            </div>
+
+                            <div class="form-group m-0">
+                                <!--select-->
+                                <div class="select-option m-0" style="width: 100%;">
+                                    <select class="select2" ng-model="role" ng-change="hideoptions()" id="roleselect">
+                                        <option>Role</option>
+                                        <option>Key Account</option>
+                                        <option>Teamleader</option>
+                                        <option>Developer</option>
+                                        <option>Tester</option>
+                                        <option>Designer</option>
+                                        <option>Administrator</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div><!--col-md-->
+
+                        <div class="col-md-12">
+                            <div class="hr-line-solid"></div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h4>Location</h4>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="City" required="" ng-model="city">
+                            </div>  
+                            <div class="form-group mb-0">
+                                <div class="select-option m-0" style="width: 100%;">
+                                    <select class="select2" ng-model="country" id="countryselect">
+                                        <option>Country</option>
+                                        <option>Turkey</option>
+                                        <option>Tunisia</option>
+                                        <option>Germany</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h4>Info</h4>
+                            <div class="form-group">
+                                <input type="number" class="form-control" placeholder="Capacity (Weekly)" required="" ng-model="capacity" id="capacityset">
+                            </div>
+                            <div class="form-group mb-0">
+                                <div class="select-option m-0" style="width: 100%;">
+                                    <select class="select2" ng-model="status" id="statusselct">
+                                        <option>Status</option>
+                                        <option>Team</option>
+                                        <option>Freelancer</option>
+                                        <option>Waiting</option>
+                                        <option>Break</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+
+                        <div class="col-md-12">
+                            <div class="hr-line-solid"></div>
+                            <h4>Skills</h4>
+                            <div class="form-group m-0">
+                                <select data-placeholder="Select Skills" class="chosen-select" multiple style="width:100%;" tabindex="2" ng-model="skills" id="skillsselct">
+                                    <optgroup label="OOP">
+                                        <option value="PHP">PHP</option>
+                                        <option value="Java">Java</option>
+                                        <option value="C#">C#</option>
+                                        <option value="Python">Python</option>
+                                        <option value="vb.net">vb.net</option>
+                                        <option value="Ruby on Rails">Ruby on Rails</option>
+                                        <option value="Objective C">Objective C</option>
+                                        <option value="Action Script">Action Script</option>
+                                        <option value="Pearl">Pearl</option>
+                                    </optgroup>
+                                    <optgroup label="Design">
+                                        <option value="Web Design">Web Design</option>
+                                        <option value="User Interface Design">User Interface Design</option>
+                                        <option value="User Experience Design">User Experience Design</option>
+                                        <option value="Mobile Design">Mobile Design</option>
+                                        <option value="Responsive Design">Responsive Design</option>
+                                        <option value="Graphic Design">Graphic Design</option>
+                                    </optgroup>
+                                    <optgroup label="Frontend Developement">
+                                        <option value="HTML 5 &amp; CSS 3">HTML 5 &amp; CSS 3</option>
+                                        <option value="jQuery">jQuery</option>
+                                        <option value="Javascript">Javascript</option>
+                                        <option value="Bootstrap Framework">Bootstrap Framework</option>
+                                        <option value="Gumby Framework">Gumby Framework</option>
+                                        <option value="WordPress Template">WordPress Template</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                            <div class="hr-line-solid"></div>
+                            <div class="form-group mb-0">
+                                <div class="row">
+                                    <label class="col-lg-6 add-user-label">Activate account?</label>
+                                    <div class="col-lg-6 add-user-switch">
+                                        <input type="checkbox" class="js-switch_3" ng-value="active" checked/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!--col-md-->
+                     </div><!--row-->
+                </div>
+                <div class="modal-footer">
+
+                    <div class="row" ng-if="!isedit">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <div class="checkbox checkbox-primary mt-5 mb-5">
+                                    <input type="checkbox" id="checkbox3" ng-model="send">
+                                    <label for="checkbox3">Send login information to user</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" ng-click="createTeamMember(null)">Save</button>
+                        </div>
+                    </div>
+                    <div ng-if="isedit">
+                        <a class="f-left mt-5" data-toggle="modal" data-target="#delete"><small>Delete Account</small></a>
+                        <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" ng-click="createTeamMember(oldmember)">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+ <!--modal delete-->
+    <div class="modal inmodal fade" id="delete" tabindex="-1" role="dialog"  aria-hidden="true" style="top:150px;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"><i class="fa fa-trash modal-fa-icon"></i> Delete</h4>
+                </div>
+                <div class="modal-body">
+                   <p class="modal-content-center m-0">Do you really want to delete it?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" ng-click="deleteMember(oldmember)">Delete</button>
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div> 
+<!--success modal-->
+    <div class="modal inmodal fade" id="success" tabindex="-1" role="dialog"  aria-hidden="true" style="top:150px;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <div class="modal-title"><i class="glyphicon glyphicon-ok-circle"> Alright :)</i></div>
+                </div>
+                <div class="modal-body">
+                   <p class="modal-content-center m-0"></p>
+                </div>
+                
+            </div>
+        </div>
+    </div> 
+<!--failure modal-->
+    <div class="modal inmodal fade" id="failure" tabindex="-1" role="dialog"  aria-hidden="true" style="top:150px;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <div class="modal-title"><i class="glyphicon glyphicon-remove-circle"> Oopss :(</i></div>
+                </div>
+                <div class="modal-body">
+                   <p class="modal-content-center m-0"></p>
+                </div>
+                
+            </div>
+        </div>
+    </div> 
+<!--warning modal-->
+    <div class="modal inmodal fade" id="warning" tabindex="-1" role="dialog"  aria-hidden="true" style="top:150px;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <div class="modal-title"><i class="glyphicon glyphicon-warning-sign"> Hey hey!!</i></div>
+                </div>
+                <div class="modal-body">
+                   <p class="modal-content-center m-0"></p>
+                </div>
+                
+            </div>
+        </div>
+    </div> 
+ <!--modal change picture-->
+    <div class="modal inmodal fade" id="change-picture" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"><i class="fa fa-camera modal-fa-icon"></i> Change Picture</h4>
+                </div>
+                <div class="modal-body">
+                   <div class="row">
+                        <div class="col-md-6">
+                                <div class="image-crop">
+                                    <img src="img/users/big-image.jpg">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h4>Preview image</h4>
+                                <div class="img-preview img-preview-sm"></div>
+                                <h4>Comon method</h4>
+                                <p>
+                                    You can upload new image to crop container and easy download new cropped image.
+                                </p>
+                                <div class="btn-group">
+                                    <label title="Upload image file" for="inputImage" class="btn btn-primary">
+                                        <input type="file" accept="image/*" name="file" id="inputImage" class="hide">
+                                        Upload new image
+                                    </label>
+                                    <label title="Donload image" id="download" class="btn btn-primary">Download</label>
+                                </div>
+                                <h4>Other method</h4>
+                                <p>
+                                    You may set cropper options with <code>$({image}).cropper(options)</code>
+                                </p>
+                                <div class="btn-group">
+                                    <button class="btn btn-white" id="zoomIn" type="button">Zoom In</button>
+                                    <button class="btn btn-white" id="zoomOut" type="button">Zoom Out</button>
+                                    <button class="btn btn-white" id="rotateLeft" type="button">Rotate Left</button>
+                                    <button class="btn btn-white" id="rotateRight" type="button">Rotate Right</button>
+                                    <button class="btn btn-warning" id="setDrag" type="button">New crop</button>
+                                </div>
+                            </div>
+                   </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" ng-click="uploadImage(oldmember)">Save</button>
+                </div>
+            </div>
+        </div>
+    </div> 

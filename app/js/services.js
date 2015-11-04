@@ -41,6 +41,7 @@ services.factory("Links",[function(){
 	var updateCuserLink=baseUrl+path+"/private/customer/users/update";
 	var listCuserLink=baseUrl+path+"/private/customer/users/all";
 	var deleteCuserLink=baseUrl+path+"/private/customer/users/delete";
+	var uploadCuserPhotoLink=baseUrl+path+"/private/customer/users/upload/photo";
 	this.getLoginLink=function()
 	{
 		return LoginLink;
@@ -161,12 +162,16 @@ services.factory("Links",[function(){
 	{
 		return deleteCuserLink;
 	}
+	this.getCuserUploadPhotoLink=function()
+	{
+		return uploadCuserPhotoLink;
+	}
 	return this;
 }]);
 services.factory("Login",['$http','$location','$cookieStore',"$route","Links",
 	function($http,$location,$cookieStore,$route,Links){
 		var Admin_Access=["/login","/dashboard","/client","/teamprofile","/team"];
-		var Client_Access=["/login","/dashboard","/cuser"];
+		var Client_Access=["/login","/dashboard","/cuser","/cuserprofile"];
 		this.doLogin=function(login,password,funcsucess,funcfailure)
 		{
 			postdata={
@@ -550,7 +555,7 @@ services.factory('Client', ['$http','Login',"Links",function ($http,Login,Links)
 			{
 				$http({
 					method:"GET", 
-					url:Links.listCuserLink()+"/"+page,
+					url:Links.getListCustomersLink()+"/"+page,
 					headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 				}).success(function (data, status, headers, config) {
 					
@@ -638,10 +643,28 @@ services.factory("Cuser",["$http",'Login','Links',function($http,Login,Links){
 		            });
 				}
 			}
+		this.uploadCuserImage=function(id,image,successFunc,failurefunc)
+		{
+			if(!Login.isTokenExpired())
+			{
+
+				$http({
+					method:"post", 
+					url:Links.getCuserUploadPhotoLink()+"/"+id,
+					data:image,
+					headers: {'Content-Type': 'application/json','x-crm-access-token': Login.getLoggedUser().token.token}
+				}).success(function (data, status, headers, config) {
+					successFunc();
+				}).error(function (data, status, headers, config) {
+	            	failurefunc(data.errors);
+	            });
+			}
+		}
 		return this;
 }])
 services.factory('Params',function(){
-	var teamMember={};
+	var teamMember=null;
+	var cuser=null;
 	return {
 		setTeamMember:function(data){
 			teamMember=data;
@@ -649,6 +672,12 @@ services.factory('Params',function(){
 		getTeamMember:function()
 		{
 			return teamMember;
+		},
+		setCuser:function(data){
+			cuser=data;
+		},
+		getCuser:function(){
+			return cuser;
 		}
 	}
 })

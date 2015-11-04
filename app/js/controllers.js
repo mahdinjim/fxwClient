@@ -79,6 +79,40 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 	};
 	Team.getAllteamMembers(successfunc);
 	$scope.send=false;
+	if(Params.getTeamMember()!=null)
+	{
+		var member=Params.getTeamMember();
+		$scope.email=member.email;
+		$scope.name=member.name;
+		$scope.surname=member.surname;
+		$scope.title=member.title;
+		$scope.city=member.city;
+		$scope.phonenumber=member.phonenumber;
+		$scope.phonecode=member.phonecode;
+		$scope.country=member.country;
+		$scope.status=member.status;
+		$scope.photo=member.photo;
+		$scope.isedit=true;
+		$scope.oldmember=member;
+		if(member.role!="Key Account")
+		{
+			var skills=member.skills.split(",");
+			$scope.skills=skills;
+			$scope.capacity=member.capacity;
+		}
+		else
+		{
+			$scope.capacity=40;
+		}
+		$scope.call=function()
+		{
+			parent.location='tel:'+member.phonecode+member.phonenumber;
+		}
+		$scope.sendemail=function()
+		{
+			parent.location='mailto:'+member.email;
+		}
+	}
 	$scope.openProfile=function(member)
 	{
 		Params.setTeamMember(member);
@@ -346,6 +380,7 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 		  	$("#failure").modal('show');
 			$('#failure').find('p').html("Couldn't uplaod picture please try again later");
 		  }
+		  $scope.photo=$image.cropper("getDataURL");
 		  Team.uploadMemberImage(member.id,member.role,$image.cropper("getDataURL"),successFunc,failurefunc)
 
 	}
@@ -641,9 +676,23 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 		Client.deleteClient(oldclient,succesfunc,failureFunction);
 	}
 }]);
-Controllers.controller('CuserCtrl',['$scope','Login','Cuser',function($scope,Login,Cuser){
+Controllers.controller('CuserCtrl',['$scope','Login','Cuser','$location','Params',function($scope,Login,Cuser,$location,Params){
 	$scope.isSent=false;
 	$scope.isEdit=false;
+	if(Params.getCuser()!=null)
+	{
+		$scope.email=Params.getCuser().email;
+		$scope.password="******";
+		$scope.name=Params.getCuser().name;
+		$scope.surname=Params.getCuser().surname;
+		$scope.title=Params.getCuser().title;
+		$scope.phonenumber=Params.getCuser().phonenumber;
+		$scope.phonecode=Params.getCuser().phonecode;
+		$("#phonecodeselect").select2("val",Params.getCuser().phonecode);
+		$scope.isEdit=true;
+		$scope.photo=Params.getCuser().photo;
+		$scope.olduser=Params.getCuser();
+	}
 	var updateView=function()
 	{
 		var successfunc=function(cusers)
@@ -791,6 +840,34 @@ Controllers.controller('CuserCtrl',['$scope','Login','Cuser',function($scope,Log
 			$('#failure').find('p').html(msg);
 		}
 		Cuser.deleteUser(olduser,succesfunc,failureFunction);
+	}
+	$scope.uploadImage=function(user)
+	{
+		  var $image = $(".image-crop > img")
+		  var successFunc=function()
+		  {
+		  	$("#change-picture").modal("hide");
+		  	updateView();
+		  }
+		  var failurefunc=function(msg)
+		  {
+		  	$("#failure").modal('show');
+			$('#failure').find('p').html("Couldn't uplaod picture please try again later");
+		  }
+		  $scope.photo=$image.cropper("getDataURL");
+		  Cuser.uploadCuserImage(user.id,$image.cropper("getDataURL"),successFunc,failurefunc)
+
+	}
+	$scope.openImageUplaoder=function(user)
+	{
+		$("#change-picture").modal("show");
+		$scope.olduser=user;
+
+	}
+	$scope.openProfile=function(user)
+	{
+		Params.setCuser(user);
+		$location.path("/cuserprofile");
 	}
 
 }]);
