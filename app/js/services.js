@@ -189,6 +189,7 @@ services.factory("Login",['$http','$location','$cookieStore',"$route","Links",
 				user.userinfo=data.user;
 				user.token=data.token;
 				$cookieStore.put('loggeduser',user);
+				sleep(500);
                 funcsucess();
             }).error(function (data, status, headers, config) {
             	if(status==403)

@@ -3,6 +3,7 @@ Controllers.controller('LoginCtrl',['$scope','Login','$location',
 	function LoginCtrl($scope,Login,$location){
 		$scope.loginFunction=function()
 		{
+			$('#loginbtn').prop('disabled', true);
 			var login =$scope.login;
 			var password=$scope.password;
 			if(login!=undefined && password!=undefined)
@@ -26,6 +27,7 @@ Controllers.controller('LoginCtrl',['$scope','Login','$location',
 				var failureFunction=function(mess)
 				{
 					$scope.errors=mess;
+					$('#loginbtn').prop('disabled', false);
 				};
 					
 				Login.doLogin(login,password,successfunc,failureFunction);
