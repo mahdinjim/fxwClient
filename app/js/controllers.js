@@ -476,13 +476,25 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 		successfunc=function(data)
 		{
 			$scope.keyaccounts=data;
-			var selectdata={"id":0,text:data[0].name+ " "+data[0].surname};
-			$("#keyaccountselect").select2("data",selectdata);
-			selectedKeyaccount=data[0].id;
+			if(data.length>0){
+				var selectdata={"id":0,text:data[0].name+ " "+data[0].surname};
+				$("#keyaccountselect").select2("data",selectdata);
+				selectedKeyaccount=data[0].id;
+			}
+			else
+			{
+				$scope.keyaccounts={};
+				var selectdata={"id":0,text:"No keyaccount found"};
+				$("#keyaccountselect").select2("data",selectdata);
+				selectedKeyaccount=null;
+			}
 		}
 		failurefunc=function(data)
 		{
 			$scope.keyaccounts={};
+			var selectdata={"id":0,text:"No keyaccount found"};
+			$("#keyaccountselect").select2("data",selectdata);
+			selectedKeyaccount=null;
 		}
 		Client.getAllKeyAccounts(successfunc,failurefunc,1);
 	}
