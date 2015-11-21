@@ -1,0 +1,125 @@
+  <!-- message -->
+    <script type='text/javascript'>
+            $('.chat-discussion').slimScroll({
+            start:"bottom"
+        });
+        $(document).ready(function(){
+          $("#add").click(function(){
+              $('#message').html('@muhammed: ');
+          });
+        });
+    </script>
+ <div id="wrapper">
+ 	 <div side-bar></div>
+
+ 	 <div id="page-wrapper" class="gray-bg">
+ 	 	<div nav-menu></div>
+ 	 	<!--header title-->
+            <div class="row wrapper border-bottom white-bg page-heading">
+                <div class="col-lg-9">
+                    <h2><i class="fa fa-comments"></i> Messages</h2>
+                    <ol class="breadcrumb">
+                        <li>
+                            flexwork.io
+                        </li>
+                        <li>
+                            Messages
+                        </li>
+                        <li>
+                            #{{groupname}}
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            <!--end header title-->
+       <div class="wrapper wrapper-content animated fadeInRight">
+                <div class="row">
+                    <div class="col-lg-9">
+                        <div class="ibox chat-view">
+                            <div class="ibox-box float-e-margins mb-0 ">
+                                <div class="ibox-box-title channel">
+                                    <h5><span>Channel #</span>{{groupname}}</h5> 
+                                    <button type="button" class="btn btn-primary btn-bitbucket btn-sm f-right" onclick="parent.location='project-fxw.html'"><i class="fa fa-angle-left"></i> Back to Project</button>
+                                </div>
+                            </div>
+                            <div class="ibox-content chat-message-box">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="chat-discussion">
+                                        <div><img src="img/loading.gif" style="width:100%" ng-if="loadingmessages"></div>    
+                                            <div class="chat-message left" ng-repeat="message in messages">
+                                                <img width="38" alt="Picture" src="{{message.userphoto}}" class="message-avatar" heigth="38">
+                                                <div class="message">
+                                                    <a class="message-author" href="#">{{message.username}}</a>
+                                                    <span class="message-date">{{message.year}}/{{message.month}}/{{message.day}} {{message.hour}}:{{message.minutes}} </span>
+                                                    <span class="message-content">
+                                                        {{message.text}} 
+                                                    </span>
+                                                </div>
+                                            </div>
+
+
+                                            
+                                        </div>
+                                    </div>
+                                   
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="chat-message-form">
+                                            <div class="form-group">
+                                                <textarea class="form-control message-input" id="message" name="message" placeholder="Enter message text"></textarea>
+                                            </div>
+                                            <div class="mentions">
+                                                <a id="add">@muhammed</a> 
+                                                <a id="add">@ferit</a>
+                                                <a id="add">@mahdi</a>
+                                                <a id="add">@zied</a>
+                                                <a id="add">@bilel</a> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-3 mb-15">
+
+                       <div class="ibox-box float-e-margins mb-0">
+                            <div class="ibox-box-title">
+                                <h5 class="m-0"><i class="fa fa-users"></i> Team</h5>
+                            </div>
+                        </div><!--end ibox-box-->
+                        <div><img src="img/loading.gif" style="width:100%" ng-if="loadingteam"></div>
+                    <div ng-repeat="member in members">
+
+                        <div class="ibox-box float-e-margins mb-0 chat-user-box">
+                            <div class="chat-user p-0 b-0">
+                                <a href="">
+                                    <img class="chat-avatar" src="{{member.profile.image_32}}" alt="" >
+                                    <div class="chat-user-name">{{member.profile.first_name}} {{member.profile.last_name}} </div>
+                                    <div class="chat-users-job-title m-0">{{member.profile.title}}</div>
+                                </a>
+                            </div>
+                        </div><!--end ibox-box-->
+
+                      </div><!--end ibox-box-->
+                    </div><!--col-lg-3-->
+                </div>
+            </div>
+            <!--end wrapper-->
+
+            <!--footer-->
+            <div class="footer">
+                <div>
+                     &copy;2015 &middot; <b>flexwork.io</b> &middot; <a href="privacy-terms-fxw.html">Privacy and Terms</a> &middot; <a href="imprint-fxw.html">Imprint</a>
+                </div>
+            </div>
+            <!--end footer-->
+   
+        </div>
+        <!--end page wrapper-->
+
+    
+    </div>

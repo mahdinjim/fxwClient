@@ -9,7 +9,7 @@ services.factory("Links",[function(){
 	else
 	{
 		var baseUrl="http://www.dev.fxw.io";
-		var path="/backend/web/app.php/api";
+		var path="/backend/web/api";
 	}
 	var LoginLink=baseUrl+path+'/public/login';
 	var AllteamMembersLink=baseUrl+path+'/private/team/all';
@@ -42,6 +42,9 @@ services.factory("Links",[function(){
 	var listCuserLink=baseUrl+path+"/private/customer/users/all";
 	var deleteCuserLink=baseUrl+path+"/private/customer/users/delete";
 	var uploadCuserPhotoLink=baseUrl+path+"/private/customer/users/upload/photo";
+	var channelInfoLink=baseUrl+path+"/private/chat/info";
+	var messageslink=baseUrl+path+"/private/chat/messages";
+	var newmessagesLink=baseUrl+path+"/private/chat/new"
 	this.getLoginLink=function()
 	{
 		return LoginLink;
@@ -166,12 +169,24 @@ services.factory("Links",[function(){
 	{
 		return uploadCuserPhotoLink;
 	}
+	this.getChannelInfoLink=function()
+	{
+		return channelInfoLink;
+	}
+	this.getMessagesLink=function()
+	{
+		return messageslink;
+	}
+	this.getNewMessagesLink=function()
+	{
+		return newmessagesLink;
+	}
 	return this;
 }]);
-services.factory("Login",['$http','$location','$cookieStore',"$route","Links",
-	function($http,$location,$cookieStore,$route,Links){
-		var Admin_Access=["/login","/dashboard","/client","/teamprofile","/team"];
-		var Client_Access=["/login","/dashboard","/cuser","/cuserprofile"];
+services.factory("Login",['$http','$location','$cookies',"$route","Links",
+	function($http,$location,$cookies,$route,Links){
+		var Admin_Access=["/login","/dashboard","/client","/teamprofile","/team","/messaging"];
+		var Client_Access=["/login","/dashboard","/cuser","/cuserprofile","/messaging"];
 		this.doLogin=function(login,password,funcsucess,funcfailure)
 		{
 			postdata={
@@ -186,11 +201,13 @@ services.factory("Login",['$http','$location','$cookieStore',"$route","Links",
 				headers: {'Content-Type': 'application/json'}
 			}).success(function (data, status, headers, config) {
 				var user={};
+				data.token.experationDate.date=data.token.experationDate.date.replace(".000000","");
+				data.token.experationDate.date=data.token.experationDate.date.replace(" ","T");
 				user.userinfo=data.user;
 				user.token=data.token;
-				$cookieStore.put('loggeduser',user);
-				sleep(500);
-                funcsucess();
+				localStorage.setItem("loggeduser",JSON.stringify(user));
+				funcsucess();
+               
             }).error(function (data, status, headers, config) {
             	if(status==403)
                		funcfailure(data.errors);
@@ -200,13 +217,21 @@ services.factory("Login",['$http','$location','$cookieStore',"$route","Links",
 		
 		}
 		this.getLoggedUser=function(){
-			if($cookieStore.get('loggeduser')!=null)
-				return $cookieStore.get('loggeduser');
+			if(localStorage.loggeduser!=undefined)
+			{
+				var loggedUser=JSON.parse(localStorage.loggeduser);
+				if(loggedUser!=null)
+					return loggedUser;
+				else
+					return false;
+			}
 			else
+			{
 				return false;
+			}
 		}
 		this.logout=function(){
-			$cookieStore.remove("loggeduser");
+			localStorage.removeItem("loggeduser");
 			$location.path('/login');
 			
 		}
@@ -216,8 +241,8 @@ services.factory("Login",['$http','$location','$cookieStore',"$route","Links",
 			{
 				path=$location.path();
 			}
-			if($cookieStore.get('loggeduser')!=undefined)
-				var role=$cookieStore.get('loggeduser').userinfo.roles[0];
+			if(this.getLoggedUser())
+				var role=this.getLoggedUser().userinfo.roles[0];
 			else
 				return false;
 			if(role=="ROLE_ADMIN")
@@ -242,11 +267,14 @@ services.factory("Login",['$http','$location','$cookieStore',"$route","Links",
 		}
 		this.isTokenExpired=function()
 		{
-			if($cookieStore.get('loggeduser')!=null)
+			var loggedUser=this.getLoggedUser();
+			if(loggedUser)
 			{
-				exprirationdate=Date.parse($cookieStore.get('loggeduser').token.experationDate.date);
-				curentdate=new Date;
-				curentdate.setHours(curentdate.getHours()+1);
+
+				exprirationdate=new Date(loggedUser.token.experationDate.date);
+				curentdate=new Date();
+				exprirationdate=this.toUTCdate(exprirationdate,-60);
+				curentdate=this.toUTCdate(curentdate,curentdate.getTimezoneOffset());
 				if(exprirationdate>curentdate)
 				{
 					return false;
@@ -258,8 +286,12 @@ services.factory("Login",['$http','$location','$cookieStore',"$route","Links",
 				this.logout();
 
 		}
+		this.toUTCdate=function(d,offset)
+		{
+			return d.getTime() - (offset * 60000);
+		}
 		return this;
-		
+
 	}]);
 
 services.factory("Team",['$http','$location','$cookieStore',"Login","Links",
@@ -271,7 +303,7 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",
 				$http({
 					method:"GET", 
 					url:Links.getAllteamMembersLink(),
-					headers: {'x-crm-access-token': $cookieStore.get('loggeduser').token.token}
+					headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 				}).success(function (data, status, headers, config) {
 					for(i=0;i<data.length;i++)
 					{
@@ -365,7 +397,7 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",
 					method:method, 
 					url:link,
 					data:member, 
-					headers: {'Content-Type': 'application/json','x-crm-access-token': $cookieStore.get('loggeduser').token.token}
+					headers: {'Content-Type': 'application/json','x-crm-access-token': Login.getLoggedUser().token.token}
 				}).success(function (data, status, headers, config) {
 					successFunc();
 				}).error(function (data, status, headers, config) {
@@ -381,7 +413,7 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",
 				$http({
 					method:"delete", 
 					url:link+"/"+member.id,
-					headers: {'Content-Type': 'application/json','x-crm-access-token': $cookieStore.get('loggeduser').token.token}
+					headers: {'Content-Type': 'application/json','x-crm-access-token': Login.getLoggedUser().token.token}
 				}).success(function (data, status, headers, config) {
 					successFunc();
 				}).error(function (data, status, headers, config) {
@@ -398,7 +430,7 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",
 					method:"post", 
 					url:Links.getImageUplaodLink()+"/"+id+"/"+role,
 					data:image,
-					headers: {'Content-Type': 'application/json','x-crm-access-token': $cookieStore.get('loggeduser').token.token}
+					headers: {'Content-Type': 'application/json','x-crm-access-token': Login.getLoggedUser().token.token}
 				}).success(function (data, status, headers, config) {
 					successFunc();
 				}).error(function (data, status, headers, config) {
@@ -408,107 +440,107 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",
 		}
 		return this;
 	}]);
-services.factory('Chat', ["$http","$location","$cookieStore",function ($http,$location,$cookieStore) {
-	this.loginToChat=function(code,chatstate){
+// services.factory('Chat', ["$http","$location","$cookieStore",function ($http,$location,$cookieStore) {
+// 	this.loginToChat=function(code,chatstate){
 
-		var state=this.generateString();
-		var teamid="T09LA070W";
-		var client_id="9690007030.11132963923";
-		var client_secret="255fabd7768a518b3dc08be06dcdd883";
-		var redirecturl="http://127.0.0.1/crmtoolwebclient/app/%23"+$location.path();
-		console.log(redirecturl);
-		if(code===undefined && chatstate===undefined)
-		{
-			$cookieStore.put("chat_state",state);
-			$cookieStore.put("chat_location",redirecturl);
-			var url="https://slack.com/oauth/authorize?client_id="+client_id+"&redirect_uri="+redirecturl+"&team="+teamid+"&state="+state;
-			window.open(url,"_self");
-		}
-		else
-		{
-			state=$cookieStore.get("chat_state");
-			if(state==chatstate)
-			{
-				redirecturl=$cookieStore.get("chat_location");
-				console.log(code);
-				var apiurl="https://slack.com/api/oauth.access?client_id="+client_id+"&redirect_uri="+redirecturl+"&client_secret="+client_secret+"&code="+code;
-				console.log(apiurl);
-				$http({
-					method:"GET", 
-					url:apiurl,
-				}).success(function (data, status, headers, config) {
-					if(data.ok)
-					{
-						$cookieStore.put("chatloggedin",true);
-						$cookieStore.put("access_token",data.access_token);
-						$location.search("code",null);
-						$location.search("state",null);
-					}
+// 		var state=this.generateString();
+// 		var teamid="T09LA070W";
+// 		var client_id="9690007030.11132963923";
+// 		var client_secret="255fabd7768a518b3dc08be06dcdd883";
+// 		var redirecturl="http://127.0.0.1/crmtoolwebclient/app/%23"+$location.path();
+// 		console.log(redirecturl);
+// 		if(code===undefined && chatstate===undefined)
+// 		{
+// 			$cookieStore.put("chat_state",state);
+// 			$cookieStore.put("chat_location",redirecturl);
+// 			var url="https://slack.com/oauth/authorize?client_id="+client_id+"&redirect_uri="+redirecturl+"&team="+teamid+"&state="+state;
+// 			window.open(url,"_self");
+// 		}
+// 		else
+// 		{
+// 			state=$cookieStore.get("chat_state");
+// 			if(state==chatstate)
+// 			{
+// 				redirecturl=$cookieStore.get("chat_location");
+// 				console.log(code);
+// 				var apiurl="https://slack.com/api/oauth.access?client_id="+client_id+"&redirect_uri="+redirecturl+"&client_secret="+client_secret+"&code="+code;
+// 				console.log(apiurl);
+// 				$http({
+// 					method:"GET", 
+// 					url:apiurl,
+// 				}).success(function (data, status, headers, config) {
+// 					if(data.ok)
+// 					{
+// 						$cookieStore.put("chatloggedin",true);
+// 						$cookieStore.put("access_token",data.access_token);
+// 						$location.search("code",null);
+// 						$location.search("state",null);
+// 					}
 					
-	            }).error(function (data, status, headers, config) {
+// 	            }).error(function (data, status, headers, config) {
 	            	
-	            });
-			}
-		}
-	};
-	this.chatloggout=function(){
-		$cookieStore.put("chatloggedin",false);
-		$cookieStore.remove("access_token");
-		$cookieStore.remove("chat_location");
-		$cookieStore.remove("chat_state");
-	};
-	this.isUserLoggedIn=function()
-	{
-		var loggedin = $cookieStore.get("chatloggedin");
-		if(!loggedin || loggedin==null)
-			return false;
-		else
-			return true;
-	}
-	this.getChannels=function()
-	{
-		var url="https://slack.com/api/channels.list?token="+$cookieStore.get("access_token");
-		$http({
-					method:"GET", 
-					url:url,
-				}).success(function (data, status, headers, config) {
+// 	            });
+// 			}
+// 		}
+// 	};
+// 	this.chatloggout=function(){
+// 		$cookieStore.put("chatloggedin",false);
+// 		$cookieStore.remove("access_token");
+// 		$cookieStore.remove("chat_location");
+// 		$cookieStore.remove("chat_state");
+// 	};
+// 	this.isUserLoggedIn=function()
+// 	{
+// 		var loggedin = $cookieStore.get("chatloggedin");
+// 		if(!loggedin || loggedin==null)
+// 			return false;
+// 		else
+// 			return true;
+// 	}
+// 	this.getChannels=function()
+// 	{
+// 		var url="https://slack.com/api/channels.list?token="+$cookieStore.get("access_token");
+// 		$http({
+// 					method:"GET", 
+// 					url:url,
+// 				}).success(function (data, status, headers, config) {
 					
-					if(data.ok)
-					{
-						var channels=data.channels;
-					}
+// 					if(data.ok)
+// 					{
+// 						var channels=data.channels;
+// 					}
 					
-	            }).error(function (data, status, headers, config) {
+// 	            }).error(function (data, status, headers, config) {
 	            	
-	            });
+// 	            });
 
-	}
-	/*this.sendmsg=function(channel_id,msg)
-	{
-		var url="https://slack.com/api/chat.postMessage?token="+$cookieStore.get("access_token")+"&channel="channel_id+"&text="+msg+"&as_user=true";
-		$http({
-					method:"GET", 
-					url:url,
-				}).success(function (data, status, headers, config) {
+// 	}
+// 	/*this.sendmsg=function(channel_id,msg)
+// 	{
+// 		var url="https://slack.com/api/chat.postMessage?token="+$cookieStore.get("access_token")+"&channel="channel_id+"&text="+msg+"&as_user=true";
+// 		$http({
+// 					method:"GET", 
+// 					url:url,
+// 				}).success(function (data, status, headers, config) {
 					
-					if(data.ok)
-					{
-						console.log(data);
-					}
+// 					if(data.ok)
+// 					{
+// 						console.log(data);
+// 					}
 					
-	            }).error(function (data, status, headers, config) {
+// 	            }).error(function (data, status, headers, config) {
 	            	
-	            });
-	}*/
-	this.generateString=function(){
-		var text = "";
-    	var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-	    for( var i=0; i < 5; i++ )
-	        text += possible.charAt(Math.floor(Math.random() * possible.length));
-	    return text;
-	}
-	return this;
-}]);
+// 	            });
+// 	}*/
+// 	this.generateString=function(){
+// 		var text = "";
+//     	var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+// 	    for( var i=0; i < 5; i++ )
+// 	        text += possible.charAt(Math.floor(Math.random() * possible.length));
+// 	    return text;
+// 	}
+// 	return this;
+// }]);
 services.factory('Client', ['$http','Login',"Links",function ($http,Login,Links) {
 	
 	this.getAllKeyAccounts=function(successFunc,failureFunc,page)
@@ -682,3 +714,97 @@ services.factory('Params',function(){
 		}
 	}
 })
+services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
+	var team=null;
+	this.getChannelInfo=function(channel_id,successFunc,messagingssuccsFunc,failureFunc,start)
+	{
+		if(!Login.isTokenExpired())
+		{
+			var me=this;
+			$http({
+				method:"GET", 
+				url:Links.getChannelInfoLink()+"/"+channel_id,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+				me.team=data.members;
+                successFunc(data);
+                me.getMessages(channel_id,messagingssuccsFunc,failureFunc,start);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failureFunc(data.error);
+            });
+        }
+	}
+	this.formatSlackMessages=function(data)
+	{
+		for (i=0; i<data.messages.length;i++) {
+			var time=data.messages[i].ts.split(".")[0];
+			var messdate=new Date(new Number(time));
+			data.messages[i].hour=messdate.getHours();
+			data.messages[i].minutes=messdate.getMinutes();
+			data.messages[i].day=messdate.getDate();
+			data.messages[i].month=messdate.getMonth()+1;
+			data.messages[i].year=messdate.getFullYear();
+			data.messages[i].date=messdate;
+			for (j=0; j<this.team.length;j++) {
+				if(data.messages[i].user==this.team[j].id)
+				{
+					data.messages[i].username=this.team[j].name;
+					data.messages[i].userphoto=this.team[j].profile.image_32;
+				}
+				if(data.messages[i].text!=undefined)
+				{
+					if(data.messages[i].text.indexOf("<@"+this.team[j].id+">")>-1)
+					{
+						data.messages[i].text=data.messages[i].text.replace("<@"+this.team[j].id+">","@"+this.team[j].name);
+					}
+				}
+			}
+		}
+		data.messages.reverse();
+		return data;
+	}
+	this.getMessages=function(channel_id,successFunc,failureFunc,start)
+	{
+		if(!Login.isTokenExpired())
+		{
+			var me =this;
+			$http({
+				method:"GET", 
+				url:Links.getMessagesLink()+"/20/"+channel_id+"/"+start,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+				data=me.formatSlackMessages(data);
+                successFunc(data);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failureFunc(data.error);
+            });
+        }
+	}
+	this.getNewMessages=function(channel_id,successFunc,failureFunc,last)
+	{
+		if(!Login.isTokenExpired())
+		{
+			var me =this;
+			$http({
+				method:"GET", 
+				url:Links.getNewMessagesLink()+"/"+channel_id+"/"+last,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+				data=me.formatSlackMessages(data);
+                successFunc(data);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failureFunc(data.error);
+            });
+        }
+	}
+	return this;
+}]);

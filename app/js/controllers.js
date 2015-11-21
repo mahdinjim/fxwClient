@@ -887,17 +887,60 @@ Controllers.controller('CuserCtrl',['$scope','Login','Cuser','$location','Params
 }]);
 Controllers.controller('SettingsCtrl', ['$scope','Chat', function ($scope,Chat) {
 
-	$scope.connect_to_chat=Chat.isUserLoggedIn();
-	Chat.getChannels();
-	$scope.connectToChat=function()
-	{
-		if($scope.connect_to_chat)
-		{
-			Chat.loginToChat();
-		}
-		else{
-			Chat.chatloggout();
-		}
-	}
 	
+	
+}])
+Controllers.controller("ChatCtrl",["$scope","$rootScope","Chat","$routeParams",function($scope,$rootScope,Chat,$routeParams){
+	$scope.loadingteam=true;
+	$scope.loadingmessages=true;
+
+	var succesFunc=function(data)
+	{
+		$scope.groupname=data.name;
+		$scope.members=data.members;
+		$scope.loadingteam=false;
+		
+	}
+	var failureFunc=function(msg)
+	{
+		alert(msg);
+	}
+	var messagingssuccsFunc=function(data)
+	{
+		$scope.messages=data.messages;
+		$scope.loadingmessages=false;
+		$scope.has_more=data.hasmore;
+		$('.chat-discussion').slimScroll({
+            scrollTo:"200px"
+        });
+        var fetchForMessages=function()
+        {
+        	var succsfunc=function(data)
+ 			{
+ 				$scope.messages=$scope.messages.concat(data.messages);
+ 			}
+ 			var latest=$scope.messages[$scope.messages.length-1].ts
+     		Chat.getNewMessages($routeParams.channel_id,succsfunc,failureFunc,latest);
+        }
+        var fetcher=setInterval(fetchForMessages, 10000);
+        $scope.$on('$routeChangeStart',function(){
+			clearInterval(fetcher);
+		});
+  		$('.chat-discussion').slimScroll().bind('slimscroll', function(e, pos){
+     		
+     		if(pos=="top" && $scope.has_more)
+     		{
+     			$scope.loadingmessages=true;
+     			var succsfunc=function(data)
+     			{
+     				$scope.messages=data.messages.concat($scope.messages);
+     				$scope.loadingmessages=false;
+     				$scope.has_more=data.hasmore;
+     			}
+     			var latest=$scope.messages[0].ts
+     			Chat.getMessages($routeParams.channel_id,succsfunc,failureFunc,latest);
+     		}
+		});
+	}
+	Chat.getChannelInfo($routeParams.channel_id,succesFunc,messagingssuccsFunc,failureFunc,0);
 }])
