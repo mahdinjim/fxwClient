@@ -54,9 +54,38 @@ Controllers.controller("MenuNavCtrl",['$scope','Login',
 		}
 	}
 	]);
-Controllers.controller("SideBarCtrl",['$scope','Login',
-	function SideBarCtrl($scope,Login)
+Controllers.controller("SideBarCtrl",['$scope','Login','Chat',
+	function SideBarCtrl($scope,Login,Chat)
 	{
+		$scope.totalmessages=0;
+		var channels=[{"name":"flimflam","id":"C09LA4WE5","newmessages":0},{"name":"team","id":"C09L9LQ8G","newmessages":0}];
+		$scope.channels=channels;
+		var getnewMessagesNumber=function()
+		{
+			
+			for(i=0;i<$scope.channels.length;i++)
+			{
+				var end =$scope.channels.length-1;
+				var sum=0;
+				var successfunc=function(data,channel,i,end,sum)
+				{
+					channel.newmessages=data.undread_count;
+					
+					if(i==end)
+					{
+						$scope.totalmessages=sum;
+					}
+					
+				}
+				Chat.getNewMessagesNumber($scope.channels[i],successfunc,i,end);
+
+			}
+		}
+		getnewMessagesNumber();
+		var newmessagesinterval=setInterval(getnewMessagesNumber, 20000);
+		$scope.$on('$routeChangeStart',function(){
+			clearInterval(newmessagesinterval);
+		});
 		var userinf= Login.getLoggedUser().userinfo;
 		$scope.name=userinf.name;
 		$scope.surname=userinf.surname;
@@ -890,10 +919,38 @@ Controllers.controller('SettingsCtrl', ['$scope','Chat', function ($scope,Chat) 
 	
 	
 }])
-Controllers.controller("ChatCtrl",["$scope","$rootScope","Chat","$routeParams",function($scope,$rootScope,Chat,$routeParams){
+Controllers.controller("ChatCtrl",["$scope","$rootScope","Chat","$routeParams","Login",function($scope,$rootScope,Chat,$routeParams,Login){
 	$scope.loadingteam=true;
 	$scope.loadingmessages=true;
-
+	$scope.messageto=null;
+	
+	if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER")
+	{
+		$('#messForm').show();
+	}
+	else
+		$('#messForm').hide();
+	
+	$scope.sendMessage=function()
+	{
+		if($scope.messageto!=null)
+		{
+			$scope.messagetext=$scope.messagetext.replace("@"+$scope.messageto.name+":","<@"+$scope.messageto.id+"|"+$scope.messageto.name+">");
+		}
+		var successFunc=function(data)
+		{
+			$scope.messages.push(data.message.message);
+		}
+		Chat.sendMessage($routeParams.channel_id,$scope.messagetext,successFunc);
+		console.log($scope.messagetext);
+		$scope.messageto=null;
+		$scope.messagetext="";
+	}
+	$scope.setMessageTo=function(member)
+	{
+		$scope.messageto=member;
+		 $scope.messagetext='@'+member.name+': ';
+	}
 	var succesFunc=function(data)
 	{
 		$scope.groupname=data.name;
@@ -909,7 +966,7 @@ Controllers.controller("ChatCtrl",["$scope","$rootScope","Chat","$routeParams",f
 	{
 		$scope.messages=data.messages;
 		$scope.loadingmessages=false;
-		$scope.has_more=data.hasmore;
+		
 		$('.chat-discussion').slimScroll({
             scrollTo:"200px"
         });
@@ -927,18 +984,22 @@ Controllers.controller("ChatCtrl",["$scope","$rootScope","Chat","$routeParams",f
 			clearInterval(fetcher);
 		});
   		$('.chat-discussion').slimScroll().bind('slimscroll', function(e, pos){
-     		
-     		if(pos=="top" && $scope.has_more)
+     		e.stopPropagation();
+     		if(pos=="top" && Chat.isHasMore())
      		{
      			$scope.loadingmessages=true;
      			var succsfunc=function(data)
      			{
      				$scope.messages=data.messages.concat($scope.messages);
      				$scope.loadingmessages=false;
-     				$scope.has_more=data.hasmore;
+     				
      			}
-     			var latest=$scope.messages[0].ts
-     			Chat.getMessages($routeParams.channel_id,succsfunc,failureFunc,latest);
+     			Chat.getMessages($routeParams.channel_id,succsfunc,failureFunc,1);
+     		}
+     		if(pos=="bottom")
+     		{
+     			var latest=$scope.messages[$scope.messages.length-1].ts
+     			Chat.markreadMessages($routeParams.channel_id,latest)
      		}
 		});
 	}

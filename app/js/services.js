@@ -44,7 +44,10 @@ services.factory("Links",[function(){
 	var uploadCuserPhotoLink=baseUrl+path+"/private/customer/users/upload/photo";
 	var channelInfoLink=baseUrl+path+"/private/chat/info";
 	var messageslink=baseUrl+path+"/private/chat/messages";
-	var newmessagesLink=baseUrl+path+"/private/chat/new"
+	var newmessagesLink=baseUrl+path+"/private/chat/new";
+	var makreadmessagesLink=baseUrl+path+"/private/chat/mark";
+	var newmessagesNumberLink=baseUrl+path+"/private/chat/newmessages/number";
+	var sendMessageLink=baseUrl+path+"/private/chat/send";
 	this.getLoginLink=function()
 	{
 		return LoginLink;
@@ -180,6 +183,18 @@ services.factory("Links",[function(){
 	this.getNewMessagesLink=function()
 	{
 		return newmessagesLink;
+	}
+	this.getMakreadmessagesLink=function()
+	{
+		return makreadmessagesLink;
+	}
+	this.getNewMessageNumberLink=function()
+	{
+		return newmessagesNumberLink;
+	}
+	this.getSendMessageLink=function()
+	{
+		return sendMessageLink;
 	}
 	return this;
 }]);
@@ -715,7 +730,10 @@ services.factory('Params',function(){
 	}
 })
 services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
-	var team=null;
+	this.team=null;
+	this.first=null;
+	this.has_more=false;
+	this.newmessagesCount=0;
 	this.getChannelInfo=function(channel_id,successFunc,messagingssuccsFunc,failureFunc,start)
 	{
 		if(!Login.isTokenExpired())
@@ -739,44 +757,105 @@ services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
 	}
 	this.formatSlackMessages=function(data)
 	{
+		var deletedItems=new Array();
+		this.first=data.messages[data.messages.length-1];
 		for (i=0; i<data.messages.length;i++) {
-			var time=data.messages[i].ts.split(".")[0];
-			var messdate=new Date(new Number(time));
-			data.messages[i].hour=messdate.getHours();
-			data.messages[i].minutes=messdate.getMinutes();
-			data.messages[i].day=messdate.getDate();
-			data.messages[i].month=messdate.getMonth()+1;
-			data.messages[i].year=messdate.getFullYear();
-			data.messages[i].date=messdate;
-			for (j=0; j<this.team.length;j++) {
-				if(data.messages[i].user==this.team[j].id)
-				{
-					data.messages[i].username=this.team[j].name;
-					data.messages[i].userphoto=this.team[j].profile.image_32;
-				}
-				if(data.messages[i].text!=undefined)
-				{
-					if(data.messages[i].text.indexOf("<@"+this.team[j].id+">")>-1)
-					{
-						data.messages[i].text=data.messages[i].text.replace("<@"+this.team[j].id+">","@"+this.team[j].name);
-					}
-				}
+			var mess=this.formatOneSlackMessage(data.messages[i]);
+			if(mess.mustdelete)
+			{
+				deletedItems.push(data.messages[i]);
 			}
+			else
+			{
+				data.messages[i]=mess.message;
+			}
+			
+		}
+		for(i=0;i<deletedItems.length;i++)
+		{
+			var index=data.messages.indexOf(deletedItems[i]);
+			data.messages.splice(index,1);
 		}
 		data.messages.reverse();
 		return data;
 	}
+	this.formatOneSlackMessage=function(message)
+	{
+		var mustdelete=false;
+		var time=message.ts.split(".")[0];
+		var messdate=new Date(new Number(time)*1000);
+		message.hour=messdate.getHours();
+		message.minutes=messdate.getMinutes();
+		message.day=messdate.getDate();
+		message.month=messdate.getMonth()+1;
+		message.year=messdate.getFullYear();
+		message.date=messdate;
+		for (j=0; j<this.team.length;j++) {
+			if(message.user!=undefined)
+			{
+				if(message.user==this.team[j].id)
+				{
+					message.username=this.team[j].name;
+					message.userphoto=this.team[j].profile.image_32;
+				}
+			}
+			else
+			{
+				message.userphoto="img/users/profile_default_small.jpg";
+			}
+			if(message.text!=undefined)
+			{
+				if(message.text.indexOf("<http")>-1)
+				{
+					var link="";
+					var h=message.text.indexOf("<http")+1;
+					while(message.text.charAt(h)!='>')
+					{
+						link+=message.text[h];
+						h++;
+					}
+					message.text=message.text.replace("<"+link+">",'<a href="'+link+'">'+link+'</a>');
+				}
+				if(message.text.indexOf("<@"+this.team[j].id+">")>-1)
+				{
+					message.text=message.text.replace("<@"+this.team[j].id+">","@"+this.team[j].name);
+				}
+				if(message.text.indexOf("<@"+this.team[j].id+"|"+this.team[j].name+">")>-1)
+				{
+					message.text=message.text.replace("<@"+this.team[j].id+"|"+this.team[j].name+">","@"+"<a>"+this.team[j].name+"</a>");
+				}
+			}
+			else 
+			{
+				mustdelete=true;
+			}
+		}
+			
+		
+		return {"message":message,"mustdelete":mustdelete};
+	}
 	this.getMessages=function(channel_id,successFunc,failureFunc,start)
 	{
+		if(start!=0)
+		{
+			if(this.first===undefined)
+				return;
+			else
+				start=this.first.ts;
+		}
 		if(!Login.isTokenExpired())
 		{
 			var me =this;
 			$http({
 				method:"GET", 
-				url:Links.getMessagesLink()+"/20/"+channel_id+"/"+start,
+				url:Links.getMessagesLink()+"/40/"+channel_id+"/"+start,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 			}).success(function (data, status, headers, config) {
-				data=me.formatSlackMessages(data);
+				if(data.messages.length>0)
+				{
+					data=me.formatSlackMessages(data);
+				}
+				me.has_more=data.hasmore;
                 successFunc(data);
             }).error(function (data, status, headers, config) {
             	if(status==403)
@@ -785,6 +864,10 @@ services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
             		failureFunc(data.error);
             });
         }
+	}
+	this.isHasMore=function()
+	{
+		return this.has_more;
 	}
 	this.getNewMessages=function(channel_id,successFunc,failureFunc,last)
 	{
@@ -805,6 +888,81 @@ services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
             		failureFunc(data.error);
             });
         }
+	}
+	this.markreadMessages=function(channel_id,mess)
+	{
+		if(!Login.isTokenExpired())
+		{
+			var me =this;
+			$http({
+				method:"GET", 
+				url:Links.getMakreadmessagesLink()+"/"+channel_id+"/"+mess,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		alert(data.error);
+            });
+        }
+	}
+	this.getNewMessagesNumber=function(channel,successfunction,i,end)
+	{
+		if(!Login.isTokenExpired())
+		{
+			
+			var me =this;
+			$http({
+				method:"GET", 
+				url:Links.getNewMessageNumberLink()+"/"+channel.id,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+				if(i==0)
+				{
+					me.newmessagesCount=0;
+				}
+				me.newmessagesCount+=parseInt(data.undread_count);
+				successfunction(data,channel,i,end,me.newmessagesCount);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		alert(data.error);
+            });
+        }
+	}
+	this.sendMessage=function(group,text,successFunc)
+	{
+		var me =this;
+		if(!Login.isTokenExpired())
+		{
+			var username;
+			if(Login.getLoggedUser().userinfo.compnay_name==undefined)
+				username="flexwork";
+			else
+				username=Login.getLoggedUser().userinfo.compnay_name;
+			var postdata={
+				"message":text,
+				"client":username
+			}
+			$http({
+				method:"POST", 
+				data:postdata,
+				url:Links.getSendMessageLink()+"/"+group,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+				data.message.userphoto="img/users/profile_default_small.jpg";
+				data.message=me.formatOneSlackMessage(data.message);
+				successFunc(data);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		alert(data.error);
+            });
+        }
+
 	}
 	return this;
 }]);

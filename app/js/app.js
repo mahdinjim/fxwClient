@@ -1,6 +1,7 @@
 var crmapp=angular.module("crmapp",[
 	'ngRoute',
 	'Services',
+	'ngSanitize',
 	'directives',
 	'Controllers'
 	]);

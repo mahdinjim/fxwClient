@@ -63,11 +63,9 @@
                     </li>
 
                     <li ng-if="doDisplay('/messaging')">
-                        <a ><i class="fa fa-comments"></i> <span class="nav-label">Messages</span> <span class="label label-danger pull-right">12</span></span></a>
-                        <ul class="nav nav-second-level collapse in">
-                            <li><a href="#/messaging?channel_id=C0B1TA63Z"><span class="nav-label">23media</span> <span class="label label-default pull-right">5</span></a></li>
-                            <li><a href="#/messaging?channel_id=C09LA4WE5"><span class="nav-label">flimflam</span> <span class="label label-default pull-right">7</span></a></li>
-                            <li><a href="#/messaging?channel_id=C09L9LQ8G">team</a></li>
+                        <a ><i class="fa fa-comments"></i> <span class="nav-label">Messages</span> <span class="label label-danger pull-right">{{totalmessages}}</span></span></a>
+                        <ul class="nav nav-second-level collapse in" ng-repeat='channel in channels'>
+                            <li><a href="#/messaging?channel_id={{channel.id}}"><span class="nav-label">{{channel.name}}</span> <span class="label label-default pull-right">{{channel.newmessages}}</span></a></li>
                         </ul> 
                     </li>
 

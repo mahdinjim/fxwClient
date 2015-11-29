@@ -3,11 +3,7 @@
             $('.chat-discussion').slimScroll({
             start:"bottom"
         });
-        $(document).ready(function(){
-          $("#add").click(function(){
-              $('#message').html('@muhammed: ');
-          });
-        });
+       
     </script>
  <div id="wrapper">
  	 <div side-bar></div>
@@ -52,8 +48,8 @@
                                                 <div class="message">
                                                     <a class="message-author" href="#">{{message.username}}</a>
                                                     <span class="message-date">{{message.year}}/{{message.month}}/{{message.day}} {{message.hour}}:{{message.minutes}} </span>
-                                                    <span class="message-content">
-                                                        {{message.text}} 
+                                                    <span class="message-content" ng-bind-html="message.text">
+                                                        
                                                     </span>
                                                 </div>
                                             </div>
@@ -64,18 +60,14 @@
                                     </div>
                                    
                                 </div>
-                                <div class="row">
+                                <div class="row" >
                                     <div class="col-lg-12">
-                                        <div class="chat-message-form">
+                                        <div class="chat-message-form" id="messForm">
                                             <div class="form-group">
-                                                <textarea class="form-control message-input" id="message" name="message" placeholder="Enter message text"></textarea>
+                                                <textarea class="form-control message-input" name="message"  placeholder="write your message here" ng-model="messagetext" my-enter="sendMessage()"></textarea>
                                             </div>
                                             <div class="mentions">
-                                                <a id="add">@muhammed</a> 
-                                                <a id="add">@ferit</a>
-                                                <a id="add">@mahdi</a>
-                                                <a id="add">@zied</a>
-                                                <a id="add">@bilel</a> 
+                                                <a ng-click="setMessageTo(member)"  ng-repeat="member in members">@{{member.name}}</a>
                                             </div>
                                         </div>
                                     </div>
