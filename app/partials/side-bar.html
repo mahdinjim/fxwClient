@@ -1,3 +1,6 @@
+ <script>
+        $('select').select2();
+    </script>
 <div ng-controller="SideBarCtrl">
     <nav class="navbar-default navbar-static-side" role="navigation">
     <div class="sidebar-collapse">
@@ -53,12 +56,9 @@
                 
                     <li ng-if="doDisplay('/dashboard')">
                         <a href="#/dashboard"><i class="fa fa-clone"></i> <span class="nav-label">Projects</span> <span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level collapse">
-                            <li><a href="index.html">Dashboard</a></li>
-                            <li><a href="project-fxw.html">Captain</a></li>
-                            <li><a href="project-fxw.html">Website</a></li>
-                            <li><a href="project-fxw.html">Newsletter</a></li>
-                            <li><a data-toggle="modal" data-target="#add-project"><span style="border-bottom: 1px dotted;">+ Add Project</span></a></li>
+                        <ul class="nav nav-second-level collapse in">
+                            <li ng-repeat='project in projects'><a href="#/pdtetails?project_id={{project.id}}"><span class="nav-label">{{project.name}}</a></li>
+                            <li ng-if="canAdd"><a ng-click="openAddprojectModel()"><span style="border-bottom: 1px dotted;">+ Add Project</span></a></li>
                         </ul>
                     </li>
 
@@ -97,4 +97,98 @@
 
             </div>
         </nav>
+
+ <div class="modal inmodal fade" id="add-project" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-m">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"><i class="fa fa-plus modal-fa-icon"></i> Add Project</h4>
+                </div>
+                <div class="modal-body">
+                   <div class="form-group">
+                        <input type="text" class="form-control input-lg" placeholder="Project Title" ng-model="projecttitle">
+                    </div>
+                    <div class="form-group">
+                         <textarea class="form-control textarea-keybox" placeholder="Description" ng-model="description"></textarea>
+                    </div>
+                     <div class="form-group" id="clientSelectionArea">
+                        <div class="select-option m-0" style="width: 100%;">
+                            <select class="select2" id="clientselection" ng-model="selectedClient">
+                                <option ng-repeat="client in clients" value="{{client.id}}">{{client.companyname}} </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group mb0">
+                        <select data-placeholder="Select Skills" class="chosen-select" multiple style="width:100%;" tabindex="2" ng-model="projectskills">
+                            <optgroup label="OOP">
+                                <option value="PHP">PHP</option>
+                                <option value="Java">Java</option>
+                                <option value="C#">C#</option>
+                                <option value="Python">Python</option>
+                                <option value="vb.net">vb.net</option>
+                                <option value="Ruby on Rails">Ruby on Rails</option>
+                                <option value="Objective C">Objective C</option>
+                                <option value="Action Script">Action Script</option>
+                                <option value="Pearl">Pearl</option>
+                            </optgroup>
+                            <optgroup label="Design">
+                                <option value="Web Design">Web Design</option>
+                                <option value="User Interface Design">User Interface Design</option>
+                                <option value="User Experience Design">User Experience Design</option>
+                                <option value="Mobile Design">Mobile Design</option>
+                                <option value="Responsive Design">Responsive Design</option>
+                                <option value="Graphic Design">Graphic Design</option>
+                            </optgroup>
+                            <optgroup label="Frontend Developement">
+                                <option value="HTML 5 &amp; CSS 3">HTML 5 &amp; CSS 3</option>
+                                <option value="jQuery">jQuery</option>
+                                <option value="Javascript">Javascript</option>
+                                <option value="Bootstrap Framework">Bootstrap Framework</option>
+                                <option value="Gumby Framework">Gumby Framework</option>
+                                <option value="WordPress Template">WordPress Template</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    
+                   
+                       
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" ng-click="createProject()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div> 
+    <!--failure modal-->
+    <div class="modal inmodal fade" id="failure" tabindex="-1" role="dialog"  aria-hidden="true" style="top:150px;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <div class="modal-title"><i class="glyphicon glyphicon-remove-circle"> Oopss :(</i></div>
+                </div>
+                <div class="modal-body">
+                   <p class="modal-content-center m-0"></p>
+                </div>
+                
+            </div>
+        </div>
+    </div> 
+<!--warning modal-->
+    <div class="modal inmodal fade" id="warning" tabindex="-1" role="dialog"  aria-hidden="true" style="top:150px;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <div class="modal-title"><i class="glyphicon glyphicon-warning-sign"> Hey hey!!</i></div>
+                </div>
+                <div class="modal-body">
+                   <p class="modal-content-center m-0"></p>
+                </div>
+                
+            </div>
+        </div>
+    </div> 
 </div>

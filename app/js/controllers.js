@@ -54,12 +54,16 @@ Controllers.controller("MenuNavCtrl",['$scope','Login',
 		}
 	}
 	]);
-Controllers.controller("SideBarCtrl",['$scope','Login','Chat',
-	function SideBarCtrl($scope,Login,Chat)
+Controllers.controller("SideBarCtrl",['$scope','Login','Chat','Client','Project',
+	function SideBarCtrl($scope,Login,Chat,Client,Project)
 	{
+		$scope.canAdd=false;
+		if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER"  ||Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_KEYACCOUNT")
+		{
+			$scope.canAdd=true;
+
+		}
 		$scope.totalmessages=0;
-		var channels=[{"name":"flimflam","id":"C09LA4WE5","newmessages":0},{"name":"team","id":"C09L9LQ8G","newmessages":0}];
-		$scope.channels=channels;
 		var getnewMessagesNumber=function()
 		{
 			
@@ -81,11 +85,26 @@ Controllers.controller("SideBarCtrl",['$scope','Login','Chat',
 
 			}
 		}
-		getnewMessagesNumber();
-		var newmessagesinterval=setInterval(getnewMessagesNumber, 20000);
-		$scope.$on('$routeChangeStart',function(){
-			clearInterval(newmessagesinterval);
-		});
+		var getprojects=function()
+		{
+			var successfunc=function(data)
+			{
+				$scope.channels=data.channels;
+				$scope.projects=data.projects;
+				getnewMessagesNumber();
+				var newmessagesinterval=setInterval(getnewMessagesNumber, 20000);
+				$scope.$on('$routeChangeStart',function(){
+					clearInterval(newmessagesinterval);
+				});
+			}
+			Project.getAllproject(successfunc);
+		}
+		
+		getprojects();
+		
+		
+		
+		
 		var userinf= Login.getLoggedUser().userinfo;
 		$scope.name=userinf.name;
 		$scope.surname=userinf.surname;
@@ -101,6 +120,113 @@ Controllers.controller("SideBarCtrl",['$scope','Login','Chat',
 		{
 			return Login.haveAccess(path);
 		}
+
+		$scope.openAddprojectModel=function()
+		{
+			if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_KEYACCOUNT" )
+			{
+				$scope.canAdd=true;
+				var successfunc =function(customers)
+				{
+					$scope.clients=customers;
+					
+					if(customers.length>0){
+						var selectdata={"id":0,text:customers[0].companyname};
+						$("#clientselection").select2("data",selectdata);
+						$scope.selectedClient=customers[0].id;
+					}
+					else
+					{
+						$scope.clients={};
+						var selectdata={"id":0,text:"No Clients found"};
+						$("#clientselection").select2("data",selectdata);
+						$scope.selectedClient=null;
+					}
+
+				}
+				failurefunc=function(data)
+				{
+					$scope.clients={};
+					var selectdata={"id":0,text:"No client found"};
+					$("#clientselection").select2("data",selectdata);
+					$scope.selectedClient=null;
+				}
+
+				Client.getAllClients(successfunc,failurefunc,1);
+				$("#clientSelectionArea").show();
+			}
+			else
+			{
+
+				$("#clientSelectionArea").hide();
+			}
+
+			$("#add-project").modal('show');
+		
+		}
+		var verifyForm=function()
+		{
+			var messages=new Array();
+			if($scope.projecttitle===undefined)
+			{
+				messages.push("Please add the project title</br>");
+
+			}
+			if($scope.description===undefined)
+			{
+				messages.push("Please add the project description</br>");
+				
+			}
+			if($scope.projectskills===undefined)
+			{
+				messages.push("Please add the project required skills</br>");
+				
+			}
+			if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_KEYACCOUNT")
+			{
+				if($scope.selectedClient===undefined || $scope.selectedClient===null)
+				{
+					messages.push("Please choose a client</br>");
+					
+				}
+			}
+			return messages;
+		}
+		$scope.createProject=function()
+		{
+			var messages =verifyForm();
+			if(messages.length>0)
+			{
+				$("#warning").modal('show');
+				$('#warning').find('p').html(messages);
+			}
+			else
+			{
+				var project={
+					"name":$scope.projecttitle,
+					"description":$scope.description,
+					"skills":""+$scope.projectskills
+				}
+				if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_KEYACCOUNT")
+				{
+					project.customer_id=$scope.selectedClient;
+				}
+				var successFunc=function()
+				{
+					$("#add-project").modal('hide');
+					$("#success").modal('show');
+					$('#success').find('p').html("Project added successfully");
+				}
+				var failureFunc=function()
+				{
+					
+					$("#failure").modal('show');
+					$('#failure').find('p').html("Something bad happend please try again later");
+				}
+				Project.createProject(project,successFunc,failureFunc);
+			}
+		}
+		
 	}
 	]);
 Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', function ($scope,Team,Params,$location) {

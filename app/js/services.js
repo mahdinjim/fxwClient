@@ -48,6 +48,8 @@ services.factory("Links",[function(){
 	var makreadmessagesLink=baseUrl+path+"/private/chat/mark";
 	var newmessagesNumberLink=baseUrl+path+"/private/chat/newmessages/number";
 	var sendMessageLink=baseUrl+path+"/private/chat/send";
+	var createProjectLink=baseUrl+path+"/private/project/restricted/create";
+	var listprojectLink=baseUrl+path+"/private/project/restricted/list";
 	this.getLoginLink=function()
 	{
 		return LoginLink;
@@ -195,6 +197,14 @@ services.factory("Links",[function(){
 	this.getSendMessageLink=function()
 	{
 		return sendMessageLink;
+	}
+	this.getCreateProjectLink=function()
+	{
+		return createProjectLink;
+	}
+	this.getListProjectLink=function()
+	{
+		return listprojectLink;
 	}
 	return this;
 }]);
@@ -902,8 +912,7 @@ services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
             }).error(function (data, status, headers, config) {
             	if(status==403)
             		Login.logout();
-            	else
-            		alert(data.error);
+            	
             });
         }
 	}
@@ -927,8 +936,7 @@ services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
             }).error(function (data, status, headers, config) {
             	if(status==403)
             		Login.logout();
-            	else
-            		alert(data.error);
+            	
             });
         }
 	}
@@ -958,11 +966,44 @@ services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
             }).error(function (data, status, headers, config) {
             	if(status==403)
             		Login.logout();
-            	else
-            		alert(data.error);
+            	
             });
         }
 
 	}
 	return this;
 }]);
+services.factory('Project',["$http","Login",'Links',function($http,Login,Links){
+	this.createProject=function(postdata,successfunc,failurefunc)
+	{
+		$http({
+			method:"POST", 
+			data:postdata,
+			url:Links.getCreateProjectLink(),
+			headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+		}).success(function (data, status, headers, config) {
+			successfunc();
+        }).error(function (data, status, headers, config) {
+        	if(status==403)
+        		Login.logout();
+        	else
+        		failurefunc();
+        });
+	}
+	this.getAllproject=function(successfunc)
+	{
+		$http({
+			method:"GET", 
+			url:Links.getListProjectLink()+"/1/all",
+			headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+		}).success(function (data, status, headers, config) {
+			successfunc(data);
+        }).error(function (data, status, headers, config) {
+        	if(status==403)
+        		Login.logout();
+        	
+        });
+	}
+	return this;
+}
+]);
