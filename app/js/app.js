@@ -41,6 +41,10 @@ crmapp.config(["$routeProvider",
 				templateUrl:'partials/messaging.html',
 				controller:'ChatCtrl'
 			}).
+			when('/pdetails',{
+				templateUrl:'partials/pdetails.html',
+				controller:'ProjectCtrl'
+			}).
 			otherwise({
         		redirectTo: '/dashboard'
       		});

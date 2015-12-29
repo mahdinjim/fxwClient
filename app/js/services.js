@@ -210,8 +210,11 @@ services.factory("Links",[function(){
 }]);
 services.factory("Login",['$http','$location','$cookies',"$route","Links",
 	function($http,$location,$cookies,$route,Links){
-		var Admin_Access=["/login","/dashboard","/client","/teamprofile","/team","/messaging"];
-		var Client_Access=["/login","/dashboard","/cuser","/cuserprofile","/messaging"];
+		var Admin_Access=["/login","/dashboard","/client","/teamprofile","/team","/messaging","/pdetails"];
+		var Client_Access=["/login","/dashboard","/cuser","/cuserprofile","/messaging","/pdetails"];
+		var KeyAccount_Access=["/login","/dashboard","/pdetails","/messaging","/client"];
+		var TeamLeader_Access=["/login","/dashboard","/pdetails","/messaging"];
+		var TeamMember_Access=["/login","/dashboard","/pdetails","/messaging"];
 		this.doLogin=function(login,password,funcsucess,funcfailure)
 		{
 			postdata={

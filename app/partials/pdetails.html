@@ -1,0 +1,219 @@
+<div id="wrapper">
+    <div side-bar>
+    </div>
+    <div id="page-wrapper" class="gray-bg">
+            
+		<div nav-menu></div>
+		  <!--header title-->
+            <div class="row wrapper border-bottom white-bg page-heading">
+                <div class="col-lg-9">
+                    <h2><i class="fa fa-clone"></i> website</h2>
+                    <ol class="breadcrumb" ng-if="!isclient">
+
+                       	<li>
+                            {{username}}
+                        </li>
+                        <li>
+                            projects
+                        </li>
+                         <li>
+                            {{company_name}}
+                        </li>
+                        <li>
+                            {{project_name}}
+                        </li>
+                    </ol>
+                    <ol class="breadcrumb" ng-if="isclient">
+                    	
+                        <li>
+                            {{company_name}}
+                        </li>
+                        <li>
+                            projects
+                        </li>
+                        <li>
+                            {{project_name}}
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            <!--end header title-->
+             <!--main-->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="wrapper wrapper-content animated fadeInUp">
+
+                        <!-- buttons & team -->
+                        <div class="row mb20">
+                            <div class="col-md-6">
+                                <button class="btn btn-primary btn-bitbucket btn-m mr5" type="button" data-target="#add-ticket" data-toggle="modal" ng-if="isclient"><i class="fa fa-plus mr5"></i> add ticket</button>
+                                <button class="btn btn-default btn-bitbucket btn-m mr5" type="button" data-target="#budgetlimit" data-toggle="modal" ng-if="isclient"><i class="fa fa-thumb-tack mr5" ></i> budgetlimit</button>
+                                <button class="btn btn-default btn-bitbucket btn-m mr5" type="button" onclick="parent.location='project-keybox-website-fxw.html'"><i class="fa fa-lock mr5"></i> keybox</button>
+                            </div>
+                          
+                            
+                            <div class="col-md-6" ng-if="!isclient">
+                                <div class="project-people">
+                                    <a href="" class="fxwlink-member" data-toggle="modal" data-target="#add-member"><small><i class="fa fa-plus"></i> add member</small></a>
+                                    <a href="" class="team-lead"><img alt="Mahdi" class="img-circle" src="img/users/profile_mn_small.jpg"></a>
+                                    <a href=""><img alt="Zied" class="img-circle" src="img/users/profile_zj_small.jpg"></a>
+                                    <a href=""><img alt="Bilel" class="img-circle" src="img/users/profile_ba_small.jpg"></a>
+                                </div>
+                            </div>
+                        
+                        <!-- end buttons & team -->
+                            <div class="col-md-6" ng-if="isclient">
+                                <div class="project-people">
+                                    <!--<a href="" class="fxwlink-member" data-toggle="modal" data-target="#add-member"><small><i class="fa fa-plus"></i> add member</small></a>-->
+                                    <div class="project-status" style="margin-top:7px;">
+                                        <span class="label label-default label-nobg"><img  class="progress-loading" width="15" height="15" src="img/ellipsis.gif"> team building in progress</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end buttons & team -->
+
+                        <!-- info1 -->
+                        <div class="row" ng-if="isclient">
+                            <div class="col-lg-12 p0">
+                                <div class="col-lg-12">
+                                     <div class="alert alert-warning" style="font-size:14px;">
+                                        <i class="fa fa-phone-square mr5"></i> Your contract is in progress. <b class="ml5">Janine</b> will call you about details.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 p0">
+                                <div class="col-lg-12">
+                                     <div class="alert alert-success" style="font-size:14px;">
+                                        <i class="fa fa-file-text mr5"></i> Your contract is ready. Please confirm to start your project. 
+                                         <button class="btn btn-primary btn-bitbucket btn-xs mr5 ml10" type="button" data-toggle="modal" data-target="#"><i class="fa fa-chevron-right mr5"></i> see details &amp; confirm</button>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ibox" ng-if="isclient">
+                           <div class="ibox-content">
+                                <div class="row mb20 mt20 pt20 pb20">
+                                    
+                                    <div class="col-md-12 acenter mt20 mb5">
+                                        <img width="55" height="49" title="flexwork.io" alt="flexwork.io" src="img/logo-grey-flexwork@2.png">
+                                    </div>
+
+                                    <div class="col-md-12 acenter">
+                                         <p class="mb20 first-ticket-info">add your <i class="fa fa-angle-down mr5 ml5"></i> first ticket</p>
+                                        <button class="btn btn-primary btn-bitbucket btn-xs mr5" type="button" data-target="#add-ticket" data-toggle="modal"><i class="fa fa-plus mr5"></i> add ticket</button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ibox">
+                           <div class="ibox-content">
+                                <div class="row">
+                                    <!-- filter-->
+                                    <div class="col-md-12 pb10">
+                                        <div class="col-md-8 p0">   
+                                            <div class="form-group fleft mr10 mb10">
+                                                <div class="select-option select-project m-0" style="width: 150px;">
+                                                    <select class="select2">
+                                                        <option selected="selected">all type</option>
+                                                        <option>feature</option>
+                                                        <option>bug</option>
+                                                        <option>concept</option>
+                                                        <option>design</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="form-group fleft mr10 mb10">
+                                                <div class="select-option select-project m-0" style="width: 150px;">
+                                                    <select class="select2">
+                                                        <option selected="selected">all status</option>
+                                                        <option>draft</option>
+                                                        <option>estimation</option>
+                                                        <option>go production</option>
+                                                        <option>waiting</option>
+                                                        <option>production</option>
+                                                        <option>accept</option>
+                                                        <option>done</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-md-4 p0">
+                                            <div class="input-group project-search">
+                                                <input type="text" placeholder="search" class="input-sm form-control"> 
+                                                <span class="input-group-btn"><button type="button" class="btn btn-sm btn-primary"> go!</button> </span>
+                                            </div>
+                                        </div>
+                                        <div style="clear:both;"></div>
+                                    </div>
+                                    <!-- end filter-->
+                                    
+                                    <!-- table project list -->
+                                    <div class="col-md-12">
+                                        <div class="project-list">
+                                            <div class="table-responsive">
+                                                <table class="table table-hover">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td width="50" class="project-table-head"></td>
+                                                        <td width="150" class="project-table-head">ID</td>
+                                                        <td width="1100" class="project-table-head">Title</td>
+                                                        <td width="100" class="project-table-head">Estimation</td>
+                                                        <td width="300" class="project-table-head">Status</td>
+                                                        <td width="300" class="project-table-head aright">Action</td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td class="project-type">
+                                                            <i class="fa fa-star"></i>
+                                                        </td>
+                                                        <td class="project-id">
+                                                            00101080
+                                                        </td>
+                                                        <td class="project-title">
+                                                            <a href="ticket-details-client-area-references-fxw.html">Client Area References  <span class="draft">(Draft)</span></a>
+                                                            <small>Muhammed created at 14.08.2014</small>
+                                                        </td>
+                                                        <td class="project-estimation">
+
+                                                        </td>
+                                                        <td class="project-status">
+                                                            <button type="button" class="btn btn-primary btn-xs fxw-alert-start-estimation" disabled="disbaled"><i class="fa fa-chevron-right"></i> start</button>
+                                                            <small>please start estimation</small>
+                                                        </td>
+                                                        <td class="project-actions">
+                                                            <button type="button" class="btn btn-white btn-sm" data-toggle="modal" data-target="#edit-ticket"><i class="fa fa-pencil"></i> </button>
+                                                            <button type="button" class="btn btn-white btn-sm fxw-alert-archive-ticket"><i class="fa fa-trash"></i> </button>
+                                                            <a href="ticket-details-client-area-references-fxw.html" class="btn btn-white btn-sm"><i class="fa fa-search"></i> details</a>
+                                                        </td> 
+                                                    </tr>
+
+                                                    
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end table project list-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--main-->
+
+            <!--footer-->
+            <div class="footer">
+                <div>
+                     &copy;2015 &middot; <b>flexwork.io</b> &middot; <a href="privacy-terms-fxw.html">Privacy and Terms</a> &middot; <a href="imprint-fxw.html">Imprint</a>
+                </div>
+            </div>
+            <!--end footer-->
+	</div>
+</div>

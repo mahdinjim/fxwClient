@@ -58,6 +58,10 @@ Controllers.controller("SideBarCtrl",['$scope','Login','Chat','Client','Project'
 	function SideBarCtrl($scope,Login,Chat,Client,Project)
 	{
 		$scope.canAdd=false;
+		$scope.isclient=false;;
+		if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER"){
+			$scope.isclient=true;
+		}
 		if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER"  ||Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_KEYACCOUNT")
 		{
 			$scope.canAdd=true;
@@ -143,6 +147,7 @@ Controllers.controller("SideBarCtrl",['$scope','Login','Chat','Client','Project'
 						$scope.selectedClient=null;
 					}
 
+
 				}
 				failurefunc=function(data)
 				{
@@ -216,6 +221,7 @@ Controllers.controller("SideBarCtrl",['$scope','Login','Chat','Client','Project'
 					$("#add-project").modal('hide');
 					$("#success").modal('show');
 					$('#success').find('p').html("Project added successfully");
+					getprojects();
 				}
 				var failureFunc=function()
 				{
@@ -1130,4 +1136,10 @@ Controllers.controller("ChatCtrl",["$scope","$rootScope","Chat","$routeParams","
 		});
 	}
 	Chat.getChannelInfo($routeParams.channel_id,succesFunc,messagingssuccsFunc,failureFunc,0);
-}])
+}]);
+Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",function($scope,Project,$routeParams,Login){
+	$scope.isclient=false;;
+	if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER"){
+		$scope.isclient=true;
+	}
+}]);

@@ -8,7 +8,7 @@
                         <li class="nav-logo">
                             <div class="nav-logo-element">
                                 <a href="#/dashboard">
-                                    <img src="img/logo-flexwork@2.png" width="139" height="19" alt="flexwork.io" title="flexwork.io"/>
+                                     <img src="img/logo-flexwork@2.png" width="55" height="49" alt="flexwork.io" title="flexwork.io"/>
                                 </a>
                             </div>
                         </li>
@@ -57,7 +57,12 @@
                     <li ng-if="doDisplay('/dashboard')">
                         <a href="#/dashboard"><i class="fa fa-clone"></i> <span class="nav-label">Projects</span> <span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level collapse in">
-                            <li ng-repeat='project in projects'><a href="#/pdtetails?project_id={{project.id}}"><span class="nav-label">{{project.name}}</a></li>
+                            <li ng-repeat='project in projects'>
+                                <a href="#/pdetails?project_id={{project.id}}" ng-if="isclient"><span class="nav-label">{{project.name}}</a>
+                                <a href="#/pdetails?project_id={{project.id}}" ng-if="!isclient">{{project.company}}
+                                    <span class="navi-project-name">{{project.name}}</span>
+                                </a>
+                            </li>
                             <li ng-if="canAdd"><a ng-click="openAddprojectModel()"><span style="border-bottom: 1px dotted;">+ Add Project</span></a></li>
                         </ul>
                     </li>
@@ -158,6 +163,21 @@
                     <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" ng-click="createProject()">Save</button>
                 </div>
+            </div>
+        </div>
+    </div> 
+    <!--success modal-->
+    <div class="modal inmodal fade" id="success" tabindex="-1" role="dialog"  aria-hidden="true" style="top:150px;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <div class="modal-title"><i class="glyphicon glyphicon-ok-circle"> Alright :)</i></div>
+                </div>
+                <div class="modal-body">
+                   <p class="modal-content-center m-0"></p>
+                </div>
+                
             </div>
         </div>
     </div> 
