@@ -50,6 +50,7 @@ services.factory("Links",[function(){
 	var sendMessageLink=baseUrl+path+"/private/chat/send";
 	var createProjectLink=baseUrl+path+"/private/project/restricted/create";
 	var listprojectLink=baseUrl+path+"/private/project/restricted/list";
+	var projectDetailLink=baseUrl+path+"/private/project/restricted/details";
 	this.getLoginLink=function()
 	{
 		return LoginLink;
@@ -205,6 +206,10 @@ services.factory("Links",[function(){
 	this.getListProjectLink=function()
 	{
 		return listprojectLink;
+	}
+	this.getProjectDetailLink=function()
+	{
+		return projectDetailLink;
 	}
 	return this;
 }]);
@@ -1004,6 +1009,22 @@ services.factory('Project',["$http","Login",'Links',function($http,Login,Links){
         }).error(function (data, status, headers, config) {
         	if(status==403)
         		Login.logout();
+        	
+        });
+	}
+	this.getProjectDetails=function(project_id,successFunc,failureFunc)
+	{
+		$http({
+			method:"GET", 
+			url:Links.getProjectDetailLink()+"/"+project_id,
+			headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+		}).success(function (data, status, headers, config) {
+			successfunc(data);
+        }).error(function (data, status, headers, config) {
+        	if(status==403)
+        		Login.logout();
+        	else
+        		failureFunc();
         	
         });
 	}

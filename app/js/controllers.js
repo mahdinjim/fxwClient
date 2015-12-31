@@ -1142,4 +1142,11 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER"){
 		$scope.isclient=true;
 	}
+	var succesFunc=function(data)
+	{
+		if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER"){
+		
+		}
+	}
+	Project.getProjectDetails($routeParams.project_id,succesFunc,failureFunc);
 }]);
