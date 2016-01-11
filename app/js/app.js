@@ -52,29 +52,35 @@ crmapp.config(["$routeProvider",
 ]);      		
 crmapp.run(['$rootScope', '$location', 'Login','Chat', function ($rootScope, $location, Login,Chat) {
     $rootScope.$on('$routeChangeStart', function (event) {
-
+    	if(!Login.getLoggedUser() && $location.path()=="/login")
+    	{
+    		return;
+    	}
         if (!Login.getLoggedUser() && $location.path()!="/login") {
            
             $location.path('/login');
         }
         else
         {
+        	var func=function(){
+		        if(Login.getLoggedUser() && !Login.haveAccess())
+		        {
+		        	Login.logout(false);
+		        }
+		        if(Login.getLoggedUser() && $location.path()=="/login" && Login.haveAccess())
+		        {
+		        	$location.path("/dashboard");
+		        	$location.replace();
+		        }
+		    }
 
-        	Login.isTokenExpired()
-	        if(Login.getLoggedUser() && !Login.haveAccess())
-	        {
-	        	$location.path('/login');
-	        }
-	        if(Login.getLoggedUser() && $location.path()=="/login" && Login.haveAccess())
-	        {
-	        	$location.path("/dashboard");
-	        	$location.replace();
-	        }
 	    }
-	    if($location.search().code!=undefined && $location.search().state!=undefined)
+	    if($location.search().last!=undefined)
 	    {
-	    	Chat.loginToChat($location.search().code,$location.search().state);
+	    	$location.url($location.search().last);
+	    	
 	    }
+	    
         
     });
 }]);

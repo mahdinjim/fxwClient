@@ -7,7 +7,7 @@
 		  <!--header title-->
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-lg-9">
-                    <h2><i class="fa fa-clone"></i> website</h2>
+                    <h2><i class="fa fa-clone"></i> {{project_name}}</h2>
                     <ol class="breadcrumb" ng-if="!isclient">
 
                        	<li>
@@ -46,23 +46,34 @@
                         <!-- buttons & team -->
                         <div class="row mb20">
                             <div class="col-md-6">
+
                                 <button class="btn btn-primary btn-bitbucket btn-m mr5" type="button" data-target="#add-ticket" data-toggle="modal" ng-if="isclient"><i class="fa fa-plus mr5"></i> add ticket</button>
+                                 <button class="btn btn-default btn-bitbucket btn-m mr5" type="button" data-target="#project-description" data-toggle="modal"><i class="fa fa-file-text mr5"></i> description</button>
                                 <button class="btn btn-default btn-bitbucket btn-m mr5" type="button" data-target="#budgetlimit" data-toggle="modal" ng-if="isclient"><i class="fa fa-thumb-tack mr5" ></i> budgetlimit</button>
                                 <button class="btn btn-default btn-bitbucket btn-m mr5" type="button" onclick="parent.location='project-keybox-website-fxw.html'"><i class="fa fa-lock mr5"></i> keybox</button>
+                                <a ng-if="!isclient" class="btn btn-default btn-bitbucket btn-m mr5" href="https://fxw.slack.com/" target="_blank"><i class="fa fa-slack mr5" ></i> slack</a>
+                                <a class="btn btn-default btn-bitbucket btn-m mr5" href="https://www.pivotaltracker.com/n/projects/928534" target="_blank" ng-if="!isclient"><i class="fa fa-circle-o mr5"></i> pivotal</a>
+                                <a class="btn btn-default btn-bitbucket btn-m mr5" href="https://github.com/mahdinjim/crmtool/commits/master" target="_blank" ng-if="!isclient"><i class="fa fa-github mr5"></i> github</a>
                             </div>
                           
                             
-                            <div class="col-md-6" ng-if="!isclient">
-                                <div class="project-people">
-                                    <a href="" class="fxwlink-member" data-toggle="modal" data-target="#add-member"><small><i class="fa fa-plus"></i> add member</small></a>
-                                    <a href="" class="team-lead"><img alt="Mahdi" class="img-circle" src="img/users/profile_mn_small.jpg"></a>
-                                    <a href=""><img alt="Zied" class="img-circle" src="img/users/profile_zj_small.jpg"></a>
-                                    <a href=""><img alt="Bilel" class="img-circle" src="img/users/profile_ba_small.jpg"></a>
+                            <div class="col-md-6">
+                                <div class="project-people" >
+                                    <a href="" class="fxwlink-member" ng-click="openAddMember()" ng-if="!isclient"><small><i class="fa fa-plus" ></i> add member</small></a>
+                                
+                                
+                                    <a href="" class="fxwlink-member" ng-if="hasteam && isclient"><small><i class="fa fa-comments"></i> see messages</small></a>
+                                
+                                
+                                    <a href="" class="team-lead" ng-repeat="member in team" ng-if='member.role.role==teamroles.TeamLeader.role' ><img alt="{{member.name}}"  class="img-circle" src="{{member.photo}}"></a>
+                                    <a href="" ng-repeat="member in team" ng-if='member.role.role!=teamroles.TeamLeader.role'><img alt="{{member.name}}" class="img-circle" src="{{member.photo}}"></a>
+                                    
+                                
                                 </div>
                             </div>
                         
                         <!-- end buttons & team -->
-                            <div class="col-md-6" ng-if="isclient">
+                            <div class="col-md-6" ng-if="isclient && !hasteam">
                                 <div class="project-people">
                                     <!--<a href="" class="fxwlink-member" data-toggle="modal" data-target="#add-member"><small><i class="fa fa-plus"></i> add member</small></a>-->
                                     <div class="project-status" style="margin-top:7px;">
@@ -109,7 +120,22 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="ibox">
+                        <div class="ibox" ng-if="!isclient">
+                           <div class="ibox-content">
+                                <div class="row mb20 mt20 pt20 pb20">
+                                    
+                                    <div class="col-md-12 acenter mt20 mb5">
+                                        <img width="55" height="49" title="flexwork.io" alt="flexwork.io" src="img/logo-grey-flexwork@2.png">
+                                    </div>
+
+                                    <div class="col-md-12 acenter">
+                                         This project is in Draft
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ibox" ng-if="hasTicket">
                            <div class="ibox-content">
                                 <div class="row">
                                     <!-- filter-->
@@ -143,7 +169,7 @@
                                             </div>
 
                                         </div>
-                                        <div class="col-md-4 p0">
+                                        <div class="col-md-4 p0" >
                                             <div class="input-group project-search">
                                                 <input type="text" placeholder="search" class="input-sm form-control"> 
                                                 <span class="input-group-btn"><button type="button" class="btn btn-sm btn-primary"> go!</button> </span>
@@ -216,4 +242,156 @@
             </div>
             <!--end footer-->
 	</div>
+     <!--modal add member-->
+    <div class="modal inmodal fade" id="add-member" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"><i class="fa fa-users modal-fa-icon"></i> Team</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row header-ticket-types">
+
+                        <div class="col-lg-12 p15" style="background-color: #1ab394;">
+                            <div class="form-group fleft m0 mr10">
+                                <div class="select-option m-0" style="width: 360px;">
+                                    <select class="select2" ng-model="addedmember" id="selectdevmember" ng-options="[member.name,' ',member.surname,', ',member.role.Text].join('') for member in devteam track by member.id && member.role.role">
+                                       
+                                       
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group m0">
+                                <button class="btn btn-white" type="button" ng-click="adddevmember()"><i class="fa fa-plus mr5"></i> add</button>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12 mt20">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-striped notification mb0">
+                                    <thead>
+                                        <th width="200">Name</th>
+                                        <th width="200">Role</th>
+                                        <th width="80" class="aright">Action</th>
+                                    </thead>
+                                    <tbody >
+                                        <tr ng-repeat="prod in team">
+                                            <td class="bold">{{prod.surname}} {{prod.name}}</td>
+                                            <td class="bold">
+                                                {{prod.role.Text}}
+                                            </td>
+                                            <td class="aright">
+                                                <button type="button" class="btn btn-white btn-sm fxw-alert-delete" role="button" ng-click="deleteTeamMember(prod)" ng-if='prod.role.role!=teamroles.TeamLeader.role'><i class="fa fa-close"></i></button>
+                                            </td>
+                                        </tr>
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" ng-click="closeTeamModal()">Close</button>
+                    <button type="button" class="btn btn-primary" ng-click="saveTeamMembers()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+ <!--success modal-->
+    <div class="modal inmodal fade" id="teamsuccess" tabindex="-1" role="dialog"  aria-hidden="true" style="top:150px;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <div class="modal-title"><i class="glyphicon glyphicon-ok-circle"> Alright :)</i></div>
+                </div>
+                <div class="modal-body">
+                   <p class="modal-content-center m-0"></p>
+                </div>
+                
+            </div>
+        </div>
+    </div> 
+    <!--failure modal-->
+    <div class="modal inmodal fade" id="teamfailure" tabindex="-1" role="dialog"  aria-hidden="true" style="top:150px;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <div class="modal-title"><i class="glyphicon glyphicon-remove-circle"> Oopss :(</i></div>
+                </div>
+                <div class="modal-body">
+                   <p class="modal-content-center m-0"></p>
+                </div>
+                
+            </div>
+        </div>
+    </div> 
+<!--warning modal-->
+    <div class="modal inmodal fade" id="teamwarning" tabindex="100" role="dialog"  aria-hidden="true" style="top:150px;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <div class="modal-title"><i class="glyphicon glyphicon-warning-sign"> Hey!!</i></div>
+                </div>
+                <div class="modal-body">
+                   <p class="modal-content-center m-0"></p>
+                </div>
+                
+            </div>
+        </div>
+    </div> 
+    <!--modal project description-->
+    <div class="modal inmodal fade" id="project-description" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-m">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"><i class="fa fa-file-text modal-fa-icon"></i> project description</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                             <p>{{projectDescription}}
+                             </p>
+                        </div>
+                        <div class="col-lg-12 mt20">
+                            <h4>Skills</h4>
+                            <p>{{projectSkilss}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>  
+    <div class="modal inmodal fade" id="budgetlimit" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"><i class="fa fa-thumb-tack modal-fa-icon"></i> Budgetlimit</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Send notification at</p>
+                    <div class="form-group m0">
+                        <input type="text" class="form-control input-lg fleft budgetlimit" placeholder="0" style="width: 215px;" ng-model="budget">
+                        <label class="fleft euro">€</label>
+                        <div class="clear-both"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" ng-click="assignBudget()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div> 
+</div>
 </div>

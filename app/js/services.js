@@ -13,6 +13,7 @@ services.factory("Links",[function(){
 	}
 	var LoginLink=baseUrl+path+'/public/login';
 	var AllteamMembersLink=baseUrl+path+'/private/team/all';
+	var AllDevteamMembersLink=baseUrl+path+'/private/devteam/all';
 	var createTeamLeaderLink=baseUrl+path+'/private/super/teamleader/create';
 	var createdeveloperLink=baseUrl+path+'/private/super/developer/create';
 	var createtesterLink=baseUrl+path+'/private/super/tester/create';
@@ -51,6 +52,18 @@ services.factory("Links",[function(){
 	var createProjectLink=baseUrl+path+"/private/project/restricted/create";
 	var listprojectLink=baseUrl+path+"/private/project/restricted/list";
 	var projectDetailLink=baseUrl+path+"/private/project/restricted/details";
+	var isexpiredLink=baseUrl+path+"/private/token/expired";
+	var assignTeamLeaderLink=baseUrl+path+"/private/super/project/teamleader/assign";
+	var addDeveloperLink=baseUrl+path+"/private/teamleader/project/developer/add";
+	var addDesignerLink=baseUrl+path+"/private/teamleader/project/designer/add";
+	var addTesterLink=baseUrl+path+"/private/teamleader/project/tester/add";
+	var addSysAdminLink=baseUrl+path+"/private/teamleader/project/sysadmin/add";
+	var deleteDeveloperFromProjectLink=baseUrl+path+"/private/teamleader/project/developer/delete";
+	var deleteTesterFromProjectLink=baseUrl+path+"/private/teamleader/project/tester/delete";
+	var deleteDesignerFromProjectLink=baseUrl+path+"/private/teamleader/project/designer/delete";
+	var deleteSysAdminFromprojectLink=baseUrl+path+"/private/teamleader/project/sysadmin/delete";
+	var getRolesLink=baseUrl+path+"/private/roles";
+	var fixProjectBudgetLink=baseUrl+path+"/private/project/restricted/budget";
 	this.getLoginLink=function()
 	{
 		return LoginLink;
@@ -211,15 +224,72 @@ services.factory("Links",[function(){
 	{
 		return projectDetailLink;
 	}
+	this.getIsExpiredLink=function()
+	{
+		return isexpiredLink;
+	}
+	this.getAllDevTeamMemberLink=function()
+	{
+		return AllDevteamMembersLink;
+	}
+	this.getAssignTealLeaderLink=function()
+	{
+		return assignTeamLeaderLink;
+	}
+	this.getAddDeveloperLink=function()
+	{
+		return addDeveloperLink;
+	}
+	this.getAddDesignerLink=function()
+	{
+		return addDesignerLink;
+	}
+	this.getAddTesterLink=function()
+	{
+		return addTesterLink;
+	}
+	this.getAddSysAdminLink=function()
+	{
+		return addSysAdminLink;
+	}
+	this.getDeleteDeveloperFromProjectLink=function()
+	{
+		return deleteDeveloperFromProjectLink;
+	}
+	this.getDeleteTesterFromProjectLink=function()
+	{
+		return deleteTesterFromProjectLink;
+	}
+	this.getDeleteDesignerFromProjectLink=function()
+	{
+		return deleteDesignerFromProjectLink;
+	}
+	this.getDeleteSysAdminFromProjectLink=function()
+	{
+		return deleteSysAdminFromprojectLink;
+	}
+	this.getGetRolesLink=function()
+	{
+		return getRolesLink;
+	}
+	this.getAssignBudgetLink=function()
+	{
+		return fixProjectBudgetLink;
+	}
 	return this;
 }]);
 services.factory("Login",['$http','$location','$cookies',"$route","Links",
 	function($http,$location,$cookies,$route,Links){
+		var lastlink=null;
 		var Admin_Access=["/login","/dashboard","/client","/teamprofile","/team","/messaging","/pdetails"];
 		var Client_Access=["/login","/dashboard","/cuser","/cuserprofile","/messaging","/pdetails"];
 		var KeyAccount_Access=["/login","/dashboard","/pdetails","/messaging","/client"];
 		var TeamLeader_Access=["/login","/dashboard","/pdetails","/messaging"];
 		var TeamMember_Access=["/login","/dashboard","/pdetails","/messaging"];
+		this.setLastLink=function(path)
+		{
+			this.lastlink=path;
+		}
 		this.doLogin=function(login,password,funcsucess,funcfailure)
 		{
 			postdata={
@@ -263,9 +333,20 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 				return false;
 			}
 		}
-		this.logout=function(){
+		this.logout=function(savelast){
 			localStorage.removeItem("loggeduser");
-			$location.path('/login');
+			if(savelast===undefined || savelast==null)
+			 {
+			 	savelast=true;
+			 }
+			if(savelast)
+			{
+				var last=$location.path();
+				$location.url('/login?last='+last);
+
+			}
+			else
+				$location.url("/login");
 			
 		}
 		this.haveAccess=function(path)
@@ -298,25 +379,25 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 			}
 
 		}
-		this.isTokenExpired=function()
+		this.isTokenExpired=function(successFunc)
 		{
 			var loggedUser=this.getLoggedUser();
+			var me=this;
 			if(loggedUser)
 			{
-
-				exprirationdate=new Date(loggedUser.token.experationDate.date);
-				curentdate=new Date();
-				exprirationdate=this.toUTCdate(exprirationdate,-60);
-				curentdate=this.toUTCdate(curentdate,curentdate.getTimezoneOffset());
-				if(exprirationdate>curentdate)
-				{
-					return false;
-				}
-				else
-					this.logout();
+				$http({
+					method:"GET", 
+					url:Links.getIsExpiredLink(),
+					headers: {'x-crm-access-token': this.getLoggedUser().token.token}
+				}).success(function (data, status, headers, config) {
+					successFunc()
+	            }).error(function (data, status, headers, config) {
+	            	me.logout();
+	            });
+				
 			}
 			else
-				this.logout();
+				$location.url("/login");
 
 		}
 		this.toUTCdate=function(d,offset)
@@ -329,9 +410,34 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 
 services.factory("Team",['$http','$location','$cookieStore',"Login","Links",
 	function($http,$location,$cookieStore,Login,Links){
+		this.roles=null;
+		var me=this;
+		this.loadRoles=function(successFunc){
+			if(Login.getLoggedUser() && this.roles==null)
+			{
+				$http({
+					method:"GET", 
+					url:Links.getGetRolesLink(),
+					headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+				}).success(function (data, status, headers, config) {
+					me.roles=data.Roles;
+					successFunc(data.Roles);
+	            }).error(function (data, status, headers, config) {
+	            	if(status==403)
+        				Login.logout();
+        	
+	            });
+	        }
+	        else
+	        	successFunc(this.roles)
+		 }
+	    this.getRoles=function()
+	    {
+	    	return this.roles;
+	    }
 		this.getAllteamMembers=function(funcsuccess,funcfailure)
 		{
-			if(!Login.isTokenExpired())
+			if(Login.getLoggedUser())
 			{
 				$http({
 					method:"GET", 
@@ -345,7 +451,34 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",
 					}
 	                funcsuccess(data);
 	            }).error(function (data, status, headers, config) {
-	            	
+	            	if(status==403)
+        				Login.logout();
+        	
+	            });
+	        }
+		}
+		this.getAlldevteamMembers=function(funcsuccess,funcfailure)
+		{
+			if(Login.getLoggedUser())
+			{
+				$http({
+					method:"GET", 
+					url:Links.getAllDevTeamMemberLink(),
+					headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+				}).success(function (data, status, headers, config) {
+					for(i=0;i<data.length;i++)
+					{
+						if(data[i].photo==null)
+							data[i].photo="img/users/profile_default_small.jpg"
+					}
+	                funcsuccess(data);
+	            }).error(function (data, status, headers, config) {
+	            	if(status==403)
+        				Login.logout();
+        			else{
+        				funcfailure();
+        			}
+        	
 	            });
 	        }
 		}
@@ -423,7 +556,7 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",
 		}
 		this.addTeamMember=function(link,member,successFunc,failureFunc,method)
 		{
-			if(!Login.isTokenExpired())
+			if(Login.getLoggedUser())
 			{
 
 				$http({
@@ -434,13 +567,16 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",
 				}).success(function (data, status, headers, config) {
 					successFunc();
 				}).error(function (data, status, headers, config) {
-	            	failureFunc(data.errors);
+					if(status==403)
+        				Login.logout();
+        			else
+	            		failureFunc(data.errors);
 	            });
 			}
 		}
 		this.deleteTeamMember=function(link,member,successFunc,failureFunc)
 		{
-			if(!Login.isTokenExpired())
+			if(Login.getLoggedUser())
 			{
 
 				$http({
@@ -450,13 +586,16 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",
 				}).success(function (data, status, headers, config) {
 					successFunc();
 				}).error(function (data, status, headers, config) {
-	            	failureFunc(data.errors);
+					if(status==403)
+        				Login.logout();
+        			else
+	            		failureFunc(data.errors);
 	            });
 			}
 		}
 		this.uploadMemberImage=function(id,role,image,successFunc,failurefunc)
 		{
-			if(!Login.isTokenExpired())
+			if(Login.getLoggedUser())
 			{
 
 				$http({
@@ -467,7 +606,10 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",
 				}).success(function (data, status, headers, config) {
 					successFunc();
 				}).error(function (data, status, headers, config) {
-	            	failurefunc(data.errors);
+					if(status==403)
+        				Login.logout();
+        			else
+	            		failurefunc(data.errors);
 	            });
 			}
 		}
@@ -578,7 +720,7 @@ services.factory('Client', ['$http','Login',"Links",function ($http,Login,Links)
 	
 	this.getAllKeyAccounts=function(successFunc,failureFunc,page)
 	{
-		if(!Login.isTokenExpired())
+		if(Login.getLoggedUser())
 			{
 				$http({
 					method:"GET", 
@@ -588,13 +730,16 @@ services.factory('Client', ['$http','Login',"Links",function ($http,Login,Links)
 					
 	                successFunc(data.users);
 	            }).error(function (data, status, headers, config) {
-	            	failureFunc();
+	            	if(status==403)
+        				Login.logout();
+        			else
+	            		failureFunc();
 	            });
 	        }
 	}
 	this.addClient=function(client,successFunc,failureFunc,method)
 		{
-			if(!Login.isTokenExpired())
+			if(Login.getLoggedUser())
 			{
 				if(method=="POST")
 					var link =Links.getCreateClientLink();
@@ -611,13 +756,16 @@ services.factory('Client', ['$http','Login',"Links",function ($http,Login,Links)
 					else
 						successFunc("Client updated successfully");
 				}).error(function (data, status, headers, config) {
-	            	failureFunc(data.errors);
+					if(status==403)
+        				Login.logout();
+        			else
+	            		failureFunc(data.errors);
 	            });
 			}
 		}
 	this.getAllClients=function(successFunc,failureFunc,page)
 	{
-		if(!Login.isTokenExpired())
+		if(Login.getLoggedUser())
 			{
 				$http({
 					method:"GET", 
@@ -627,13 +775,16 @@ services.factory('Client', ['$http','Login',"Links",function ($http,Login,Links)
 					
 	                successFunc(data.users,data.totalpages,data.current_page);
 	            }).error(function (data, status, headers, config) {
+	            	if(status==403)
+        				Login.logout();
+        	
 	            	
 	            });
 	        }
 	}
 	this.deleteClient=function(client,successFunc,failureFunc)
 		{
-			if(!Login.isTokenExpired())
+			if(Login.getLoggedUser())
 			{
 
 				$http({
@@ -643,7 +794,10 @@ services.factory('Client', ['$http','Login',"Links",function ($http,Login,Links)
 				}).success(function (data, status, headers, config) {
 					successFunc();
 				}).error(function (data, status, headers, config) {
-	            	failureFunc(data.errors);
+					if(status==403)
+        				Login.logout();
+        			else
+	            		failureFunc(data.errors);
 	            });
 			}
 		}
@@ -652,7 +806,7 @@ services.factory('Client', ['$http','Login',"Links",function ($http,Login,Links)
 services.factory("Cuser",["$http",'Login','Links',function($http,Login,Links){
 	this.addUser=function(user,successFunc,failureFunc,method)
 		{
-			if(!Login.isTokenExpired())
+			if(Login.getLoggedUser())
 			{
 				if(method=="POST")
 					var link =Links.getCreateCuserLink();
@@ -669,13 +823,16 @@ services.factory("Cuser",["$http",'Login','Links',function($http,Login,Links){
 					else
 						successFunc("User updated successfully");
 				}).error(function (data, status, headers, config) {
+					if(status==403)
+        				Login.logout();
+        			else
 	            	failureFunc(data.errors);
 	            });
 			}
 		}
 		this.getAllUsers=function(successFunc,failureFunc,page)
 		{
-			if(!Login.isTokenExpired())
+			if(Login.getLoggedUser())
 				{
 					$http({
 						method:"GET", 
@@ -689,13 +846,15 @@ services.factory("Cuser",["$http",'Login','Links',function($http,Login,Links){
 						}
 		                successFunc(data.users);
 		            }).error(function (data, status, headers, config) {
-		            	
+		            	if(status==403)
+        					Login.logout();
+        	
 		            });
 		        }
 		}
 		this.deleteUser=function(user,successFunc,failureFunc)
 			{
-				if(!Login.isTokenExpired())
+				if(Login.getLoggedUser())
 				{
 
 					$http({
@@ -705,13 +864,16 @@ services.factory("Cuser",["$http",'Login','Links',function($http,Login,Links){
 					}).success(function (data, status, headers, config) {
 						successFunc();
 					}).error(function (data, status, headers, config) {
-		            	failureFunc(data.errors);
+						if(status==403)
+        					Login.logout();
+        				else
+		            		failureFunc(data.errors);
 		            });
 				}
 			}
 		this.uploadCuserImage=function(id,image,successFunc,failurefunc)
 		{
-			if(!Login.isTokenExpired())
+			if(Login.getLoggedUser())
 			{
 
 				$http({
@@ -722,7 +884,10 @@ services.factory("Cuser",["$http",'Login','Links',function($http,Login,Links){
 				}).success(function (data, status, headers, config) {
 					successFunc();
 				}).error(function (data, status, headers, config) {
-	            	failurefunc(data.errors);
+					if(status==403)
+        				Login.logout()
+        			else
+	            		failurefunc(data.errors);
 	            });
 			}
 		}
@@ -754,7 +919,7 @@ services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
 	this.newmessagesCount=0;
 	this.getChannelInfo=function(channel_id,successFunc,messagingssuccsFunc,failureFunc,start)
 	{
-		if(!Login.isTokenExpired())
+		if(Login.getLoggedUser())
 		{
 			var me=this;
 			$http({
@@ -861,7 +1026,7 @@ services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
 			else
 				start=this.first.ts;
 		}
-		if(!Login.isTokenExpired())
+		if(Login.getLoggedUser())
 		{
 			var me =this;
 			$http({
@@ -889,7 +1054,7 @@ services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
 	}
 	this.getNewMessages=function(channel_id,successFunc,failureFunc,last)
 	{
-		if(!Login.isTokenExpired())
+		if(Login.getLoggedUser())
 		{
 			var me =this;
 			$http({
@@ -909,7 +1074,7 @@ services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
 	}
 	this.markreadMessages=function(channel_id,mess)
 	{
-		if(!Login.isTokenExpired())
+		if(Login.getLoggedUser())
 		{
 			var me =this;
 			$http({
@@ -926,7 +1091,7 @@ services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
 	}
 	this.getNewMessagesNumber=function(channel,successfunction,i,end)
 	{
-		if(!Login.isTokenExpired())
+		if(Login.getLoggedUser())
 		{
 			
 			var me =this;
@@ -951,7 +1116,7 @@ services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
 	this.sendMessage=function(group,text,successFunc)
 	{
 		var me =this;
-		if(!Login.isTokenExpired())
+		if(Login.getLoggedUser())
 		{
 			var username;
 			if(Login.getLoggedUser().userinfo.compnay_name==undefined)
@@ -1019,14 +1184,92 @@ services.factory('Project',["$http","Login",'Links',function($http,Login,Links){
 			url:Links.getProjectDetailLink()+"/"+project_id,
 			headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 		}).success(function (data, status, headers, config) {
-			successfunc(data);
+			successFunc(data);
         }).error(function (data, status, headers, config) {
         	if(status==403)
         		Login.logout();
         	else
-        		failureFunc();
+        		failureFunc("error");
         	
         });
+	}
+
+	this.assignTeamLeader=function(successFunc,failureFunc,data)
+	{
+		this.ProjectMember(Links.getAssignTealLeaderLink(),data,successFunc,failureFunc);
+	}
+	this.addDeveloper=function(successFunc,failureFunc,data)
+	{
+		this.ProjectMember(Links.getAddDeveloperLink(),data,successFunc,failureFunc);
+	}
+	this.addDesigner=function(successFunc,failureFunc,data)
+	{
+		this.ProjectMember(Links.getAddDesignerLink(),data,successFunc,failureFunc);
+	}
+	this.addTester=function(successFunc,failureFunc,data)
+	{
+		this.ProjectMember(Links.getAddTesterLink(),data,successFunc,failureFunc);
+	}
+	this.addSystemAdmin=function(successFunc,failureFunc,data)
+	{
+		this.ProjectMember(Links.getAddSysAdminLink(),data,successFunc,failureFunc);
+	}
+	this.deleteDeveloperFromProject=function(successFunc,failureFunc,data)
+	{
+		this.ProjectMember(Links.getDeleteDeveloperFromProjectLink(),data,successFunc,failureFunc);
+	}
+	this.deleteTesterFromProject=function(successFunc,failureFunc,data)
+	{
+		this.ProjectMember(Links.getDeleteTesterFromProjectLink(),data,successFunc,failureFunc);
+	}
+	this.deleteDesignerFromProject=function(successFunc,failureFunc,data)
+	{
+		this.ProjectMember(Links.getDeleteDesignerFromProjectLink(),data,successFunc,failureFunc);
+	}
+	this.deleteSysAdminFromProject=function(successFunc,failureFunc,data)
+	{
+		this.ProjectMember(Links.getDeleteSysAdminFromProjectLink(),data,successFunc,failureFunc);
+	}
+	this.ProjectMember=function(url,data,successFunc,failureFunc)
+	{
+		$http({
+			method:"POST", 
+			url:url,
+			data:data,
+			headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+		}).success(function (data, status, headers, config) {
+
+			successFunc(data);
+
+        }).error(function (data, status, headers, config) {
+        	if(status==403)
+        		Login.logout();
+        	else
+        		failureFunc("error");
+        	
+        });
+	}
+	this.assignProjectBudget=function(successFunc,failureFunc,data)
+	{
+		if(Login.getLoggedUser())
+		{
+			$http({
+				method:"POST", 
+				url:Links.getAssignBudgetLink(),
+				data:data,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+
+				successFunc(data);
+
+	        }).error(function (data, status, headers, config) {
+	        	if(status==403)
+	        		Login.logout();
+	        	else
+	        		failureFunc("error");
+	        	
+	        });
+	    }
 	}
 	return this;
 }
