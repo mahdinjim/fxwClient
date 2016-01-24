@@ -49,6 +49,13 @@ Controllers.controller('LoginCtrl',['$scope','Login','$location',
 Controllers.controller("MenuNavCtrl",['$scope','Login',
 	function SideBarCtrl($scope,Login)
 	{
+		if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER"){
+			$scope.isclient=true;
+			if(Login.getLoggedUser().userinfo.keyaccount.photo==null)
+				Login.getLoggedUser().userinfo.keyaccount.photo="img/users/profile_default_small.jpg";
+			$scope.keyaccount=Login.getLoggedUser().userinfo.keyaccount;
+		}
+
 		$scope.logout=function(){
 			Login.logout(false);
 		}
@@ -1137,16 +1144,37 @@ Controllers.controller("ChatCtrl",["$scope","$rootScope","Chat","$routeParams","
 	}
 	Chat.getChannelInfo($routeParams.channel_id,succesFunc,messagingssuccsFunc,failureFunc,0);
 }]);
-Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login","Team",function($scope,Project,$routeParams,Login,Team){
+Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login","Team","$location","Ticket","Params",function($scope,Project,$routeParams,Login,Team,$location,Ticket,Params){
 	$scope.isclient=false;
 	$scope.isAdmin=false;
 	$scope.isTeamLeader=false;
 	$scope.isMember=false;
+	
+	$scope.hasteam=true;
+	$scope.ticketStatus=Ticket.ticketstatus;
+	var channel_id=null;
+	var updateTickets=function()
+	{
+		var successFunc=function(data)
+		{
+			$scope.tickets=data;
+		}
+		var failureFunc=function()
+		{
+			swal("Can't update Ticket","We couldn't update tickets status","error");
+		}
+		Ticket.getTicketList(successFunc,failureFunc,project_id)
+	}
 	var project_id=$routeParams.project_id;
 	var loadRoles=function(data){
 		$scope.teamroles=data;
 	}
 	Team.loadRoles(loadRoles);
+	var tikettypes=function(data)
+	{
+		$scope.tickettypes=data;
+	}
+	Ticket.loadTicketTypes(tikettypes);
 	if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN")
 	{
 		$scope.isAdmin=true;
@@ -1155,12 +1183,14 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	{
 		$scope.isTeamLeader=true;
 	}
-	if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER"){
+	if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER"|| Login.getLoggedUser().userinfo.roles[0]=="ROLE_KEYACCOUNT"){
 		$scope.isclient=true;
 	}
 	else{
-		$scope.username=Login.getLoggedUser().userinfo.surname+ " "+Login.getLoggedUser().userinfo.name;
+		$scope.isMember=true;
 	}
+	$scope.username=Login.getLoggedUser().userinfo.surname+ " "+Login.getLoggedUser().userinfo.name;
+	var ticketupdater=null;
 	var succesFunc=function(data)
 	{
 		$scope.company_name=data.customer;
@@ -1168,11 +1198,16 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		for(i=0;i<data.team.length;i++)
 			if(data.team[i].photo==null)
 				data.team[i].photo="img/users/profile_default_small.jpg";
+		Params.setProject(data);
 		$scope.team=data.team;
 		$scope.tickets=data.tickets;
 		$scope.projectDescription=data.description;
 		$scope.projectSkilss=data.skills;
 		$scope.budget=data.budget;
+		$scope.issigned=data.signed;
+		$scope.client=data.client;
+		channel_id=data.channel_id;
+
 		if(data.tickets.length==0)
 		{
 			$scope.hasTicket=false;
@@ -1180,6 +1215,10 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		else
 		{
 			$scope.hasTicket=true;
+			ticketupdater=setInterval(updateTickets, 10000);
+			$scope.$on('$routeChangeStart',function(){
+					clearInterval(ticketupdater);
+				});
 		}
 		if(data.team.length==0)
 		{
@@ -1193,9 +1232,21 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 
 		}
 	}
+	$scope.acceptContract=function()
+	{
+		var successFunc=function(){
+			$("#see-contract").modal("hide");
+			$scope.issigned=true;
+		}
+		var failureFunc=function()
+		{
+			swal("Can't accept contract","Sorry please try again later");
+		}
+		Project.acceptContract(successFunc,failureFunc,project_id);
+	}
 	var failureFunc=function(msg)
 	{
-		alert(msg)
+		swal("Oops!!","We can't load project details please refresh the page","error");
 	}
 	var newDevMembers=new Array();
 	var newSysMember=new Array();
@@ -1554,5 +1605,1293 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 			$('#teamwarning').find('p').html("Please choose a number great than zero");
 		}
 	}
+	$scope.openKeybox=function()
+	{
+		$location.url("/keybox").search({"project_id": project_id});;
+	}
+	$scope.hideshowForm=function(visible){
+		if(visible)
+		{
+			$("#ticketchoiceform").show();
+		}
+		else {
+			$("#ticketchoiceform").hide();
+		}
+	}
+	var verifTicketForm=function()
+	{
+		message=new Array();
+		if($scope.tickettitle===undefined || $scope.tickettitle==null ||$scope.tickettitle=="")
+		{
+			message.push("Please enter Ticket title");
+		}
+		if($scope.ticketdescription===undefined || $scope.ticketdescription==null ||$scope.ticketdescription=="")
+		{
+			message.push("Please enter Ticket description");
+		}
+		return message;
+	}
+	$scope.openmessages=function()
+	{
+		if(channel_id!=null)
+		{
+			$location.url("/messaging").search({"channel_id": channel_id});
+		}
+		else
+		{
+			swal("No channel","No messaging channel was created for this project","info")
+		}
+	}
+	var editedTicket=null;
+	$scope.openCreateTicket=function(ticket)
+	{
+		if(ticket!=null)
+		{
+			if(ticket.type==$scope.tickettypes[4].type){
+				$scope.conceptselct=false;
+				$scope.designselct=true;
+				$scope.featureselct=false;
+				$scope.bugselct=false;
+				$scope.devselct=false;
+				//$("#radio3").trigger('click');
+				}
+			else if(ticket.type==$scope.tickettypes[3].type){
+				$scope.conceptselct=true;
+				$scope.designselct=false;
+				$scope.featureselct=false;
+				$scope.bugselct=false;
+				$scope.devselct=false;
+				$("#radio2").attr("checked", "checked");
+				
+			}
+			else if(ticket.type==$scope.tickettypes[1].type)
+			{
+				$scope.conceptselct=false;
+				$scope.designselct=false;
+				$scope.featureselct=true;
+				$scope.bugselct=false;
+				$scope.devselct=true;
+				$("#radio1").attr("checked", "checked");
+				$("#inlineradio1").attr("checked", "checked");
+				
+				
+			}
+			else if(ticket.type==$scope.tickettypes[2].type)
+			{
+				$scope.conceptselct=false;
+				$scope.designselct=false;
+				$scope.featureselct=false;
+				$scope.bugselct=true;
+				$scope.devselct=true;
+				$("#radio1").prop("checked", true);
+				$("#radio2").prop("checked", false);
+				$("#radio3").prop("checked", false);
+				$("#inlineradio1").prop("checked", false);
+				$("#inlineradio2").prop("checked", true);
+			}
+			$scope.isedit=true;
+			$scope.tickettitle=ticket.title;
+			$scope.ticketdescription=ticket.description;
+			editedTicket=ticket;
+			$("#add-ticket").modal('show');
+		}
+		else{
+			$scope.conceptselct=false;
+			$scope.designselct=false;
+			$scope.featureselct=false;
+			$scope.bugselct=false;
+			$scope.devselct=true;
+			$("#radio1").prop("checked", true);
+			$scope.tickettitle="";
+			$scope.ticketdescription="";
+			editedTicket=null;
+			$scope.isedit=false;
+			$("#add-ticket").modal('show');
+		}
+	}
+	$scope.openBuginfo=function(desc)
+	{
+		$scope.bugdescription=desc;
+		$('#bug-info').modal('show');
+	}
+	$scope.createTicket=function(){
+		messages=verifTicketForm();
+		if(messages.length==0)
+		{
+			var data={
+				"project_id":project_id,
+				"title":$scope.tickettitle,
+				"description":$scope.ticketdescription,
+				"createdby":Login.getLoggedUser().userinfo.name+" "+Login.getLoggedUser().userinfo.surname
+			}
+			if(editedTicket!=null)
+			{
+				data.ticket_id=editedTicket.id;
+			}
+			if($scope.designselct){
+				data.type=$scope.tickettypes[4].type;
+			}
+			else if($scope.conceptselct){
+				data.type=$scope.tickettypes[3].type;
+			}
+			else if($scope.devselct)
+			{
+				if($scope.featureselct){
+					data.type=$scope.tickettypes[1].type;
+				}
+				else if($scope.bugselct){
+				data.type=$scope.tickettypes[2].type;
+				}
+				else{
+					swal("Choose Type", "Please choose a ticket type", "warning");
+				}
+			}
+			
+			
+			var successFunc=function()
+			{
+				swal("Ticket Created", "Ticket created successfully", "success");
+				$("#add-ticket").modal('hide');
+				updateTickets();
+			}
+			var failureFunc=function()
+			{
+				swal("Opss", "Something bad happen please try again later", "error");
+			}
+			if(editedTicket==null)
+				Ticket.createTicket(successFunc,failureFunc,data);
+			else
+				Ticket.updateTicket(successFunc,failureFunc,data);
+		}
+		else
+		{
+			swal("Oopss",messages.join("\n"),"warning");
+		}
+	}
+	$scope.openTicketDetails=function(ticket)
+	{
+		$scope.tasks=ticket.tasks;
+		$('#estimation-details').modal("show");
+	}
+	var ticket=null;
+	$scope.openEstimationDetails=function(selectedticket)
+	{
+		$scope.tasks=selectedticket.tasks;
+		ticket=selectedticket;
+		$('#send-to-client').modal("show");
+	}
+	$scope.sendToClient=function()
+	{
+		var estimation=0;
+		var complete=true;
+		for(i=0;i<ticket.tasks.length;i++)
+		{
+			if(ticket.tasks[i].estimation==null)
+			{
+				complete=false;
+			}
+			else
+				estimation+=ticket.tasks[i].estimation;
+		}
+		if(complete){
+			swal({
+	                title: "Are you sure?",
+	                text: 'You want to send a total estimation of '+estimation+' h to client.',
+	                type: "warning",
+	                showCancelButton: true,
+	                cancelButtonText: "cancel",
+	                confirmButtonColor: "#ed5565",
+	                confirmButtonText: "Yes, send it!",
+	                closeOnConfirm: false
+	            }, function () {
+	            	
+					var successFunc=function(data)
+					{
+						$('#send-to-client').modal("hide");
+						updateTickets();
+						swal.close();
+					}
+					var failureFunc=function()
+					{
+						swal("Oops!","Can't send estimation to client");
+					}
+					Ticket.sendToClient(successFunc,failureFunc,ticket.id);
+						
+						
+	        });
+		}
+		else
+		{
+			swal("Please Complete estimation","Some stories are not estimated yet","info");
+		}
+
+	}
+	$scope.openSendToProdModal=function(selectedticket)
+	{
+		$scope.tasks=selectedticket.tasks;
+		ticket=selectedticket;
+		$('#send-to-production').modal("show");
+	}
+	$scope.sendToProduction=function()
+	{
+
+		swal({
+            title: "Are you sure?",
+            text: 'You want to send the ticket to production',
+            type: "warning",
+            showCancelButton: true,
+            cancelButtonText: "cancel",
+            confirmButtonColor: "#ed5565",
+            confirmButtonText: "Yes, send it!",
+            closeOnConfirm: false
+	        }, function () {
+	        	
+				var successFunc=function(data)
+				{
+					$('#send-to-production').modal("hide");
+					updateTickets();
+					swal.close();
+				}
+				var failureFunc=function()
+				{
+					swal("Oops!","Can't send estimation to client");
+				}
+				Ticket.sendToProd(successFunc,failureFunc,ticket.id);
+						
+						
+	        });
+	}
+	$scope.openDeliverToClientModal=function(selectedticket)
+	{
+		$scope.tasks=selectedticket.tasks;
+		ticket=selectedticket;
+		$('#deliver-ticket').modal("show");
+	}
+	$scope.deliverToclient=function()
+	{
+		var realtime=0;
+		var complete=true;
+		for(i=0;i<ticket.tasks.length;i++)
+		{
+			if(ticket.tasks[i].realtime==null)
+			{
+				complete=false;
+			}
+			else
+				realtime+=ticket.tasks[i].realtime;
+		}
+		if(complete){
+			swal({
+	                title: "Are you sure?",
+	                text: 'You want to deliver the ticket of total time '+realtime+' h to client.',
+	                type: "warning",
+	                showCancelButton: true,
+	                cancelButtonText: "cancel",
+	                confirmButtonColor: "#ed5565",
+	                confirmButtonText: "Yes, send it!",
+	                closeOnConfirm: false
+	            }, function () {
+	            	
+					var successFunc=function(data)
+					{
+						updateTickets();
+						$('#deliver-ticket').modal("hide");
+						swal.close();
+					}
+					var failureFunc=function()
+					{
+						swal("Oops!","Can't deliver ticket to client");
+					}
+					Ticket.deliverToClient(successFunc,failureFunc,ticket.id);
+						
+						
+	        });
+		}
+		else
+		{
+			swal("Please Complete realtime","Real time for some stories is not set yet","info");
+		}
+	}
+	$scope.startEstimation=function(ticket)
+	{
+		
+		swal({
+                title: "You start the ticket:",
+                html: '<p><i class="fa fa-star project-type"></i>'+ticket.title+'</p>',
+                type: "info",
+                showCancelButton: true,
+                cancelButtonText: "cancel",
+                confirmButtonColor: "#1ab394",
+                confirmButtonText: "start now",
+                closeOnConfirm: false
+            }, function () {
+            	var successFunc=function()
+				{
+					swal(
+	                {
+	                    title: "Great!",
+	                    text: "Your ticket is send successfully to estimation", 
+	                    type: "success",
+	                    confirmButtonColor: "#1ab394",
+	                    confirmButtonText: "close"
+	                });
+					updateTickets();
+				}
+				var failureFunc=function()
+				{
+					swal("Can't start estimation","We couldn't statrt the estimation process","error");
+
+				}
+                Ticket.startEstimation(successFunc,failureFunc,ticket.id);
+            });
+	}
+	$scope.acceptEstimation=function(ticket)
+	{
+		
+		swal({
+                title: "You confirm the estimation of "+ ticket.estimation+"h for", 
+                html: '<p><i class="fa fa-star project-type"></i> Contracting Process</p><div class="col-lg-12 acenter mb20"><div class="checkbox checkbox-alert checkbox-primary mt-5 mb-5"><input type="checkbox" id="checkbox3"><label for="checkbox3">I accept the <a href="#" target="_blank">Terms and Conditions</a></label></div></div>',
+                type: "info",
+                showCancelButton: true,
+                cancelButtonText: "cancel",
+                confirmButtonColor: "#1ab394",
+                confirmButtonText: "i confirm",
+                closeOnConfirm: false
+            }, function () {
+            	var successFunc=function()
+				{
+					swal(
+	                {
+	                    title: "Great!",
+	                    text: "Your ticket is send successfully to production", 
+	                    type: "success",
+	                    confirmButtonColor: "#1ab394",
+	                    confirmButtonText: "close"
+	                });
+					updateTickets();
+				}
+				var failureFunc=function()
+				{
+					swal("Can't accept estimation","We couldn't accept the estimation","error");
+
+				}
+                Ticket.acceptEstimation(successFunc,failureFunc,ticket.id);
+            });
+	}
+	$scope.rejectEstimation=function(ticket)
+	{
+		
+		swal({
+                title: "You reject the estimation for", 
+                //html: '<p><i class="fa fa-star project-type"></i>'+ticket.title+'</p>',
+                text:"hello",
+                type: "info",
+                showCancelButton: true,
+                cancelButtonText: "cancel",
+                confirmButtonColor: "#1ab394",
+                confirmButtonText: "i confirm",
+                closeOnConfirm: false
+            }, function () {
+            	var successFunc=function()
+				{
+					swal(
+	                {
+	                    title: "Great!",
+	                    text: "Estimation rejected successfully", 
+	                    type: "success",
+	                    confirmButtonColor: "#1ab394",
+	                    confirmButtonText: "close"
+	                });
+					updateTickets();
+				}
+				var failureFunc=function()
+				{
+					swal("Can't reject estimation","We couldn't reject the estimation","error");
+
+				}
+                Ticket.rejectEstimation(successFunc,failureFunc,ticket.id);
+            });
+	}
+	$scope.acceptTicket=function(ticket)
+	{
+		
+		swal({
+                title: "You accept and close the ticket", 
+                html: '<p><i class="fa fa-star project-type"></i>'+ticket.title+'</p>',
+                type: "info",
+                showCancelButton: true,
+                cancelButtonText: "cancel",
+                confirmButtonColor: "#1ab394",
+                confirmButtonText: "accept",
+                closeOnConfirm: false
+            }, function () {
+            	var successFunc=function()
+				{
+					swal(
+	                {
+	                    title: "Great!",
+	                    text: "Your ticket is successfully closed", 
+	                    type: "success",
+	                    confirmButtonColor: "#1ab394",
+	                    confirmButtonText: "close"
+	                });
+					updateTickets();
+				}
+				var failureFunc=function()
+				{
+					swal("Can't accept ticket","We couldn't accept the ticket","error");
+
+				}
+                Ticket.acceptTicket(successFunc,failureFunc,ticket.id);
+            });
+	}
+	$scope.openRejectModal=function(ticket)
+	{
+		$scope.rejectedticket=ticket;
+		$scope.rejectionmessage="";
+		$("#reject-ticket").modal("show");
+	}
+	$scope.rejectTicket=function(ticket)
+	{
+		
+    	var successFunc=function()
+		{
+			swal(
+            {
+                 title: "Thank you!",
+                text: "Your ticket is successfully rejected", 
+                type: "success",
+                confirmButtonColor: "#1ab394",
+                confirmButtonText: "close"
+            });
+			updateTickets();
+		}
+		var failureFunc=function()
+		{
+			swal("Can't reject ticket","We couldn't reject the ticket","error");
+
+		}
+		if($scope.rejectionmessage===undefined || $scope.rejectionmessage===null || $scope.rejectionmessage==="")
+		{
+			var rejectionmessage="No message";
+		}
+		else
+		{
+			var rejectionmessage=$scope.rejectionmessage;
+		}
+		var data={"ticket_id":ticket.id,"message":rejectionmessage};
+        Ticket.rejectTicket(successFunc,failureFunc,data);
+           
+	}
+	$scope.deleteTicket=function(ticket)
+	{
+		
+		swal({
+                title: "Are you sure?",
+                html: '<p>You deleted it.</p>',
+                type: "warning",
+                showCancelButton: true,
+                cancelButtonText: "cancel",
+                confirmButtonColor: "#ed5565",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false
+            }, function () {
+            	var successFunc=function(){
+	                swal(
+	                {
+	                    title: "Deleted!",
+	                    text: "You deleted it!", 
+	                    type: "success",
+	                    confirmButtonColor: "#1ab394",
+	                    confirmButtonText: "close"
+	                });
+	                updateTickets();
+	            }
+	            var failureFunc=function()
+	            {
+	            	swal("can't delete ticket","Ticket couldn't be deleted please try again later","error");
+	            }
+	            Ticket.deleteTicket(successFunc,failureFunc,ticket.id);
+            });
+	}
+	$scope.openStoriesView=function(ticket)
+	{
+		Params.setTicket(ticket);
+		$location.path("/stories");
+	}
 	Project.getProjectDetails($routeParams.project_id,succesFunc,failureFunc);
+}]);
+Controllers.controller('KeyboxCtrl', ['$scope','KeyBox',"$routeParams","Login","$location", function ($scope,KeyBox,$routeParams,Login,$location) {
+	var project_id=$routeParams.project_id;
+	if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER"|| Login.getLoggedUser().userinfo.roles[0]=="ROLE_KEYACCOUNT"){
+		$scope.isclient=true;
+	}
+	else
+		$scope.isclient=false;
+	if(project_id==undefined)
+	{
+		$location.path("/dashboard");
+	}
+	var updateView=function()
+	{
+		var successFunc=function(data)
+		{
+			$scope.configs=data;
+		}
+		KeyBox.getProjectConfigs(project_id,successFunc);
+	}
+	
+	updateView();
+	$scope.addKeyBox=function()
+	{
+		var conf={
+			"id":-1,
+			"title":"",
+			"config":""
+		}
+		$scope.configs.unshift(conf);
+	}
+	$scope.deleteKeubox=function(conf)
+	{
+		swal({   
+			title: "Are you sure?",   
+			text: "Do you want to delete keybox "+conf.title,
+			type: "warning",
+			showCancelButton: true,
+			confirmButtonColor: "#DD6B55",
+			confirmButtonText: "Yes, delete it!",
+			closeOnConfirm: false }, 
+			function(){
+				if(conf.id==-1)
+				{
+					var index= $scope.configs.indexOf(conf);
+					$scope.configs.splice(index, 1);
+					$scope.$apply();
+					swal("Deleted!", "The Keybox was deleted", "success"); 
+				}
+				else
+				{
+					var successFunc=function()
+					{
+						var index =$scope.configs.indexOf(conf);
+						$scope.configs.splice(index, 1);
+						swal("Deleted!", "The Keybox was deleted", "success"); 
+					}
+					var failureFunc=function()
+					{
+						swal("Not Deleted!", "Something bad happen try again later", "error");
+					}
+					KeyBox.deleteProjectConfig(successFunc,failureFunc,conf.id);
+				}
+				
+			});
+	}
+	$scope.resetKeybox=function()
+	{
+		$location.url("/pdetails").search({"project_id": project_id});
+	}
+	$scope.saveKeyBox=function()
+	{
+		for(i=0;i<$scope.configs.length;i++)
+		{
+			var failureFunc=function()
+			{
+				console.log("failure");
+			}
+			var successFunc=null;
+			if(i==$scope.configs.length-1)
+			{
+				successFunc=function()
+				{
+					updateView();
+				}
+			}
+			else
+			{
+				successFunc=function()
+				{
+					console.log('success');
+				}
+			}
+			if($scope.configs[i].id==-1)
+			{
+				if($scope.configs[i].title!="" && $scope.configs[i].config!="")
+				{
+					var data={
+						"project_id":project_id,
+						"title":$scope.configs[i].title,
+						"config":$scope.configs[i].config
+					}
+					KeyBox.createProjectConfig(successFunc,failureFunc,data);
+				}
+			}
+			else
+			{
+				if($scope.configs[i].title!="" && $scope.configs[i].config!="")
+				{
+					var data={
+						"config_id":$scope.configs[i].id,
+						"title":$scope.configs[i].title,
+						"config":$scope.configs[i].config
+					}
+					KeyBox.updateProjectConfig(successFunc,failureFunc,data);
+				}
+			}
+		}
+	}
+	
+}]);
+Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Team','Ticket',"Task", function ($scope,Login,Params,$location,Team,Ticket,Task) {
+	$scope.isclient=false;
+	$scope.isAdmin=false;
+	$scope.isTeamLeader=false;
+	$scope.isMember=false;
+	var project=Params.getProject();
+	var ticket=Params.getTicket();
+	$scope.company_name=project.customer;
+	$scope.project_name=project.name;
+	$scope.team=project.team;
+	$scope.ticket_name=ticket.title;
+	$scope.ticket_id=ticket.displayId;
+	$scope.ticket_type=ticket.type;
+	$scope.ticketStatus=Ticket.ticketstatus;
+	$scope.ticket_decription=ticket.description;
+	$scope.ticket_status=ticket.status;
+	$scope.ticket_realtime=ticket.realtime;
+	$scope.ticket_estimation=ticket.estimation;
+	$scope.username=Login.getLoggedUser().userinfo.surname+ " "+Login.getLoggedUser().userinfo.name;
+	$scope.tasks=ticket.tasks;
+	$scope.totaltasks=ticket.taskscount;
+	$scope.finishedtasks=ticket.finishedtasks;
+	$scope.rejectionmessage=ticket.rejectionmessage;
+	$scope.docs=project.docs;
+	var loadRoles=function(data){
+		$scope.teamroles=data;
+	}
+	var selectedtask;
+	$scope.openAddEstimation=function(estimation,task)
+	{
+		if(estimation!=null)
+		{
+			if(estimation==1)
+				$("#selectest").select2("data",{"id":1,'text':"1 h"});
+			if(estimation==2)
+				$("#selectest").select2("data",{"id":2,'text':"2 h"});
+			if(estimation==3)
+				$("#selectest").select2("data",{"id":3,'text':"3 h"});
+			if(estimation==4)
+				$("#selectest").select2("data",{"id":4,'text':"4 h"});
+		}
+		else
+			$("#selectest").select2("val","Select");
+		selectedtask=task;
+		$("#add-estimation").modal("show");
+	}
+	$scope.openAddRealtime=function(realtime,task)
+	{
+		if(realtime!=null)
+		{
+			$scope.realtime=realtime;
+		}
+		else
+			$scope.realtime="";
+		selectedtask=task;
+		$("#add-realtime").modal("show");
+	}
+	$scope.setEstimation=function()
+	{
+		var data ={
+			"estimation":$scope.estimation,
+			"task_id":selectedtask.id
+		}
+		var successFunc=function()
+		{
+			updateView();
+
+			$("#add-estimation").modal("hide");
+		}
+		var failureFunc=function()
+		{
+			swal("Estimation not set","We couldn't set the estimation please try again later","error");
+		}
+		Task.setEstimation(successFunc,failureFunc,data);
+	}
+	$scope.setRealtime=function()
+	{
+		if($scope.realtime=="" || $scope.realtime==undefined || $scope.realtime==null)
+		{
+			swal("Enter a realtime","Please enter a realtime","error");
+		}
+		else
+		{
+			var data ={
+			"realtime":$scope.realtime,
+			"task_id":selectedtask.id
+			}
+			var successFunc=function()
+			{
+				updateView();
+
+				$("#add-realtime").modal("hide");
+			}
+			var failureFunc=function()
+			{
+				swal("Realtime not set","We couldn't set the realtime please try again later","error");
+			}
+			Task.setRealtime(successFunc,failureFunc,data);
+		}
+		
+	}
+	$scope.deleteTask=function(task)
+	{
+		swal({
+                title: "Are you sure?",
+                text: 'You deleted it.',
+                type: "warning",
+                showCancelButton: true,
+                cancelButtonText: "cancel",
+                confirmButtonColor: "#ed5565",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false
+            }, function () {
+                var successFunc=function()
+                {
+                	swal(
+	                {
+	                    title: "Deleted!",
+	                    text: "You deleted it!", 
+	                    type: "success",
+	                    confirmButtonColor: "#1ab394",
+	                    confirmButtonText: "close"
+	                });
+	                updateView();
+                }
+                var failureFunc=function()
+                {
+                	swal(
+	                {
+	                    title: "Oops!",
+	                    text: "Task not deleted please try again later", 
+	                    type: "error",
+	                    confirmButtonColor: "#1ab394",
+	                    confirmButtonText: "close"
+	                });
+                }
+                Task.deleteTask(successFunc,failureFunc,task.id);
+               
+            });
+		
+	}
+	var updateStatus=function(status)
+	{
+		ticket.status=status.status;
+		$scope.ticket_status=ticket.status;
+		localStorage.ticket=JSON.stringify(ticket);
+
+	}
+	$scope.sendToClient=function()
+	{
+		var estimation=0;
+		var complete=true;
+		for(i=0;i<ticket.tasks.length;i++)
+		{
+			if(ticket.tasks[i].estimation==null)
+			{
+				complete=false;
+			}
+			else
+				estimation+=ticket.tasks[i].estimation;
+		}
+		if(complete){
+			swal({
+	                title: "Are you sure?",
+	                text: 'You want to send a total estimation of '+estimation+' h to client.',
+	                type: "warning",
+	                showCancelButton: true,
+	                cancelButtonText: "cancel",
+	                confirmButtonColor: "#ed5565",
+	                confirmButtonText: "Yes, send it!",
+	                closeOnConfirm: false
+	            }, function () {
+	            	
+					var successFunc=function(data)
+					{
+						ticket.estimation=data.estimation;
+						$scope.ticket_estimation=ticket.estimation;
+						updateStatus(Ticket.ticketstatus.Goproduction);
+						swal.close();
+					}
+					var failureFunc=function()
+					{
+						swal("Oops!","Can't send estimation to client");
+					}
+					Ticket.sendToClient(successFunc,failureFunc,ticket.id);
+						
+						
+	        });
+		}
+		else
+		{
+			swal("Please Complete estimation","Some stories are not estimated yet","info");
+		}
+
+	}
+	$scope.sendToProduction=function()
+	{
+
+		swal({
+            title: "Are you sure?",
+            text: 'You want to send the ticket to production',
+            type: "warning",
+            showCancelButton: true,
+            cancelButtonText: "cancel",
+            confirmButtonColor: "#ed5565",
+            confirmButtonText: "Yes, send it!",
+            closeOnConfirm: false
+	        }, function () {
+	        	
+				var successFunc=function(data)
+				{
+					updateStatus(Ticket.ticketstatus.Production);
+					swal.close();
+				}
+				var failureFunc=function()
+				{
+					swal("Oops!","Can't send estimation to client");
+				}
+				Ticket.sendToProd(successFunc,failureFunc,ticket.id);
+						
+						
+	        });
+	}
+	$scope.acceptTicket=function()
+	{
+		
+		swal({
+                title: "You accept and close the ticket", 
+                html: '<p><i class="fa fa-star project-type"></i>'+ticket.title+'</p>',
+                type: "info",
+                showCancelButton: true,
+                cancelButtonText: "cancel",
+                confirmButtonColor: "#1ab394",
+                confirmButtonText: "accept",
+                closeOnConfirm: false
+            }, function () {
+            	var successFunc=function()
+				{
+					swal(
+	                {
+	                    title: "Great!",
+	                    text: "Your ticket is successfully closed", 
+	                    type: "success",
+	                    confirmButtonColor: "#1ab394",
+	                    confirmButtonText: "close"
+	                });
+					updateStatus(Ticket.ticketstatus.Done);
+				}
+				var failureFunc=function()
+				{
+					swal("Can't accept ticket","We couldn't accept the ticket","error");
+
+				}
+                Ticket.acceptTicket(successFunc,failureFunc,ticket.id);
+            });
+	}
+	$scope.openRejectModal=function()
+	{
+		
+		$scope.rejectionmessage="";
+		$("#reject-ticket").modal("show");
+	}
+	$scope.rejectTicket=function()
+	{
+		
+    	var successFunc=function()
+		{
+			swal(
+            {
+                 title: "Thank you!",
+                text: "Your ticket is successfully rejected", 
+                type: "success",
+                confirmButtonColor: "#1ab394",
+                confirmButtonText: "close"
+            });
+			updateStatus(Ticket.ticketstatus.Reject);
+			$("#reject-ticket").modal("hide");
+		}
+		var failureFunc=function()
+		{
+			swal("Can't reject ticket","We couldn't reject the ticket","error");
+
+		}
+		if($scope.rejectionmessage===undefined || $scope.rejectionmessage===null || $scope.rejectionmessage==="")
+		{
+			var rejectionmessage="No message";
+		}
+		else
+		{
+			var rejectionmessage=$scope.rejectionmessage;
+		}
+		var data={"ticket_id":ticket.id,"message":rejectionmessage};
+        Ticket.rejectTicket(successFunc,failureFunc,data);
+           
+	}
+	$scope.finishTask=function(task)
+	{
+		swal({   title: "Finishing task..",   text: "This task will be Finish very soon..",   timer: 5000,   showConfirmButton: false });
+		var successFunc=function(data)
+		{
+			ticket.finishedtasks+=1;
+			if(data.done)
+				updateStatus(Ticket.ticketstatus.Testing)
+			updateView();
+		}
+		var failureFunc=function()
+		{
+			swal("Oops!","Can't start story please try again later","error");
+		}
+		Task.finishTask(successFunc,failureFunc,task.id)
+	}
+	$scope.startTask=function(task)
+	{
+		swal({   title: "Starting task..",   text: "This task will start very soon..",   timer: 5000,   showConfirmButton: false });
+		var successFunc=function()
+		{
+			updateView();
+		}
+		var failureFunc=function()
+		{
+			swal("Oops!","Can't start story please try again later","error");
+		}
+		Task.startTask(successFunc,failureFunc,task.id)
+	}
+	$scope.addStory=function(story)
+	{
+		if(story==null)
+		{
+			$('#add-story').modal("show");
+			$scope.isedit=false;
+			$scope.storytitle="";
+			$scope.storydescription="";
+			if($scope.team.length==0){
+				var selectdata={"id":-1,text:"No team found"};
+				$("#selectassign").select2("data",selectdata);
+				swal("Add memebers","please add team members before adding stories","error");
+			}
+			else
+			{
+				var selectdata={"id":-1,text:"Assign to"};
+				$("#selectassign").select2("data",selectdata);
+			}
+			selectedtask=null;
+		}
+		else
+		{
+			$('#add-story').modal("show");
+			$scope.isedit=true;
+			$scope.storytitle=story.title;
+			$scope.storydescription=story.description;
+			if($scope.team.length==0){
+				var selectdata={"id":-1,text:"No team found"};
+				$("#selectassign").select2("data",selectdata);
+				swal("Add memebers","please add team members before adding stories","error");
+			}
+			else
+			{
+				var selectdata={"id":-1,text:story.assignto.name+" "+story.assignto.surname+","+story.assignto.role.role};
+				$("#selectassign").select2("data",selectdata);
+				$scope.assignto=story.assignto;
+			}
+			selectedtask=story;
+		}
+	}
+	var updateView=function()
+	{
+		sucessFunc=function(data)
+		{
+			$scope.tasks=data;
+			ticket.tasks=data;
+			localStorage.ticket=JSON.stringify(ticket);
+		}
+		failureFunc=function(err)
+		{
+			console.log(err);
+		}
+		Task.getAllTasks(sucessFunc,failureFunc,ticket.id);
+	}
+	var verifyForm=function()
+	{
+		var messages=[];
+		if($scope.storytitle==undefined || $scope.storytitle=="" || $scope.storytitle==null)
+		{
+			messgaes.push("please enter a story title");
+		}
+		if($scope.storydescription==undefined || $scope.storydescription=="" || $scope.storydescription==null)
+		{
+			messgaes.push("please enter a story description");
+		}
+		if($scope.assignto==undefined || $scope.assignto=="" || $scope.assignto==null)
+		{
+			messgaes.push("please assign the story to a team member");
+		}
+		return messages;
+	}
+	$scope.createStory=function()
+	{
+		var messages=verifyForm();
+		if(messages.length==0)
+		{
+			var data ={
+				"title":$scope.storytitle,
+				"description":$scope.storydescription,
+				"assignedTo":{
+					"role":$scope.assignto.role.role,
+					"id":$scope.assignto.id
+				}
+			};
+			for(i=0;i<project.team.length;i++)
+			{
+				if(project.team[i].role.role==$scope.teamroles.TeamLeader.role)
+				{
+					data.owner=project.team[i].id;
+				}
+			}
+			var successFunc=function()
+			{
+				swal("Success","Story added/edited successfully","success");
+				updateView();
+				$('#add-story').modal("hide");
+			}
+			var failureFunc=function()
+			{
+				swal("Oops","Something wrong happend please try again later","error");	
+			}
+			if($scope.isedit)
+			{
+				data.task_id=selectedtask.id;
+				Task.updateTask(successFunc,failureFunc,data);
+
+			}
+			else
+			{
+				data.ticket_id=ticket.id;
+				Task.craeteTask(successFunc,failureFunc,data);
+			}
+		}
+		else
+		{
+			swal("Please fill those information",messages.join('\n'),"warning");
+		}
+	}
+	$scope.deliverToclient=function()
+	{
+		var realtime=0;
+		var complete=true;
+		for(i=0;i<ticket.tasks.length;i++)
+		{
+			if(ticket.tasks[i].realtime==null)
+			{
+				complete=false;
+			}
+			else
+				realtime+=ticket.tasks[i].realtime;
+		}
+		if(complete){
+			swal({
+	                title: "Are you sure?",
+	                text: 'You want to deliver the ticket of total time '+realtime+' h to client.',
+	                type: "warning",
+	                showCancelButton: true,
+	                cancelButtonText: "cancel",
+	                confirmButtonColor: "#ed5565",
+	                confirmButtonText: "Yes, send it!",
+	                closeOnConfirm: false
+	            }, function () {
+	            	
+					var successFunc=function(data)
+					{
+						ticket.realtime=data.realtime;
+						$scope.ticket_estimation=ticket.realtime;
+						updateStatus(Ticket.ticketstatus.Accept);
+						swal.close();
+					}
+					var failureFunc=function()
+					{
+						swal("Oops!","Can't deliver ticket to client");
+					}
+					Ticket.deliverToClient(successFunc,failureFunc,ticket.id);
+						
+						
+	        });
+		}
+		else
+		{
+			swal("Please Complete realtime","Real time for some stories is not set yet","info");
+		}
+	}
+	$scope.startEstimation=function()
+	{
+		
+		swal({
+                title: "You start the ticket:",
+                html: '<p><i class="fa fa-star project-type"></i>'+ticket.title+'</p>',
+                type: "info",
+                showCancelButton: true,
+                cancelButtonText: "cancel",
+                confirmButtonColor: "#1ab394",
+                confirmButtonText: "start now",
+                closeOnConfirm: false
+            }, function () {
+            	var successFunc=function()
+				{
+					swal(
+	                {
+	                    title: "Great!",
+	                    text: "Your ticket is send successfully to estimation", 
+	                    type: "success",
+	                    confirmButtonColor: "#1ab394",
+	                    confirmButtonText: "close"
+	                });
+					updateStatus(Ticket.ticketstatus.Estimation);
+				}
+				var failureFunc=function()
+				{
+					swal("Can't start estimation","We couldn't statrt the estimation process","error");
+
+				}
+                Ticket.startEstimation(successFunc,failureFunc,ticket.id);
+            });
+	}
+	$scope.acceptEstimation=function()
+	{
+		
+		swal({
+                title: "You confirm the estimation of "+ ticket.estimation+"h for", 
+                html: '<p><i class="fa fa-star project-type"></i> Contracting Process</p><div class="col-lg-12 acenter mb20"><div class="checkbox checkbox-alert checkbox-primary mt-5 mb-5"><input type="checkbox" id="checkbox3"><label for="checkbox3">I accept the <a href="#" target="_blank">Terms and Conditions</a></label></div></div>',
+                type: "info",
+                showCancelButton: true,
+                cancelButtonText: "cancel",
+                confirmButtonColor: "#1ab394",
+                confirmButtonText: "i confirm",
+                closeOnConfirm: false
+            }, function () {
+            	var successFunc=function()
+				{
+					swal(
+	                {
+	                    title: "Great!",
+	                    text: "Your ticket is send successfully to production", 
+	                    type: "success",
+	                    confirmButtonColor: "#1ab394",
+	                    confirmButtonText: "close"
+	                });
+					updateStatus(Ticket.ticketstatus.Waiting);
+				}
+				var failureFunc=function()
+				{
+					swal("Can't accept estimation","We couldn't accept the estimation","error");
+
+				}
+                Ticket.acceptEstimation(successFunc,failureFunc,ticket.id);
+            });
+	}
+	$scope.rejectEstimation=function()
+	{
+		
+		swal({
+                title: "You reject the estimation for", 
+                //html: '<p><i class="fa fa-star project-type"></i>'+ticket.title+'</p>',
+                text:"hello",
+                type: "info",
+                showCancelButton: true,
+                cancelButtonText: "cancel",
+                confirmButtonColor: "#1ab394",
+                confirmButtonText: "i confirm",
+                closeOnConfirm: false
+            }, function () {
+            	var successFunc=function()
+				{
+					swal(
+	                {
+	                    title: "Great!",
+	                    text: "Estimation rejected successfully", 
+	                    type: "success",
+	                    confirmButtonColor: "#1ab394",
+	                    confirmButtonText: "close"
+	                });
+					updateStatus(Ticket.ticketstatus.Estimation);
+				}
+				var failureFunc=function()
+				{
+					swal("Can't reject estimation","We couldn't reject the estimation","error");
+
+				}
+                Ticket.rejectEstimation(successFunc,failureFunc,ticket.id);
+            });
+	}
+	Team.loadRoles(loadRoles);
+	var tikettypes=function(data)
+	{
+		$scope.tickettypes=data;
+	}
+	Ticket.loadTicketTypes(tikettypes);
+	$scope.backToProject=function()
+	{
+		$location.url("/pdetails").search({"project_id": project.id});
+	}
+	$scope.openKeybox=function()
+	{
+		$location.url("/keybox").search({"project_id": project.id});
+	}
+	if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN")
+	{
+		$scope.isAdmin=true;
+	}
+	else if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_TEAMLEADER")
+	{
+		$scope.isTeamLeader=true;
+	}
+	else if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER"|| Login.getLoggedUser().userinfo.roles[0]=="ROLE_KEYACCOUNT"){
+		$scope.isclient=true;
+	}
+	else
+	{
+		$scope.isMember=true;
+	}
+	$scope.uploadFile=function()
+	{
+		var formData = new FormData();
+        formData.append('file',  document.getElementById('upfiles').files[0]);
+        successFunc=function()
+        {
+        	$("#upload-file").modal('hide');
+        	successFunc=function(data)
+        	{
+        		$scope.docs=data;
+        	}
+        	Task.listFiles(successFunc,project.id);
+        }
+        failureFunc=function()
+        {
+        	swal("Can't upload file","we can't upload file please try again later","error");
+        }
+        Task.uploadFile(successFunc,failureFunc,formData,project.id);
+	}
+}]);
+Controllers.controller('ContractCtrl', ['$scope',"Login","$routeParams","$location", function ($scope,Login,$routeParams,$location) {
+	var customerid=$routeParams.cid;
+	if(customerid==undefined)
+		Login.logout();
+	$scope.acceptContract=function()
+	{
+		var sucessFunc=function()
+		{
+			swal("Congratulation","Welcome to flexwork please login again","info");
+		}
+		var failureFunc=function()
+		{
+			swal("Can't accept terms","Please try again later","error");
+		}
+		Login.signContract(sucessFunc,failureFunc,customerid);
+	}
 }]);

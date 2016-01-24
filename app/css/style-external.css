@@ -86,7 +86,6 @@ body{
 
 #side-menu > li.active {
   background-color: #222;
-  padding: 0 0 10px;
 }
 .nav-second-level > li.active{
   background-color: #333;
@@ -139,11 +138,11 @@ body.mini-navbar .nav-logo .nav-logo-element {
 }
 
 .mini-navbar-account{
-  display: none !important;
+	display: none !important;
 }
 
 body.mini-navbar .mini-navbar-account{
-  display: block !important;
+	display: block !important;
 }
 
 .mini-navbar .nav-second-level {
@@ -398,11 +397,12 @@ a.fxwlink-dark:hover{
   display: block;
 }
 .ibox-users-email {
-  color: #ccc;
+  color: #999;
   display: block;
 }
+
 .ibox-users-location {
-  color: #ccc;
+  color: #999;
   display: block;
 }
 .ibox-users.ibox-add-box div{
@@ -462,8 +462,8 @@ a.fxwlink-dark:hover{
 
 .checkbox-primary input[type="checkbox"]:checked + label::before,
 .checkbox-primary input[type="radio"]:checked + label::before {
-  background-color: #1ab394;
-  border-color: #1ab394;
+  background-color: #1ab394 !important;
+  border-color: #1ab394 !important;
 }
 
 .btn-default {
@@ -528,7 +528,7 @@ a.fxwlink-dark:hover{
   background: transparent !important;
   color: #1ab394;
   padding: 20px !important;
-  border-bottom: 0px;
+  border-bottom: 1px solid #eee;
 }
 .modal-body {
   padding: 20px;
@@ -550,7 +550,7 @@ a.fxwlink-dark:hover{
 }
 .modal-footer {
   border-top: 0px;
-  padding: 0 15px 15px;
+  padding: 0 20px 15px;
 }
 #right-sidebar {
   z-index: 99;
@@ -1363,12 +1363,17 @@ a.message-author{
 }
 
 .project-title{
+  font-weight: 600;
+}
+
+.project-title{
   color: #333;
   font-size: 14px;
 }
 
 .project-title small{
   color: #aaa;
+  font-weight: 400;
 }
 
 .project-estimation .fa-bug{
@@ -1422,6 +1427,11 @@ a.message-author{
   display: block;
 }
 
+.project-status.dashboard-status small{
+  color: #1ab394;
+  font-weight: 600;
+}
+
 .project-status .fa{
   margin-right: 5px;
 }
@@ -1442,6 +1452,12 @@ a.message-author{
   font-weight:400;
   font-size:12px;
   color: #aaa;
+}
+
+.project-details-info{
+  font-weight:400;
+  font-size:12px;
+  color: #333Contractor;
 }
 
 .project-details-title-id{
@@ -1470,6 +1486,26 @@ a.message-author{
   color: #1ab394;
 }
 
+.user-acoount-delete-btn{
+  font-weight:400;
+  font-size:12px;
+  color: #aaa;
+}
+
+.user-acoount-delete-btn:hover{
+  color: #1ab394;
+}
+
+.project-details-see-reject{
+  font-weight:400;
+  font-size:12px;
+  color: #ed5565;
+}
+
+.project-details-see-reject:hover{
+  color: #ec4758;
+}
+
 
 .project-details-box{
   display: block;
@@ -1491,6 +1527,26 @@ a.message-author{
 
 .project-title small{
   display: block;
+}
+
+.dashboard-report-title a{
+  color: #000;
+  font-size: 12px;
+  display: block;
+}
+
+
+.dashboard-report-title a .dashboard-report-date{
+  color: #333;
+  display: block;
+  font-weight: 400;
+  margin-bottom: 5px;
+}
+
+.dashboard-report-title a .dashboard-report-subject{
+  color: #000;
+  display: block;
+  font-weight: 600;
 }
 
 .project-details-status-area{
@@ -1546,6 +1602,102 @@ a.message-author{
 .btn-group-xs > .btn, .btn-xs {
   margin-bottom: 3px;
   padding: 2px 5px;
+}
+
+.member-level{
+    display: block;
+}
+.member-level .fa-star{
+  color: #f1c40f;
+  font-size: 10px;
+}
+
+.member-skills{
+  font-size: 10px;
+}
+
+.member-skills ul{
+  padding: 0px;
+}
+
+.member-skills ul li{
+  margin-bottom: 2px;
+}
+
+.member-skills ul li.label{
+  background-color: #eee;
+  padding: 3px 5px;
+  display: inline-block;
+  font-weight: 400;
+}
+
+.member-skills ul li.label-warning{
+  background-color: #f8ac59;
+} 
+
+.valign-top{
+  vertical-align: top !important;
+}
+
+.member-total{
+  color: #000;
+  border-right: 1px solid #eee;
+  text-align: center;
+}
+.member-capacity{
+  color: #000;
+  border-left: 1px solid #eee;
+  text-align: center;
+}
+.member-performance{
+  color: #3498db;
+  border-right: 1px solid #eee;
+  text-align: center;
+}
+
+.member-days{
+  background-color: #f9f9f9;
+  text-align: center;
+  border-right: 1px solid #eee;
+}
+
+.member-days.stage-1{
+  border-bottom: 2px solid #27ae60;
+}
+.member-days.stage-2{
+  border-bottom: 2px solid #f39c12;
+}
+.member-days.stage-3{
+  border-bottom: 2px solid #e74c3c;
+}
+
+.reset-filter{
+  float: left;
+  margin-left: 5px;
+  position: relative;
+  top: 4px;
+}
+
+.reset-filter a{
+  color: #aaa;
+  font-size: 10px;
+  font-weight: 400;
+}
+
+.reset-filter a:hover{
+  color: #1ab394;
+  border-bottom: 1px dotted #1ab394;
+}
+
+.member-performance-week {
+  background-color: #eee;
+  border-radius: 4px;
+  display: block;
+  font-size: 12px;
+  padding: 4px 10px;
+  position: relative;
+  top: 0;
+  float: left;
 }
 
 /* project typs color */
@@ -1612,9 +1764,22 @@ tr.done .fa{
 }
 
 tr.done .project-actions .btn,
+tr.done .project-actions .btn .fa,
 tr.done .project-actions .fa-search
 {
   color: #676a6c;
+}
+
+tr.done .project-status .btn{
+  color: #aaa;
+}
+
+tr.done .notification-avatar{
+  color: #676a6c;
+}
+
+tr.new td{
+  background:#fffeea;
 }
 
 
@@ -1749,6 +1914,10 @@ tr.done .project-actions .fa-search
   width: 250px;
   font-weight: 600; 
   font-size: 12px;
+}
+.notification-title small{
+  display: block;
+  color: #aaa;
 }
 .notification-action{
   text-align: right;
@@ -2023,6 +2192,11 @@ tr.done .project-actions .fa-search
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;
+  border-color: #d1dade;
+}
+
+.form-control.input-week{
+  background-color: #d1dade;
 }
 
 .header-ticket-types{
@@ -2184,6 +2358,132 @@ li.key-account a{
 #ticket-description .col-lg-12{
   padding: 20px 45px 20px 45px;
   margin-bottom: 20px;
+}
+
+.header-add-member{
+  background-color: #f3f3f4;
+}
+
+.reject-arrow{
+  vertical-align: top !important;
+  text-align: right !important;
+}
+.reject-arrow .fa{
+    margin-top: 17px;
+}
+
+.reject-message{}
+
+.reject-message small{
+  display: block;
+  margin-bottom: 20px;
+  margin-top: 15px;
+}
+
+
+/* client */
+
+.project-client-projects .client-projects{
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.project-client-projects .client-tickets{
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.project-client-projects .fa{
+  font-size: 12px;
+  margin-right: 5px;
+}
+
+.project-client-projects a{
+  color: #aaa;
+  border-bottom: 1px dotted #aaa;
+  display: table;
+}
+
+.project-client-projects a:hover{
+  color: #1ab394;
+  border-bottom: 1px dotted #1ab394;
+}
+
+.rate{
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.contract{
+  color: #333;
+}
+
+.contract-paragraphs{
+  background:#f9f9f9;
+  color: #676a6c;
+  height: 350px;
+  overflow: auto;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.contract-paragraphs.no-height{
+  height: 100%;
+  margin-bottom: 50px;
+}
+
+.terms.loginscreen.middle-box {
+  width: 500px;
+  max-width: 500px;
+}
+
+.terms.loginscreen.middle-box .contract-paragraphs{
+  height: 450px;
+  background: #444;
+  color: #fff;
+}
+
+.terms.loginscreen.middle-box .contract-paragraphs hr{
+  border-color: #333;
+}
+
+.form-group.terms label{
+  color: #fff;
+}
+
+.previous-next{
+  float: left;
+  margin-top: 8px;
+}
+
+.previous-next.previous{
+  margin-right: 15px;
+}
+
+.previous-next.next{
+  margin-left: 15px;
+}
+
+.previous-next a{
+  color: #aaa;
+}
+
+.btn-group.weeks .btn-group-xs{
+  padding: 5px 15px;
+}
+
+.btn-group.weeks{
+  float: left;
+  margin-right: 10px;
+}
+
+.tabs-container .nav-tabs > li.active > a, .tabs-container .nav-tabs > li.active > a:hover, .tabs-container .nav-tabs > li.active > a:focus {
+  font-weight: 600;
+}
+
+.dashboard-report-invoice-reports{
+  height:400px;
+  overflow: auto;
 }
 
 /* MOBILE */

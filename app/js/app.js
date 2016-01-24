@@ -45,6 +45,18 @@ crmapp.config(["$routeProvider",
 				templateUrl:'partials/pdetails.html',
 				controller:'ProjectCtrl'
 			}).
+			when('/keybox',{
+				templateUrl:'partials/keybox.html',
+				controller:'KeyboxCtrl'
+			}).
+			when('/stories',{
+				templateUrl:'partials/stories.html',
+				controller:'StoriesCtrl'
+			}).
+			when('/acceptcontract',{
+				templateUrl:'partials/terms.html',
+				controller:'ContractCtrl'
+			}).
 			otherwise({
         		redirectTo: '/dashboard'
       		});
@@ -52,29 +64,28 @@ crmapp.config(["$routeProvider",
 ]);      		
 crmapp.run(['$rootScope', '$location', 'Login','Chat', function ($rootScope, $location, Login,Chat) {
     $rootScope.$on('$routeChangeStart', function (event) {
-    	if(!Login.getLoggedUser() && $location.path()=="/login")
+    	
+    	if(!Login.getLoggedUser())
     	{
-    		return;
+    		if($location.path()=="/login")
+    			return;
+    		else {
+    			$location.path('/login');
+    		}
     	}
-        if (!Login.getLoggedUser() && $location.path()!="/login") {
-           
-            $location.path('/login');
-        }
-        else
-        {
-        	var func=function(){
-		        if(Login.getLoggedUser() && !Login.haveAccess())
-		        {
-		        	Login.logout(false);
-		        }
-		        if(Login.getLoggedUser() && $location.path()=="/login" && Login.haveAccess())
-		        {
-		        	$location.path("/dashboard");
-		        	$location.replace();
-		        }
-		    }
-
-	    }
+    	else
+    	{
+    		Login.contractSigned();
+    		if(!Login.haveAccess())
+    		{
+    			Login.logout(false);
+    		}
+    		else if($location.path()=="/login")
+    		{
+    			$location.path("/dashboard");
+		        $location.replace();
+    		}
+    	}
 	    if($location.search().last!=undefined)
 	    {
 	    	$location.url($location.search().last);

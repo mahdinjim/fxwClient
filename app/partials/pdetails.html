@@ -47,10 +47,11 @@
                         <div class="row mb20">
                             <div class="col-md-6">
 
-                                <button class="btn btn-primary btn-bitbucket btn-m mr5" type="button" data-target="#add-ticket" data-toggle="modal" ng-if="isclient"><i class="fa fa-plus mr5"></i> add ticket</button>
+                                <button class="btn btn-primary btn-bitbucket btn-m mr5" type="button" ng-click="openCreateTicket(null)" ng-if="isclient && issigned"><i class="fa fa-plus mr5"></i> add ticket</button>
+                                <button class="btn btn-primary btn-bitbucket btn-m mr5" type="button" ng-click="openCreateTicket(null)" ng-if="isclient && !issigned" disabled><i class="fa fa-plus mr5"></i> add ticket</button>
                                  <button class="btn btn-default btn-bitbucket btn-m mr5" type="button" data-target="#project-description" data-toggle="modal"><i class="fa fa-file-text mr5"></i> description</button>
                                 <button class="btn btn-default btn-bitbucket btn-m mr5" type="button" data-target="#budgetlimit" data-toggle="modal" ng-if="isclient"><i class="fa fa-thumb-tack mr5" ></i> budgetlimit</button>
-                                <button class="btn btn-default btn-bitbucket btn-m mr5" type="button" onclick="parent.location='project-keybox-website-fxw.html'"><i class="fa fa-lock mr5"></i> keybox</button>
+                                <button class="btn btn-default btn-bitbucket btn-m mr5" type="button" ng-click="openKeybox()"><i class="fa fa-lock mr5"></i> keybox</button>
                                 <a ng-if="!isclient" class="btn btn-default btn-bitbucket btn-m mr5" href="https://fxw.slack.com/" target="_blank"><i class="fa fa-slack mr5" ></i> slack</a>
                                 <a class="btn btn-default btn-bitbucket btn-m mr5" href="https://www.pivotaltracker.com/n/projects/928534" target="_blank" ng-if="!isclient"><i class="fa fa-circle-o mr5"></i> pivotal</a>
                                 <a class="btn btn-default btn-bitbucket btn-m mr5" href="https://github.com/mahdinjim/crmtool/commits/master" target="_blank" ng-if="!isclient"><i class="fa fa-github mr5"></i> github</a>
@@ -59,10 +60,10 @@
                             
                             <div class="col-md-6">
                                 <div class="project-people" >
-                                    <a href="" class="fxwlink-member" ng-click="openAddMember()" ng-if="!isclient"><small><i class="fa fa-plus" ></i> add member</small></a>
+                                    <a href="" class="fxwlink-member" ng-click="openAddMember()" ng-if="isAdmin || isTeamLeader"><small><i class="fa fa-plus" ></i> add member</small></a>
                                 
                                 
-                                    <a href="" class="fxwlink-member" ng-if="hasteam && isclient"><small><i class="fa fa-comments"></i> see messages</small></a>
+                                    <a ng-click="openmessages()" class="fxwlink-member" ng-if="hasteam && isclient"><small><i class="fa fa-comments"></i> see messages</small></a>
                                 
                                 
                                     <a href="" class="team-lead" ng-repeat="member in team" ng-if='member.role.role==teamroles.TeamLeader.role' ><img alt="{{member.name}}"  class="img-circle" src="{{member.photo}}"></a>
@@ -85,26 +86,26 @@
                         <!-- end buttons & team -->
 
                         <!-- info1 -->
-                        <div class="row" ng-if="isclient">
-                            <div class="col-lg-12 p0">
+                        <div class="row" ng-if="isclient && !issigned">
+                            <!-- <div class="col-lg-12 p0">
                                 <div class="col-lg-12">
                                      <div class="alert alert-warning" style="font-size:14px;">
                                         <i class="fa fa-phone-square mr5"></i> Your contract is in progress. <b class="ml5">Janine</b> will call you about details.
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="col-lg-12 p0">
                                 <div class="col-lg-12">
                                      <div class="alert alert-success" style="font-size:14px;">
                                         <i class="fa fa-file-text mr5"></i> Your contract is ready. Please confirm to start your project. 
-                                         <button class="btn btn-primary btn-bitbucket btn-xs mr5 ml10" type="button" data-toggle="modal" data-target="#"><i class="fa fa-chevron-right mr5"></i> see details &amp; confirm</button>
+                                         <button class="btn btn-primary btn-bitbucket btn-xs mr5 ml10" type="button" data-toggle="modal" data-target="#see-contract"><i class="fa fa-chevron-right mr5"></i> see details &amp; confirm</button>
                                         
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="ibox" ng-if="isclient">
+                        <div class="ibox" ng-if="isclient && !hasTicket">
                            <div class="ibox-content">
                                 <div class="row mb20 mt20 pt20 pb20">
                                     
@@ -114,13 +115,14 @@
 
                                     <div class="col-md-12 acenter">
                                          <p class="mb20 first-ticket-info">add your <i class="fa fa-angle-down mr5 ml5"></i> first ticket</p>
-                                        <button class="btn btn-primary btn-bitbucket btn-xs mr5" type="button" data-target="#add-ticket" data-toggle="modal"><i class="fa fa-plus mr5"></i> add ticket</button>
+                                        <button class="btn btn-primary btn-bitbucket btn-xs mr5" type="button" ng-click="openCreateTicket(null)" ng-if="issigned"><i class="fa fa-plus mr5" ></i> add ticket</button>
+                                        <button class="btn btn-primary btn-bitbucket btn-xs mr5" type="button" ng-click="openCreateTicket(null)" ng-if="!issigned" disabled><i class="fa fa-plus mr5"></i> add ticket</button>
                                     </div>
 
                                 </div>
                             </div>
                         </div>
-                        <div class="ibox" ng-if="!isclient">
+                        <div class="ibox" ng-if="!isclient && !hasTicket">
                            <div class="ibox-content">
                                 <div class="row mb20 mt20 pt20 pb20">
                                     
@@ -139,7 +141,7 @@
                            <div class="ibox-content">
                                 <div class="row">
                                     <!-- filter-->
-                                    <div class="col-md-12 pb10">
+                                    <!-- <div class="col-md-12 pb10">
                                         <div class="col-md-8 p0">   
                                             <div class="form-group fleft mr10 mb10">
                                                 <div class="select-option select-project m-0" style="width: 150px;">
@@ -176,7 +178,7 @@
                                             </div>
                                         </div>
                                         <div style="clear:both;"></div>
-                                    </div>
+                                    </div> -->
                                     <!-- end filter-->
                                     
                                     <!-- table project list -->
@@ -194,31 +196,223 @@
                                                         <td width="300" class="project-table-head aright">Action</td>
                                                     </tr>
 
-                                                    <tr>
+                                                    <tr ng-if="isclient" ng-repeat="ticket in tickets">
                                                         <td class="project-type">
-                                                            <i class="fa fa-star"></i>
+                                                            <i class="fa fa-star" ng-if="ticket.type==tickettypes[1].type"></i>
+                                                            <i class="fa fa-bug" ng-if="ticket.type==tickettypes[2].type"></i>
+                                                            <i class="fa fa-file" ng-if="ticket.type==tickettypes[3].type"></i>
+                                                            <i class="fa fa-tint" ng-if="ticket.type==tickettypes[4].type"></i>
                                                         </td>
                                                         <td class="project-id">
-                                                            00101080
+                                                           {{ticket.displayId}}
                                                         </td>
                                                         <td class="project-title">
-                                                            <a href="ticket-details-client-area-references-fxw.html">Client Area References  <span class="draft">(Draft)</span></a>
-                                                            <small>Muhammed created at 14.08.2014</small>
+                                                            <a ng-click="openStoriesView(ticket)">{{ticket.title}} <span class="draft" ng-if="ticket.status==ticketStatus.Draft.status">(Draft)</span></a>
+                                                            <small>{{ticket.createdby}} created at {{ticket.creationdate}}</small>
                                                         </td>
-                                                        <td class="project-estimation">
-
+                                                        <td class="project-estimation" ng-if="ticket.type!=tickettypes[2].type && ticket.estimation!=null">
+                                                            {{ticket.estimation}}h
+                                                            <a ng-click="openTicketDetails(ticket)"><small>see details</small></a>
+                                                            
                                                         </td>
-                                                        <td class="project-status">
-                                                            <button type="button" class="btn btn-primary btn-xs fxw-alert-start-estimation" disabled="disbaled"><i class="fa fa-chevron-right"></i> start</button>
+                                                        <td class="project-estimation" ng-if="ticket.type!=tickettypes[2].type && ticket.estimation==null">
+                                                           
+                                                        </td>
+                                                        <td class="project-estimation" ng-if="ticket.type==tickettypes[2].type">
+                                                            <i class="fa fa-bug"></i>
+                                                            <a ng-click="openBuginfo(ticket.description)"><small>see details</small></a>
+                                                        </td>
+                                                        <td class="project-status" ng-if="ticket.status==ticketStatus.Draft.status">
+                                                            <button type="button" class="btn btn-primary btn-xs fxw-alert-start-estimation" ng-click="startEstimation(ticket)"><i class="fa fa-chevron-right" ></i> start</button>
                                                             <small>please start estimation</small>
                                                         </td>
+                                                        <td class="project-status" ng-if="ticket.status==ticketStatus.Estimation.status">
+                                                            <span ng-if="ticket.type!=tickettypes[2].type" class="label label-default label-nobg"><img src="img/ellipsis.gif" width="15" height="15"> in estimation</span>
+                                                            <span ng-if="ticket.type==tickettypes[2].type" class="label label-default label-nobg"><img src="img/ellipsis.gif" width="15" height="15"> in precheck</span>
+                                                        </td>
+                                                        <td class="project-status" ng-if="ticket.status==ticketStatus.Goproduction.status">
+                                                            <button type="button" class="btn btn-primary btn-xs fxw-alert-confirm-estimation" ng-click="acceptEstimation(ticket)"><i class="fa fa-chevron-right" ></i> confirm</button>
+                                                             <button type="button" class="btn btn-danger btn-xs fxw-alert-reject-ticket" ng-click="rejectEstimation(ticket)"><i class="fa fa-undo" ></i> reject</button>
+                                                            <small>please confirm for production</small>
+                                                        </td>
+                                                        <td class="project-status" ng-if="ticket.status==ticketStatus.Waiting.status">
+                                                            <span class="label label-default label-nobg"><i class="fa fa-genderless"></i> waiting ({{ticket.taskscount}}/{{ticket.finishedtasks}})</span>
+                                                        </td>
+                                                        <td class="project-status" ng-if="ticket.status==ticketStatus.Production.status">
+                                                            <span class="label label-default label-nobg"><img src="img/ellipsis.gif" width="15" height="15"> in production ({{ticket.taskscount}}/{{ticket.finishedtasks}})</span>
+                                                        </td>
+                                                        <td class="project-status" ng-if="ticket.status==ticketStatus.Testing.status">
+                                                            <span class="label label-default label-nobg"><img src="img/ellipsis.gif" width="15" height="15"> in QA</span>
+                                                        </td>
+                                                        <td class="project-status" ng-if="ticket.status==ticketStatus.Accept.status">
+                                                            <button type="button" class="btn btn-primary btn-xs fxw-alert-accept-ticket" ng-click="acceptTicket(ticket)"><i class="fa fa-chevron-right" ></i> acccept</button>
+                                                            <button type="button" class="btn btn-danger btn-xs fxw-alert-reject-ticket" ng-click="openRejectModal(ticket)"><i class="fa fa-undo"></i> reject</button>
+                                                            <small>please accept &amp; close ticket</small>
+                                                        </td>
+                                                        <td class="project-status" ng-if="ticket.status==ticketStatus.Done.status">
+                                                            <span class="label label-default label-nobg"><i class="fa fa-check"></i> done</span>
+                                                        </td>
+                                                         <td class="project-status" ng-if="ticket.status==ticketStatus.Reject.status">
+                                                            <span class="label label-default label-nobg"></i> Rejected</span>
+                                                        </td>
                                                         <td class="project-actions">
-                                                            <button type="button" class="btn btn-white btn-sm" data-toggle="modal" data-target="#edit-ticket"><i class="fa fa-pencil"></i> </button>
-                                                            <button type="button" class="btn btn-white btn-sm fxw-alert-archive-ticket"><i class="fa fa-trash"></i> </button>
-                                                            <a href="ticket-details-client-area-references-fxw.html" class="btn btn-white btn-sm"><i class="fa fa-search"></i> details</a>
+                                                            <button type="button" class="btn btn-white btn-sm" data-toggle="modal" data-target="#edit-ticket" ng-if="ticket.status==ticketStatus.Draft.status" ng-click="openCreateTicket(ticket)"><i class="fa fa-pencil"></i> </button>
+                                                            <button type="button" class="btn btn-white btn-sm fxw-alert-archive-ticket" ng-if="ticket.status==ticketStatus.Goproduction.status || ticket.status==ticketStatus.Draft.status" ng-click="deleteTicket(ticket)"><i class="fa fa-trash" ></i> </button>
+                                                            <a ng-click="openStoriesView(ticket)" class="btn btn-white btn-sm"><i class="fa fa-search"></i> details</a>
                                                         </td> 
                                                     </tr>
-
+                                                    <tr ng-if="isAdmin || isTeamLeader" ng-repeat="ticket in tickets">
+                                                        <td class="project-type">
+                                                            <i class="fa fa-star" ng-if="ticket.type==tickettypes[1].type"></i>
+                                                            <i class="fa fa-bug" ng-if="ticket.type==tickettypes[2].type"></i>
+                                                            <i class="fa fa-file" ng-if="ticket.type==tickettypes[3].type"></i>
+                                                            <i class="fa fa-tint" ng-if="ticket.type==tickettypes[4].type"></i>
+                                                        </td>
+                                                        <td class="project-id">
+                                                           {{ticket.displayId}}
+                                                        </td>
+                                                        <td class="project-title">
+                                                            <a ng-click="openStoriesView(ticket)">{{ticket.title}} <span class="draft" ng-if="ticket.status==ticketStatus.Draft.status">(Draft)</span></a>
+                                                            <small>{{ticket.createdby}} created at {{ticket.creationdate}}</small>
+                                                        </td>
+                                                        <td class="project-estimation" ng-if="ticket.type!=tickettypes[2].type && ticket.estimation!=null">
+                                                            {{ticket.estimation}}h
+                                                            <a ng-click="openTicketDetails(ticket)"><small>see details</small></a>
+                                                            
+                                                        </td>
+                                                        <td class="project-estimation" ng-if="ticket.type!=tickettypes[2].type && ticket.estimation==null">
+                                                           
+                                                        </td>
+                                                        <td class="project-estimation" ng-if="ticket.type==tickettypes[2].type">
+                                                            <i class="fa fa-bug"></i>
+                                                            <a ng-click="openBuginfo(ticket.description)"><small>see details</small></a>
+                                                        </td>
+                                                        <td class="project-status" ng-if="ticket.status==ticketStatus.Draft.status">
+                                                            <span class="label label-default label-nobg"><i class="fa fa-genderless"></i> draft</span>  
+                                                        </td>
+                                                        <td class="project-status" ng-if="ticket.status==ticketStatus.Estimation.status && ticket.type!=tickettypes[2].type">
+                                                            <button type="button" class="btn btn-primary btn-xs" ng-click="openStoriesView(ticket)"><i class="fa fa-chevron-right"></i> estimation</button>
+                                                            <button type="button" class="btn btn-danger btn-xs" ng-click="openEstimationDetails(ticket)"><i class="fa fa-chevron-right"></i> send to client</button>
+                                                            <small>client started ticket</small>
+                                                        </td>
+                                                         <td class="project-status" ng-if="ticket.status==ticketStatus.Estimation.status && ticket.type==tickettypes[2].type">
+                                                            
+                                                            <button type="button" class="btn btn-primary btn-xs" ng-click="openStoriesView(ticket)"><i class="fa fa-chevron-right"></i> check</button>
+                                                            <button type="button" class="btn btn-success btn-xs"ng-click="openSendToProdModal(ticket)"><i class="fa fa-chevron-right"></i> send to production</button>
+                                                            <small>client started ticket</small>
+                                                        
+                                                        </td>
+                                                        <td class="project-status" ng-if="ticket.status==ticketStatus.Goproduction.status">
+                                                            
+                                                            <span class="label label-default label-nobg"><img src="img/ellipsis.gif" width="15" height="15"> waiting confirmation</span>
+                                                        
+                                                        </td>
+                                                        <td class="project-status" ng-if="ticket.status==ticketStatus.Waiting.status">
+                                                           
+                                                            <button type="button" class="btn btn-success btn-xs" ng-click="openSendToProdModal(ticket)"><i class="fa fa-chevron-right"></i> send to production</button>
+                                                            <small>client confirmed estimation</small>
+                                                        
+                                                        </td>
+                                                        <td class="project-status" ng-if="ticket.status==ticketStatus.Production.status">
+                                                            <span class="label label-default label-nobg"><img src="img/ellipsis.gif" width="15" height="15"> in production ({{ticket.taskscount}}/{{ticket.finishedtasks}})</span>
+                                                        </td>
+                                                        <td class="project-status" ng-if="ticket.status==ticketStatus.Testing.status">
+                                                            
+                                                            <button type="button" class="btn btn-danger btn-xs"ng-click='openDeliverToClientModal(ticket)'><i class="fa fa-chevron-right"></i> deliver to client</button>
+                                                            <small>all stories done</small>
+                                                        
+                                                        </td>
+                                                        <td class="project-status" ng-if="ticket.status==ticketStatus.Accept.status">
+                                                            
+                                                           <span class="label label-default label-nobg"><img src="img/ellipsis.gif" width="15" height="15"> in acceptance</span>
+                                                        
+                                                        </td>
+                                                        <td class="project-status" ng-if="ticket.status==ticketStatus.Done.status">
+                                                            <span class="label label-default label-nobg"><i class="fa fa-check"></i> done</span>
+                                                        </td>
+                                                         <td class="project-status" ng-if="ticket.status==ticketStatus.Reject.status">
+                                                            <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#reject-messages"><i class="fa fa-commenting"></i> see messages</button>
+                                                            <small>client reject ticket</small> 
+                                                        
+                                                        </td>
+                                                        <td class="project-actions">
+                                                            <a ng-click="openStoriesView(ticket)" class="btn btn-white btn-sm"><i class="fa fa-search"></i> details</a>
+                                                        </td> 
+                                                    </tr>
+                                                    <tr ng-if="isMember" ng-repeat="ticket in tickets">
+                                                        <td class="project-type">
+                                                            <i class="fa fa-star" ng-if="ticket.type==tickettypes[1].type"></i>
+                                                            <i class="fa fa-bug" ng-if="ticket.type==tickettypes[2].type"></i>
+                                                            <i class="fa fa-file" ng-if="ticket.type==tickettypes[3].type"></i>
+                                                            <i class="fa fa-tint" ng-if="ticket.type==tickettypes[4].type"></i>
+                                                        </td>
+                                                        <td class="project-id">
+                                                           {{ticket.displayId}}
+                                                        </td>
+                                                        <td class="project-title">
+                                                            <a ng-click="openStoriesView(ticket)">{{ticket.title}} <span class="draft" ng-if="ticket.status==ticketStatus.Draft.status">(Draft)</span></a>
+                                                            <small>{{ticket.createdby}} created at {{ticket.creationdate}}</small>
+                                                        </td>
+                                                        <td class="project-estimation" ng-if="ticket.type!=tickettypes[2].type && ticket.estimation!=null">
+                                                            {{ticket.estimation}}h
+                                                            <a ng-click="openTicketDetails(ticket)"><small>see details</small></a>
+                                                            
+                                                        </td>
+                                                        <td class="project-estimation" ng-if="ticket.type!=tickettypes[2].type && ticket.estimation==null">
+                                                           
+                                                        </td>
+                                                        <td class="project-estimation" ng-if="ticket.type==tickettypes[2].type">
+                                                            <i class="fa fa-bug"></i>
+                                                            <a ng-click="openBuginfo(ticket.description)"><small>see details</small></a>
+                                                        </td>
+                                                        <td class="project-status" ng-if="ticket.status==ticketStatus.Draft.status">
+                                                            <span class="label label-default label-nobg"><i class="fa fa-genderless"></i> draft</span>  
+                                                        </td>
+                                                        <td class="project-status" ng-if="ticket.status==ticketStatus.Estimation.status && ticket.type!=tickettypes[2].type">
+                                                            <button type="button" class="btn btn-primary btn-xs" ng-click="openStoriesView(ticket)"><i class="fa fa-chevron-right"></i> estimation</button>
+                                                            <small>client started ticket</small>
+                                                        </td>
+                                                         <td class="project-status" ng-if="ticket.status==ticketStatus.Estimation.status && ticket.type==tickettypes[2].type">
+                                                            
+                                                            <button type="button" class="btn btn-primary btn-xs" ng-click="openStoriesView(ticket)"><i class="fa fa-chevron-right"></i> check</button>
+                                                            <small>client started ticket</small>
+                                                        
+                                                        </td>
+                                                        <td class="project-status" ng-if="ticket.status==ticketStatus.Goproduction.status">
+                                                            
+                                                            <span class="label label-default label-nobg"><img src="img/ellipsis.gif" width="15" height="15"> waiting confirmation</span>
+                                                        
+                                                        </td>
+                                                        <td class="project-status" ng-if="ticket.status==ticketStatus.Waiting.status">
+                                                           
+                                                            <span class="label label-default label-nobg"><i class="fa fa-genderless"></i> waiting ({{ticket.taskscount}}/{{ticket.finishedtasks}})</span>
+                                                        
+                                                        </td>
+                                                        <td class="project-status" ng-if="ticket.status==ticketStatus.Production.status">
+                                                            <span class="label label-default label-nobg"><img src="img/ellipsis.gif" width="15" height="15"> in production ({{ticket.taskscount}}/{{ticket.finishedtasks}})</span>
+                                                        </td>
+                                                        <td class="project-status" ng-if="ticket.status==ticketStatus.Testing.status">
+                                                            
+                                                           <span class="label label-default label-nobg"><img src="img/ellipsis.gif" width="15" height="15"> in QA</span>
+                                                        
+                                                        </td>
+                                                        <td class="project-status" ng-if="ticket.status==ticketStatus.Accept.status">
+                                                            
+                                                           <span class="label label-default label-nobg"><img src="img/ellipsis.gif" width="15" height="15"> in acceptance</span>
+                                                        
+                                                        </td>
+                                                        <td class="project-status" ng-if="ticket.status==ticketStatus.Done.status">
+                                                            <span class="label label-default label-nobg"><i class="fa fa-check"></i> done</span>
+                                                        </td>
+                                                         <td class="project-status" ng-if="ticket.status==ticketStatus.Reject.status">
+                                                            <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#reject-messages"><i class="fa fa-commenting"></i> see messages</button>
+                                                            <small>client reject ticket</small> 
+                                                        
+                                                        </td>
+                                                        <td class="project-actions">
+                                                            <a ng-click="openStoriesView(ticket)" class="btn btn-white btn-sm"><i class="fa fa-search"></i> details</a>
+                                                        </td> 
+                                                    </tr>
                                                     
                                                     </tbody>
                                                 </table>
@@ -393,5 +587,530 @@
             </div>
         </div>
     </div> 
+     <!--modal add ticket-->
+    <div class="modal inmodal fade" id="add-ticket" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 ng-if="!isedit" class="modal-title"><i class="fa fa-plus modal-fa-icon"></i> Add Ticket</h4>
+                    <h4 ng-if="isedit" class="modal-title"><i class="fa fa-pencil modal-fa-icon"></i> Edit Ticket</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb10 header-ticket-types">
+                        <div class="col-lg-12">
+                            <div class="form-group radio-toolbar header-toolbar">
+                                <input id='radio1' class="development" type="radio" name="radios" value="true">
+                                <label class="development" for="radio1" ng-click="hideshowForm(true)"><i class="fa fa-star" ng-model="devselct"></i> Development</label>
+
+                                <input id='radio2' class="concept" type="radio" name="radios" value="true" ng-click="hideshowForm(false)" ng-model="conceptselct">
+                                <label class="concept" for="radio2"><i class="fa fa-file"></i> Concept</label>
+
+                                <input id='radio3' class="design" type="radio" name="radios" value="true" ng-click="hideshowForm(false)" ng-model="designselct">
+                                <label class="design" for="radio3"><i class="fa fa-tint"></i> Design</label> 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12"> 
+                            <div class="form-group" id="ticketchoiceform">
+                               <div class="radio ticket radio-warning radio-inline ml5">
+                                    <input id='inlineradio1' type="radio" name="radioInline" value="option1"  ng-model="featureselct">
+                                    <label for="inlineRadio1"> Feature </label>
+                                </div>
+                                <div class="radio ticket radio-danger radio-inline">
+                                    <input id='inlineradio2' type="radio" name="radioInline" value="option2"  ng-model="bugselct">
+                                    <label for="inlineRadio2"> Bug </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Title" ng-model="tickettitle">
+                            </div>
+                            <div class="form-group mb0">
+                                 <textarea class="form-control textarea-keybox" placeholder="Description" ng-model="ticketdescription"></textarea>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" ng-click="createTicket()">Save as Draft</button>
+                </div>
+            </div>
+        </div>
+    </div>
+     <div class="modal inmodal fade" id="bug-info" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"><i class="fa fa-bug modal-fa-icon"></i> Bug</h4>
+                </div>
+                <div class="modal-body">
+                   <p>{{bugdescription}}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal inmodal fade" id="reject-ticket" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"><i class="fa fa-plus modal-fa-icon"></i> Reject Ticket</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                            <div class="form-group mb0">
+                                 <textarea class="form-control textarea-keybox" placeholder="Rejection message" ng-model="rejectionmessage"></textarea>
+                            </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" ng-click="rejectTicket(rejectedticket)">Reject</button>
+                </div>
+            </div>
+        </div>
+    </div>
+     <div class="modal inmodal fade" id="bug-info" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"><i class="fa fa-bug modal-fa-icon"></i> Bug</h4>
+                </div>
+                <div class="modal-body">
+                   <p>{{bugdescription}}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+      
+
+    </div>
 </div>
+<div class="modal inmodal fade" id="estimation-details" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"><i class="fa fa-clock-o modal-fa-icon"></i> Estimation Details</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12"> 
+                            <!-- table project list -->
+                                            <div class="project-list">
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover responsive">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td width="50" class="project-table-head"></td>
+                                                            <td width="150" class="project-table-head">ID</td>
+                                                            <td width="1100" class="project-table-head">Tasks</td>
+                                                            <td width="100" class="project-table-head">Estimation</td>
+                                                            <td width="100" class="project-table-head">Realtime</td>
+                                                            <td width="300" class="project-table-head">Status</td>
+                                                        </tr>
+
+                                                        <tr ng-repeat="task in tasks">
+                                                            <td class="project-type">
+                                                                <i class="fa fa-angle-right"></i>
+                                                            </td>
+                                                            <td class="project-id">
+                                                                {{task.displayId}}
+                                                            </td>
+                                                            <td class="project-title">
+                                                                {{task.title}}
+                                                                <small>Assign to: <b>{{task.assignto.name}}</b></small>
+                                                            </td>
+                                                            <td class="project-estimation">
+                                                                <i class="fa fa-clock-o"></i> 
+                                                                <span class="hour">{{task.estimation}} h</span>
+                                                            </td>
+                                                            <td class="project-realtime">
+                                                                <i class="fa fa-clock-o"></i> 
+                                                                <span class="hour" ng-if="task.realtime!=null">{{task.realtime}} h</span>
+                                                            </td>
+                                                            <td class="project-status">
+                                                                 <span class="label label-default label-nobg" ng-if="!task.isstarted"><i class="fa fa-genderless"></i> waiting</span>
+                                                                  <span class="label label-default label-nobg" ng-if="task.isstarted && !task.finished"><i class="fa fa-genderless"></i> production</span>
+                                                                   <span class="label label-default label-nobg" ng-if="task.isstarted && !task.finished"><i class="fa fa-genderless"></i> production</span>
+                                                                   <span class="label label-default label-nobg" ng-if="task.isstarted && task.finished"><i class="fa fa-check"></i>  finished</span>
+                                                            </td>
+                                                        </tr>
+
+                                                       
+                                                
+                                                    </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <!-- end table project list-->
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+ <!--modal send to client-->
+    <div class="modal inmodal fade" id="send-to-client" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"><i class="fa fa-chevron-right modal-fa-icon"></i> send estimation to client</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12"> 
+                            <!-- table project list -->
+                                            <div class="project-list">
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover responsive">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td width="50" class="project-table-head"></td>
+                                                            <td width="150" class="project-table-head">ID</td>
+                                                            <td width="1100" class="project-table-head">Tasks</td>
+                                                            <td width="100" class="project-table-head">Estimation</td>
+                                                            <td width="100" class="project-table-head">Realtime</td>
+                                                            <td width="300" class="project-table-head">Status</td>
+                                                        </tr>
+
+                                                      <tr ng-repeat="task in tasks">
+                                                            <td class="project-type">
+                                                                <i class="fa fa-angle-right"></i>
+                                                            </td>
+                                                            <td class="project-id">
+                                                                {{task.displayId}}
+                                                            </td>
+                                                            <td class="project-title">
+                                                                {{task.title}}
+                                                                <small>Assign to: <b>{{task.assignto.name}}</b></small>
+                                                            </td>
+                                                            <td class="project-estimation">
+                                                                <i class="fa fa-clock-o"></i> 
+                                                                <span class="hour">{{task.estimation}} h</span>
+                                                            </td>
+                                                            <td class="project-realtime">
+                                                                <i class="fa fa-clock-o"></i> 
+                                                                <span class="hour" ng-if="task.realtime!=null">{{task.realtime}} h</span>
+                                                            </td>
+                                                            <td class="project-status">
+                                                                 <span class="label label-default label-nobg" ng-if="!task.isstarted"><i class="fa fa-genderless"></i> waiting</span>
+                                                                  <span class="label label-default label-nobg" ng-if="task.isstarted && !task.finished"><i class="fa fa-genderless"></i> production</span>
+                                                                   <span class="label label-default label-nobg" ng-if="task.isstarted && !task.finished"><i class="fa fa-genderless"></i> production</span>
+                                                                   <span class="label label-default label-nobg" ng-if="task.isstarted && task.finished"><i class="fa fa-check"></i>  finished</span>
+                                                            </td>
+                                                        </tr>
+
+                                                                                              
+                                                    </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <!-- end table project list-->
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" ng-click="sendToClient()">send estimation to client</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--modal send-to-production chrome safari bug-->
+    <div class="modal inmodal fade" id="send-to-production" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"><i class="fa fa-chevron-right modal-fa-icon"></i> send to production</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12"> 
+                            <!-- table project list -->
+                                            <div class="project-list">
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover responsive">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td width="50" class="project-table-head"></td>
+                                                            <td width="150" class="project-table-head">ID</td>
+                                                            <td width="1100" class="project-table-head">Tasks</td>
+                                                            <td width="100" class="project-table-head">Estimation</td>
+                                                            <td width="300" class="project-table-head">Assign to</td>
+                                                        </tr>
+
+                                                         <tr ng-repeat="task in tasks">
+                                                            <td class="project-type">
+                                                                <i class="fa fa-angle-right"></i>
+                                                            </td>
+                                                            <td class="project-id">
+                                                                {{task.displayId}}
+                                                            </td>
+                                                            <td class="project-title">
+                                                                {{task.title}}
+                                                                <small>Assign to: <b>{{task.assignto.name}}</b></small>
+                                                            </td>
+                                                            <td class="project-estimation">
+                                                                <i class="fa fa-clock-o"></i> 
+                                                                <span class="hour">{{task.estimation}} h</span>
+                                                            </td>
+                                                            <td class="project-status">
+                                                                 Assign to : {{task.assignto.name}}
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <!-- end table project list-->
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" ng-click="sendToProduction()">Send to Pivotal Tracker</button>
+                </div>
+            </div>
+        </div>
+    </div>
+ <!--modal deliver ticket-->
+    <div class="modal inmodal fade" id="deliver-ticket" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"><i class="fa fa-chevron-right modal-fa-icon"></i> deliver ticket</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12"> 
+                            <!-- table project list -->
+                                            <div class="project-list">
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover responsive">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td width="50" class="project-table-head"></td>
+                                                            <td width="150" class="project-table-head">ID</td>
+                                                            <td width="1100" class="project-table-head">Tasks</td>
+                                                            <td width="100" class="project-table-head">Estimation</td>
+                                                            <td width="100" class="project-table-head">Realtime</td>
+                                                            <td width="300" class="project-table-head">Status</td>
+                                                        </tr>
+
+                                                        <tr ng-repeat="task in tasks">
+                                                            <td class="project-type">
+                                                                <i class="fa fa-angle-right"></i>
+                                                            </td>
+                                                            <td class="project-id">
+                                                                {{task.displayId}}
+                                                            </td>
+                                                            <td class="project-title">
+                                                                {{task.title}}
+                                                                <small>Assign to: <b>{{task.assignto.name}}</b></small>
+                                                            </td>
+                                                            <td class="project-estimation">
+                                                                <i class="fa fa-clock-o"></i> 
+                                                                <span class="hour">{{task.estimation}} h</span>
+                                                            </td>
+                                                            <td class="project-realtime">
+                                                                <i class="fa fa-clock-o"></i> 
+                                                                <span class="hour" ng-if="task.realtime!=null">{{task.realtime}} h</span>
+                                                            </td>
+                                                            <td class="project-status">
+                                                                 <span class="label label-default label-nobg" ng-if="!task.isstarted"><i class="fa fa-genderless"></i> waiting</span>
+                                                                  <span class="label label-default label-nobg" ng-if="task.isstarted && !task.finished"><i class="fa fa-genderless"></i> production</span>
+                                                                   <span class="label label-default label-nobg" ng-if="task.isstarted && !task.finished"><i class="fa fa-genderless"></i> production</span>
+                                                                   <span class="label label-default label-nobg" ng-if="task.isstarted && task.finished"><i class="fa fa-check"></i>  finished</span>
+                                                            </td>
+                                                        </tr>                                         
+                                                    </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <!-- end table project list-->
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" ng-click="deliverToclient()">deliver ticket to client</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--modal see reject messages-->
+    <div class="modal inmodal fade" id="reject-messages" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-m">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"><i class="fa fa-undo modal-fa-icon"></i> Rejects</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                             <!-- table project list -->    
+                                    <div class="table-responsive">
+                                        <table class="table table-hover responsive">
+                                            <tbody>
+                                                <tr>
+                                                    <td width="50" class="project-table-head"></td>
+                                                    <td width="" class="project-table-head">Messages</td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td class="reject-arrow">
+                                                        <i class="fa fa-angle-right"></i>
+                                                    </td>
+                                                    <td class="reject-message">
+                                                      {{rejectionmessage}}
+                                                    </td>
+                                                </tr>                                                                                                  
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                <!-- end table project list-->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<div class="modal inmodal fade" id="see-contract" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-m">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"><i class="fa fa-file-text modal-fa-icon"></i> contract</h4>
+                </div>
+                <form role="form" ng-submit="acceptContract()">
+                    <div class="modal-body">
+                       <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-12 mb20 p0 aright">
+                                  <!--  <a class="btn btn-white btn-xs" target="_blank"><i class="fa fa-print"></i> print view</a> -->
+                                </div>
+                                <hr class="clear-both"/>
+                                <div class="col-md-12 p0 contract">
+                                    <div class="col-md-8 pl0 mb20">
+                                        <h2 class="mt0 mb5 bold">{{project_name}}</h2>
+                                         <span class="project-details-info mb10">project</span>
+                                    </div>
+                                    <div class="col-md-4 pr0 mb20 aright">
+                                        <h2 class="mt0 mb5 bold">
+                                            <i class="fa fa-euro"></i> 
+                                            <span class="hour">30</span>
+                                        </h2>
+                                        <span class="project-details-info mb10">per hour</span>
+                                    </div>
+                                </div>
+
+                               <hr class="clear-both"/>
+                                <div class="col-md-12 p0 contract">
+                                    <div class="col-md-5 pl0 pb20 aright">
+                                         <p>
+                                            Client<br/>
+                                            <b>{{company_name}}</b><br/>
+                                            {{client.address.address}}<br/>
+                                           {{client.address.zipcode}} {{client.address.city}} - {{client.address.country}} <br/><br/>
+                                            Represented by <br/><b>{{client.surname}} {{client.name}}</b>
+                                        </p>
+                                        
+                                    </div>
+                                    <div class="col-md-2 acenter mt20">
+                                        <i class="fa fa-angle-left"></i>
+                                        <i class="fa fa-angle-right"></i>
+                                    </div>
+                                    <div class="col-md-5 pr0 pb20 aleft">
+                                        <p>
+                                            Contractor<br/>
+                                            <b>flexwork.io</b><br/>
+                                            technology centre<br/>
+                                            emil-figge-strasse 76-80<br/>
+                                            44227 dortmund - germany<br/><br/>
+                                            Represented by <br/><b>Ferit Demir</b>
+                                        </p>
+                                    </div>
+                                </div>
+                                <hr class="clear-both"/>
+                               
+                                <div class="col-md-12 mb20 p0">
+                                    <i>The client <b>adnatives</b> solmen in li aede dakka <b>flexwork.io</b>. Li lingues differe solmen in li grammatica, li pronunciation e li plu commun vocabules.</i>
+                                </div>
+
+                                <hr class="clear-both"/>
+                                <div class="contract-paragraphs col-md-12 p0">
+                                    <div class="p20">
+                                        <h4>$paragraph1</h4>
+                                        <p>Li Europan lingues es membres del sam familie. Lor separat existentie es un myth. Por scientie, musica, sport etc, litot Europa usa li sam vocabular.</p>
+                                        <p>Li lingues differe solmen in li grammatica, li pronunciation e li plu commun vocabules.</p>
+                                        <hr/>
+                                        <h4>$paragraph2</h4>
+                                        <p>Li Europan lingues es membres del sam familie. Lor separat existentie es un myth. Por scientie, musica, sport etc, litot Europa usa li sam vocabular.</p>
+                                        <p>Li lingues differe solmen in li grammatica, li pronunciation e li plu commun vocabules.</p>
+                                        <hr/>
+                                        <h4>$paragraph3</h4>
+                                        <p>Li Europan lingues es membres del sam familie. Lor separat existentie es un myth. Por scientie, musica, sport etc, litot Europa usa li sam vocabular.</p>
+                                        <p>Li lingues differe solmen in li grammatica, li pronunciation e li plu commun vocabules.</p>
+                                        <hr/>
+                                        <h4>$paragraph4</h4>
+                                        <p>Li Europan lingues es membres del sam familie. Lor separat existentie es un myth. Por scientie, musica, sport etc, litot Europa usa li sam vocabular.</p>
+                                        <p>Li lingues differe solmen in li grammatica, li pronunciation e li plu commun vocabules.</p>
+                                        <hr/>
+                                        <h4>$paragraph5</h4>
+                                        <p>Li Europan lingues es membres del sam familie. Lor separat existentie es un myth. Por scientie, musica, sport etc, litot Europa usa li sam vocabular.</p>
+                                        <p>Li lingues differe solmen in li grammatica, li pronunciation e li plu commun vocabules.</p>
+                                        <hr/>
+                                        <h4>$paragraph6</h4>
+                                        <p>Li Europan lingues es membres del sam familie. Lor separat existentie es un myth. Por scientie, musica, sport etc, litot Europa usa li sam vocabular.</p>
+                                        <p>Li lingues differe solmen in li grammatica, li pronunciation e li plu commun vocabules.</p>
+                                        <hr/>
+                                    </div>                   
+                                </div>
+                                <hr class="clear-both"/>
+                                <div class="col-md-12">
+                                    <div class="form-group terms fright">
+                                        <div class="checkbox checkbox-primary">
+                                            <input type="checkbox" id="checkbox3" name="terms" id="terms" required>
+                                            <label for="checkbox3" style="color:#333;"> I accept the terms and conditions</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                 <hr class="clear-both mb0"/>
+                            </div>
+                       </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">accept contract</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div> 
 </div>

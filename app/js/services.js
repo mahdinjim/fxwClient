@@ -50,8 +50,8 @@ services.factory("Links",[function(){
 	var newmessagesNumberLink=baseUrl+path+"/private/chat/newmessages/number";
 	var sendMessageLink=baseUrl+path+"/private/chat/send";
 	var createProjectLink=baseUrl+path+"/private/project/restricted/create";
-	var listprojectLink=baseUrl+path+"/private/project/restricted/list";
-	var projectDetailLink=baseUrl+path+"/private/project/restricted/details";
+	var listprojectLink=baseUrl+path+"/private/project/list";
+	var projectDetailLink=baseUrl+path+"/private/project/details";
 	var isexpiredLink=baseUrl+path+"/private/token/expired";
 	var assignTeamLeaderLink=baseUrl+path+"/private/super/project/teamleader/assign";
 	var addDeveloperLink=baseUrl+path+"/private/teamleader/project/developer/add";
@@ -64,6 +64,35 @@ services.factory("Links",[function(){
 	var deleteSysAdminFromprojectLink=baseUrl+path+"/private/teamleader/project/sysadmin/delete";
 	var getRolesLink=baseUrl+path+"/private/roles";
 	var fixProjectBudgetLink=baseUrl+path+"/private/project/restricted/budget";
+	var projectConfigsListLink=baseUrl+path+"/private/project/configs/list";
+	var deleteprojectConfigLink=baseUrl+path+"/private/project/restricted/config/delete";
+	var createProjectConfigLink=baseUrl+path+"/private/project/restricted/config/create";
+	var updateProjectConfigLink=baseUrl+path+"/private/project/restricted/config/update";
+	var tickettypesLink=baseUrl+path+"/private/ticket/types";
+	var createTicketLink=baseUrl+path+"/private/project/restricted/ticket/create";
+	var listTicketLink=baseUrl+path+"/private/ticket/list";
+	var startEstimationLink=baseUrl+path+"/private/project/restricted/ticket/startestipamtion";
+	var acceptEstimationLink=baseUrl+path+"/private/project/restricted/ticket/acceptestipamtion";
+	var rejectEstimationLink=baseUrl+path+"/private/project/restricted/ticket/rejectestipamtion";
+	var acceptTicketLink=baseUrl+path+"/private/project/restricted/ticket/accept";
+	var rejectTicketLink=baseUrl+path+"/private/project/restricted/ticket/reject";
+	var deleteTicketLink=baseUrl+path+"/private/project/restricted/ticket/delete";
+	var updateTicketLink=baseUrl+path+"/private/project/restricted/ticket/update";
+	var createTaskLink=baseUrl+path+"/private/project/task/create";
+	var updateTaskLink=baseUrl+path+"/private/project/task/update";
+	var listTaskLink=baseUrl+path+"/private/project/task/list";
+	var estimationLink=baseUrl+path+"/private/project/task/estimation";
+	var deletetasklink=baseUrl+path+"/private/project/task/delete";
+	var sentToclientLink=baseUrl+path+"/private/project/ticket/sent";
+	var sentToProdLink=baseUrl+path+"/private/project/ticket/production";
+	var startTaskLink=baseUrl+path+"/private/project/task/start";
+	var finishTaskLink=baseUrl+path+"/private/project/task/finish";
+	var realtimeLink=baseUrl+path+"/private/project/task/realtime";
+	var delivertoClientLink=baseUrl+path+"/private/project/ticket/acceptance";
+	var uploadfilelink=baseUrl+path+"/private/project/restricted/file/uplaod";
+	var listdocumentsLink=baseUrl+path+"/private/project/file/list";
+	var acceptContractLink=baseUrl+path+"/private/customer/contract/accept";
+	var acceptProjectContractLink=baseUrl+path+"/private/project/restricted/accept";
 	this.getLoginLink=function()
 	{
 		return LoginLink;
@@ -276,19 +305,165 @@ services.factory("Links",[function(){
 	{
 		return fixProjectBudgetLink;
 	}
+	this.getProjectConfigsListLink=function()
+	{
+		return projectConfigsListLink;
+	}
+	this.getDeleteProjectConfigLink=function()
+	{
+		return deleteprojectConfigLink;
+	}
+	this.getCreateProjectConfigLink=function()
+	{
+		return createProjectConfigLink;
+	}
+	this.getUpdateProjectConfigLink=function()
+	{
+		return updateProjectConfigLink;
+	}
+	this.getTicketTypesLink=function()
+	{
+		return tickettypesLink;
+	}
+	this.getCreateTicketLink=function()
+	{
+		return createTicketLink;
+	}
+	this.getTicketListLink=function()
+	{
+		return listTicketLink;
+	}
+	this.getStartEstimationLink=function()
+	{
+		return startEstimationLink;
+	}
+	this.getAcceptEstimationLink=function()
+	{
+		return acceptEstimationLink;
+	}
+	this.getRejectEstimationLink=function()
+	{
+		return rejectEstimationLink;
+	}
+	this.getAcceptTicketLink=function(){
+		return acceptTicketLink;
+	}
+	this.getRejectionTicketLink=function(){
+		return rejectTicketLink;
+	}
+	this.getDeleteTicketLink=function()
+	{
+		return deleteTicketLink;
+	}
+	this.getUpdateTicketLink=function()
+	{
+		return updateTicketLink;
+	}
+	this.getCreatetaskLink=function()
+	{
+		return createTaskLink;
+	}
+	this.getUpdatetaskLink=function()
+	{
+		return updateTaskLink;
+	}
+	this.getListTasksLink=function()
+	{
+		return listTaskLink;
+	}
+	this.getEstimationLink=function()
+	{
+		return estimationLink;
+	}
+	this.getDeleteTaskLink=function()
+	{
+		return deletetasklink;
+	}
+	this.GetSendToClientLink=function()
+	{
+		return sentToclientLink;
+	}
+	this.GetSendToProdLink=function()
+	{
+		return sentToProdLink;
+	}
+	this.getStartTaskLink=function()
+	{
+		return startTaskLink;
+	}
+	this.getFinishTaskLink=function()
+	{
+		return finishTaskLink;
+	}
+	this.getRealtimeLink=function()
+	{
+		return realtimeLink;
+	}
+	this.GetdeliverToClientLink=function()
+	{
+		return delivertoClientLink;
+	}
+	this.getUplaodfileLink=function()
+	{
+		return uploadfilelink;
+	}
+	this.getDocumentslistLink=function()
+	{
+		return listdocumentsLink;
+	}
+	this.getAcceptContractLink=function()
+	{
+		return acceptContractLink;
+	}
+	this.getAcceptProjectContractLink=function()
+	{
+		return acceptProjectContractLink;
+	}
 	return this;
 }]);
 services.factory("Login",['$http','$location','$cookies',"$route","Links",
 	function($http,$location,$cookies,$route,Links){
 		var lastlink=null;
-		var Admin_Access=["/login","/dashboard","/client","/teamprofile","/team","/messaging","/pdetails"];
-		var Client_Access=["/login","/dashboard","/cuser","/cuserprofile","/messaging","/pdetails"];
-		var KeyAccount_Access=["/login","/dashboard","/pdetails","/messaging","/client"];
-		var TeamLeader_Access=["/login","/dashboard","/pdetails","/messaging"];
-		var TeamMember_Access=["/login","/dashboard","/pdetails","/messaging"];
+		var Admin_Access=["/login","/dashboard","/client","/teamprofile","/team","/messaging","/pdetails","/keybox","/stories"];
+		var Client_Access=["/login","/dashboard","/cuser","/cuserprofile","/messaging","/pdetails","/keybox","/stories","/acceptcontract"];
+		var KeyAccount_Access=["/login","/dashboard","/pdetails","/messaging","/client","/keybox","/stories"];
+		var TeamLeader_Access=["/login","/dashboard","/pdetails","/messaging","/keybox","/stories"];
+		var TeamMember_Access=["/login","/dashboard","/pdetails","/messaging","/keybox","/stories"];
 		this.setLastLink=function(path)
 		{
 			this.lastlink=path;
+		}
+		this.contractSigned=function()
+		{
+			if(this.getLoggedUser()){
+				var role=this.getLoggedUser().userinfo.roles[0];
+				 if(role=="ROLE_CUSTOMER")
+				 	if(!this.getLoggedUser().userinfo.signed)
+				 	{
+				 		$location.url("/acceptcontract?cid="+this.getLoggedUser().userinfo.id);
+				 	}
+			}
+		}
+		this.signContract=function(successFunc,failureFunc,customer_id)
+		{
+			var me=this;
+			if(this.getLoggedUser())
+			{
+				$http({
+					method:"GET", 
+					url:Links.getAcceptContractLink()+"/"+customer_id,
+					headers: {'x-crm-access-token': this.getLoggedUser().token.token}
+				}).success(function (data, status, headers, config) {
+					successFunc();
+					me.logout(false);
+	            }).error(function (data, status, headers, config) {
+	            	if(status==403)
+	            		me.logout();
+	            	else
+	            		failureFunc();
+	            });
+				
+			}
 		}
 		this.doLogin=function(login,password,funcsucess,funcfailure)
 		{
@@ -335,10 +510,11 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 		}
 		this.logout=function(savelast){
 			localStorage.removeItem("loggeduser");
-			if(savelast===undefined || savelast==null)
+			/*if(savelast===undefined || savelast==null)
 			 {
 			 	savelast=true;
-			 }
+			 }*/
+			savelast=false;
 			if(savelast)
 			{
 				var last=$location.path();
@@ -373,9 +549,26 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 				else
 					return false;
 			}
-			else
+			else if(role=="ROLE_TEAMLEADER")
 			{
-				return false;
+				if(TeamLeader_Access.indexOf(path)>0 )
+					return true;
+				else
+					return false;
+			}
+			else if(role=="ROLE_KEYACCOUNT")
+			{
+				if(KeyAccount_Access.indexOf(path)>0 )
+					return true;
+				else
+					return false;
+			}
+			else if(role=="ROLE_DEVELOPER" || role=="ROLE_DESIGNER" || role=="ROLE_TESTER" || role=="ROLE_SYSADMIN")
+			{
+				if(TeamMember_Access.indexOf(path)>0 )
+					return true;
+				else
+					return false;
 			}
 
 		}
@@ -410,30 +603,33 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 
 services.factory("Team",['$http','$location','$cookieStore',"Login","Links",
 	function($http,$location,$cookieStore,Login,Links){
-		this.roles=null;
-		var me=this;
-		this.loadRoles=function(successFunc){
-			if(Login.getLoggedUser() && this.roles==null)
+		this.loadRoles=function(successFunc){ 
+			if(localStorage.roles!=null)
 			{
-				$http({
-					method:"GET", 
-					url:Links.getGetRolesLink(),
-					headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
-				}).success(function (data, status, headers, config) {
-					me.roles=data.Roles;
-					successFunc(data.Roles);
-	            }).error(function (data, status, headers, config) {
-	            	if(status==403)
-        				Login.logout();
-        	
-	            });
-	        }
-	        else
-	        	successFunc(this.roles)
+				successFunc(JSON.parse(localStorage.roles))
+			}
+			else{
+				if(Login.getLoggedUser() && this.roles==null)
+				{
+					$http({
+						method:"GET", 
+						url:Links.getGetRolesLink(),
+						headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+					}).success(function (data, status, headers, config) {
+						localStorage.roles=JSON.stringify(data.Roles);
+						successFunc(data.Roles);
+		            }).error(function (data, status, headers, config) {
+		            	if(status==403)
+	        				Login.logout();
+	        	
+		            });
+		        }
+			}
+			
 		 }
 	    this.getRoles=function()
 	    {
-	    	return this.roles;
+	    	return JSON.parse(localStorage.roles);
 	    }
 		this.getAllteamMembers=function(funcsuccess,funcfailure)
 		{
@@ -896,6 +1092,8 @@ services.factory("Cuser",["$http",'Login','Links',function($http,Login,Links){
 services.factory('Params',function(){
 	var teamMember=null;
 	var cuser=null;
+	var project=null;
+	var ticket=null;
 	return {
 		setTeamMember:function(data){
 			teamMember=data;
@@ -909,6 +1107,32 @@ services.factory('Params',function(){
 		},
 		getCuser:function(){
 			return cuser;
+		},
+		setProject:function(data){
+			localStorage.project=JSON.stringify(data);
+			project=data;
+
+		},
+		getProject:function(){
+			if(project==null)
+			{
+				project=JSON.parse(localStorage.project);
+
+			}
+			return project;
+		},
+		setTicket:function(data){
+			localStorage.ticket=JSON.stringify(data);
+			ticket=data;
+
+		},
+		getTicket:function(){
+			if(ticket==null)
+			{
+				ticket=JSON.parse(localStorage.ticket);
+
+			}
+			return ticket;
 		}
 	}
 })
@@ -1147,6 +1371,25 @@ services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
 	return this;
 }]);
 services.factory('Project',["$http","Login",'Links',function($http,Login,Links){
+	this.acceptContract=function(successFunc,failureFunc,project_id){
+		if(Login.getLoggedUser())
+		{
+			$http({
+				method:"GET", 
+				url:Links.getAcceptProjectContractLink()+"/"+project_id,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+				successFunc();
+				
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failureFunc();
+            });
+			
+		}
+	}
 	this.createProject=function(postdata,successfunc,failurefunc)
 	{
 		$http({
@@ -1274,3 +1517,438 @@ services.factory('Project',["$http","Login",'Links',function($http,Login,Links){
 	return this;
 }
 ]);
+services.factory('KeyBox', ["$http","Login","Links",function ($http,Login,Links) {
+	this.getProjectConfigs=function(project_id,successFunc,failureFunc)
+	{
+		
+		if(Login.getLoggedUser())
+		{
+			var me =this;
+			$http({
+				method:"GET", 
+				url:Links.getProjectConfigsListLink()+"/"+project_id,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+                successFunc(data);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failureFunc(data.error);
+            });
+        }
+	}
+	this.deleteProjectConfig=function(successFunc,failureFunc,config_id)
+	{
+		if(Login.getLoggedUser())
+		{
+			var me =this;
+			$http({
+				method:"DELETE", 
+				url:Links.getDeleteProjectConfigLink()+"/"+config_id,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+                successFunc(data);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failureFunc(data.error);
+            });
+        }
+	}
+	this.createProjectConfig=function(successFunc,failureFunc,data)
+	{
+		if(Login.getLoggedUser())
+		{
+			var me =this;
+			$http({
+				method:"POST", 
+				url:Links.getCreateProjectConfigLink(),
+				data:data,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+                successFunc(data);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failureFunc(data.error);
+            });
+        }
+	}
+	this.updateProjectConfig=function(successFunc,failureFunc,data)
+	{
+		if(Login.getLoggedUser())
+		{
+			var me =this;
+			$http({
+				method:"PUT", 
+				url:Links.getUpdateProjectConfigLink(),
+				data:data,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+                successFunc(data);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failureFunc(data.error);
+            });
+        }
+	}
+	return this;
+}]);
+services.service('Ticket', ["$http","Login","Links",function ($http,Login,Links) {
+	
+	this.ticketypes=null;
+	this.ticketstatus={
+		"All":{"status":"all","text":"All status"},
+		"Draft":{"status":"draft","text":"Draft"},
+		"Estimation":{"status":"estimation","text":"Estimation"},
+		"Goproduction":{"status":"goproduction","text":"Go production"},
+		"Waiting":{"status":"waiting","text":"Waiting"},
+		"Production":{"status":"production","text":"Production"},
+		"Testing":{"status":"testing","text":"Testing"},
+		"Accept":{"status":"accept","text":"Accept"},
+		"Reject":{"status":"reject","text":"Reject"},
+		"Done":{"status":"done","text":"Done"},
+		toArray:function(){
+			return [this.All,this.Draft,this.Estimation,this.Goproduction,this.Waiting,this.Production,this.Accept,this.Reject,this.Done];
+		}
+	}
+	var me=this;
+	this.loadTicketTypes=function(successFunc)
+	{
+		
+		if(Login.getLoggedUser())
+			{
+				if(localStorage.tickettypes==null)
+				{
+					$http({
+						method:"GET", 
+						url:Links.getTicketTypesLink(),
+						headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+					}).success(function (data, status, headers, config) {
+						localStorage.ticketypes=JSON.stringify(data);
+						successFunc(data);
+		            }).error(function (data, status, headers, config) {
+		            	if(status==403)
+	        				Login.logout();
+	        	
+		            });
+		        }
+		        else
+		        	successFunc(JSON.parse(localStorage.ticketypes));
+	        }
+	}
+	this.getTicketTypes=function()
+	{
+		return JSON.parse(localStorage.ticketypes);
+	}
+	this.createTicket=function(successFunc,failureFunc,data)
+	{
+		if(Login.getLoggedUser())
+			{
+				$http({
+					method:"POST", 
+					data:data,
+					url:Links.getCreateTicketLink(),
+					headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+				}).success(function (data, status, headers, config) {
+					successFunc();
+	            }).error(function (data, status, headers, config) {
+	            	if(status==403)
+        				Login.logout();
+        			else
+        				failureFunc();
+
+        	
+	            });
+	        }	
+	}
+	this.getTicketList=function(successFunc,failureFunc,project_id)
+	{
+		if(Login.getLoggedUser())
+		{
+			$http({
+				method:"GET", 
+				url:Links.getTicketListLink()+"/"+project_id,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+				successFunc(data);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+    				Login.logout();
+    			else
+    				failureFunc();
+
+    	
+            });
+        }	
+	}
+	
+	this.sendToClient=function(successFunc,failureFunc,ticket_id)
+	{
+		this.changeTicketStatus(successFunc,failureFunc,ticket_id,Links.GetSendToClientLink());
+	}
+	this.sendToProd=function(successFunc,failureFunc,ticket_id)
+	{
+		this.changeTicketStatus(successFunc,failureFunc,ticket_id,Links.GetSendToProdLink());
+	}
+	this.deliverToClient=function(successFunc,failureFunc,ticket_id)
+	{
+		this.changeTicketStatus(successFunc,failureFunc,ticket_id,Links.GetdeliverToClientLink());
+	}
+	this.startEstimation=function(successFunc,failureFunc,ticket_id)
+	{
+		this.changeTicketStatus(successFunc,failureFunc,ticket_id,Links.getStartEstimationLink());
+	}
+	this.acceptEstimation=function(successFunc,failureFunc,ticket_id)
+	{
+		this.changeTicketStatus(successFunc,failureFunc,ticket_id,Links.getAcceptEstimationLink());
+	}
+	this.rejectEstimation=function(successFunc,failureFunc,ticket_id)
+	{
+		this.changeTicketStatus(successFunc,failureFunc,ticket_id,Links.getRejectEstimationLink());
+	}
+	this.acceptTicket=function(successFunc,failureFunc,ticket_id)
+	{
+		this.changeTicketStatus(successFunc,failureFunc,ticket_id,Links.getAcceptTicketLink());
+	}
+	this.rejectTicket=function(successFunc,failureFunc,data){
+		if(Login.getLoggedUser())
+		{
+			$http({
+				method:"POST", 
+				url:Links.getRejectionTicketLink(),
+				data:data,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+				successFunc();
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+    				Login.logout();
+    			else
+    				failureFunc();
+
+    	
+            });
+        }	
+	}
+	this.updateTicket=function(successFunc,failureFunc,data)
+	{
+		if(Login.getLoggedUser())
+			{
+				$http({
+					method:"PUT", 
+					data:data,
+					url:Links.getUpdateTicketLink(),
+					headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+				}).success(function (data, status, headers, config) {
+					successFunc();
+	            }).error(function (data, status, headers, config) {
+	            	if(status==403)
+        				Login.logout();
+        			else
+        				failureFunc();
+
+        	
+	            });
+	        }	
+	}
+	this.deleteTicket=function(successFunc,failureFunc,ticket_id){
+		if(Login.getLoggedUser())
+		{
+			$http({
+				method:"DELETE", 
+				url:Links.getDeleteTicketLink()+"/"+ticket_id,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+				successFunc();
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+    				Login.logout();
+    			else
+    				failureFunc();
+
+    	
+            });
+        }
+	}
+	this.changeTicketStatus=function(successFunc,failureFunc,ticket_id,link)
+	{
+		if(Login.getLoggedUser())
+		{
+			$http({
+				method:"GET", 
+				url:link+"/"+ticket_id,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+				successFunc(data);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+    				Login.logout();
+    			else
+    				failureFunc();
+
+    	
+            });
+        }	
+	}
+}]);
+services.service('Task', ["$http","Login","Links",function ($http,Login,Links) {
+	this.craeteTask=function(successFunc,failureFunc,data)
+	{
+		this.execute(successFunc,failureFunc,data,"POST",Links.getCreatetaskLink());
+	}
+	this.updateTask=function(successFunc,failureFunc,data)
+	{
+		this.execute(successFunc,failureFunc,data,"PUT",Links.getUpdatetaskLink());
+	}
+	
+	this.setEstimation=function(successFunc,failureFunc,data)
+	{
+		this.execute(successFunc,failureFunc,data,"POST",Links.getEstimationLink());
+	}
+	this.setRealtime=function(successFunc,failureFunc,data)
+	{
+		this.execute(successFunc,failureFunc,data,"POST",Links.getRealtimeLink());
+	}
+	this.execute=function(successFunc,failureFunc,data,method,link)
+	{
+		if(Login.getLoggedUser())
+		{
+			var me =this;
+			$http({
+				method:method, 
+				url:link,
+				data:data,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+                successFunc(data);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failureFunc(data.error);
+            });
+        }
+	}
+	this.getAllTasks=function(successFunc,failureFunc,ticket_id)
+	{
+		if(Login.getLoggedUser())
+		{
+			var me =this;
+			$http({
+				method:"GET", 
+				url:Links.getListTasksLink()+"/"+ticket_id,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+                successFunc(data);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failureFunc(data.error);
+            });
+        }
+	}
+	this.startTask=function(successFunc,failureFunc,task_id)
+	{
+		if(Login.getLoggedUser())
+		{
+			var me =this;
+			$http({
+				method:"GET", 
+				url:Links.getStartTaskLink()+"/"+task_id,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+                successFunc(data);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failureFunc(data.error);
+            });
+        }
+	}
+	this.finishTask=function(successFunc,failureFunc,task_id)
+	{
+		if(Login.getLoggedUser())
+		{
+			var me =this;
+			$http({
+				method:"GET", 
+				url:Links.getFinishTaskLink()+"/"+task_id,
+				
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+                successFunc(data);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failureFunc(data.error);
+            });
+        }
+	}
+	this.deleteTask=function(successFunc,failureFunc,task_id)
+	{
+		if(Login.getLoggedUser())
+		{
+			var me =this;
+			$http({
+				method:"DELETE", 
+				url:Links.getDeleteTaskLink()+"/"+task_id,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+                successFunc(data);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failureFunc(data.error);
+            });
+        }
+	}
+	this.uploadFile=function(successFunc,failureFunc,data,project_id)
+	{
+		if(Login.getLoggedUser())
+		{
+			var me =this;
+			$http({
+				method:"POST", 
+				url:Links.getUplaodfileLink()+"/"+project_id,
+				transformRequest: angular.identity,
+				data:data,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token,'Content-Type': undefined}
+			}).success(function (data, status, headers, config) {
+                successFunc(data);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failureFunc(data.error);
+            });
+        }
+	}
+	this.listFiles=function(successFunc,project_id)
+	{
+		
+		if(Login.getLoggedUser())
+		{
+			var me =this;
+			$http({
+				method:"GET", 
+				url:Links.getDocumentslistLink()+"/"+project_id,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+                successFunc(data);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            });
+        }
+	}
+}]);
