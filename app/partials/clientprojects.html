@@ -1,0 +1,303 @@
+ <!-- select2 -->
+    <script>
+        $('.select2').select2();
+    </script>
+<div id="wrapper">
+ 	 <div side-bar></div>
+
+ 	 <div id="page-wrapper" class="gray-bg">
+ 	 	<div nav-menu></div>
+ 	 	<!--header title-->
+            <div class="row wrapper border-bottom white-bg page-heading">
+                <div class="col-lg-9">
+                    <h2><i class="fa fa-clone"></i> project details</h2>
+                    <ol class="breadcrumb">
+                        <li>
+                            administrator
+                        </li>
+                        <li>
+                            clients
+                        </li>
+                        <li>
+                            adnatives
+                        </li>
+                        <li>
+                            project details
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            <!--end header title-->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="wrapper wrapper-content animated fadeInUp">
+
+                        <!-- buttons & team -->
+                        <div class="row mb20">
+                            <div class="col-md-12">
+                                <a class="btn btn-default btn-bitbucket btn-m mr5" href="#/client"><i class="fa fa-angle-left mr5"></i> back to client</a>
+                                <button class="btn btn-primary btn-bitbucket btn-m mr5" type="button" ng-click="openAddprojectModelFromclient(null)"><i class="fa fa-plus mr5"></i> add project</button>
+                            </div>
+                        </div>
+                        <!-- end buttons & team -->
+                        
+                        <div class="ibox">
+                           <div class="ibox-content">
+                                <div class="row">
+                                    <!-- filter-->
+                                    <div class="col-md-12 pb10">
+                                        <!-- <div class="col-md-8 p0">   
+                                            <div class="form-group fleft mr10 mb10">
+                                                <div class="select-option select-project m-0" style="width: 150px;">
+                                                    <select class="select2">
+                                                        <option selected="selected">all type</option>
+                                                        <option>feature</option>
+                                                        <option>bug</option>
+                                                        <option>concept</option>
+                                                        <option>design</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="form-group fleft mr10 mb10">
+                                                <div class="select-option select-project m-0" style="width: 150px;">
+                                                    <select class="select2">
+                                                        <option selected="selected">all status</option>
+                                                        <option>draft</option>
+                                                        <option>estimation</option>
+                                                        <option>go production</option>
+                                                        <option>waiting</option>
+                                                        <option>production</option>
+                                                        <option>accept</option>
+                                                        <option>done</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                        </div> -->
+                                        <div class="col-md-4 p0">
+                                            <div class="input-group project-search">
+                                                <input type="text" placeholder="search" class="input-sm form-control"> 
+                                                <span class="input-group-btn"><button type="button" class="btn btn-sm btn-primary"> go!</button> </span>
+                                            </div>
+                                        </div>
+                                        <div style="clear:both;"></div>
+                                    </div>
+                                    <!-- end filter-->
+                                    
+                                    <!-- table project list -->
+                                    <div class="col-md-12">
+                                        <div class="project-list">
+                                            <div class="table-responsive">
+                                                <table class="table table-hover">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td width="50" class="project-table-head"></td>
+                                                        <td width="150" class="project-table-head">ID</td>
+                                                        <td width="600" class="project-table-head">Title</td>
+                                                        <td width="250" class="project-table-head">Tickets</td>
+                                                        <td width="900" class="project-table-head">Team</td>
+                                                        <td width="150" class="project-table-head">Rate</td>
+                                                        <td width="100" class="project-table-head">Contract</td>
+                                                        <td width="500" class="project-table-head aright">Action</td>
+                                                    </tr>
+
+                                                    <tr ng-repeat="project in projects"> 
+                                                        <td class="project-type">
+                                                            <i class="fa fa-angle-right"></i>
+                                                        </td>
+                                                        <td class="project-id">
+                                                            {{project.id}}
+                                                        </td>
+                                                        <td class="project-title">
+                                                            <a href="ticket-details-team-tracking-fxw.html">{{project.name}}</a>
+                                                            <small>created at {{project.creationdate}}</small>
+                                                        </td>
+                                                        <td class="project-client-projects">
+                                                            <i class="fa fa-angle-right ml5"></i><span class="client-tickets">{{project.ticketcount}} Tickets</span>
+                                                        </td>
+                                                        <td class="notification-avatar">
+                                                            <div class="project-people aleft" ng-if="project.team.length>0">
+                                                                 <a href="" class="team-lead" ng-repeat="member in project.team" ng-if='member.role.role==teamroles.TeamLeader.role' ><img src="{{member.photo}}" class="img-circle" alt="{{member.name}}" ng-if='member.photo!=null'>
+                                                                <img src="img/users/profile_default_small.jpg" class="img-circle" alt="{{member.name}}" ng-if='member.photo==null'></a>
+                                                                <a href="" ng-repeat="member in project.team" ng-if='member.role.role!=teamroles.TeamLeader.role'><img src="{{member.photo}}" class="img-circle" alt="{{member.name}}" ng-if='member.photo!=null'>
+                                                                <img src="img/users/profile_default_small.jpg" class="img-circle" alt="{{member.name}}" ng-if='member.photo==null'></a>
+                                                               
+                                                            </div>
+                                                            <button type="button" class="btn btn-danger btn-xs" ng-click="openAddMember(project)" ng-if="project.team.length==0"><i class="fa fa-plus"></i> add</button>
+                                                        </td>
+                                                             
+                                                        <td class="project-status">
+                                                            <span class="rate" ng-if="project.rate!=null"><i class="fa fa-euro"></i> {{project.rate}}</span>
+                                                            <button ng-if="project.rate==null" type="button" class="btn btn-danger btn-xs" data-toggle="modal" ng-click="openRate(project)"><i class="fa fa-plus"></i> add</button>
+                                                        </td>
+                                                        <td class="project-status" ng-if="project.signed">
+                                                            <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#see-contract"><i class="fa fa-check"></i> accepted</button>
+                                                            <small>accepted on {{project.signaturedate}}</small>
+                                                        </td>
+                                                        <td class="project-status" ng-if="!project.signed">
+                                                            <span class="label label-default label-nobg"><img width="15" height="15" src="img/ellipsis.gif"> in acceptance</span>
+                                                        </td>
+                                                        <td class="project-actions">
+                                                            <button type="button" class="btn btn-white btn-sm" ng-click="openAddprojectModelFromclient(project)"><i class="fa fa-pencil"></i> </button>
+                                                            <button type="button" class="btn btn-white btn-sm" ng-click="openAddMember(project)"><i class="fa fa-users"></i> </button>
+                                                            <a href="project-fxw.html" class="btn btn-default btn-sm" target="_blank"><i class="fa fa-sign-in"></i></a>
+                                                        </td> 
+                                                    </tr>
+
+                                                   
+                                                   
+                                                                                                        
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end table project list-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+ 	 </div>
+</diV>
+<!--modal add rate-->
+    <div class="modal inmodal fade" id="add-rate" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"><i class="fa fa-plus modal-fa-icon"></i> add rate</h4>
+                </div>
+                <div class="modal-body">
+                    <p>The rate for this project is</p>
+                    <div class="form-group m0">
+                        <input type="text" class="form-control input-lg fleft budgetlimit" placeholder="0" style="width: 215px;" ng-model="prate">
+                        <label class="fleft euro">€</label>
+                        <div class="clear-both"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" ng-click="assignRate()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--modal add member-->
+    <div class="modal inmodal fade" id="add-member" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"><i class="fa fa-users modal-fa-icon"></i> Team</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row header-ticket-types">
+
+                        <div class="col-lg-12 p15" style="background-color: #1ab394;">
+                            <div class="form-group fleft m0 mr10">
+                                <div class="select-option m-0" style="width: 360px;">
+                                    <select class="select2" ng-model="addedmember" id="selectdevmember" ng-options="[member.name,' ',member.surname,', ',member.role.Text].join('') for member in devteam track by member.id && member.role.role">
+                                       
+                                       
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group m0">
+                                <button class="btn btn-white" type="button" ng-click="adddevmember()"><i class="fa fa-plus mr5"></i> add</button>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12 mt20">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-striped notification mb0">
+                                    <thead>
+                                        <th width="200">Name</th>
+                                        <th width="200">Role</th>
+                                        <th width="80" class="aright">Action</th>
+                                    </thead>
+                                    <tbody >
+                                        <tr ng-repeat="prod in team">
+                                            <td class="bold">{{prod.surname}} {{prod.name}}</td>
+                                            <td class="bold">
+                                                {{prod.role.Text}}
+                                            </td>
+                                            <td class="aright">
+                                                <button type="button" class="btn btn-white btn-sm fxw-alert-delete" role="button" ng-click="deleteTeamMember(prod)" ng-if='prod.role.role!=teamroles.TeamLeader.role'><i class="fa fa-close"></i></button>
+                                            </td>
+                                        </tr>
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" ng-click="closeTeamModal()">Close</button>
+                    <button type="button" class="btn btn-primary" ng-click="saveTeamMembers()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<div class="modal inmodal fade" id="admin-add-project" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-m">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" ng-if="!isedit"><i class="fa fa-plus modal-fa-icon"></i> Add Project</h4>
+                    <h4 class="modal-title" ng-if="isedit"><i class="fa fa-plus modal-fa-icon"></i> Edit Project</h4>
+
+                </div>
+                <div class="modal-body">
+                   <div class="form-group">
+                        <input type="text" class="form-control input-lg" placeholder="Project Title" ng-model="aprojecttitle">
+                    </div>
+                    <div class="form-group">
+                         <textarea class="form-control textarea-keybox" placeholder="Description" ng-model="apdescription"></textarea>
+                    </div>
+                    <div class="form-group mb0">
+                        <select data-placeholder="Select Skills" class="chosen-select" multiple style="width:100%;" tabindex="2" ng-model="aprojectskills" id="apskillsselct">
+                            <optgroup label="OOP">
+                                <option value="PHP">PHP</option>
+                                <option value="Java">Java</option>
+                                <option value="C#">C#</option>
+                                <option value="Python">Python</option>
+                                <option value="vb.net">vb.net</option>
+                                <option value="Ruby on Rails">Ruby on Rails</option>
+                                <option value="Objective C">Objective C</option>
+                                <option value="Action Script">Action Script</option>
+                                <option value="Pearl">Pearl</option>
+                            </optgroup>
+                            <optgroup label="Design">
+                                <option value="Web Design">Web Design</option>
+                                <option value="User Interface Design">User Interface Design</option>
+                                <option value="User Experience Design">User Experience Design</option>
+                                <option value="Mobile Design">Mobile Design</option>
+                                <option value="Responsive Design">Responsive Design</option>
+                                <option value="Graphic Design">Graphic Design</option>
+                            </optgroup>
+                            <optgroup label="Frontend Developement">
+                                <option value="HTML 5 &amp; CSS 3">HTML 5 &amp; CSS 3</option>
+                                <option value="jQuery">jQuery</option>
+                                <option value="Javascript">Javascript</option>
+                                <option value="Bootstrap Framework">Bootstrap Framework</option>
+                                <option value="Gumby Framework">Gumby Framework</option>
+                                <option value="WordPress Template">WordPress Template</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    
+                   
+                       
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" ng-click="createAdminProject()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>

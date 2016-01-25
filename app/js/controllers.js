@@ -46,21 +46,19 @@ Controllers.controller('LoginCtrl',['$scope','Login','$location',
 			
 		}
 	}]);
-Controllers.controller("MenuNavCtrl",['$scope','Login',
-	function SideBarCtrl($scope,Login)
-	{
-		if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER"){
-			$scope.isclient=true;
-			if(Login.getLoggedUser().userinfo.keyaccount.photo==null)
-				Login.getLoggedUser().userinfo.keyaccount.photo="img/users/profile_default_small.jpg";
-			$scope.keyaccount=Login.getLoggedUser().userinfo.keyaccount;
-		}
-
-		$scope.logout=function(){
-			Login.logout(false);
-		}
+Controllers.controller("MenuNavCtrl",['$scope','Login',function ($scope,Login){
+	if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER"){
+		$scope.isclient=true;
+		if(Login.getLoggedUser().userinfo.keyaccount.photo==null)
+			Login.getLoggedUser().userinfo.keyaccount.photo="img/users/profile_default_small.jpg";
+		$scope.keyaccount=Login.getLoggedUser().userinfo.keyaccount;
 	}
-	]);
+
+	$scope.logout=function(){
+		Login.logout(false);
+	}
+	
+}]);
 Controllers.controller("SideBarCtrl",['$scope','Login','Chat','Client','Project',
 	function SideBarCtrl($scope,Login,Chat,Client,Project)
 	{
@@ -599,6 +597,10 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 	$scope.isSent=false;
 	$scope.currentpage=1;
 	$scope.isEdit=false;
+	if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN")
+	{
+		$scope.isadmin=true;
+	}
 	var updateView=function(page){
 		var successfunc=function(customers,pagecount,currentpage)
 		{
@@ -691,12 +693,14 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 			$("#keyaccountselect").select2("data",data);
 			$scope.selectedKeyaccount=client.keyaccount.id;
 			$("#phonecode").select2("val",client.phonecode);
+			$("#countryselect").select2("data",{id:-1,text:client.address.country});
 			$scope.isEdit=true;
 			$scope.oldclient=client;
 		}
 		else
 		{
 			$scope.isEdit=false;
+			clearForm();
 		}
 		$("#add-client").modal('show');
 	}
@@ -715,7 +719,9 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 		$scope.companyname=undefined;
 		$scope.zipcode=undefined;
 		$scope.selectedKeyaccount===undefined
-		$("#keyaccountselect").select2("val","Key Account");
+		
+		$("#keyaccountselect").select2("data",{id:-1,text:"Key Account"});
+		$("#countryselect").select2("data",{id:-1,text:"Country"});
 		$("#phonecode").select2("val","+49");
 	}
 	var verifyForm=function()
@@ -775,14 +781,22 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 		}
 		return messages;
 	}
+	$scope.stateChanged=function()
+	{
+		if($scope.isSent)
+		{
+			$scope.isSent=false;
+		}
+		else
+			$scope.isSent=true;
+	}
 	$scope.createClient=function(oldclient)
 	{
 		var messages=verifyForm();
 		if(messages.length>0)
 		{
 			
-			$("#warning").modal('show');
-			$('#warning').find('p').html(messages);
+			swal("Please fill all information",messages.join("\n"),"warning");
 		}
 		else{
 			var address={
@@ -2893,5 +2907,480 @@ Controllers.controller('ContractCtrl', ['$scope',"Login","$routeParams","$locati
 			swal("Can't accept terms","Please try again later","error");
 		}
 		Login.signContract(sucessFunc,failureFunc,customerid);
+	}
+}]);
+Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","Project","$location","Team",function ($scope,Login,$routeParams,Project,$location,Team) {
+	var customerid=$routeParams.cid;
+	if(customerid==undefined)
+		$location.path("/client");
+	var loadRoles=function(data){
+		$scope.teamroles=data;
+	}
+	Team.loadRoles(loadRoles);
+	var selectedPorject=null;
+	updateView=function()
+	{
+		successFunc=function(data)
+		{
+			$scope.projects=data;
+		}
+		failureFunc=function()
+		{
+			swal("Oops","Can't load projects please try again later","error");
+		}
+		Project.projectsbyclient(successFunc,failureFunc,customerid);
+	}
+	var selectedproject=null;
+	$scope.openRate=function(project)
+	{
+		if(project.rate!=null)
+			$scope.prate=project.rate;
+		else
+			$scope.prate="";
+		$("#add-rate").modal("show");
+		selectedproject=project;
+	}
+	$scope.assignRate=function()
+	{
+		if($scope.prate!="" && $scope.prate!=null && $scope.prate!=undefined)
+		{
+			data={
+				"project_id":selectedproject.id,
+				"rate":$scope.prate
+			}
+			var successFunc=function()
+			{
+				updateView();
+				$("#add-rate").modal("hide");
+			}
+			var failureFunc=function()
+			{
+				swal("Oops!","Can't set the rate please try agaib later","error");
+			}
+			Project.assignProjectRate(successFunc,failureFunc,data);
+		}
+	}
+	updateView();
+
+	var update=setInterval(updateView(), 5000);
+	$scope.$on('$routeChangeStart',function(){
+					clearInterval(update);
+				});
+	$scope.openAddprojectModelFromclient=function(project)
+	{
+		$scope.selectedClient=customerid;
+		selectedproject=project;
+		if(project==null){
+			
+			$scope.aprojecttitle=undefined;
+			$scope.apdescription=undefined;
+			$scope.aprojectskills=undefined;
+			$scope.iedit=false;
+		}
+		else
+		{
+			$scope.aprojecttitle=project.name;;
+			$scope.apdescription=project.description;
+			$scope.aprojectskills=project.skills.split(",");
+			$("#apskillsselct").select2("val",$scope.aprojectskills);
+			$scope.iedit=true;
+		}
+		$("#admin-add-project").modal('show');
+	
+	}
+	var verifyForm=function()
+	{
+		var messages=new Array();
+		if($scope.aprojecttitle===undefined)
+		{
+			messages.push("Please add the project title</br>");
+
+		}
+		if($scope.apdescription===undefined)
+		{
+			messages.push("Please add the project description</br>");
+			
+		}
+		if($scope.aprojectskills===undefined)
+		{
+			messages.push("Please add the project required skills</br>");
+			
+		}
+		return messages;
+	}
+	$scope.createAdminProject=function()
+	{
+		var messages =verifyForm();
+		if(messages.length>0)
+		{
+			swal("Please fill all the information",messages.join('\n'),"warning");
+		}
+		else
+		{
+			var project={
+				"name":$scope.aprojecttitle,
+				"description":$scope.apdescription,
+				"skills":""+$scope.aprojectskills
+			}
+			if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_KEYACCOUNT")
+			{
+				project.customer_id=$scope.selectedClient;
+			}
+			var successFunc=function()
+			{
+				$("#admin-add-project").modal('hide');
+				swal("Project added","Project added/updated successfully","success");
+				updateView();
+			}
+			var failureFunc=function()
+			{
+				
+				swal("Oops!","Something bad happen please try again later","error");
+			}
+			if(!$scope.iedit)
+				Project.createProject(project,successFunc,failureFunc);
+			if($scope.iedit)
+			{
+				project.project_id=selectedproject.id;
+				Project.updateProject(project,successFunc,failureFunc);
+
+			}
+		}
+	}
+	var newDevMembers=new Array();
+	var newSysMember=new Array();
+	var newDesignerMembers=new Array();
+	var newTesterMembers=new Array();
+	var newTealeader=null;
+	var oldmembers;
+	$scope.openAddMember=function(project)
+	{
+		newDevMembers=[];
+		newSysMember=[];
+		newDesignerMembers=[];
+		newTesterMembers=[];
+		newTealeader=null;
+		console.log(project.team);
+		oldmembers=project.team.slice();
+		$scope.team=project.team;
+		selectedPorject=project;
+		var successFunc=function(data)
+		{
+			if(data.length==0)
+			{
+				var selectdata={"id":-1,text:"No team found"};
+				$("#selectdevmember").select2("data",selectdata);
+			}
+			else{
+				var selectdata={"id":-1,text:"Search Member "};
+				$("#selectdevmember").select2("data",selectdata);
+				$scope.addedmember=null;
+				$scope.devteam=data;
+			}
+		}
+		var failureFunc=function()
+		{
+			var selectdata={"id":-1,text:"Please try again later"};
+			$("#selectdevmember").select2("data",selectdata);
+		}
+		var loadingdata={"id":-1,text:"Loading..."};
+		$("#selectdevmember").select2("data",loadingdata);
+		Team.getAlldevteamMembers(successFunc,failureFunc);
+		$('#add-member').modal('show');
+	}
+	var isOldMember=function(member)
+	{
+		for(i=0;i<oldmembers.length;i++)
+		{
+			if(member.id==oldmembers[i].id && oldmembers[i].role.role==member.role.role)
+				return true;
+		}
+		return false;
+	}
+	var projectHaveLeader=function()
+	{
+		for(i=0;i<oldmembers.length;i++)
+		{
+			if(oldmembers[i].role.role==Team.roles.TeamLeader.role)
+				return oldmembers[i];
+		}
+		return false;
+	}
+	$scope.adddevmember=function(){
+		if(!isOldMember($scope.addedmember))
+		{
+			var added=false;
+
+			if($scope.addedmember.role.role==Team.roles.TeamLeader.role){
+				var oldleader=projectHaveLeader();
+				if(oldleader)
+				{
+					var index =$scope.team.indexOf(oldleader);
+					$scope.team.splice(index,1);
+				}
+				else if(newTealeader!=null && newTealeader!=$scope.addedmember){
+					var index =$scope.team.indexOf(newTealeader);
+					$scope.team.splice(index,1);
+				}
+				newTealeader=$scope.addedmember;
+				$scope.team.unshift(newTealeader);
+				
+			}
+			if($scope.addedmember.role.role==Team.roles.Developer.role){
+				
+				for(i=0;i<newDevMembers.length;i++)
+				{
+					if(newDevMembers[i].id==$scope.addedmember.id)
+						added=true;
+				}
+				if(!added)
+					newDevMembers.push($scope.addedmember);
+			}
+			if($scope.addedmember.role.role==Team.roles.Tester.role){
+				for(i=0;i<newTesterMembers.length;i++)
+				{
+					if(newTesterMembers[i].id==$scope.addedmember.id)
+						added=true;
+				}
+				if(!added)
+					newTesterMembers.push($scope.addedmember);
+			}
+			if($scope.addedmember.role.role==Team.roles.Designer.role){
+				for(i=0;i<newDesignerMembers.length;i++)
+				{
+					if(newDesignerMembers[i].id==$scope.addedmember.id)
+						added=true;
+				}
+				if(!added)
+					newDesignerMembers.push($scope.addedmember);
+			}
+			if($scope.addedmember.role.role==Team.roles.SysAdmin.role){
+				for(i=0;i<newSysMember.length;i++)
+				{
+					if(newSysMember[i].id==$scope.addedmember.id)
+						added=true;
+				}
+				if(!added)
+					newSysMember.push($scope.addedmember);
+			}
+			if(added)
+			{
+				$('#teamwarning').modal("show");
+				$('#teamwarning').find('p').html("Team member is already added");
+			}
+			else
+			{
+				if($scope.addedmember.role.role!=Team.roles.TeamLeader.role)
+					$scope.team.push($scope.addedmember);
+			}
+		}
+		else
+		{
+			$('#teamwarning').modal("show");
+			$('#teamwarning').find('p').html("Team member is already added");
+		}
+	}
+	$scope.saveTeamMembers=function()
+	{
+		var success=function()
+		{
+			$('#add-member').modal('hide');
+			console.log("New members added successfully");
+		}
+		var failure=function()
+		{
+			$('#teamfailure').modal("show");
+			$('#teamfailure').find('p').html("Something wrong happend, please try again");
+		}
+		if(newTealeader!=null)
+		{
+			var data={
+					"project_id":selectedPorject.id,
+					"teamleader_id":newTealeader.id
+				}
+			Project.assignTeamLeader(success,failure,data);
+		}
+		if(newDevMembers.length>0)
+		{
+			var members=[];
+			for(i=0;i<newDevMembers.length;i++)
+			{
+				members.push(newDevMembers[i].id);
+			}
+			var data={
+					"project_id":selectedPorject.id,
+					"developers":members
+			}
+			Project.addDeveloper(success,failure,data);
+
+		}
+		if(newTesterMembers.length>0)
+		{
+			var members=[];
+			for(i=0;i<newTesterMembers.length;i++)
+			{
+				members.push(newTesterMembers[i].id);
+			}
+			var data={
+					"project_id":selectedPorject.id,
+					"testers":members
+			}
+			Project.addTester(success,failure,data);
+
+		}
+		if(newDesignerMembers.length>0)
+		{
+			var members=[];
+			for(i=0;i<newDesignerMembers.length;i++)
+			{
+				members.push(newDesignerMembers[i].id);
+			}
+			var data={
+					"project_id":selectedPorject.id,
+					"designers":members
+			}
+			Project.addDesigner(success,failure,data);
+
+		}
+		if(newSysMember.length>0)
+		{
+			var members=[];
+			for(i=0;i<newSysMember.length;i++)
+			{
+				members.push(newSysMember[i].id);
+			}
+			var data={
+					"project_id":selectedPorject.id,
+					"sysadmins":members
+			}
+			Project.addSystemAdmin(success,failure,data);
+
+		}
+	}
+	$scope.deleteTeamMember=function(member)
+	{
+		var success=function()
+		{
+			var index=$scope.team.indexOf(member);
+			$scope.team.splice(index,1);
+			console.log("members deleted successfully");
+		}
+		var failure=function()
+		{
+			$('#teamfailure').modal("show");
+			$('#teamfailure').find('p').html("Something wrong happend, please try again later");
+		}
+		if(isOldMember(member))
+		{
+			if(member.role.role==Team.roles.Developer.role){
+				var data={
+					"project_id":selectedPorject.id,
+					"developers":[member.id]
+				}
+				Project.deleteDeveloperFromProject(success,failure,data);				
+				
+			}
+			if(member.role.role==Team.roles.Tester.role){
+				var data={
+					"project_id":selectedPorject.id,
+					"testers":[member.id]
+				}
+				Project.deleteTesterFromProject(success,failure,data);
+			}
+			if(member.role.role==Team.roles.Designer.role){
+				var data={	
+					"project_id":selectedPorject.id,
+					"designers":[member.id]
+				}
+				Project.deleteDesignerFromProject(success,failure,data);
+			}
+			if(member.role.role==Team.roles.SysAdmin.role){
+				var data={	
+					"project_id":selectedPorject.id,
+					"sysadmins":[member.id]
+				}
+				Project.deleteSysAdminFromProject(success,failure,data);
+			}
+		}
+		else
+		{
+			if(member.role.role==Team.roles.Developer.role){
+				var index=newDevMembers.indexOf(member);
+				newDevMembers.splice(index,1);
+				
+			}
+			if(member.role.role==Team.roles.Tester.role){
+				var index=newTesterMembers.indexOf(member);
+				newTesterMembers.splice(index,1);
+			}
+			if(member.role.role==Team.roles.Designer.role){
+				var index=newDesignerMembers.indexOf(member);
+				newDesignerMembers.splice(index,1);
+			}
+			if(member.role.role==Team.roles.SysAdmin.role){
+				var index=newSysMember.indexOf(member);
+				newSysMember.splice(index,1);
+			}
+			var index=$scope.team.indexOf(member);
+			$scope.team.splice(index,1);
+		}
+	}
+	$scope.closeTeamModal=function()
+	{
+		if(newTealeader!=null)
+		{
+			var data={
+					"project_id":selectedPorject.id,
+					"teamleader_id":newTealeader.id
+				}
+			Project.assignTeamLeader(success,failure,data);
+		}
+		if(newDevMembers.length>0)
+		{
+			
+			for(i=0;i<newDevMembers.length;i++)
+			{
+				var index=$scope.team.indexOf(newDevMembers[i]);
+				$scope.team.splice(index, 1);
+			}
+
+		}
+		if(newTesterMembers.length>0)
+		{
+			for(i=0;i<newTesterMembers.length;i++)
+			{
+				var index=$scope.team.indexOf(newTesterMembers[i]);
+				$scope.team.splice(index, 1);
+			}
+		}
+		if(newDesignerMembers.length>0)
+		{
+			for(i=0;i<newDesignerMembers.length;i++)
+			{
+				var index=$scope.team.indexOf(newDesignerMembers[i]);
+				$scope.team.splice(index, 1);
+			}
+		}
+		if(newSysMember.length>0)
+		{
+			var members=[];
+			for(i=0;i<newSysMember.length;i++)
+			{
+				var index=$scope.team.indexOf(newSysMember[i]);
+				$scope.team.splice(index, 1);
+			}
+		}
+		if(newTealeader!=null)
+		{
+			
+			var index=$scope.team.indexOf(newTealeader);
+			$scope.team.splice(index, 1);
+			var oldleader=projectHaveLeader();
+			if(oldleader){
+				$scope.team.unshift(oldleader);
+			}
+		}
+		$('#add-member').modal('hide');
+
 	}
 }]);

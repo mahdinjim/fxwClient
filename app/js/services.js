@@ -93,6 +93,9 @@ services.factory("Links",[function(){
 	var listdocumentsLink=baseUrl+path+"/private/project/file/list";
 	var acceptContractLink=baseUrl+path+"/private/customer/contract/accept";
 	var acceptProjectContractLink=baseUrl+path+"/private/project/restricted/accept";
+	var listProjectByClientLink=baseUrl+path+"/private/super/project/client/list";
+	var assignRateLink=baseUrl+path+"/private/super/project/rate";
+	var updateprojectLink=baseUrl+path+"/private/project/restricted/update";
 	this.getLoginLink=function()
 	{
 		return LoginLink;
@@ -419,12 +422,24 @@ services.factory("Links",[function(){
 	{
 		return acceptProjectContractLink;
 	}
+	this.getListProjectByClientLink=function()
+	{
+		return listProjectByClientLink;
+	}
+	this.getAssignRateLink=function()
+	{
+		return assignRateLink;
+	}
+	this.getUpdateProjectLink=function()
+	{
+		return updateprojectLink;
+	}
 	return this;
 }]);
 services.factory("Login",['$http','$location','$cookies',"$route","Links",
 	function($http,$location,$cookies,$route,Links){
 		var lastlink=null;
-		var Admin_Access=["/login","/dashboard","/client","/teamprofile","/team","/messaging","/pdetails","/keybox","/stories"];
+		var Admin_Access=["/login","/dashboard","/client","/teamprofile","/team","/messaging","/pdetails","/keybox","/stories","/clientprojects"];
 		var Client_Access=["/login","/dashboard","/cuser","/cuserprofile","/messaging","/pdetails","/keybox","/stories","/acceptcontract"];
 		var KeyAccount_Access=["/login","/dashboard","/pdetails","/messaging","/client","/keybox","/stories"];
 		var TeamLeader_Access=["/login","/dashboard","/pdetails","/messaging","/keybox","/stories"];
@@ -601,14 +616,16 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 
 	}]);
 
-services.factory("Team",['$http','$location','$cookieStore',"Login","Links",
-	function($http,$location,$cookieStore,Login,Links){
+services.factory("Team",['$http','$location','$cookieStore',"Login","Links",function($http,$location,$cookieStore,Login,Links){
+		this.roles=null;
 		this.loadRoles=function(successFunc){ 
 			if(localStorage.roles!=null)
 			{
 				successFunc(JSON.parse(localStorage.roles))
+				this.roles=JSON.parse(localStorage.roles);
 			}
 			else{
+				me=this;
 				if(Login.getLoggedUser() && this.roles==null)
 				{
 					$http({
@@ -618,6 +635,7 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",
 					}).success(function (data, status, headers, config) {
 						localStorage.roles=JSON.stringify(data.Roles);
 						successFunc(data.Roles);
+						me.roles=data.Roles;
 		            }).error(function (data, status, headers, config) {
 		            	if(status==403)
 	        				Login.logout();
@@ -1406,6 +1424,22 @@ services.factory('Project',["$http","Login",'Links',function($http,Login,Links){
         		failurefunc();
         });
 	}
+	this.updateProject=function(postdata,successfunc,failurefunc)
+	{
+		$http({
+			method:"PUT", 
+			data:postdata,
+			url:Links.getUpdateProjectLink(),
+			headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+		}).success(function (data, status, headers, config) {
+			successfunc();
+        }).error(function (data, status, headers, config) {
+        	if(status==403)
+        		Login.logout();
+        	else
+        		failurefunc();
+        });
+	}
 	this.getAllproject=function(successfunc)
 	{
 		$http({
@@ -1513,6 +1547,48 @@ services.factory('Project',["$http","Login",'Links',function($http,Login,Links){
 	        	
 	        });
 	    }
+	}
+	this.assignProjectRate=function(successFunc,failureFunc,data)
+	{
+		if(Login.getLoggedUser())
+		{
+			$http({
+				method:"POST", 
+				url:Links.getAssignRateLink(),
+				data:data,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+
+				successFunc();
+
+	        }).error(function (data, status, headers, config) {
+	        	if(status==403)
+	        		Login.logout();
+	        	else
+	        		failureFunc("error");
+	        	
+	        });
+	    }
+	}
+	this.projectsbyclient=function(succesFunc,failureFunc,client_id)
+	{
+		if(Login.getLoggedUser())
+		{
+			$http({
+				method:"GET", 
+				url:Links.getListProjectByClientLink()+"/"+client_id,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+				successFunc(data);
+				
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failureFunc();
+            });
+			
+		}
 	}
 	return this;
 }
