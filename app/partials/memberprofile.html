@@ -138,9 +138,9 @@
                                         <h5><i class="fa fa-clone"></i> Tasks</h5>
                                     </div>
                                     <div class="ibox-box-content">
-                                        <span class="label label-danger">Assigned 22</span>
-                                       <span class="label label-primary">In Progress 4</span>
-                                       <span class="label label-default">Complete 57</span>
+                                        <span class="label label-danger">Assigned {{totaltasks}}</span>
+                                       
+                                       <span class="label label-default">Complete {{finishedtasks}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -188,7 +188,7 @@
                             <div class="ibox-box-title">
                                 <h5><i class="fa fa-clock-o"></i> Away</h5>
                             </div>
-                            <div class="ibox-box-content">
+                            <!-- <div class="ibox-box-content">
                                  <ul class="p-0 m-0 mb-15">
                                     <li class="label tags away">
                                         <span class="away-text">10 days </span> 
@@ -205,13 +205,13 @@
                                 <div class="form-group m-0">
                                     <a data-toggle="modal" data-target="#add-date"><i class="fa fa-calendar-plus-o fa-add-date"></i> Add Date</a>
                                 </div>
-                            </div>
+                            </div> -->
                             </div>
                         </div><!--col-lg-->
 
                     </div><!--col-lg-->
 
-                    <div class="col-lg-8">
+                    <!-- <div class="col-lg-8">
                         <div class="ibox float-e-margins">
                             <div class="ibox-title">
                                 <h5>Activites</h5>
@@ -343,7 +343,7 @@
                                 </div>
                             </div>
                         </div> 
-                    </div><!--col-lg-->
+                    </div> --><!--col-lg-->
                 </div>
                 <!--end row2-->
             </div>
@@ -368,7 +368,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title"><i class="fa fa-user-plus modal-fa-icon"></i> Add Member</h4>
+                    <h4 class="modal-title"><i class="fa fa-user-plus modal-fa-icon" ng-if="!isedit"></i> Add Member</h4>
+                    <h4 class="modal-title"><i class="fa fa-user-plus modal-fa-icon" ng-if="isedit"></i> Edit Member</h4>
                 </div>
                 <div class="modal-body">
                      <div class="row">
@@ -382,7 +383,7 @@
                             <div class="form-group">
                                 <input type="text" class="form-control" placeholder="Job Title" required="" ng-model="title">
                             </div>
-                            <div class="form-group m-0">
+                            <div class="form-group">
                                 <!--select-->
                                 <div class="select-option f-left m-0" style="width: 30%; margin-right: 2.5% ! important;" >
                                     <select class="select2" ng-model="phonecode" id="phonecodeselect">
@@ -392,6 +393,19 @@
                                     </select>
                                 </div>
                                 <input type="text" class="form-control" placeholder="Telephone" style="width: 67.5%;" ng-model="phonenumber">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="City" required="" ng-model="city">
+                            </div>  
+                            <div class="form-group mb-0">
+                                <div class="select-option m-0" style="width: 100%;">
+                                    <select class="select2" ng-model="country" id="countryselect">
+                                        <option>Country</option>
+                                        <option>Turkey</option>
+                                        <option>Tunisia</option>
+                                        <option>Germany</option>
+                                    </select>
+                                </div>
                             </div>
                         </div><!--col-md-->
 
@@ -410,56 +424,68 @@
                                 <div class="select-option m-0" style="width: 100%;">
                                     <select class="select2" ng-model="role" ng-change="hideoptions()" id="roleselect">
                                         <option>Role</option>
-                                        <option>Key Account</option>
+                                        <option>keyaccount</option>
                                         <option>Teamleader</option>
                                         <option>Developer</option>
                                         <option>Tester</option>
                                         <option>Designer</option>
-                                        <option>Administrator</option>
+                                        <option>Sysadmin</option>
                                     </select>
                                 </div>
                             </div>
+                            
                         </div><!--col-md-->
 
                         <div class="col-md-12">
                             <div class="hr-line-solid"></div>
                         </div>
-
-                        <div class="col-md-6">
-                            <h4>Location</h4>
-                            <div class="form-group">
-                                <input type="text" class="form-control" placeholder="City" required="" ng-model="city">
-                            </div>  
-                            <div class="form-group mb-0">
-                                <div class="select-option m-0" style="width: 100%;">
-                                    <select class="select2" ng-model="country" id="countryselect">
-                                        <option>Country</option>
-                                        <option>Turkey</option>
-                                        <option>Tunisia</option>
-                                        <option>Germany</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="col-md-6">
                             <h4>Info</h4>
                             <div class="form-group">
                                 <input type="number" class="form-control" placeholder="Capacity (Weekly)" required="" ng-model="capacity" id="capacityset">
                             </div>
-                            <div class="form-group mb-0">
+                            <div class="form-group">
+                                <input type="number" class="form-control" placeholder="Hourly Rate" required="" ng-model="hourrate">
+                            </div>
+                        </div>
+                            <div class="col-md-6 mt20 pt10">
                                 <div class="select-option m-0" style="width: 100%;">
+                                    <div class="form-group">
+                                <div class="select-option m-0" style="width: 100%;">
+                                    <select class="select2" ng-model="level" id="levelselect">
+                                        <option>Level</option>
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                    </select>
+                                </div>
+                            </div>
                                     <select class="select2" ng-model="status" id="statusselct">
                                         <option>Status</option>
                                         <option>Team</option>
                                         <option>Freelancer</option>
-                                        <option>Waiting</option>
-                                        <option>Break</option>
+                                        <option>Pool</option>
                                     </select>
                                 </div>
                             </div>
                             
+                        
+                         <div class="col-md-12">
+                            <div class="hr-line-solid"></div>
                         </div>
+
+                        <div class="col-md-12">
+                            <h4>Language</h4>
+                            <div class="form-group m-0">
+                                <select data-placeholder="Select Language" class="chosen-select" multiple style="width:100%;" tabindex="2" ng-model="language" id="luanguageselect">
+                                    <option value="English">English</option>
+                                    <option value="German">German</option>
+                                    <option value="Turkish">Turkish</option>
+                                    <option value="French">French</option>
+                                    <option value="Arabic">Arabic</option>
+                                </select>
+                            </div>
+                        </div><!--col-md-->
 
 
                         <div class="col-md-12">
@@ -514,7 +540,7 @@
                         <div class="col-md-6">
                             <div class="input-group">
                                 <div class="checkbox checkbox-primary mt-5 mb-5">
-                                    <input type="checkbox" id="checkbox3" ng-model="send">
+                                    <input type="checkbox" id="checkbox3" ng-model="send" ng-click="stateChanged()">
                                     <label for="checkbox3">Send login information to user</label>
                                 </div>
                             </div>
@@ -525,7 +551,7 @@
                         </div>
                     </div>
                     <div ng-if="isedit">
-                        <a class="f-left mt-5" data-toggle="modal" data-target="#delete"><small>Delete Account</small></a>
+                        <a class="f-left mt-5" ng-click="deleteMember(oldmember)"><small>Delete Account</small></a>
                         <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary" ng-click="createTeamMember(oldmember)">Save</button>
                     </div>

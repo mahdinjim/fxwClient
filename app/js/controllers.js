@@ -242,6 +242,37 @@ Controllers.controller("SideBarCtrl",['$scope','Login','Chat','Client','Project'
 	]);
 Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', function ($scope,Team,Params,$location) {
     
+
+    $scope.tab="operations";
+    $scope.isoperation=true;
+    $scope.isexpertise=false;
+    var roles=null;
+    Team.loadRoles(function(data)
+	{
+		roles=data;
+	});
+    $scope.stateChanged=function()
+	{
+		if($scope.send)
+		{
+			$scope.send=false;
+		}
+		else
+			$scope.send=true;
+	}
+    $scope.selectOperation=function()
+    {
+    	$scope.tab="operations";
+    	$scope.isoperation=true;
+    	$scope.isexpertise=false;
+    }
+    $scope.selectExpertise=function()
+    {
+    	$scope.tab="expertise";
+    	$scope.isexpertise=true;
+    	$scope.isoperation=false;
+    	
+    }
 	var successfunc=function(data){
 		$scope.team=data;
 	};
@@ -262,6 +293,8 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 		$scope.photo=member.photo;
 		$scope.isedit=true;
 		$scope.oldmember=member;
+		$scope.totaltasks=member.totaltasks;
+		$scope.finishedtasks=member.finishedtasks;
 		if(member.role!="Key Account")
 		{
 			var skills=member.skills.split(",");
@@ -333,9 +366,25 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 		{
 			messages.push("Please fill the status");
 		}
+		if($scope.level===undefined)
+		{
+			messages.push("Please fill the level");
+		}
+		if($scope.level===undefined)
+		{
+			messages.push("Please fill the level");
+		}
+		if($scope.hourrate===undefined)
+		{
+			messages.push("Please fill the hour rate");
+		}
+		if($scope.language===undefined)
+		{
+			messages.push("Please fill the language");
+		}
 		if($scope.role!=undefined)
 		{
-			if($scope.role!="Key Account" && $scope.skills===undefined)
+			if($scope.role!=roles.KeyAccount.role && $scope.skills===undefined)
 			{
 				if($scope.skills===undefined)
 					messages.push("Please fill the skills");
@@ -349,7 +398,7 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 	$scope.hideoptions=function()
 	{
 
-		if($scope.role==="Key Account")
+		if($scope.role===roles.KeyAccount.role)
 		{
 			$("#skillsselct").prop("disabled",true);
 			$("#capacityset").prop("disabled",true);
@@ -379,10 +428,15 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 			$("#countryselect").select2("val",member.country);
 			$scope.status=member.status;
 			$("#statusselct").select2("val",member.status);
-			$scope.role=member.role;
-			$("#roleselect").select2("val",member.role);
+			$scope.role=member.role.role;
+			$scope.hourrate=member.hourate;
+			$scope.language=member.language.split(',');
+			$("#luanguageselect").select2("val",member.language.split(','));
+			$scope.level=member.level;
+			$("#levelselect").select2("val",member.level);
+			$("#roleselect").select2("data",{id:-1,"text":member.role.role});
 			$("#roleselect").prop("disabled",true);
-			if(member.role!="Key Account")
+			if(member.role!=roles.KeyAccount.role)
 			{
 				var skills=member.skills.split(",");
 				$scope.skills=skills;
@@ -422,6 +476,10 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 		$scope.country=undefined;
 		$scope.status=undefined;
 		$scope.skills=undefined;
+		$scope.hourrate=undefined;
+		$scope.language=undefined;
+		$scope.level=undefined;
+		$("#levelselect").select2("val","Level");
 		$("#roleselect").prop("disabled",false);
 		$("#capacityset").val("");
 		$("#phonecodeselect").select2("val","+49");
@@ -436,8 +494,7 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 		if(messages.length>0)
 		{
 			
-			$("#warning").modal('show');
-			$('#warning').find('p').html(messages);
+			swal("Please Fill missing information",messages.join('\n'),"warning");
 		}
 		else
 		{
@@ -445,16 +502,14 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 			{
 				$('#add-user').modal('hide');
 				
-				$("#success").modal('show');
-				$('#success').find('p').html('Member created successfully');
+				swal("Success","Member Added/Updated successfully","success");
 				Team.getAllteamMembers(successfunc);
 				cleanForm();
 
 			}
 			var failureFunction=function(msg)
 			{
-				$("#failure").modal('show');
-				$('#failure').find('p').html(msg);
+				swal("Oops!","Can't add team member please try again later","error");
 			}
 			var member={
 				"email":$scope.email,
@@ -470,11 +525,14 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 				"country":$scope.country,
 				"status":$scope.status,
 				"dosend":$scope.send,
+				"hourate":$scope.hourrate,
+				"language":""+$scope.language,
+				"level":$scope.level
 			};
 			if($scope.password!="******")
 				member.password=$scope.password;
 			if(oldmember==null){
-				if($scope.role==="Teamleader")
+				if($scope.role===Team.roles)
 					Team.createTeamLeader(member,succesfunc,failureFunction);
 				if($scope.role==="Developer")
 					Team.createDeveloper(member,succesfunc,failureFunction);
@@ -490,50 +548,61 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 			else
 			{
 				member["id"]=oldmember.id;
-				if($scope.role==="Teamleader")
+				if($scope.role===roles.TeamLeader.role)
 					Team.updateTeamLeader(member,succesfunc,failureFunction);
-				if($scope.role==="Developer")
+				if($scope.role===roles.Developer.role)
 					Team.updateDeveloper(member,succesfunc,failureFunction);
-				if($scope.role==="Administrator")
+				if($scope.role===roles.SysAdmin.role)
 					Team.updateSysAdmin(member,succesfunc,failureFunction);
-				if($scope.role==="Tester")
+				if($scope.role===roles.Tester.role)
 					Team.updateTester(member,succesfunc,failureFunction);
-				if($scope.role==="Key Account")
+				if($scope.role===roles.KeyAccount.role)
 					Team.updateKeyAccount(member,succesfunc,failureFunction);
-				if($scope.role==="Designer")
+				if($scope.role===roles.Designer.role)
 					Team.updateDesigner(member,succesfunc,failureFunction);
 			}
 		}
 	}
 	$scope.deleteMember=function(member)
 	{
-		var succesfunc=function()
-		{
-			$('#delete').modal('hide');
-			$('#add-user').modal('hide');
-			$("#success").modal('show');
-			$('#success').find('p').html('Member deleted successfully');
-			Team.getAllteamMembers(successfunc);
-			cleanForm();
+		swal({
+                title: "Are you sure?",
+                text: 'You deleted it.',
+                type: "warning",
+                showCancelButton: true,
+                cancelButtonText: "cancel",
+                confirmButtonColor: "#ed5565",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false
+            }, function () {
+            	var succesfunc=function()
+				{
+					$('#delete').modal('hide');
+					$('#add-user').modal('hide');
+					swal("Success","Member deleted successfully","success");
+					Team.getAllteamMembers(successfunc);
+					cleanForm();
+					swal.close();
 
-		}
-		var failureFunction=function(msg)
-		{
-			$("#failure").modal('show');
-			$('#failure').find('p').html(msg);
-		}
-		if($scope.role==="Teamleader")
-			Team.deleteTeamLeader(member,succesfunc,failureFunction);
-		if($scope.role==="Developer")
-			Team.deleteDeveloper(member,succesfunc,failureFunction);
-		if($scope.role==="Administrator")
-			Team.deleteSysAdmin(member,succesfunc,failureFunction);
-		if($scope.role==="Tester")
-			Team.deleteTester(member,succesfunc,failureFunction);
-		if($scope.role==="Key Account")
-			Team.deleteKeyAccount(member,succesfunc,failureFunction);
-		if($scope.role==="Designer")
-			Team.deleteDesigner(member,succesfunc,failureFunction);
+				}
+				var failureFunction=function(msg)
+				{
+					swal("Oops!","Can't delete team member please try again later","error");
+				}
+				if($scope.role===roles.TeamLeader.role)
+					Team.deleteTeamLeader(member,succesfunc,failureFunction);
+				if($scope.role===roles.Developer.role)
+					Team.deleteDeveloper(member,succesfunc,failureFunction);
+				if($scope.role===roles.SysAdmin.role)
+					Team.deleteSysAdmin(member,succesfunc,failureFunction);
+				if($scope.role===roles.Tester.role)
+					Team.deleteTester(member,succesfunc,failureFunction);
+				if($scope.role===roles.KeyAccount.role)
+					Team.deleteKeyAccount(member,succesfunc,failureFunction);
+				if($scope.role===roles.Designer.role)
+					Team.deleteDesigner(member,succesfunc,failureFunction);
+		 });
+		
 	}
 	$scope.uploadImage=function(member)
 	{
@@ -545,11 +614,10 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 		  }
 		  var failurefunc=function(msg)
 		  {
-		  	$("#failure").modal('show');
-			$('#failure').find('p').html("Couldn't uplaod picture please try again later");
+		  	swal("Oops!","Can't upload team member please try again later","error");
 		  }
 		  $scope.photo=$image.cropper("getDataURL");
-		  Team.uploadMemberImage(member.id,member.role,$image.cropper("getDataURL"),successFunc,failurefunc)
+		  Team.uploadMemberImage(member.id,member.role.role,$image.cropper("getDataURL"),successFunc,failurefunc)
 
 	}
 	$scope.openImageUplaoder=function(member)
