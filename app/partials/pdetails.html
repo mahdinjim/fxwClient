@@ -331,7 +331,7 @@
                                                             <span class="label label-default label-nobg"><i class="fa fa-check"></i> done</span>
                                                         </td>
                                                          <td class="project-status" ng-if="ticket.status==ticketStatus.Reject.status">
-                                                            <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#reject-messages"><i class="fa fa-commenting"></i> see messages</button>
+                                                            <button type="button" class="btn btn-danger btn-xs" ng-click="openRejectionMessage(ticket)"><i class="fa fa-commenting"></i> see messages</button>
                                                             <small>client reject ticket</small> 
                                                         
                                                         </td>
@@ -405,7 +405,7 @@
                                                             <span class="label label-default label-nobg"><i class="fa fa-check"></i> done</span>
                                                         </td>
                                                          <td class="project-status" ng-if="ticket.status==ticketStatus.Reject.status">
-                                                            <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#reject-messages"><i class="fa fa-commenting"></i> see messages</button>
+                                                            <button type="button" class="btn btn-danger btn-xs" ng-click="openRejectionMessage(ticket)"><i class="fa fa-commenting"></i> see messages</button>
                                                             <small>client reject ticket</small> 
                                                         
                                                         </td>
@@ -450,7 +450,7 @@
                         <div class="col-lg-12 p15" style="background-color: #1ab394;">
                             <div class="form-group fleft m0 mr10">
                                 <div class="select-option m-0" style="width: 360px;">
-                                    <select class="select2" ng-model="addedmember" id="selectdevmember" ng-options="[member.name,' ',member.surname,', ',member.role.Text].join('') for member in devteam track by member.id && member.role.role">
+                                    <select class="select2" ng-model="addedmember" id="selectdevmember" ng-options="[member.name,' ',member.surname,', ',member.role.Text].join('') for member in devteam track by member.order">
                                        
                                        
                                     </select>
@@ -593,37 +593,28 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 ng-if="!isedit" class="modal-title"><i class="fa fa-plus modal-fa-icon"></i> Add Ticket</h4>
-                    <h4 ng-if="isedit" class="modal-title"><i class="fa fa-pencil modal-fa-icon"></i> Edit Ticket</h4>
+                    <h4 class="modal-title"><i class="fa fa-plus modal-fa-icon"></i> Add Ticket</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row mb10 header-ticket-types">
                         <div class="col-lg-12">
                             <div class="form-group radio-toolbar header-toolbar">
-                                <input id='radio1' class="development" type="radio" name="radios" value="true">
-                                <label class="development" for="radio1" ng-click="hideshowForm(true)"><i class="fa fa-star" ng-model="devselct"></i> Development</label>
+                                <input class="feature" type="radio" id="radio1" name="radios" value="feature" checked ng-click="setFeature()">
+                                <label class="feature" for="radio1"><i class="fa fa-star"></i> Feature</label>
 
-                                <input id='radio2' class="concept" type="radio" name="radios" value="true" ng-click="hideshowForm(false)" ng-model="conceptselct">
-                                <label class="concept" for="radio2"><i class="fa fa-file"></i> Concept</label>
+                                <input class="bug" type="radio" id="radio2" name="radios" value="bug" ng-click="setBug()">
+                                <label class="bug" for="radio2"><i class="fa fa-bug"></i> Bug</label>
 
-                                <input id='radio3' class="design" type="radio" name="radios" value="true" ng-click="hideshowForm(false)" ng-model="designselct">
-                                <label class="design" for="radio3"><i class="fa fa-tint"></i> Design</label> 
+                                <input class="concept" type="radio" id="radio3" name="radios" value="concept" ng-click="setConcept()">
+                                <label class="concept" for="radio3"><i class="fa fa-file"></i> Concept</label>
+
+                                <input class="design" type="radio" id="radio4" name="radios" value="design" ng-click="setDesign()">
+                                <label class="design" for="radio4"><i class="fa fa-tint"></i> Design</label> 
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-12"> 
-                            <div class="form-group" id="ticketchoiceform">
-                               <div class="radio ticket radio-warning radio-inline ml5">
-                                    <input id='inlineradio1' type="radio" name="radioInline" value="option1"  ng-model="featureselct">
-                                    <label for="inlineRadio1"> Feature </label>
-                                </div>
-                                <div class="radio ticket radio-danger radio-inline">
-                                    <input id='inlineradio2' type="radio" name="radioInline" value="option2"  ng-model="bugselct">
-                                    <label for="inlineRadio2"> Bug </label>
-                                </div>
-                            </div>
-
                             <div class="form-group">
                                 <input type="text" class="form-control" placeholder="Title" ng-model="tickettitle">
                             </div>
@@ -927,7 +918,7 @@
                                                             </td>
                                                             <td class="project-title">
                                                                 {{task.title}}
-                                                                <small>Assign to: <b>{{task.assignto.name}}</b></small>
+                                                                <small>Assign to: <b>{{task.assignto.surname}}</b></small>
                                                             </td>
                                                             <td class="project-estimation">
                                                                 <i class="fa fa-clock-o"></i> 
@@ -985,7 +976,7 @@
                                                         <i class="fa fa-angle-right"></i>
                                                     </td>
                                                     <td class="reject-message">
-                                                      {{rejectionmessage}}
+                                                      {{rejectiommsg}}
                                                     </td>
                                                 </tr>                                                                                                  
                                             </tbody>

@@ -1386,7 +1386,7 @@ a.message-author{
 }
 .project-realtime .hour{
   font-size: 14px;
-  font-weight: normal;
+  font-weight: 700;
 }
 .project-estimation .fa{
   font-size: 14px;
@@ -1402,6 +1402,7 @@ a.message-author{
 .project-realtime a{
   color: #aaa;
   border-bottom: 1px dotted #aaa;
+  display: table;
 }
 
 .project-estimation a:hover,
@@ -2171,6 +2172,18 @@ tr.new td{
   color: #fff;
 }
 
+.radio-toolbar input.feature[type="radio"]:checked + label.feature { 
+  background-color: #f1c40f;
+  border: 1px solid #f1c40f;
+  color: #fff;
+}
+
+.radio-toolbar input.bug[type="radio"]:checked + label.bug { 
+  background-color: #d9534f;
+  border: 1px solid #d9534f;
+  color: #fff;
+}
+
 .radio-toolbar input.concept[type="radio"]:checked + label.concept { 
   background-color: #34495e;
   border: 1px solid #34495e;
@@ -2484,6 +2497,14 @@ li.key-account a{
 .dashboard-report-invoice-reports{
   height:400px;
   overflow: auto;
+}
+
+.realtime-info-box{
+  background: #f9f9f9;
+}
+
+.realtime-info-text{
+  color: #999;
 }
 
 /* MOBILE */

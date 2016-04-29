@@ -295,7 +295,7 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 		$scope.oldmember=member;
 		$scope.totaltasks=member.totaltasks;
 		$scope.finishedtasks=member.finishedtasks;
-		if(member.role!="Key Account")
+		if(member.role.role!=roles.KeyAccount.role)
 		{
 			var skills=member.skills.split(",");
 			$scope.skills=skills;
@@ -436,7 +436,7 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 			$("#levelselect").select2("val",member.level);
 			$("#roleselect").select2("data",{id:-1,"text":member.role.role});
 			$("#roleselect").prop("disabled",true);
-			if(member.role!=roles.KeyAccount.role)
+			if(member.role.role!=roles.KeyAccount.role)
 			{
 				var skills=member.skills.split(",");
 				$scope.skills=skills;
@@ -532,17 +532,17 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 			if($scope.password!="******")
 				member.password=$scope.password;
 			if(oldmember==null){
-				if($scope.role===Team.roles)
+				if($scope.role===roles.TeamLeader.role)
 					Team.createTeamLeader(member,succesfunc,failureFunction);
-				if($scope.role==="Developer")
+				if($scope.role===roles.Developer.role)
 					Team.createDeveloper(member,succesfunc,failureFunction);
-				if($scope.role==="Administrator")
+				if($scope.role===roles.SysAdmin.role)
 					Team.createSysAdmin(member,succesfunc,failureFunction);
-				if($scope.role==="Tester")
+				if($scope.role===roles.Tester.role)
 					Team.createTester(member,succesfunc,failureFunction);
-				if($scope.role==="Key Account")
+				if($scope.role===roles.KeyAccount.role)
 					Team.createKeyAccount(member,succesfunc,failureFunction);
-				if($scope.role==="Designer")
+				if($scope.role===roles.Designer.role)
 					Team.createDesigner(member,succesfunc,failureFunction);
 			}
 			else
@@ -1261,11 +1261,11 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	{
 		$scope.isAdmin=true;
 	}
-	if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_TEAMLEADER")
+	else if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_TEAMLEADER")
 	{
 		$scope.isTeamLeader=true;
 	}
-	if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER"|| Login.getLoggedUser().userinfo.roles[0]=="ROLE_KEYACCOUNT"){
+	else if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER"|| Login.getLoggedUser().userinfo.roles[0]=="ROLE_KEYACCOUNT"){
 		$scope.isclient=true;
 	}
 	else{
@@ -1539,71 +1539,85 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	}
 	$scope.deleteTeamMember=function(member)
 	{
-		var success=function()
-		{
-			var index=$scope.team.indexOf(member);
-			$scope.team.splice(index,1);
-			console.log("members deleted successfully");
-		}
-		var failure=function()
-		{
-			$('#teamfailure').modal("show");
-			$('#teamfailure').find('p').html("Something wrong happend, please try again later");
-		}
-		if(isOldMember(member))
-		{
-			if(member.role.role==Team.roles.Developer.role){
-				var data={
-					"project_id":project_id,
-					"developers":[member.id]
-				}
-				Project.deleteDeveloperFromProject(success,failure,data);				
+		swal({
+            title: "Are you sure?",
+            text: 'You want to delete member?',
+            type: "warning",
+            showCancelButton: true,
+            cancelButtonText: "cancel",
+            confirmButtonColor: "#ed5565",
+            confirmButtonText: "Yes, delete it!",
+            closeOnConfirm: true
+	    }, function () {
+	        var success=function()
+			{
+				var index=$scope.team.indexOf(member);
+				$scope.team.splice(index,1);
+				oldmembers.splice(index, 1);
+				console.log("members deleted successfully");
+			}
+			var failure=function()
+			{
+				$('#teamfailure').modal("show");
+				$('#teamfailure').find('p').html("Something wrong happend, please try again later");
+			}
+			if(isOldMember(member))
+			{
 				
-			}
-			if(member.role.role==Team.roles.Tester.role){
-				var data={
-					"project_id":project_id,
-					"testers":[member.id]
+				if(member.role.role==Team.roles.Developer.role){
+					var data={
+						"project_id":project_id,
+						"developers":[member.id]
+					}
+					Project.deleteDeveloperFromProject(success,failure,data);				
+					
 				}
-				Project.deleteTesterFromProject(success,failure,data);
-			}
-			if(member.role.role==Team.roles.Designer.role){
-				var data={	
-					"project_id":project_id,
-					"designers":[member.id]
+				if(member.role.role==Team.roles.Tester.role){
+					var data={
+						"project_id":project_id,
+						"testers":[member.id]
+					}
+					Project.deleteTesterFromProject(success,failure,data);
 				}
-				Project.deleteDesignerFromProject(success,failure,data);
-			}
-			if(member.role.role==Team.roles.SysAdmin.role){
-				var data={	
-					"project_id":project_id,
-					"sysadmins":[member.id]
+				if(member.role.role==Team.roles.Designer.role){
+					var data={	
+						"project_id":project_id,
+						"designers":[member.id]
+					}
+					Project.deleteDesignerFromProject(success,failure,data);
 				}
-				Project.deleteSysAdminFromProject(success,failure,data);
+				if(member.role.role==Team.roles.SysAdmin.role){
+					var data={	
+						"project_id":project_id,
+						"sysadmins":[member.id]
+					}
+					Project.deleteSysAdminFromProject(success,failure,data);
+				}
 			}
-		}
-		else
-		{
-			if(member.role.role==Team.roles.Developer.role){
-				var index=newDevMembers.indexOf(member);
-				newDevMembers.splice(index,1);
-				
+			else
+			{
+				if(member.role.role==Team.roles.Developer.role){
+					var index=newDevMembers.indexOf(member);
+					newDevMembers.splice(index,1);
+					
+				}
+				if(member.role.role==Team.roles.Tester.role){
+					var index=newTesterMembers.indexOf(member);
+					newTesterMembers.splice(index,1);
+				}
+				if(member.role.role==Team.roles.Designer.role){
+					var index=newDesignerMembers.indexOf(member);
+					newDesignerMembers.splice(index,1);
+				}
+				if(member.role.role==Team.roles.SysAdmin.role){
+					var index=newSysMember.indexOf(member);
+					newSysMember.splice(index,1);
+				}
+				var index=$scope.team.indexOf(member);
+				$scope.team.splice(index,1);
 			}
-			if(member.role.role==Team.roles.Tester.role){
-				var index=newTesterMembers.indexOf(member);
-				newTesterMembers.splice(index,1);
-			}
-			if(member.role.role==Team.roles.Designer.role){
-				var index=newDesignerMembers.indexOf(member);
-				newDesignerMembers.splice(index,1);
-			}
-			if(member.role.role==Team.roles.SysAdmin.role){
-				var index=newSysMember.indexOf(member);
-				newSysMember.splice(index,1);
-			}
-			var index=$scope.team.indexOf(member);
-			$scope.team.splice(index,1);
-		}
+	    });
+		
 	}
 	$scope.closeTeamModal=function()
 	{
@@ -1725,6 +1739,34 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		}
 	}
 	var editedTicket=null;
+	$scope.setFeature=function()
+	{
+		$scope.conceptselct=false;
+		$scope.designselct=false;
+		$scope.bugselct=false;
+		$scope.devselct=true;
+	}
+	$scope.setBug=function()
+	{
+		$scope.conceptselct=false;
+		$scope.designselct=false;
+		$scope.bugselct=true;
+		$scope.devselct=false;
+	}
+	$scope.setConcept=function()
+	{
+		$scope.conceptselct=true;
+		$scope.designselct=false;
+		$scope.bugselct=false;
+		$scope.devselct=false;
+	}
+	$scope.setDesign=function()
+	{
+		$scope.conceptselct=false;
+		$scope.designselct=true;
+		$scope.bugselct=false;
+		$scope.devselct=false;
+	}
 	$scope.openCreateTicket=function(ticket)
 	{
 		if(ticket!=null)
@@ -1750,11 +1792,14 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 			{
 				$scope.conceptselct=false;
 				$scope.designselct=false;
-				$scope.featureselct=true;
+				
 				$scope.bugselct=false;
 				$scope.devselct=true;
-				$("#radio1").attr("checked", "checked");
-				$("#inlineradio1").attr("checked", "checked");
+				//$("#radio1").attr("checked", "checked");
+				$("#radio1").prop("checked", true);
+				$("#radio2").prop("checked", false);
+				$("#radio3").prop("checked", false);
+				$("#radio4").prop("checked", false);
 				
 				
 			}
@@ -1764,12 +1809,12 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 				$scope.designselct=false;
 				$scope.featureselct=false;
 				$scope.bugselct=true;
-				$scope.devselct=true;
-				$("#radio1").prop("checked", true);
-				$("#radio2").prop("checked", false);
+				$scope.devselct=false;
+				$("#radio1").prop("checked", false);
+				$("#radio2").prop("checked", true);
 				$("#radio3").prop("checked", false);
-				$("#inlineradio1").prop("checked", false);
-				$("#inlineradio2").prop("checked", true);
+				$("#radio4").prop("checked", false);
+				
 			}
 			$scope.isedit=true;
 			$scope.tickettitle=ticket.title;
@@ -1780,7 +1825,6 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		else{
 			$scope.conceptselct=false;
 			$scope.designselct=false;
-			$scope.featureselct=false;
 			$scope.bugselct=false;
 			$scope.devselct=true;
 			$("#radio1").prop("checked", true);
@@ -1797,7 +1841,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		$('#bug-info').modal('show');
 	}
 	$scope.createTicket=function(){
-		messages=verifTicketForm();
+		var messages=verifTicketForm();
 		if(messages.length==0)
 		{
 			var data={
@@ -1818,15 +1862,11 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 			}
 			else if($scope.devselct)
 			{
-				if($scope.featureselct){
-					data.type=$scope.tickettypes[1].type;
-				}
-				else if($scope.bugselct){
+				data.type=$scope.tickettypes[1].type;
+		
+			}
+			else if($scope.bugselct){
 				data.type=$scope.tickettypes[2].type;
-				}
-				else{
-					swal("Choose Type", "Please choose a ticket type", "warning");
-				}
 			}
 			
 			
@@ -2126,6 +2166,11 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 				}
                 Ticket.acceptTicket(successFunc,failureFunc,ticket.id);
             });
+	}
+	$scope.openRejectionMessage=function(ticket)
+	{
+		$scope.rejectiommsg=ticket.rejectionmessage;
+		$("#reject-messages").modal("show");
 	}
 	$scope.openRejectModal=function(ticket)
 	{

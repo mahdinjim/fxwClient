@@ -262,7 +262,7 @@
                                                             <td width="100" class="project-table-head">Estimation</td>
                                                             <td width="100" class="project-table-head">Realtime</td>
                                                             <td width="250" class="project-table-head">Status</td>
-                                                            <td width="500" class="project-table-head aright">Action</td>
+                                                            <td width="500" class="project-table-head aright" ng-if="!isclient">Action</td>
                                                         </tr>
 
                                                         <tr ng-repeat="story in tasks">

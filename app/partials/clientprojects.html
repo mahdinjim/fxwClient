@@ -199,7 +199,7 @@
                         <div class="col-lg-12 p15" style="background-color: #1ab394;">
                             <div class="form-group fleft m0 mr10">
                                 <div class="select-option m-0" style="width: 360px;">
-                                    <select class="select2" ng-model="addedmember" id="selectdevmember" ng-options="[member.name,' ',member.surname,', ',member.role.Text].join('') for member in devteam track by member.id && member.role.role">
+                                    <select class="select2" ng-model="addedmember" id="selectdevmember" ng-options="[member.name,' ',member.surname,', ',member.role.Text].join('') for member in devteam track by member.order">
                                        
                                        
                                     </select>

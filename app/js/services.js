@@ -3,7 +3,7 @@ services.factory("Links",[function(){
 	var env="dev";
 	if(env=="dev")
 	{
-		var baseUrl="http://127.0.0.1";
+		var baseUrl="http://localhost";
 		var path="/crmtool/web/app_dev.php/api";
 	}
 	else
