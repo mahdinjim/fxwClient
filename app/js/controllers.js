@@ -207,8 +207,7 @@ Controllers.controller("SideBarCtrl",['$scope','Login','Chat','Client','Project'
 			var messages =verifyForm();
 			if(messages.length>0)
 			{
-				$("#warning").modal('show');
-				$('#warning').find('p').html(messages);
+				swal("Complete information",messages,"info");
 			}
 			else
 			{
@@ -224,15 +223,13 @@ Controllers.controller("SideBarCtrl",['$scope','Login','Chat','Client','Project'
 				var successFunc=function()
 				{
 					$("#add-project").modal('hide');
-					$("#success").modal('show');
-					$('#success').find('p').html("Project added successfully");
+					swal("Project Created", "Project added successfully", "success");
 					getprojects();
 				}
 				var failureFunc=function()
 				{
 					
-					$("#failure").modal('show');
-					$('#failure').find('p').html("Something bad happend please try again later");
+					swal("Oops!!", "Something bad happend please try again later", "error");
 				}
 				Project.createProject(project,successFunc,failureFunc);
 			}
@@ -893,15 +890,13 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 
 			var failureFunction=function(msg)
 			{
-				$("#failure").modal('show');
-				$('#failure').find('p').html(msg);
+				swal("Oops!!", msg, "error");
 			}
 			var succesfunc=function(msg)
 				{
 					$('#delete').modal('hide');
 					$('#add-client').modal('hide');
-					$("#success").modal('show');
-					$('#success').find('p').html(msg);
+					swal("Client Added", msg, "success");
 					updateView($scope.currentpage);
 					clearForm();
 				}
@@ -926,16 +921,14 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 		{
 			$('#delete').modal('hide');
 			$('#add-client').modal('hide');
-			$("#success").modal('show');
-			$('#success').find('p').html('Member deleted successfully');
+			swal("Member Deleted", 'Member deleted successfully', "success");
 			updateView($scope.currentpage);
 			clearForm();
 
 		}
 		var failureFunction=function(msg)
 		{
-			$("#failure").modal('show');
-			$('#failure').find('p').html(msg);
+			swal("Oops!!", msg, "error");
 		}
 		Client.deleteClient(oldclient,succesfunc,failureFunction);
 	}
@@ -1042,8 +1035,7 @@ Controllers.controller('CuserCtrl',['$scope','Login','Cuser','$location','Params
 		if(messages.length>0)
 		{
 			
-			$("#warning").modal('show');
-			$('#warning').find('p').html(messages);
+			swal("Complete information",messages,"info");
 		}
 		else{
 			var user={
@@ -1059,15 +1051,13 @@ Controllers.controller('CuserCtrl',['$scope','Login','Cuser','$location','Params
 
 			var failureFunction=function(msg)
 			{
-				$("#failure").modal('show');
-				$('#failure').find('p').html(msg);
+				swal("Oops!!", msg, "error");
 			}
 			var succesfunc=function(msg)
 				{
 					$('#delete').modal('hide');
 					$('#add-user').modal('hide');
-					$("#success").modal('show');
-					$('#success').find('p').html(msg);
+					swal("User Created", msg, "success");
 					updateView();
 					clearForm();
 				}
@@ -1092,16 +1082,14 @@ Controllers.controller('CuserCtrl',['$scope','Login','Cuser','$location','Params
 		{
 			$('#delete').modal('hide');
 			$('#add-user').modal('hide');
-			$("#success").modal('show');
-			$('#success').find('p').html('Member deleted successfully');
+			swal("Member deleted", "Member deleted successfully", "success");
 			updateView();
 			cleanForm();
 
 		}
 		var failureFunction=function(msg)
 		{
-			$("#failure").modal('show');
-			$('#failure').find('p').html(msg);
+			swal("Oops!!", msg, "error");
 		}
 		Cuser.deleteUser(olduser,succesfunc,failureFunction);
 	}
@@ -1115,8 +1103,7 @@ Controllers.controller('CuserCtrl',['$scope','Login','Cuser','$location','Params
 		  }
 		  var failurefunc=function(msg)
 		  {
-		  	$("#failure").modal('show');
-			$('#failure').find('p').html("Couldn't uplaod picture please try again later");
+		  	swal("Oops!!", "Couldn't uplaod picture please try again later", "error");
 		  }
 		  $scope.photo=$image.cropper("getDataURL");
 		  Cuser.uploadCuserImage(user.id,$image.cropper("getDataURL"),successFunc,failurefunc)
@@ -1239,6 +1226,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	{
 		var successFunc=function(data)
 		{
+			$scope.hasTicket=true;
 			$scope.tickets=data;
 		}
 		var failureFunc=function()
@@ -2392,6 +2380,21 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 	$scope.finishedtasks=ticket.finishedtasks;
 	$scope.rejectionmessage=ticket.rejectionmessage;
 	$scope.docs=project.docs;
+	var updateView=function()
+	{
+		sucessFunc=function(data)
+		{
+			$scope.tasks=data;
+			ticket.tasks=data;
+			localStorage.ticket=JSON.stringify(ticket);
+		}
+		failureFunc=function(err)
+		{
+			console.log(err);
+		}
+		Task.getAllTasks(sucessFunc,failureFunc,ticket.id);
+	}
+	updateView();
 	var loadRoles=function(data){
 		$scope.teamroles=data;
 	}
@@ -2414,14 +2417,23 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 		selectedtask=task;
 		$("#add-estimation").modal("show");
 	}
+	var updateRealtimes=function(task)
+	{
+		var successFunc=function(data)
+		{
+			$scope.realtimes=data.realtimes;
+			$scope.totalrealtime=data.total;
+			$scope.assigned=task.assignto;
+		}
+		var failureFunc=function()
+		{
+			swal("Oops!!","Can't get realtime please try again later","error");
+		}
+		Task.getAllRealtimes(successFunc,failureFunc,task.id);
+	}
 	$scope.openAddRealtime=function(realtime,task)
 	{
-		if(realtime!=null)
-		{
-			$scope.realtime=realtime;
-		}
-		else
-			$scope.realtime="";
+		updateRealtimes(task);
 		selectedtask=task;
 		$("#add-realtime").modal("show");
 	}
@@ -2443,6 +2455,92 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 		}
 		Task.setEstimation(successFunc,failureFunc,data);
 	}
+	var selectedrealtime=null;
+	$scope.sendToTl=function()
+	{
+		data={"task_id":selectedtask.id};
+		successFunc=function()
+		{
+			swal("Realtime sent","Realtime sent successfully to team leader","success");
+			updateView();
+			$("#add-realtime").modal("hide");
+		}
+		failurefunc=function()
+		{
+			swal("Oopss!!","Can't send realtime to team leader please try again later","error");
+
+		}
+		Task.setRealtime(successFunc,failurefunc,data);
+	}
+	$scope.editRealtime=function(realtime)
+	{
+		selectedrealtime=realtime;
+		$scope.editrealtime=realtime.time;
+		$("#edit-realtime").modal("show");
+	}
+	$scope.seteditRealtime=function(){
+		if($scope.editrealtime=="" || $scope.editrealtime==undefined || $scope.editrealtime==null)
+		{
+			swal("Enter a realtime","Please enter a realtime","error");
+		}
+		else
+		{
+			if(!isNaN($scope.editrealtime))
+			{
+				var successFunc=function()
+				{
+					updateRealtimes(selectedtask);
+					$("#edit-realtime").modal("hide");
+				}
+				var failureFunc=function()
+				{
+					swal("Realtime not set","We couldn't set the realtime please try again later","error");
+				}
+				
+				var data ={
+				"realtime":$scope.editrealtime,
+				"realtime_id":selectedrealtime.id
+				}
+				Task.updateRealtime(successFunc,failureFunc,data);
+				
+			}
+			else
+				swal("Enter a number","Please enter a number in realtime","warning");
+			
+		}
+	}
+	$scope.deleteRealtime=function(realtime)
+	{
+		swal({
+                title: "Are you sure?",
+                html: 'You deleted it.',
+                type: "warning",
+                showCancelButton: true,
+                cancelButtonText: "cancel",
+                confirmButtonColor: "#ed5565",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false
+            }, function () {
+            	var successFunc=function()
+            	{
+            		updateRealtimes(selectedtask);
+            		swal(
+	                {
+	                    title: "Deleted!",
+	                    text: "You deleted it!", 
+	                    type: "success",
+	                    confirmButtonColor: "#1ab394",
+	                    confirmButtonText: "close"
+	                });
+            	}
+            	var failureFunc=function()
+            	{
+            		swal('Oops!!',"Can't delete realtime please try again later","error");
+            	}
+            	Task.deleteRealtime(successFunc,failureFunc,realtime.id);
+                
+            });
+	}
 	$scope.setRealtime=function()
 	{
 		if($scope.realtime=="" || $scope.realtime==undefined || $scope.realtime==null)
@@ -2451,21 +2549,27 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 		}
 		else
 		{
-			var data ={
-			"realtime":$scope.realtime,
-			"task_id":selectedtask.id
-			}
-			var successFunc=function()
+			if(!isNaN($scope.realtime))
 			{
-				updateView();
-
-				$("#add-realtime").modal("hide");
+				var successFunc=function()
+				{
+					updateRealtimes(selectedtask);
+				}
+				var failureFunc=function()
+				{
+					swal("Realtime not set","We couldn't set the realtime please try again later","error");
+				}
+				
+				var data ={
+				"realtime":$scope.realtime,
+				"task_id":selectedtask.id
+				}
+				Task.addRealtime(successFunc,failureFunc,data);
+				
 			}
-			var failureFunc=function()
-			{
-				swal("Realtime not set","We couldn't set the realtime please try again later","error");
-			}
-			Task.setRealtime(successFunc,failureFunc,data);
+			else
+				swal("Enter a number","Please enter a number in realtime","warning");
+			
 		}
 		
 	}
@@ -2732,20 +2836,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 			selectedtask=story;
 		}
 	}
-	var updateView=function()
-	{
-		sucessFunc=function(data)
-		{
-			$scope.tasks=data;
-			ticket.tasks=data;
-			localStorage.ticket=JSON.stringify(ticket);
-		}
-		failureFunc=function(err)
-		{
-			console.log(err);
-		}
-		Task.getAllTasks(sucessFunc,failureFunc,ticket.id);
-	}
+	
 	var verifyForm=function()
 	{
 		var messages=[];
@@ -3106,17 +3197,17 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 		var messages=new Array();
 		if($scope.aprojecttitle===undefined)
 		{
-			messages.push("Please add the project title</br>");
+			messages.push("Please add the project title\n");
 
 		}
 		if($scope.apdescription===undefined)
 		{
-			messages.push("Please add the project description</br>");
+			messages.push("Please add the project description\n");
 			
 		}
 		if($scope.aprojectskills===undefined)
 		{
-			messages.push("Please add the project required skills</br>");
+			messages.push("Please add the project required skills\n");
 			
 		}
 		return messages;

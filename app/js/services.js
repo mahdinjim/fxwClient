@@ -96,6 +96,10 @@ services.factory("Links",[function(){
 	var listProjectByClientLink=baseUrl+path+"/private/super/project/client/list";
 	var assignRateLink=baseUrl+path+"/private/super/project/rate";
 	var updateprojectLink=baseUrl+path+"/private/project/restricted/update";
+	var addRealtimeLink=baseUrl+path+"/private/project/task/realtime/create";
+	var updateRealtimeLink=baseUrl+path+"/private/project/task/realtime/update";
+	var deleteRealTimeLink=baseUrl+path+"/private/project/task/realtime/delete";
+	var getRealtimesLink=baseUrl+path+"/private/project/task/realtime/all";
 	this.getLoginLink=function()
 	{
 		return LoginLink;
@@ -434,6 +438,22 @@ services.factory("Links",[function(){
 	{
 		return updateprojectLink;
 	}
+	this.getAddRealtimeLink=function()
+	{
+		return addRealtimeLink;
+	}
+	this.getUpdateRealtimeLink=function()
+	{
+		return updateRealtimeLink;
+	}
+	this.getDeleteRealtimeLink=function()
+	{
+		return deleteRealTimeLink;
+	}
+	this.getAllRealtimesLink=function()
+	{
+		return getRealtimesLink;
+	}
 	return this;
 }]);
 services.factory("Login",['$http','$location','$cookies',"$route","Links",
@@ -498,7 +518,7 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 				data.token.experationDate.date=data.token.experationDate.date.replace(" ","T");
 				user.userinfo=data.user;
 				user.token=data.token;
-				localStorage.setItem("loggeduser",JSON.stringify(user));
+				$cookies.put('loggeduser', JSON.stringify(user));
 				funcsucess();
                
             }).error(function (data, status, headers, config) {
@@ -510,9 +530,9 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 		
 		}
 		this.getLoggedUser=function(){
-			if(localStorage.loggeduser!=undefined)
+			if($cookies.get("loggeduser")!=undefined)
 			{
-				var loggedUser=JSON.parse(localStorage.loggeduser);
+				var loggedUser=JSON.parse($cookies.get("loggeduser"));
 				if(loggedUser!=null)
 					return loggedUser;
 				else
@@ -524,7 +544,7 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 			}
 		}
 		this.logout=function(savelast){
-			localStorage.removeItem("loggeduser");
+			$cookies.remove("loggeduser");
 			/*if(savelast===undefined || savelast==null)
 			 {
 			 	savelast=true;
@@ -1890,6 +1910,52 @@ services.service('Task', ["$http","Login","Links",function ($http,Login,Links) {
 	this.setRealtime=function(successFunc,failureFunc,data)
 	{
 		this.execute(successFunc,failureFunc,data,"POST",Links.getRealtimeLink());
+	}
+	this.addRealtime=function(successFunc,failureFunc,data)
+	{
+		this.execute(successFunc,failureFunc,data,"POST",Links.getAddRealtimeLink());
+	}
+	this.updateRealtime=function(successFunc,failureFunc,data)
+	{
+		this.execute(successFunc,failureFunc,data,"PUT",Links.getUpdateRealtimeLink());
+	}
+	this.deleteRealtime=function(successFunc,failureFunc,realtime_id)
+	{
+		if(Login.getLoggedUser())
+		{
+			var me =this;
+			$http({
+				method:"DELETE", 
+				url:Links.getDeleteRealtimeLink()+"/"+realtime_id,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+                successFunc();
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failureFunc(data.error);
+            });
+        }
+	}
+	this.getAllRealtimes=function(successFunc,failureFunc,task_id)
+	{
+		if(Login.getLoggedUser())
+		{
+			var me =this;
+			$http({
+				method:"GET", 
+				url:Links.getAllRealtimesLink()+"/"+task_id,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+                successFunc(data);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failureFunc(data.error);
+            });
+        }
 	}
 	this.execute=function(successFunc,failureFunc,data,method,link)
 	{
