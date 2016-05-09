@@ -1366,7 +1366,10 @@ services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
 				{
 					me.newmessagesCount=0;
 				}
-				me.newmessagesCount+=parseInt(data.undread_count);
+				if(data.result)
+					me.newmessagesCount+=parseInt(data.undread_count);
+				else
+					me.newmessagesCount+=0;
 				successfunction(data,channel,i,end,me.newmessagesCount);
             }).error(function (data, status, headers, config) {
             	if(status==403)

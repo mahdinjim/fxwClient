@@ -82,7 +82,10 @@ Controllers.controller("SideBarCtrl",['$scope','Login','Chat','Client','Project'
 				var sum=0;
 				var successfunc=function(data,channel,i,end,sum)
 				{
-					channel.newmessages=data.undread_count;
+					if(data.result)
+						channel.newmessages=data.undread_count;
+					else
+						channel.newmessages=0;
 					
 					if(i==end)
 					{
