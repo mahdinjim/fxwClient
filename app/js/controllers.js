@@ -2554,6 +2554,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 				var successFunc=function()
 				{
 					updateRealtimes(selectedtask);
+					updateView();
 				}
 				var failureFunc=function()
 				{

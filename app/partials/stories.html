@@ -309,8 +309,21 @@
                                                              <td class="project-realtime" ng-if="isclient && story.realtime==null">
                                                                
                                                             </td>
-                                                            <td class="project-realtime" ng-if="!isclient && story.realtime==null && ticket_status==ticketStatus.Production.status && story.isstarted">
+                                                            <td class="project-realtime" ng-if="!isclient && story.realtime==null && ticket_status==ticketStatus.Production.status && !story.isstarted ">
+                                                               
+                                                            </td>
+                                                            <td class="project-realtime" ng-if="!isclient && story.realtime==null && ticket_status==ticketStatus.Production.status && story.isstarted && story.workedhours==0">
                                                                 <button ng-click="openAddRealtime(null,story)" type="button" class="btn btn-primary btn-bitbucket btn-xs"><i class="fa fa-plus mr5"></i> add</button>
+                                                            </td>
+                                                            <td class="project-realtime" ng-if="!isclient && story.realtime==null && ticket_status==ticketStatus.Production.status && story.isstarted && story.workedhours!=0">
+                                                                <i class="fa fa-clock-o"></i> 
+                                                                <span class="hour">{{story.workedhours}} h</span>
+                                                                <a  ng-click="openAddRealtime(null,story)"><small>+ add</small></a>
+                                                            </td>
+                                                             <td class="project-realtime" ng-if="!isclient && !story.finished && story.realtime!=null &&(ticket_status==ticketStatus.Production.status || ticket_status==ticketStatus.Testing.status)">
+                                                                 <i class="fa fa-clock-o"></i> 
+                                                                <span class="hour">{{story.realtime}} h</span>
+                                                                
                                                             </td>
                                                             <td class="project-realtime" ng-if="!isclient && story.finished && story.realtime!=null &&(ticket_status==ticketStatus.Production.status || ticket_status==ticketStatus.Testing.status)">
                                                                  <i class="fa fa-clock-o"></i> 
