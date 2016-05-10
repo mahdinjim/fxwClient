@@ -63,7 +63,7 @@ Controllers.controller("SideBarCtrl",['$scope','Login','Chat','Client','Project'
 	function SideBarCtrl($scope,Login,Chat,Client,Project)
 	{
 		$scope.canAdd=false;
-		$scope.isclient=false;;
+		$scope.isclient=false;
 		if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER"){
 			$scope.isclient=true;
 		}
@@ -1130,11 +1130,16 @@ Controllers.controller('SettingsCtrl', ['$scope','Chat', function ($scope,Chat) 
 	
 	
 }])
-Controllers.controller("ChatCtrl",["$scope","$rootScope","Chat","$routeParams","Login",function($scope,$rootScope,Chat,$routeParams,Login){
+Controllers.controller("ChatCtrl",["$scope","$rootScope","Chat","$routeParams","Login","$location",function($scope,$rootScope,Chat,$routeParams,Login,$location){
 	$scope.loadingteam=true;
 	$scope.loadingmessages=true;
 	$scope.messageto=null;
-	
+	var project_id=$routeParams.project_id;
+	$scope.goToProject=function()
+	{
+		$location.url("/pdetails").search({"project_id": project_id});
+	}
+	console.log($routeParams.project_id);
 	if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER")
 	{
 		$('#messForm').show();
@@ -1171,7 +1176,7 @@ Controllers.controller("ChatCtrl",["$scope","$rootScope","Chat","$routeParams","
 	}
 	var failureFunc=function(msg)
 	{
-		alert(msg);
+		swal("Oops!!","Can't load messages either the chennel was deleted or something bad happen","error");
 	}
 	var messagingssuccsFunc=function(data)
 	{
@@ -1694,7 +1699,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	}
 	$scope.openKeybox=function()
 	{
-		$location.url("/keybox").search({"project_id": project_id});;
+		$location.url("/keybox").search({"project_id": project_id});
 	}
 	$scope.hideshowForm=function(visible){
 		if(visible)

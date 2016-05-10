@@ -70,7 +70,7 @@
                     <li ng-if="doDisplay('/messaging')">
                         <a ><i class="fa fa-comments"></i> <span class="nav-label">Messages</span> <span class="label label-danger pull-right">{{totalmessages}}</span></span></a>
                         <ul class="nav nav-second-level collapse in" ng-repeat='channel in channels'>
-                            <li><a href="#/messaging?channel_id={{channel.id}}"><span class="nav-label">{{channel.name}}</span> <span class="label label-default pull-right">{{channel.newmessages}}</span></a></li>
+                            <li><a href="#/messaging?channel_id={{channel.id}}&project_id={{channel.project_id}}"><span class="nav-label">{{channel.name}}</span> <span class="label label-default pull-right">{{channel.newmessages}}</span></a></li>
                         </ul> 
                     </li>
 
@@ -94,9 +94,7 @@
                         <a href="invoice-fxw.html"><i class="fa fa-file-text"></i> <span class="nav-label">Invoice</span></a>
                     </li>
 
-                     <li>
-                        <a href="faq-fxw.html"><i class="fa fa-question-circle"></i> <span class="nav-label">FAQ</span></a>
-                    </li>
+                     
 
                 </ul>
 
