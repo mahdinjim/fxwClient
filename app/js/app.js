@@ -62,6 +62,10 @@ crmapp.config(["$routeProvider",
 				templateUrl:'partials/clientprojects.html',
 				controller:'ClientProjectsCtrl'
 			}).
+			when('/report',{
+				templateUrl:'partials/hourreports.html',
+				controller:'ReportCtrl'
+			}).
 			otherwise({
         		redirectTo: '/dashboard'
       		});

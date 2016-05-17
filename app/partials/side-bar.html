@@ -87,7 +87,15 @@
                     </li>
 
                     <li ng-if="doDisplay('/report')">
-                        <a href="report-fxw.html"><i class="fa fa-check-square"></i> <span class="nav-label">Report</span></a>
+                        <a><i class="fa fa-check-square"></i> <span class="nav-label">Report</span></a>
+                        <ul class="nav nav-second-level collapse in">
+                            <li ng-repeat='project in projects'>
+                                <a href="#/report?project_id={{project.id}}" ng-if="isclient"><span class="nav-label">{{project.name}}</a>
+                                <a href="#/report?project_id={{project.id}}" ng-if="!isclient">{{project.company}}
+                                    <span class="navi-project-name">{{project.name}}</span>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
 
                     <li ng-if="doDisplay('/invoice')">

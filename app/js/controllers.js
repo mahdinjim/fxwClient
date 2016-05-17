@@ -246,6 +246,11 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
     $scope.tab="operations";
     $scope.isoperation=true;
     $scope.isexpertise=false;
+    $scope.week1=new Array();
+	$scope.week2=new Array();
+	$scope.week3=new Array();
+	$scope.week4=new Array();
+	$scope.week5=new Array();
     var roles=null;
     Team.loadRoles(function(data)
 	{
@@ -265,17 +270,207 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
     	$scope.tab="operations";
     	$scope.isoperation=true;
     	$scope.isexpertise=false;
+    	$scope.isperformance=false;
     }
     $scope.selectExpertise=function()
     {
     	$scope.tab="expertise";
     	$scope.isexpertise=true;
     	$scope.isoperation=false;
+    	$scope.isperformance=false;
     	
     }
+    $scope.selectPerformance=function()
+    {
+    	$scope.tab="performance";
+    	$scope.isexpertise=false;
+    	$scope.isoperation=false;
+    	$scope.isperformance=true;
+    	$('#monthlyselect').select2();
+    	
+    }
+    $scope.selectWeek=function(week)
+    {
+    	if(week==1){
+    		$scope.selectedweek=$scope.week1;
+    		$scope.week1selected=true;
+    		$scope.week2selected=false;
+    		$scope.week3selected=false;
+    		$scope.week4selected=false;
+    		$scope.week5selected=false;
+    	}
+    	if(week==2){
+    		$scope.selectedweek=$scope.week2;
+    		$scope.week1selected=false;
+    		$scope.week2selected=true;
+    		$scope.week3selected=false;
+    		$scope.week4selected=false;
+    		$scope.week5selected=false;
+    	}
+    	if(week==3){
+    		$scope.selectedweek=$scope.week3;
+    		$scope.week1selected=false;
+    		$scope.week2selected=false;
+    		$scope.week3selected=true;
+    		$scope.week4selected=false;
+    		$scope.week5selected=false;
+    	}
+    	if(week==4){
+    		$scope.selectedweek=$scope.week4;
+    		$scope.week1selected=false;
+    		$scope.week2selected=false;
+    		$scope.week3selected=false;
+    		$scope.week4selected=true;
+    		$scope.week5selected=false;
+    	}
+    	if(week==5){
+    		$scope.selectedweek=$scope.week4;
+    		$scope.week1selected=false;
+    		$scope.week2selected=false;
+    		$scope.week3selected=false;
+    		$scope.week4selected=false;
+    		$scope.week5selected=true;
+    	}
+    }
+    weekCreation=function(week)
+	{
+		weekdata=new Array();
+		for(h=0;h<7;h++)
+		{
+			found=false;
+			for(j=0;j<week.days.length;j++)
+			{
+				if(week.days[j].dayofweek==h)
+				{
+					weekdata[h]=week.days[j].totalhours;
+					found=true;
+				}
+				
+			}
+			if(!found)
+			{
+				weekdata[h]=0;
+			}
+		}
+		return weekdata;
+	}
+	createEmptyWeek=function()
+	{
+		week=new Array(7);
+		for(h=0;h<7;h++)
+		{
+			week[h]=0;
+		}
+		return week;
+	}
+	var createWeekPerformance=function(data)
+	{
+		$scope.week1=new Array();
+		$scope.week2=new Array();
+		$scope.week3=new Array();
+		$scope.week4=new Array();
+		$scope.week5=new Array();
+		for(i=0;i<data.length;i++)
+		{
+			if(data[i].workeddays!=undefined)
+			{
+				if(data[i].workeddays.week1!=undefined)
+				{
+					week1=weekCreation(data[i].workeddays.week1);
+					$scope.week1.push({"data":week1,"total":data[i].workeddays.week1.weekhours,"performance":data[i].workeddays.week1.weekperformance});
+				}
+				else
+				{
+					week1=createEmptyWeek();
+					$scope.week1.push({"data":week1,"total":0,"performance":0});
+				}
+				
+				
+				if(data[i].workeddays.week2!=undefined)
+				{
+					week2=weekCreation(data[i].workeddays.week2);
+					$scope.week2.push({"data":week2,"total":data[i].workeddays.week2.weekhours,"performance":data[i].workeddays.week2.weekperformance});
+				}
+				else
+				{
+					week2=createEmptyWeek();
+					$scope.week2.push({"data":week2,"total":0,"performance":0});
+				}
+				
+				if(data[i].workeddays.week3!=undefined)
+				{
+					week3=weekCreation(data[i].workeddays.week3);
+					$scope.week3.push({"data":week3,"total":data[i].workeddays.week3.weekhours,"performance":data[i].workeddays.week3.weekperformance});
+				}
+				else
+				{
+					week3=createEmptyWeek();
+					$scope.week3.push({"data":week3,"total":0,"performance":0});
+				}
+				
+				if(data[i].workeddays.week4!=undefined)
+				{
+					week4=weekCreation(data[i].workeddays.week4);
+					$scope.week4.push({"data":week4,"total":data[i].workeddays.week4.weekhours,"performance":data[i].workeddays.week4.weekperformance});
+				}
+				else
+				{
+					week4=createEmptyWeek();
+					$scope.week4.push({"data":week4,"total":0,"performance":0});
+				}
+				
+				if(data[i].workeddays.week5!=undefined)
+				{
+					week5=weekCreation(data[i].workeddays.week5);
+					$scope.week5.push({"data":week5,"total":data[i].workeddays.week5.weekhours,"performance":data[i].workeddays.week5.weekperformance});
+				}
+				else
+				{
+					week5=createEmptyWeek();
+					$scope.week5.push({"data":week5,"total":0,"performance":0});
+				}
+			}
+			else
+			{
+				var week =createEmptyWeek();
+				var dataweek={"data":week,"total":0,"performance":0};
+				$scope.week1.push(dataweek);
+				$scope.week2.push(dataweek);
+				$scope.week3.push(dataweek);
+				$scope.week4.push(dataweek);
+				$scope.week5.push(dataweek);
+			}
+		}
+	}
 	var successfunc=function(data){
 		$scope.team=data;
+		createWeekPerformance(data);
+		$scope.selectedweek=$scope.week1;
+		$scope.week1selected=true;
+		$scope.week2selected=false;
+		$scope.week3selected=false;
+		$scope.week4selected=false;
+		$scope.week5selected=false;
 	};
+	$scope.loadPerformancebyMonth=function()
+	{
+		month=$scope.selectedMonth;
+		var sucessFunc=function(data)
+		{
+			createWeekPerformance(data);
+			$scope.selectedweek=$scope.week1;
+			$scope.week1selected=true;
+			$scope.week2selected=false;
+			$scope.week3selected=false;
+			$scope.week4selected=false;
+			$scope.week5selected=false;
+		}
+		var failureFunc=function()
+		{
+			swal("Can't laod performance","Oopps! something bad happen can't load team performance","error");
+		}
+		Team.getTeamPerformanceByMonth(sucessFunc,failureFunc,month);
+	}
 	Team.getAllteamMembers(successfunc);
 	$scope.send=false;
 	if(Params.getTeamMember()!=null)
@@ -1257,10 +1452,6 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	{
 		$scope.isAdmin=true;
 	}
-	else if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_TEAMLEADER")
-	{
-		$scope.isTeamLeader=true;
-	}
 	else if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER"|| Login.getLoggedUser().userinfo.roles[0]=="ROLE_KEYACCOUNT"){
 		$scope.isclient=true;
 	}
@@ -1284,6 +1475,8 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		$scope.budget=data.budget;
 		$scope.issigned=data.signed;
 		$scope.client=data.client;
+		if(data.teamLeader!=undefined)
+			$scope.teamlead=data.teamLeader;
 		channel_id=data.channel_id;
 
 		if(data.tickets.length==0)
@@ -1306,8 +1499,9 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		{
 			$scope.hasteam=true;
 		}
-		if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER"){
-
+		if(data.teamLeader.id==Login.getLoggedUser().userinfo.id)
+		{
+			$scope.isTeamLeader=true;
 		}
 	}
 	$scope.acceptContract=function()
@@ -1326,20 +1520,30 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	{
 		swal("Oops!!","We can't load project details please refresh the page","error");
 	}
+
 	var newDevMembers=new Array();
 	var newSysMember=new Array();
 	var newDesignerMembers=new Array();
 	var newTesterMembers=new Array();
-	var newTealeader=null;
 	var oldmembers;
+	var oldteamlead;
+	var getOldTeamLeader=function()
+	{
+		for(i=0;i<$scope.team.length;i++)
+		{
+			if($scope.team[i].isTeamLeader)
+				return $scope.team[i];
+		}
+		return null;
+	}
 	$scope.openAddMember=function()
 	{
 		newDevMembers=[];
 		newSysMember=[];
 		newDesignerMembers=[];
 		newTesterMembers=[];
-		newTealeader=null;
 		oldmembers=$scope.team.slice();
+		oldteamlead=getOldTeamLeader();
 		var successFunc=function(data)
 		{
 			if(data.length==0)
@@ -1373,35 +1577,25 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		}
 		return false;
 	}
-	var projectHaveLeader=function()
+	
+	$scope.changeRole=function(member,index)
 	{
-		for(i=0;i<oldmembers.length;i++)
+		if(index==0)
 		{
-			if(oldmembers[i].role.role==Team.roles.TeamLeader.role)
-				return oldmembers[i];
+			for(i=0;i<$scope.team.length;i++)
+				$scope.team[i].isTeamLeader=false;
+			member.isTeamLeader=true;
 		}
-		return false;
+		else
+		{
+			member.isTeamLeader=false;
+		}
 	}
 	$scope.adddevmember=function(){
+		$scope.addedmember.isTeamLeader=false;
 		if(!isOldMember($scope.addedmember))
 		{
 			var added=false;
-
-			if($scope.addedmember.role.role==Team.roles.TeamLeader.role){
-				var oldleader=projectHaveLeader();
-				if(oldleader)
-				{
-					var index =$scope.team.indexOf(oldleader);
-					$scope.team.splice(index,1);
-				}
-				else if(newTealeader!=null && newTealeader!=$scope.addedmember){
-					var index =$scope.team.indexOf(newTealeader);
-					$scope.team.splice(index,1);
-				}
-				newTealeader=$scope.addedmember;
-				$scope.team.unshift(newTealeader);
-				
-			}
 			if($scope.addedmember.role.role==Team.roles.Developer.role){
 				
 				for(i=0;i<newDevMembers.length;i++)
@@ -1441,8 +1635,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 			}
 			if(added)
 			{
-				$('#teamwarning').modal("show");
-				$('#teamwarning').find('p').html("Team member is already added");
+				swal("Team member already added","Team member is already added","warning");
 			}
 			else
 			{
@@ -1452,8 +1645,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		}
 		else
 		{
-			$('#teamwarning').modal("show");
-			$('#teamwarning').find('p').html("Team member is already added");
+			swal("Team member already added","Team member is already added","warning");
 		}
 	}
 	$scope.saveTeamMembers=function()
@@ -1465,16 +1657,19 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		}
 		var failure=function()
 		{
-			$('#teamfailure').modal("show");
-			$('#teamfailure').find('p').html("Something wrong happend, please try again");
+			swal("Oopss!!","Something wrong happend, please try again","error");
 		}
-		if(newTealeader!=null)
+		for(i=0;i<$scope.team.length;i++)
 		{
-			var data={
+			if($scope.team[i].isTeamLeader)
+			{
+				var data={
 					"project_id":project_id,
-					"teamleader_id":newTealeader.id
+					"teamleader_id":$scope.team[i].id,
+					"teamleader_role":$scope.team[i].role.role
 				}
-			Project.assignTeamLeader(success,failure,data);
+				Project.assignTeamLeader(success,failure,data);
+			}
 		}
 		if(newDevMembers.length>0)
 		{
@@ -1482,6 +1677,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 			for(i=0;i<newDevMembers.length;i++)
 			{
 				members.push(newDevMembers[i].id);
+				
 			}
 			var data={
 					"project_id":project_id,
@@ -1617,14 +1813,6 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	}
 	$scope.closeTeamModal=function()
 	{
-		if(newTealeader!=null)
-		{
-			var data={
-					"project_id":project_id,
-					"teamleader_id":newTealeader.id
-				}
-			Project.assignTeamLeader(success,failure,data);
-		}
 		if(newDevMembers.length>0)
 		{
 			
@@ -1660,15 +1848,18 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 				$scope.team.splice(index, 1);
 			}
 		}
-		if(newTealeader!=null)
+		
+		for(i=0;i<$scope.team.length;i++)
 		{
-			
-			var index=$scope.team.indexOf(newTealeader);
-			$scope.team.splice(index, 1);
-			var oldleader=projectHaveLeader();
-			if(oldleader){
-				$scope.team.unshift(oldleader);
-			}
+			if(oldteamlead!=null)
+				if($scope.team[i].id==oldteamlead.id && $scope.team[i].role.role==oldteamlead.role.role)
+				{
+					$scope.team[i].isTeamLeader=true;
+				}
+				else
+					$scope.team[i].isTeamLeader=false;
+			else
+				$scope.team[i].isTeamLeader=false;
 		}
 		$('#add-member').modal('hide');
 
@@ -3074,7 +3265,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 	{
 		$scope.isAdmin=true;
 	}
-	else if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_TEAMLEADER")
+	else if(Login.getLoggedUser().userinfo.id==project.teamLeader.id)
 	{
 		$scope.isTeamLeader=true;
 	}
@@ -3266,14 +3457,22 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 	var newTesterMembers=new Array();
 	var newTealeader=null;
 	var oldmembers;
+	var oldteamlead;
+	var getOldTeamLeader=function()
+	{
+		for(i=0;i<$scope.team.length;i++)
+		{
+			if($scope.team[i].isTeamLeader)
+				return $scope.team[i];
+		}
+		return null;
+	}
 	$scope.openAddMember=function(project)
 	{
 		newDevMembers=[];
 		newSysMember=[];
 		newDesignerMembers=[];
 		newTesterMembers=[];
-		newTealeader=null;
-		console.log(project.team);
 		oldmembers=project.team.slice();
 		$scope.team=project.team;
 		selectedPorject=project;
@@ -3310,35 +3509,25 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 		}
 		return false;
 	}
-	var projectHaveLeader=function()
+	
+	$scope.changeRole=function(member,index)
 	{
-		for(i=0;i<oldmembers.length;i++)
+		if(index==0)
 		{
-			if(oldmembers[i].role.role==Team.roles.TeamLeader.role)
-				return oldmembers[i];
+			for(i=0;i<$scope.team.length;i++)
+				$scope.team[i].isTeamLeader=false;
+			member.isTeamLeader=true;
 		}
-		return false;
+		else
+		{
+			member.isTeamLeader=false;
+		}
 	}
 	$scope.adddevmember=function(){
+		$scope.addedmember.isTeamLeader=false;
 		if(!isOldMember($scope.addedmember))
 		{
 			var added=false;
-
-			if($scope.addedmember.role.role==Team.roles.TeamLeader.role){
-				var oldleader=projectHaveLeader();
-				if(oldleader)
-				{
-					var index =$scope.team.indexOf(oldleader);
-					$scope.team.splice(index,1);
-				}
-				else if(newTealeader!=null && newTealeader!=$scope.addedmember){
-					var index =$scope.team.indexOf(newTealeader);
-					$scope.team.splice(index,1);
-				}
-				newTealeader=$scope.addedmember;
-				$scope.team.unshift(newTealeader);
-				
-			}
 			if($scope.addedmember.role.role==Team.roles.Developer.role){
 				
 				for(i=0;i<newDevMembers.length;i++)
@@ -3378,8 +3567,7 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 			}
 			if(added)
 			{
-				$('#teamwarning').modal("show");
-				$('#teamwarning').find('p').html("Team member is already added");
+				swal("Team member already added","Team member is already added","warning");
 			}
 			else
 			{
@@ -3389,8 +3577,7 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 		}
 		else
 		{
-			$('#teamwarning').modal("show");
-			$('#teamwarning').find('p').html("Team member is already added");
+			swal("Team member already added","Team member is already added","warning");
 		}
 	}
 	$scope.saveTeamMembers=function()
@@ -3402,16 +3589,19 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 		}
 		var failure=function()
 		{
-			$('#teamfailure').modal("show");
-			$('#teamfailure').find('p').html("Something wrong happend, please try again");
+			swal("Oopss!!","Something wrong happend, please try again","error");
 		}
-		if(newTealeader!=null)
+		for(i=0;i<$scope.team.length;i++)
 		{
-			var data={
+			if($scope.team[i].isTeamLeader)
+			{
+				var data={
 					"project_id":selectedPorject.id,
-					"teamleader_id":newTealeader.id
+					"teamleader_id":$scope.team[i].id,
+					"teamleader_role":$scope.team[i].role.role
 				}
-			Project.assignTeamLeader(success,failure,data);
+				Project.assignTeamLeader(success,failure,data);
+			}
 		}
 		if(newDevMembers.length>0)
 		{
@@ -3419,6 +3609,7 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 			for(i=0;i<newDevMembers.length;i++)
 			{
 				members.push(newDevMembers[i].id);
+				
 			}
 			var data={
 					"project_id":selectedPorject.id,
@@ -3472,82 +3663,88 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 	}
 	$scope.deleteTeamMember=function(member)
 	{
-		var success=function()
-		{
-			var index=$scope.team.indexOf(member);
-			$scope.team.splice(index,1);
-			console.log("members deleted successfully");
-		}
-		var failure=function()
-		{
-			$('#teamfailure').modal("show");
-			$('#teamfailure').find('p').html("Something wrong happend, please try again later");
-		}
-		if(isOldMember(member))
-		{
-			if(member.role.role==Team.roles.Developer.role){
-				var data={
-					"project_id":selectedPorject.id,
-					"developers":[member.id]
-				}
-				Project.deleteDeveloperFromProject(success,failure,data);				
+		swal({
+            title: "Are you sure?",
+            text: 'You want to delete member?',
+            type: "warning",
+            showCancelButton: true,
+            cancelButtonText: "cancel",
+            confirmButtonColor: "#ed5565",
+            confirmButtonText: "Yes, delete it!",
+            closeOnConfirm: true
+	    }, function () {
+	        var success=function()
+			{
+				var index=$scope.team.indexOf(member);
+				$scope.team.splice(index,1);
+				oldmembers.splice(index, 1);
+				console.log("members deleted successfully");
+			}
+			var failure=function()
+			{
+				$('#teamfailure').modal("show");
+				$('#teamfailure').find('p').html("Something wrong happend, please try again later");
+			}
+			if(isOldMember(member))
+			{
 				
-			}
-			if(member.role.role==Team.roles.Tester.role){
-				var data={
-					"project_id":selectedPorject.id,
-					"testers":[member.id]
+				if(member.role.role==Team.roles.Developer.role){
+					var data={
+						"project_id":selectedPorject.id,
+						"developers":[member.id]
+					}
+					Project.deleteDeveloperFromProject(success,failure,data);				
+					
 				}
-				Project.deleteTesterFromProject(success,failure,data);
-			}
-			if(member.role.role==Team.roles.Designer.role){
-				var data={	
-					"project_id":selectedPorject.id,
-					"designers":[member.id]
+				if(member.role.role==Team.roles.Tester.role){
+					var data={
+						"project_id":selectedPorject.id,
+						"testers":[member.id]
+					}
+					Project.deleteTesterFromProject(success,failure,data);
 				}
-				Project.deleteDesignerFromProject(success,failure,data);
-			}
-			if(member.role.role==Team.roles.SysAdmin.role){
-				var data={	
-					"project_id":selectedPorject.id,
-					"sysadmins":[member.id]
+				if(member.role.role==Team.roles.Designer.role){
+					var data={	
+						"project_id":selectedPorject.id,
+						"designers":[member.id]
+					}
+					Project.deleteDesignerFromProject(success,failure,data);
 				}
-				Project.deleteSysAdminFromProject(success,failure,data);
+				if(member.role.role==Team.roles.SysAdmin.role){
+					var data={	
+						"project_id":selectedPorject.id,
+						"sysadmins":[member.id]
+					}
+					Project.deleteSysAdminFromProject(success,failure,data);
+				}
 			}
-		}
-		else
-		{
-			if(member.role.role==Team.roles.Developer.role){
-				var index=newDevMembers.indexOf(member);
-				newDevMembers.splice(index,1);
-				
+			else
+			{
+				if(member.role.role==Team.roles.Developer.role){
+					var index=newDevMembers.indexOf(member);
+					newDevMembers.splice(index,1);
+					
+				}
+				if(member.role.role==Team.roles.Tester.role){
+					var index=newTesterMembers.indexOf(member);
+					newTesterMembers.splice(index,1);
+				}
+				if(member.role.role==Team.roles.Designer.role){
+					var index=newDesignerMembers.indexOf(member);
+					newDesignerMembers.splice(index,1);
+				}
+				if(member.role.role==Team.roles.SysAdmin.role){
+					var index=newSysMember.indexOf(member);
+					newSysMember.splice(index,1);
+				}
+				var index=$scope.team.indexOf(member);
+				$scope.team.splice(index,1);
 			}
-			if(member.role.role==Team.roles.Tester.role){
-				var index=newTesterMembers.indexOf(member);
-				newTesterMembers.splice(index,1);
-			}
-			if(member.role.role==Team.roles.Designer.role){
-				var index=newDesignerMembers.indexOf(member);
-				newDesignerMembers.splice(index,1);
-			}
-			if(member.role.role==Team.roles.SysAdmin.role){
-				var index=newSysMember.indexOf(member);
-				newSysMember.splice(index,1);
-			}
-			var index=$scope.team.indexOf(member);
-			$scope.team.splice(index,1);
-		}
+	    });
+		
 	}
 	$scope.closeTeamModal=function()
 	{
-		if(newTealeader!=null)
-		{
-			var data={
-					"project_id":selectedPorject.id,
-					"teamleader_id":newTealeader.id
-				}
-			Project.assignTeamLeader(success,failure,data);
-		}
 		if(newDevMembers.length>0)
 		{
 			
@@ -3583,17 +3780,91 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 				$scope.team.splice(index, 1);
 			}
 		}
-		if(newTealeader!=null)
+		
+		for(i=0;i<$scope.team.length;i++)
 		{
-			
-			var index=$scope.team.indexOf(newTealeader);
-			$scope.team.splice(index, 1);
-			var oldleader=projectHaveLeader();
-			if(oldleader){
-				$scope.team.unshift(oldleader);
-			}
+			if(oldteamlead!=null)
+				if($scope.team[i].id==oldteamlead.id && $scope.team[i].role.role==oldteamlead.role.role)
+				{
+					$scope.team[i].isTeamLeader=true;
+				}
+				else
+					$scope.team[i].isTeamLeader=false;
+			else
+				$scope.team[i].isTeamLeader=false;
 		}
 		$('#add-member').modal('hide');
 
 	}
+}]);
+Controllers.controller('ReportCtrl',['$scope','$routeParams','Project',function($scope,$routeParams,Project)
+{
+	var project_id = $routeParams.project_id;
+	$scope.isTicketReport=false;
+	$scope.isDateReport=true;
+	var d = new Date();
+	$scope.month=d.getMonth()+1;
+	$scope.year=d.getFullYear();
+
+	$scope.changeView=function(number){
+		if(number==0)
+		{
+			$scope.isTicketReport=false;
+			$scope.isDateReport=true;
+			updateDateView($scope.month,$scope.year);
+		}
+		else if (number==1) {
+			$scope.isTicketReport=true;
+			$scope.isDateReport=false;
+			updateTicketView($scope.month,$scope.year);
+		}
+	}
+	var successFunc=function(data)
+	{
+		$scope.data=data;
+	}
+	var failureFunc=function()
+	{
+		swal("Can't generate report","Oopps!! can't generate the report please try again later","error");
+	}
+	$scope.changeDate=function()
+	{
+		$scope.month=$('#selectedmonth').val();
+		$scope.year=$('#selectedyear').val();
+		if($scope.isTicketReport)
+		{
+			updateTicketView($scope.month,$scope.year);
+		}
+		else
+		{
+			updateDateView($scope.month,$scope.year);
+		}
+	}
+	var updateTicketView=function(month,year)
+	{
+		var d = new Date();
+		if(month==null)
+		{
+			month=d.getMonth()+1;
+		}
+		if(year==null)
+		{
+			year=d.getFullYear();
+		}
+		Project.getTicketReportbyMonth(successFunc,failureFunc,month,year,project_id);
+	}
+	var updateDateView=function(month,year)
+	{
+		var d = new Date();
+		if(month==null)
+		{
+			month=d.getMonth()+1;
+		}
+		if(year==null)
+		{
+			year=d.getFullYear();
+		}
+		Project.getDateReportbyMonth(successFunc,failureFunc,month,year,project_id);
+	}
+	updateDateView($scope.month,$scope.year);
 }]);

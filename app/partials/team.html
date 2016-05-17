@@ -74,7 +74,7 @@
     $('#datepicker').datepicker({
     format: "dd/mm/yyyy"
     });
-    jQuery('select').select2();
+    jQuery('.select2').select2();
   </script>
   <div id="wrapper">
        <div side-bar>
@@ -103,6 +103,7 @@
             <!--end header title-->
             <!--main-->
             <div class="row">
+               
                 <div class="col-lg-12">
                     <div class="wrapper wrapper-content animated fadeInUp">
 
@@ -117,6 +118,8 @@
                                     <a ng-if='!isoperation' ng-click="selectOperation()" class="btn btn-default btn-bitbucket btn-m"><i class="fa fa-circle-o mr5" ></i> operation</a>
                                     <a ng-if='!isexpertise' ng-click="selectExpertise()" class="btn btn-default btn-bitbucket btn-m"><i class="fa fa-crosshairs mr5" ></i> expertise</a>
                                     <a ng-if='isexpertise' ng-click="selectExpertise()" class="btn btn-white btn-bitbucket btn-m"><i class="fa fa-crosshairs mr5" ></i> expertise</a>
+                                    <a ng-if="isperformance" ng-click="selectPerformance()" class="btn btn-white btn-bitbucket btn-m"><i class="fa fa-tachometer mr5"></i> performance</a>
+                                    <a ng-if="!isperformance" ng-click="selectPerformance()" class="btn btn-default btn-bitbucket btn-m"><i class="fa fa-tachometer mr5"></i> performance</a>
                                 </div>
                             </div>
                         </div>
@@ -125,7 +128,41 @@
                         <div class="ibox">
                            <div class="ibox-content">
                                 <div class="row">
-                                    
+                                     <!-- filter-->
+                <div class="col-md-12 pb10" ng-if="isperformance">
+                    <div class="col-md-9 p0">
+                       <div class="btn-group fleft mr10 mb10">
+                           
+                                <select  class="select2" ng-change="loadPerformancebyMonth()" ng-model="selectedMonth" id="monthlyselect">
+                                    <option value="0">month</option>
+                                    <option value="1">january</option>
+                                    <option value="2">february</option>
+                                    <option value="3">march</option>
+                                    <option value="4">april</option>
+                                    <option value="5">may</option>
+                                    <option value="6">june</option>
+                                    <option value="7">july</option>
+                                    <option value="8">august</option>
+                                    <option value="9">september</option>
+                                    <option value="10">october</option>
+                                    <option value="11">november</option>
+                                    <option value="12">december</option>
+                                </select>
+                           
+                        </div>
+
+                        <div class="btn-group weeks">
+                            <a ng-click="selectWeek(1)" ng-class="{'btn btn-white btn-bitbucket btn-xs':(week1selected),'btn btn-default btn-bitbucket btn-xs':(!week1selected)}"> 1 wk</a>
+                            <a ng-click="selectWeek(2)" ng-class="{'btn btn-white btn-bitbucket btn-xs':(week2selected),'btn btn-default btn-bitbucket btn-xs':(!week2selected)}"> 2 wk</a>
+                            <a ng-click="selectWeek(3)" ng-class="{'btn btn-white btn-bitbucket btn-xs':(week3selected),'btn btn-default btn-bitbucket btn-xs':(!week3selected)}"> 3 wk</a>
+                            <a ng-click="selectWeek(4)" ng-class="{'btn btn-white btn-bitbucket btn-xs':(week4selected),'btn btn-default btn-bitbucket btn-xs':(!week4selected)}"> 4 wk</a>
+                            <a ng-click="selectWeek(5)" ng-class="{'btn btn-white btn-bitbucket btn-xs':(week5selected),'btn btn-default btn-bitbucket btn-xs':(!week5selected)}"> 5 wk</a>
+                        </div>
+                    </div>
+                   
+                    <div style="clear:both;"></div>
+                </div>
+                <!-- end filter-->
                                     <!-- table project list -->
                                     <div class="col-md-12">
                                         <div class="project-list">
@@ -210,8 +247,6 @@
                                                         <td width="300" class="project-table-head aright">Action</td>
                                                     </tr>
 
-
-                                                    <!-- member 1-->
                                                      <tr ng-repeat="member in team">
                                                          <td class="notification-avatar">
                                                             <img alt="image" class="img-circle mr5" src="{{member.photo}}">
@@ -267,6 +302,50 @@
                                                     </tr>
 
                                                  
+                                                                                                        
+                                                    </tbody>
+                                                </table>
+                                                <table class="table table-hover" ng-if="isperformance">
+                                                    <tbody>
+                                                    
+                                                    <tr>
+                                                        <td width="50" class="project-table-head"></td>
+                                                        <td width="600" class="project-table-head">Name</td>
+                                                        <td width="150" class="project-table-head"><i class="fa fa-clone"></i></td>
+                                                        <td width="100" class="project-table-head acenter"><i class="fa fa-calendar"></i></td>
+                                                        <td width="100" class="project-table-head acenter">Mon</td>
+                                                        <td width="100" class="project-table-head acenter">Tue</td>
+                                                        <td width="100" class="project-table-head acenter">Wed</td>
+                                                        <td width="100" class="project-table-head acenter">Thu</td>
+                                                        <td width="100" class="project-table-head acenter">Fri</td>
+                                                        <td width="100" class="project-table-head acenter">Sat</td>
+                                                        <td width="100" class="project-table-head acenter">Sun</td>
+                                                        <td width="100" class="project-table-head acenter"><i class="fa fa-circle-o-notch"></i></td>
+                                                        <td width="80" class="project-table-head acenter"><i class="fa fa-tachometer"></i></td>
+                                                        <td width="150" class="project-table-head aright">Action</td>
+                                                    </tr>
+
+                                                    <!-- member 1-->
+                                                    <tr ng-repeat="member in team track by $index">
+                                                         <td class="notification-avatar">
+                                                            <img alt="image" class="img-circle mr5" src="{{member.photo}}">
+                                                        </td>
+
+                                                        <td class="project-title">
+                                                            <a href="team-admin-profile-fxw.html">{{member.surname}} {{member.name}}</a> 
+                                                            <small>{{member.city}}, {{member.country}}</small>
+                                                        </td>
+                                                        <td class="bold"><i class="fa fa-clone mr5"></i> {{member.projectcount}}</td>
+                                                        <td class="bold member-capacity">{{member.capacity}}</td>
+                                                        <td  ng-repeat="hours in selectedweek[$index].data track by $index" ng-class="{'member-days stage-3': (hours<5),'member-days stage-2': (hours>4 && hours<7),'member-days stage-1': (hours>6)}">{{hours}}</td>
+                                                        
+                                                        <td class="bold member-total">{{selectedweek[$index].total}}</td>
+                                                        <td class="bold member-performance">{{selectedweek[$index].performance}}%</td>  
+                                                        <td class="project-actions">
+                                                            <a ng-click="openProfile(member)" class="btn btn-white btn-sm"><i class="fa fa-search"></i> details</a>
+                                                        </td> 
+                                                    </tr>
+
                                                                                                         
                                                     </tbody>
                                                 </table>
@@ -355,7 +434,6 @@
                                     <select class="select2" ng-model="role" ng-change="hideoptions()" id="roleselect">
                                         <option>Role</option>
                                         <option>keyaccount</option>
-                                        <option>Teamlead</option>
                                         <option>Developer</option>
                                         <option>Tester</option>
                                         <option>Designer</option>

@@ -138,11 +138,11 @@ body.mini-navbar .nav-logo .nav-logo-element {
 }
 
 .mini-navbar-account{
-	display: none !important;
+  display: none !important;
 }
 
 body.mini-navbar .mini-navbar-account{
-	display: block !important;
+  display: block !important;
 }
 
 .mini-navbar .nav-second-level {
@@ -276,7 +276,9 @@ a.fxwlink-dark:hover{
 .ibox-project-id {
   color: #ccc;
 }
-
+.project-date {
+  color: #676a6c;
+}
 .ibox-project-content {
   background-color: #ffffff;
   color: inherit;
@@ -904,7 +906,7 @@ b, strong {
   background-color: #d1dade;
   border-color: #d1dade;
   color: #5e5e5e;
-  color: 
+  color:
 }
 
 /**/
@@ -1005,16 +1007,46 @@ b, strong {
 
 .select-icon-calander{
   float: left;
-  height: 36px;
+  height: 34px;
+  width: 34px;
   margin: 5px -1px 5px 5px;
   padding: 7px;
   color: #aaa;
   border: 1px solid #e7eaec;
   background: #eee;
   text-align: center;
+  -webkit-border-top-left-radius: 3px;
+  -webkit-border-bottom-left-radius: 3px;
+  -moz-border-radius-topleft: 3px;
+  -moz-border-radius-bottomleft: 3px;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+.calander .select-month .select2-container .select2-choice{
+  border-radius: 0px;
+}
+
+.calander .select-year .select2-container .select2-choice {
   -webkit-border-radius: 3px;
+  -webkit-border-top-left-radius: 0px;
+  -webkit-border-bottom-left-radius: 0px;
   -moz-border-radius: 3px;
+  -moz-border-radius-topleft: 0px;
+  -moz-border-radius-bottomleft: 0px;
   border-radius: 3px;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+.calander .select-icon-calander{
+  margin: 0px;
+}
+.calander .select-month {
+  margin: 0 -1px 0 0;
+}
+.calander .select-year{
+  margin: 0px;
 }
 
 .select2-dropdown-open.select2-drop-above .select2-choice, .select2-dropdown-open.select2-drop-above .select2-choices {
@@ -1149,7 +1181,7 @@ b, strong {
   margin-right: 15px;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
-  border-radius: 50%;  
+  border-radius: 50%;
 }
 
 .chat-user a{
@@ -1197,7 +1229,7 @@ a.message-author{
 .message-divider{
   padding: 10px 0;
   margin: 10px 0px;
-} 
+}
 
 .message-line-divider {
   border-top: 1px solid #ddd;
@@ -1300,7 +1332,7 @@ a.message-author{
 }
 
 .login-content h3{
-  font-size: 22px; 
+  font-size: 22px;
   font-weight:400
 }
 
@@ -1384,6 +1416,25 @@ a.message-author{
   font-size: 14px;
   font-weight: bold;
 }
+.project-report-estimation{
+
+}
+.project-report-estimation .hour{
+  font-size: 14px;
+  font-weight: bold;
+}
+.project-report-estimation .fa {
+  font-size: 14px;
+  margin-right: 5px;
+}
+.project-report-realtime .hour{
+  font-size: 14px;
+  font-weight: bold;
+}
+.project-report-realtime .fa {
+  font-size: 14px;
+  margin-right: 5px;
+}
 .project-realtime .hour{
   font-size: 14px;
   font-weight: 700;
@@ -1418,8 +1469,8 @@ a.message-author{
 .project-status .label{
   font-size: 13px;
   line-height: 1.5em;
-  padding: 5px 10px; 
-  vertical-align: middle; 
+  padding: 5px 10px;
+  vertical-align: middle;
   border: 1px solid #d1dade;
 }
 
@@ -1555,7 +1606,7 @@ a.message-author{
 }
 
 .project-details-status-area .project-status small{
-  margin-top: 3px;  
+  margin-top: 3px;
 }
 
 .project-details-status-area .ticket-status-text small{
@@ -1634,7 +1685,7 @@ a.message-author{
 
 .member-skills ul li.label-warning{
   background-color: #f8ac59;
-} 
+}
 
 .valign-top{
   vertical-align: top !important;
@@ -1842,7 +1893,7 @@ tr.new td{
 
 .notification-name{
   width: 110px;
-  font-weight: 600; 
+  font-weight: 600;
   font-size: 12px;
 }
 
@@ -1913,7 +1964,7 @@ tr.new td{
 
 .notification-title{
   width: 250px;
-  font-weight: 600; 
+  font-weight: 600;
   font-size: 12px;
 }
 .notification-title small{
@@ -2148,7 +2199,7 @@ tr.new td{
 
 
 .radio-toolbar input[type="radio"] {
-  display:none; 
+  display:none;
 }
 
 .radio-toolbar label {
@@ -2166,31 +2217,31 @@ tr.new td{
   margin-right: 5px;
 }
 
-.radio-toolbar input.development[type="radio"]:checked + label.development { 
+.radio-toolbar input.development[type="radio"]:checked + label.development {
   background-color: #1ab394;
   border: 1px solid #1ab394;
   color: #fff;
 }
 
-.radio-toolbar input.feature[type="radio"]:checked + label.feature { 
+.radio-toolbar input.feature[type="radio"]:checked + label.feature {
   background-color: #f1c40f;
   border: 1px solid #f1c40f;
   color: #fff;
 }
 
-.radio-toolbar input.bug[type="radio"]:checked + label.bug { 
+.radio-toolbar input.bug[type="radio"]:checked + label.bug {
   background-color: #d9534f;
   border: 1px solid #d9534f;
   color: #fff;
 }
 
-.radio-toolbar input.concept[type="radio"]:checked + label.concept { 
+.radio-toolbar input.concept[type="radio"]:checked + label.concept {
   background-color: #34495e;
   border: 1px solid #34495e;
   color: #fff;
 }
 
-.radio-toolbar input.design[type="radio"]:checked + label.design { 
+.radio-toolbar input.design[type="radio"]:checked + label.design {
   background-color: #9b59b6;
   border: 1px solid #9b59b6;
   color: #fff;
@@ -2213,7 +2264,7 @@ tr.new td{
 }
 
 .header-ticket-types{
-  margin: -20px -20px 0px -20px;  
+  margin: -20px -20px 0px -20px;
 }
 
 .modal-footer .btn-white{
@@ -2223,7 +2274,7 @@ tr.new td{
   font-weight: 500;
   text-transform: lowercase;
 }
-.modal-footer .btn-white:hover, 
+.modal-footer .btn-white:hover,
 .modal-footer .btn-white:focus{
   background-color: #aaa;
   border: 1px solid #aaa;
@@ -2362,9 +2413,9 @@ li.key-account a{
 }
 
 .navi-project-name{
-  font-size: 11px; 
-  color: #888; 
-  line-height: 1em; 
+  font-size: 11px;
+  color: #888;
+  line-height: 1em;
   display: block;
 }
 
@@ -2507,6 +2558,46 @@ li.key-account a{
   color: #999;
 }
 
+.report-list .table-head{
+  background-color: #ecfff8;
+  color: #333;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.report-list .table-hover > tbody > tr:hover{
+  background-color: #fcfcfc !important;
+}
+
+.report-list .table-head.realt-time{
+  text-align: right;
+}
+.report-list .table-head.realt-time .fa{
+  margin-right: 5px;
+}
+.report-list .table-info{
+  background-color: #fcfcfc;
+  color: #aaa;
+}
+.report-table{
+  margin-bottom: 10px;
+}
+.report-list .table-info.estimation {
+  text-align: right;
+}
+
+.report-list .table-info.real-time {
+  text-align: right;
+}
+
+.report-list .estimation{
+  text-align: right;
+}
+
+.report-list .real-time{
+  text-align: right;
+}
+
 /* MOBILE */
 @media (max-width: 350px) {
   .nav.navbar-top-links li.dropdown {
@@ -2533,5 +2624,3 @@ li.key-account a{
     display: inherit;
   }
 }
-
-

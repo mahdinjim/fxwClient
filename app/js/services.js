@@ -100,6 +100,9 @@ services.factory("Links",[function(){
 	var updateRealtimeLink=baseUrl+path+"/private/project/task/realtime/update";
 	var deleteRealTimeLink=baseUrl+path+"/private/project/task/realtime/delete";
 	var getRealtimesLink=baseUrl+path+"/private/project/task/realtime/all";
+	var teamPerformanceLink=baseUrl+path+"/private/team/performance";
+	var ticketReportByMonthLink=baseUrl+path+"/private/project/restricted/report/ticket";
+	var dateReportByMonthLink=baseUrl+path+"/private/project/restricted/report/date";
 	this.getLoginLink=function()
 	{
 		return LoginLink;
@@ -454,13 +457,25 @@ services.factory("Links",[function(){
 	{
 		return getRealtimesLink;
 	}
+	this.getTeamPerformanceLink=function()
+	{
+		return teamPerformanceLink;
+	}
+	this.getTicketReportByMonthLink=function()
+	{
+		return ticketReportByMonthLink;
+	}
+	this.getDateReportByMonthLink=function()
+	{
+		return dateReportByMonthLink;
+	}
 	return this;
 }]);
 services.factory("Login",['$http','$location','$cookies',"$route","Links",
 	function($http,$location,$cookies,$route,Links){
 		var lastlink=null;
-		var Admin_Access=["/login","/dashboard","/client","/teamprofile","/team","/messaging","/pdetails","/keybox","/stories","/clientprojects"];
-		var Client_Access=["/login","/dashboard","/cuser","/cuserprofile","/messaging","/pdetails","/keybox","/stories","/acceptcontract"];
+		var Admin_Access=["/login","/dashboard","/client","/teamprofile","/team","/messaging","/pdetails","/keybox","/stories","/clientprojects","/report"];
+		var Client_Access=["/login","/dashboard","/cuser","/cuserprofile","/messaging","/pdetails","/keybox","/stories","/acceptcontract","/report"];
 		var KeyAccount_Access=["/login","/dashboard","/pdetails","/messaging","/client","/keybox","/stories"];
 		var TeamLeader_Access=["/login","/dashboard","/pdetails","/messaging","/keybox","/stories"];
 		var TeamMember_Access=["/login","/dashboard","/pdetails","/messaging","/keybox","/stories"];
@@ -712,6 +727,23 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",func
         			else{
         				funcfailure();
         			}
+        	
+	            });
+	        }
+		}
+		this.getTeamPerformanceByMonth=function(funcsuccess,funcfailure,month)
+		{
+			if(Login.getLoggedUser())
+			{
+				$http({
+					method:"GET", 
+					url:Links.getTeamPerformanceLink()+"/"+month,
+					headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+				}).success(function (data, status, headers, config) {
+	                funcsuccess(data);
+	            }).error(function (data, status, headers, config) {
+	            	if(status==403)
+        				Login.logout();
         	
 	            });
 	        }
@@ -1421,6 +1453,47 @@ services.factory('Project',["$http","Login",'Links',function($http,Login,Links){
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 			}).success(function (data, status, headers, config) {
 				successFunc();
+				
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failureFunc();
+            });
+			
+		}
+	}
+	
+	this.getTicketReportbyMonth=function(successFunc,failureFunc,month,year,project_id)
+	{
+		if(Login.getLoggedUser())
+		{
+			$http({
+				method:"GET", 
+				url:Links.getTicketReportByMonthLink()+"/"+month+"/"+year+"/"+project_id,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+				successFunc(data);
+				
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failureFunc();
+            });
+			
+		}
+	}
+	this.getDateReportbyMonth=function(successFunc,failureFunc,month,year,project_id)
+	{
+		if(Login.getLoggedUser())
+		{
+			$http({
+				method:"GET", 
+				url:Links.getDateReportByMonthLink()+"/"+month+"/"+year+"/"+project_id,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+				successFunc(data);
 				
             }).error(function (data, status, headers, config) {
             	if(status==403)
