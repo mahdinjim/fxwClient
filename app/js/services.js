@@ -1055,7 +1055,7 @@ services.factory('Client', ['$http','Login',"Links",function ($http,Login,Links)
 
 				$http({
 					method:"delete", 
-					url:Links.deleteCuserLink()+"/"+client.id,
+					url:Links.getDeleteClientLink()+"/"+client.id,
 					headers: {'Content-Type': 'application/json','x-crm-access-token': Login.getLoggedUser().token.token}
 				}).success(function (data, status, headers, config) {
 					successFunc();

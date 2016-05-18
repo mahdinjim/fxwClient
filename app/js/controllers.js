@@ -454,22 +454,24 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 	};
 	$scope.loadPerformancebyMonth=function()
 	{
-		month=$scope.selectedMonth;
-		var sucessFunc=function(data)
-		{
-			createWeekPerformance(data);
-			$scope.selectedweek=$scope.week1;
-			$scope.week1selected=true;
-			$scope.week2selected=false;
-			$scope.week3selected=false;
-			$scope.week4selected=false;
-			$scope.week5selected=false;
+		month=$( "#monthlyselect" ).val();
+		if(month!=0){
+			var sucessFunc=function(data)
+			{
+				createWeekPerformance(data);
+				$scope.selectedweek=$scope.week1;
+				$scope.week1selected=true;
+				$scope.week2selected=false;
+				$scope.week3selected=false;
+				$scope.week4selected=false;
+				$scope.week5selected=false;
+			}
+			var failureFunc=function()
+			{
+				swal("Can't laod performance","Oopps! something bad happen can't load team performance","error");
+			}
+			Team.getTeamPerformanceByMonth(sucessFunc,failureFunc,month);
 		}
-		var failureFunc=function()
-		{
-			swal("Can't laod performance","Oopps! something bad happen can't load team performance","error");
-		}
-		Team.getTeamPerformanceByMonth(sucessFunc,failureFunc,month);
 	}
 	Team.getAllteamMembers(successfunc);
 	$scope.send=false;
@@ -1150,11 +1152,12 @@ Controllers.controller('CuserCtrl',['$scope','Login','Cuser','$location','Params
 	}
 	var updateView=function()
 	{
+		Client_id=Login.getLoggedUser().userinfo.id;
 		var successfunc=function(cusers)
 		{
 			$scope.cusers=cusers;
 		}
-		Cuser.getAllUsers(successfunc,null,1);
+		Cuser.getAllUsers(successfunc,null,Client_id);
 	}
 	updateView();
 	$scope.openmemberForm=function(member)
@@ -1189,7 +1192,7 @@ Controllers.controller('CuserCtrl',['$scope','Login','Cuser','$location','Params
 		$scope.phonecode=undefined;
 		$scope.phonenumber=undefined;
 		$scope.title=undefined;
-		$("#phonecodeselect").select2("val","+49");
+		$("#phonecodeselect").select2("data",{id:1,text:"+49"});
 		$scope.issent=false;
 		
 	}
@@ -1499,10 +1502,15 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		{
 			$scope.hasteam=true;
 		}
-		if(data.teamLeader.id==Login.getLoggedUser().userinfo.id)
-		{
-			$scope.isTeamLeader=true;
-		}
+		if(data.teamLeader)
+			if(data.teamLeader.id==Login.getLoggedUser().userinfo.id)
+			{
+				$scope.isTeamLeader=true;
+			}
+			else
+			$scope.isTeamLeader=false;	
+		else
+			$scope.isTeamLeader=false;
 	}
 	$scope.acceptContract=function()
 	{
@@ -3265,8 +3273,9 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 	{
 		$scope.isAdmin=true;
 	}
-	else if(Login.getLoggedUser().userinfo.id==project.teamLeader.id)
+	else if(project.teamLeader && Login.getLoggedUser().userinfo.id==project.teamLeader.id)
 	{
+
 		$scope.isTeamLeader=true;
 	}
 	else if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER"|| Login.getLoggedUser().userinfo.roles[0]=="ROLE_KEYACCOUNT"){
@@ -3304,7 +3313,7 @@ Controllers.controller('ContractCtrl', ['$scope',"Login","$routeParams","$locati
 	{
 		var sucessFunc=function()
 		{
-			swal("Congratulation","Welcome to flexwork please login again","info");
+			swal("Congratulation","Welcome to flexwork please login again to start using flexwork tool","info");
 		}
 		var failureFunc=function()
 		{
@@ -3805,6 +3814,7 @@ Controllers.controller('ReportCtrl',['$scope','$routeParams','Project',function(
 	var d = new Date();
 	$scope.month=d.getMonth()+1;
 	$scope.year=d.getFullYear();
+	$scope.project_name=$routeParams.pname;
 
 	$scope.changeView=function(number){
 		if(number==0)
