@@ -340,7 +340,7 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 			found=false;
 			for(j=0;j<week.days.length;j++)
 			{
-				if(week.days[j].dayofweek==h)
+				if((week.days[j].dayofweek-1)==h)
 				{
 					weekdata[h]=week.days[j].totalhours;
 					found=true;
@@ -1506,6 +1506,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 			if(data.teamLeader.id==Login.getLoggedUser().userinfo.id)
 			{
 				$scope.isTeamLeader=true;
+				$scope.isMember=false;
 			}
 			else
 			$scope.isTeamLeader=false;	

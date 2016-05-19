@@ -309,6 +309,12 @@
                                                              <td class="project-realtime" ng-if="isclient && story.realtime==null">
                                                                
                                                             </td>
+                                                            <td class="project-realtime" ng-if="!isclient  && ticket_status==ticketStatus.Goproduction.status">
+                                                               
+                                                            </td>
+                                                            <td class="project-realtime" ng-if="!isclient && ticket_status==ticketStatus.Waiting.status">
+                                                              
+                                                            </td>
                                                             <td class="project-realtime" ng-if="!isclient && story.realtime==null && ticket_status==ticketStatus.Production.status && !story.isstarted ">
                                                                
                                                             </td>
@@ -325,7 +331,7 @@
                                                                 <span class="hour">{{story.realtime}} h</span>
                                                                 
                                                             </td>
-                                                            <td class="project-realtime" ng-if="!isclient && story.finished && story.realtime==null &&(ticket_status==ticketStatus.Production.status || ticket_status==ticketStatus.Testing.status)">
+                                                            <td class="project-realtime" ng-if="!isclient && story.finished && story.realtime==null &&ticket_status==ticketStatus.Testing.status">
                                                                  <i class="fa fa-clock-o"></i> 
                                                                 <span class="hour">{{story.workedhours}} h</span>
                                                                 <a  ng-click="openAddRealtime(null,story)"><small>+ add</small></a>
