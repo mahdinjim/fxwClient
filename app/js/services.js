@@ -648,8 +648,7 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 			return d.getTime() - (offset * 60000);
 		}
 		return this;
-
-	}]);
+}]);
 
 services.factory("Team",['$http','$location','$cookieStore',"Login","Links",function($http,$location,$cookieStore,Login,Links){
 		this.roles=null;
@@ -880,7 +879,7 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",func
 			}
 		}
 		return this;
-	}]);
+}]);
 // services.factory('Chat', ["$http","$location","$cookieStore",function ($http,$location,$cookieStore) {
 // 	this.loginToChat=function(code,chatstate){
 
@@ -1158,7 +1157,7 @@ services.factory("Cuser",["$http",'Login','Links',function($http,Login,Links){
 			}
 		}
 		return this;
-}])
+}]);
 services.factory('Params',function(){
 	var teamMember=null;
 	var cuser=null;
@@ -1205,7 +1204,7 @@ services.factory('Params',function(){
 			return ticket;
 		}
 	}
-})
+});
 services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
 	this.team=null;
 	this.first=null;

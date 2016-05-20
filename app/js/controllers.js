@@ -45,7 +45,7 @@ Controllers.controller('LoginCtrl',['$scope','Login','$location',
 				$scope.errors="Please enter a login and password";
 			
 		}
-	}]);
+}]);
 Controllers.controller("MenuNavCtrl",['$scope','Login',function ($scope,Login){
 	if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER"){
 		$scope.isclient=true;
@@ -239,7 +239,7 @@ Controllers.controller("SideBarCtrl",['$scope','Login','Chat','Client','Project'
 		}
 		
 	}
-	]);
+]);
 Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', function ($scope,Team,Params,$location) {
     
 
@@ -856,7 +856,7 @@ Controllers.controller('TeamProfilCtrl', ['$scope','Params', function ($scope,Pa
 	{
 		parent.location='mailto:'+member.email;
 	}
-	}])
+}]);
 
 Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scope,Client,Login) {
 	$scope.isSent=false;
@@ -1327,7 +1327,7 @@ Controllers.controller('SettingsCtrl', ['$scope','Chat', function ($scope,Chat) 
 
 	
 	
-}])
+}]);
 Controllers.controller("ChatCtrl",["$scope","$rootScope","Chat","$routeParams","Login","$location",function($scope,$rootScope,Chat,$routeParams,Login,$location){
 	$scope.loadingteam=true;
 	$scope.loadingmessages=true;
