@@ -63,10 +63,35 @@ Controllers.controller("MenuNavCtrl",['$scope','Login',function ($scope,Login){
 	}
 	
 }]);
-Controllers.controller("SideBarCtrl",['$scope','Login','Chat','Client','Project',
-	function SideBarCtrl($scope,Login,Chat,Client,Project)
+Controllers.controller("SideBarCtrl",['$scope','Login','Chat','Client','Project','$location',
+	function SideBarCtrl($scope,Login,Chat,Client,Project,$location)
 	{
+		if($location.path()=="/pdetails")
+		{
+			$scope.projectactive=true;
+		}
+		if($location.path()=="/messaging")
+		{
+			$scope.messageactive=true;
+		}
+		if($location.path()=="/team")
+		{
+			$scope.teamactive=true;
+		}
+		if($location.path()=="/client")
+		{
+			$scope.clientactive=true;
+		}
+		if($location.path()=="/cuser")
+		{
+			$scope.cuseractive=true;
+		}
+		if($location.path()=="/report")
+		{
+			$scope.reportactive=true;
+		}
 		$scope.canAdd=false;
+
 		$scope.isclient=false;
 		if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER"){
 			$scope.isclient=true;
@@ -1434,7 +1459,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	$scope.isAdmin=false;
 	$scope.isTeamLeader=false;
 	$scope.isMember=false;
-	
+	$(".select2").select2();
 	$scope.hasteam=true;
 	$scope.ticketStatus=Ticket.ticketstatus;
 	var channel_id=null;

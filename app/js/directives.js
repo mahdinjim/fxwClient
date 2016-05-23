@@ -32,3 +32,12 @@ directives.directive('myEnter', function () {
         });
     };
 });
+directives.directive("activateTab",function(){
+  return function(scope,element,attrs){
+    var selected=element;
+    element.bind("click",function(event){
+      
+      selected.addClass("active");
+    });
+  }
+});
