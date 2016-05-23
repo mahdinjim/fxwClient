@@ -716,8 +716,10 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",func
 				}).success(function (data, status, headers, config) {
 					for(i=0;i<data.length;i++)
 					{
-						if(data[i].photo==null)
-							data[i].photo="img/users/profile_default_small.jpg"
+						if(data[i].photo==null){
+							data[i].photo="img/users/profile_default_small.jpg";
+							data[i].bigphoto="img/users/profile_default_small.jpg";
+						}
 					}
 	                funcsuccess(data);
 	            }).error(function (data, status, headers, config) {
@@ -1106,8 +1108,10 @@ services.factory("Cuser",["$http",'Login','Links',function($http,Login,Links){
 					}).success(function (data, status, headers, config) {
 						for(i=0;i<data.users.length;i++)
 						{
-							if(data.users[i].photo==null)
-								data.users[i].photo="img/users/profile_default_small.jpg"
+							if(data.users[i].photo==null){
+								data.users[i].photo="img/users/profile_default_small.jpg";
+								data.users[i].bigphoto="img/users/profile_default_small.jpg";
+							}
 						}
 		                successFunc(data.users);
 		            }).error(function (data, status, headers, config) {

@@ -57,6 +57,10 @@ Controllers.controller("MenuNavCtrl",['$scope','Login',function ($scope,Login){
 	$scope.logout=function(){
 		Login.logout(false);
 	}
+	$scope.menuCollapse=function()
+	{
+		$("body").toggleClass("mini-navbar");
+	}
 	
 }]);
 Controllers.controller("SideBarCtrl",['$scope','Login','Chat','Client','Project',
@@ -96,6 +100,10 @@ Controllers.controller("SideBarCtrl",['$scope','Login','Chat','Client','Project'
 				Chat.getNewMessagesNumber($scope.channels[i],successfunc,i,end);
 
 			}
+		}
+		$scope.openclosetab=function(id)
+		{
+			$('#'+id).toggleClass("in");
 		}
 		var getprojects=function()
 		{
@@ -821,6 +829,7 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 	{
 		$("#change-picture").modal("show");
 		$scope.oldmember=member;
+		$scope.defaultimage=member.bigphoto;
 
 	}
 	
@@ -1314,6 +1323,7 @@ Controllers.controller('CuserCtrl',['$scope','Login','Cuser','$location','Params
 	{
 		$("#change-picture").modal("show");
 		$scope.olduser=user;
+		$scope.defaultimage=user.bigphoto;
 
 	}
 	$scope.openProfile=function(user)

@@ -1,6 +1,7 @@
  <script>
         $('select').select2();
     </script>
+     <script src="lib/bootstrap.min.js"></script>
 <div ng-controller="SideBarCtrl">
     <nav class="navbar-default navbar-static-side" role="navigation">
     <div class="sidebar-collapse">
@@ -17,7 +18,7 @@
                         <li class="nav-logo">
                             <div class="logo-element">
                                 <a href="#/dashboard">
-                                    <img src="img/logo-small-flexwork@2.png" width="60" height="14" alt="fxw.io" title="fxw.io"/>
+                                    <img src="img/logo-small-flexwork@2.png" width="45" height="40" alt="fxw.io" title="fxw.io"/>
                                 </a>
                             </div>
                         </li>
@@ -54,9 +55,9 @@
                     </li>
                     <!--End-->
                 
-                    <li ng-if="doDisplay('/dashboard')">
-                        <a href="#/dashboard"><i class="fa fa-clone"></i> <span class="nav-label">Projects</span> <span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level collapse in">
+                    <li ng-if="doDisplay('/dashboard')" ng-click="openclosetab('projecttab')">
+                        <a><i class="fa fa-clone"></i> <span class="nav-label">Projects</span> <span class="fa arrow"></span></a>
+                        <ul id="projecttab" class="nav nav-second-level collapse" >
                             <li ng-repeat='project in projects'>
                                 <a href="#/pdetails?project_id={{project.id}}" ng-if="isclient"><span class="nav-label">{{project.name}}</a>
                                 <a href="#/pdetails?project_id={{project.id}}" ng-if="!isclient">{{project.company}}
@@ -67,10 +68,10 @@
                         </ul>
                     </li>
 
-                    <li ng-if="doDisplay('/messaging')">
+                    <li ng-if="doDisplay('/messaging')" ng-click="openclosetab('messagetab')">
                         <a ><i class="fa fa-comments"></i> <span class="nav-label">Messages</span> <span class="label label-danger pull-right">{{totalmessages}}</span></span></a>
-                        <ul class="nav nav-second-level collapse in" ng-repeat='channel in channels'>
-                            <li><a href="#/messaging?channel_id={{channel.id}}&project_id={{channel.project_id}}"><span class="nav-label">{{channel.name}}</span> <span class="label label-default pull-right">{{channel.newmessages}}</span></a></li>
+                        <ul id="messagetab" class="nav nav-second-level collapse">
+                            <li  ng-repeat='channel in channels'><a href="#/messaging?channel_id={{channel.id}}&project_id={{channel.project_id}}"><span class="nav-label">{{channel.name}}</span> <span class="label label-default pull-right">{{channel.newmessages}}</span></a></li>
                         </ul> 
                     </li>
 
@@ -86,9 +87,9 @@
                         <a href="#/cuser"><i class="fa fa-users"></i> <span class="nav-label">User</span></a>
                     </li>
 
-                    <li ng-if="doDisplay('/report')">
+                    <li ng-if="doDisplay('/report')" ng-click="openclosetab('reportab')">
                         <a><i class="fa fa-check-square"></i> <span class="nav-label">Report</span></a>
-                        <ul class="nav nav-second-level collapse in">
+                        <ul id="reportab" class="nav nav-second-level collapse">
                             <li ng-repeat='project in projects'>
                                 <a href="#/report?project_id={{project.id}}&pname={{project.name}}" ng-if="isclient"><span class="nav-label">{{project.name}}</a>
                                 <a href="#/report?project_id={{project.id}}" ng-if="!isclient">{{project.company}}
