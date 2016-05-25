@@ -70,8 +70,8 @@
                                 <a class="btn btn-default btn-bitbucket btn-m mr5" ng-click="backToProject()"><i class="fa fa-angle-left mr5"></i> back to project</a>
                                 <a class="btn btn-default btn-bitbucket btn-m mr5"ng-click="openKeybox()"><i class="fa fa-lock mr5"></i> keybox</button>
                                 <a ng-if="!isclient" class="btn btn-default btn-bitbucket btn-m mr5" href="https://fxw.slack.com/" target="_blank"><i class="fa fa-slack mr5" ng-if="!isclient"></i> slack</a>
-                                <a ng-if="!isclient" class="btn btn-default btn-bitbucket btn-m mr5" href="https://www.pivotaltracker.com/n/projects/928534" target="_blank"><i class="fa fa-circle-o mr5" ng-if="!isclient"></i> pivotal</a>
-                                <a ng-if="!isclient" class="btn btn-default btn-bitbucket btn-m mr5" href="https://github.com/mahdinjim/crmtool/commits/master" target="_blank"><i class="fa fa-github mr5" ></i> github</a>
+                                <a ng-if="!isclient" class="btn btn-default btn-bitbucket btn-m mr5" href="https://www.pivotaltracker.com/" target="_blank"><i class="fa fa-circle-o mr5" ng-if="!isclient"></i> pivotal</a>
+                                <a ng-if="!isclient" class="btn btn-default btn-bitbucket btn-m mr5" href="https://github.com" target="_blank"><i class="fa fa-github mr5" ></i> github</a>
                             </div>
                             <div class="col-md-6">
                                 <div class="project-people">
@@ -300,6 +300,7 @@
                                                                 <i class="fa fa-clock-o"></i> 
                                                                 <span class="hour">{{story.estimation}} h</span>
                                                              </td>
+
                                                             <td class="project-realtime" ng-if="isclient && story.realtime!=null && ticket_status!=ticketStatus.Production.status">
                                                                 <i class="fa fa-clock-o"></i> 
                                                                 <span class="hour">{{story.realtime}} h</span>
@@ -307,6 +308,9 @@
                                                             <td class="project-realtime" ng-if="isclient && story.realtime!=null && ticket_status==ticketStatus.Production.status">
                                                             </td>
                                                              <td class="project-realtime" ng-if="isclient && story.realtime==null">
+                                                               
+                                                            </td>
+                                                             <td class="project-realtime" ng-if="!isclient  && ticket_status==ticketStatus.Estimation.status">
                                                                
                                                             </td>
                                                             <td class="project-realtime" ng-if="!isclient  && ticket_status==ticketStatus.Goproduction.status">

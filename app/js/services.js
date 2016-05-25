@@ -1,6 +1,6 @@
 var services = angular.module('Services',['ngResource','ngCookies']);
 services.factory("Links",[function(){
-	var env="dev";
+	var env="prod";
 	if(env=="dev")
 	{
 		var baseUrl="http://localhost";
@@ -58,7 +58,7 @@ services.factory("Links",[function(){
 	var listprojectLink=baseUrl+path+"/private/project/list";
 	var projectDetailLink=baseUrl+path+"/private/project/details";
 	var isexpiredLink=baseUrl+path+"/private/token/expired";
-	var assignTeamLeaderLink=baseUrl+path+"/private/super/project/teamleader/assign";
+	var assignTeamLeaderLink=baseUrl+path+"/private/project/teamleader/assign";
 	var addDeveloperLink=baseUrl+path+"/private/teamleader/project/developer/add";
 	var addDesignerLink=baseUrl+path+"/private/teamleader/project/designer/add";
 	var addTesterLink=baseUrl+path+"/private/teamleader/project/tester/add";
