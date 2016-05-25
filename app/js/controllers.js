@@ -48,7 +48,7 @@ Controllers.controller('LoginCtrl',['$scope','Login','$location',
 }]);
 Controllers.controller("MenuNavCtrl",['$scope','Login',function ($scope,Login){
 	if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER"){
-		$scope.isclient=true;
+		$scope.showcontact=true;
 		if(Login.getLoggedUser().userinfo.keyaccount.photo==null)
 			Login.getLoggedUser().userinfo.keyaccount.photo="img/users/profile_default_small.jpg";
 		$scope.keyaccount=Login.getLoggedUser().userinfo.keyaccount;
