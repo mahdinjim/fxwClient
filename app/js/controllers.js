@@ -1496,7 +1496,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	else{
 		$scope.isMember=true;
 	}
-	$scope.username=Login.getLoggedUser().userinfo.surname+ " "+Login.getLoggedUser().userinfo.name;
+	$scope.username=Login.getLoggedUser().userinfo.name+ " "+Login.getLoggedUser().userinfo.surname;
 	var ticketupdater=null;
 	var succesFunc=function(data)
 	{
@@ -3319,7 +3319,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 	{
 		$scope.isAdmin=true;
 	}
-	else if(data.teamLeader.id==Login.getLoggedUser().userinfo.id && Login.getLoggedUser().userinfo.email==data.teamLeader.email)
+	else if(project.teamLeader.id==Login.getLoggedUser().userinfo.id && Login.getLoggedUser().userinfo.email==project.teamLeader.email)
 	{
 
 		$scope.isTeamLeader=true;
