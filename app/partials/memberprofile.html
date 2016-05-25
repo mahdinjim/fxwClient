@@ -93,7 +93,7 @@
                             Team
                         </li>
                         <li>
-                            {{surname}} {{name}}
+                            {{name}} {{surname}}
                         </li>
                     </ol>
                 </div>
@@ -115,7 +115,7 @@
                                 <span class="ibox-users-picture">
                                     <img width="48" heigth="48" class="img-circle" src="{{photo}}" alt="Picture">
                                 </span>
-                                <h5>{{surname}} {{name}}</h5>
+                                <h5>{{name}} {{surname}}</h5>
                                 <span class="ibox-users-job-title">{{title}}</span>
                                 <span class="ibox-users-location">{{city}}, {{country}}</span>
                             </div>
@@ -376,8 +376,8 @@
                         <div class="col-md-6">
                             <h4>Contact</h4>
                             <div class="form-group">
-                                <input type="text" class="form-control login-first-name" placeholder="First Name" required="" ng-model="surname">
-                                <input type="text" class="form-control login-last-name" placeholder="Last Name" required="" ng-model="name">
+                                <input type="text" class="form-control login-first-name" placeholder="First Name" required="" ng-model="name">
+                                <input type="text" class="form-control login-last-name" placeholder="Last Name" required="" ng-model="surname">
                                 <div class="clear-both"></div>
                             </div>
                             <div class="form-group">

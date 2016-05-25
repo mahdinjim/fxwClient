@@ -156,7 +156,7 @@ Controllers.controller("SideBarCtrl",['$scope','Login','Chat','Client','Project'
 		if(userinf.compnay_name!=undefined)
 			$scope.company=userinf.compnay_name;
 		else
-			$scope.company="adnatives/Disycs";
+			$scope.company="flexwork";
 		$scope.title=userinf.title;
 		$scope.logout=function(){
 			Login.logout();
@@ -699,7 +699,7 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 		$scope.name=undefined;
 		$scope.surname=undefined;
 		$scope.capacity=undefined;
-		$scope.phonecode=undefined;
+		$scope.phonecode="+49";
 		$scope.phonenumber=undefined;
 		$scope.title=undefined;
 		$scope.city=undefined;
@@ -1010,7 +1010,7 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 		$scope.name=undefined;
 		$scope.surname=undefined;
 		$scope.vat=undefined;
-		$scope.phonecode=undefined;
+		$scope.phonecode="+49";
 		$scope.phonenumber=undefined;
 		$scope.address=undefined;
 		$scope.city=undefined;
@@ -1223,7 +1223,7 @@ Controllers.controller('CuserCtrl',['$scope','Login','Cuser','$location','Params
 		$scope.password=undefined;
 		$scope.name=undefined;
 		$scope.surname=undefined;
-		$scope.phonecode=undefined;
+		$scope.phonecode="+49";
 		$scope.phonenumber=undefined;
 		$scope.title=undefined;
 		$("#phonecodeselect").select2("data",{id:1,text:"+49"});
@@ -1538,7 +1538,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 			$scope.hasteam=true;
 		}
 		if(data.teamLeader)
-			if(data.teamLeader.id==Login.getLoggedUser().userinfo.id)
+			if(data.teamLeader.id==Login.getLoggedUser().userinfo.id && Login.getLoggedUser().userinfo.email==data.teamLeader.email)
 			{
 				$scope.isTeamLeader=true;
 				$scope.isMember=false;
@@ -1586,7 +1586,10 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		newSysMember=[];
 		newDesignerMembers=[];
 		newTesterMembers=[];
-		oldmembers=$scope.team.slice();
+		if($scope.team===undefined)
+			oldmembers=new Array();
+		else
+			oldmembers=$scope.team.slice();
 		oldteamlead=getOldTeamLeader();
 		var successFunc=function(data)
 		{
@@ -1599,7 +1602,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 				var selectdata={"id":-1,text:"Search Member "};
 				$("#selectdevmember").select2("data",selectdata);
 				$scope.addedmember=null;
-				$scope.devteam=data;
+				$scope.devteammembers=data;
 			}
 		}
 		var failureFunc=function()
@@ -2481,6 +2484,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 }]);
 Controllers.controller('KeyboxCtrl', ['$scope','KeyBox',"$routeParams","Login","$location", function ($scope,KeyBox,$routeParams,Login,$location) {
 	var project_id=$routeParams.project_id;
+	$scope.isadding=false;
 	if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER"|| Login.getLoggedUser().userinfo.roles[0]=="ROLE_KEYACCOUNT"){
 		$scope.isclient=true;
 	}
@@ -2495,6 +2499,7 @@ Controllers.controller('KeyboxCtrl', ['$scope','KeyBox',"$routeParams","Login","
 		var successFunc=function(data)
 		{
 			$scope.configs=data;
+			$scope.isadding=false;
 		}
 		KeyBox.getProjectConfigs(project_id,successFunc);
 	}
@@ -2508,6 +2513,11 @@ Controllers.controller('KeyboxCtrl', ['$scope','KeyBox',"$routeParams","Login","
 			"config":""
 		}
 		$scope.configs.unshift(conf);
+		$scope.isadding=true;
+	}
+	$scope.editkeybox=function()
+	{
+		$scope.isadding=true;
 	}
 	$scope.deleteKeubox=function(conf)
 	{
@@ -3309,7 +3319,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 	{
 		$scope.isAdmin=true;
 	}
-	else if(project.teamLeader && Login.getLoggedUser().userinfo.id==project.teamLeader.id)
+	else if(data.teamLeader.id==Login.getLoggedUser().userinfo.id && Login.getLoggedUser().userinfo.email==data.teamLeader.email)
 	{
 
 		$scope.isTeamLeader=true;

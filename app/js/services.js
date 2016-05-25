@@ -6,9 +6,14 @@ services.factory("Links",[function(){
 		var baseUrl="http://localhost";
 		var path="/crmtool/web/app_dev.php/api";
 	}
-	else
+	else if(env=="staging")
 	{
 		var baseUrl="http://www.dev.fxw.io";
+		var path="/backend/web/api";
+	}
+	else if(env=="prod")
+	{
+		var baseUrl="http://app.fxw.io";
 		var path="/backend/web/api";
 	}
 	var LoginLink=baseUrl+path+'/public/login';
