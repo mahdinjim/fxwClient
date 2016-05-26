@@ -1,6 +1,6 @@
 var services = angular.module('Services',['ngResource','ngCookies']);
 services.factory("Links",[function(){
-	var env="dev";
+	var env="prod";
 	if(env=="dev")
 	{
 		var baseUrl="http://localhost";
