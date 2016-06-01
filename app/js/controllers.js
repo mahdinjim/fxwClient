@@ -357,7 +357,7 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
     		$scope.week5selected=false;
     	}
     	if(week==5){
-    		$scope.selectedweek=$scope.week4;
+    		$scope.selectedweek=$scope.week5;
     		$scope.week1selected=false;
     		$scope.week2selected=false;
     		$scope.week3selected=false;
