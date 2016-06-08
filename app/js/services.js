@@ -1,21 +1,7 @@
 var services = angular.module('Services',['ngResource','ngCookies']);
 services.factory("Links",[function(){
-	var env="dev";
-	if(env=="dev")
-	{
-		var baseUrl="http://localhost";
-		var path="/crmtool/web/app_dev.php/api";
-	}
-	else if(env=="staging")
-	{
-		var baseUrl="http://www.dev.fxw.io";
-		var path="/backend/web/api";
-	}
-	else if(env=="prod")
-	{
-		var baseUrl="http://app.fxw.io";
-		var path="/backend/web/api";
-	}
+	var baseUrl=globalSeetings.baseUrl;
+	var path=globalSeetings.path;
 	var LoginLink=baseUrl+path+'/public/login';
 	var AllteamMembersLink=baseUrl+path+'/private/team/all';
 	var AllDevteamMembersLink=baseUrl+path+'/private/devteam/all';
