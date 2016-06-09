@@ -29,7 +29,7 @@ except (IOError):
 	exit()
 #create javascript config file
 if target=="production":
-	settings='var globalSeetings={\nbaseUrl:'+data[target]['baseUrl']+',\npath:'+data[target]['path']+'\n}'
+	settings="var globalSeetings={\nbaseUrl:'"+data[target]['baseUrl']+"',\npath:'"+data[target]['path']+"'\n}"
 print settings
 #first step connect to ssh make sure you have a public/private key configured
 try:
@@ -43,7 +43,16 @@ try:
 	    s.prompt()
 	    s.sendline('echo "'+settings+'" | sudo tee js/settings.js')
 	    s.prompt()
+	    #get the new code from git branch for this version we assume that you are either using ssh key or already stored your creds in server
+	    s.sendline("git pull origin "+data[target]['git_branch'])
+	    s.prompt()
+	    #we run grunt to create production folder
+	    s.sendline("grunt")
+	    s.prompt()
+	    #we copy file to production
+	    s.sendline("cp -rf production/* /var/www")
 	    print s.before
+	    #production ready
 	    s.logout()
 except pxssh.ExceptionPxssh, e:
     print "pxssh failed on login."
