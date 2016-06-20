@@ -74,7 +74,6 @@
     $('#datepicker').datepicker({
     format: "dd/mm/yyyy"
     });
-    jQuery('.select2').select2();
   </script>
   <div id="wrapper">
        <div side-bar>
@@ -485,7 +484,7 @@
                         <div class="col-md-12">
                             <h4>Language</h4>
                             <div class="form-group m-0">
-                                <select data-placeholder="Select Language" class="chosen-select" multiple style="width:100%;" tabindex="2" ng-model="language" id="luanguageselect">
+                                <select data-placeholder="Select Language" class="select2 chosen-select" multiple style="width:100%;" tabindex="2" ng-model="language" id="luanguageselect">
                                     <option value="English">English</option>
                                     <option value="German">German</option>
                                     <option value="Turkish">Turkish</option>
@@ -500,7 +499,7 @@
                             <div class="hr-line-solid"></div>
                             <h4>Skills</h4>
                             <div class="form-group m-0">
-                                <select data-placeholder="Select Skills" class="chosen-select" multiple style="width:100%;" tabindex="2" ng-model="skills" id="skillsselct">
+                                <select data-placeholder="Select Skills" class="select2 chosen-select" multiple style="width:100%;" tabindex="2" ng-model="skills" id="skillsselct">
                                     <optgroup label="OOP">
                                         <option value="PHP">PHP</option>
                                         <option value="Java">Java</option>
