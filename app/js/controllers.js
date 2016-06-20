@@ -63,9 +63,10 @@ Controllers.controller("MenuNavCtrl",['$scope','Login',function ($scope,Login){
 	}
 	
 }]);
-Controllers.controller("SideBarCtrl",['$scope','Login','Chat','Client','Project','$location',
-	function SideBarCtrl($scope,Login,Chat,Client,Project,$location)
+Controllers.controller("SideBarCtrl",['$scope','Login','Chat','Client','Project','$location','Cuser',
+	function SideBarCtrl($scope,Login,Chat,Client,Project,$location,Cuser)
 	{
+		console.log(Login.getLoggedUser().userinfo);
 		if($location.path()=="/pdetails")
 		{
 			$scope.projectactive=true;
@@ -93,14 +94,213 @@ Controllers.controller("SideBarCtrl",['$scope','Login','Chat','Client','Project'
 		$scope.canAdd=false;
 
 		$scope.isclient=false;
-		if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER"){
+		$scope.isClientUser=false;
+		if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER"){
 			$scope.isclient=true;
+		}
+		if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER")
+		{
+			$scope.isClientUser=true;
 		}
 		if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER"  ||Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_KEYACCOUNT")
 		{
 			$scope.canAdd=true;
 
 		}
+		
+		$scope.openEditProfil=function(chargeView)
+		{
+			var userinfo=Login.getLoggedUser().userinfo;
+			if($scope.isclient || $scope.isClientUser)
+			{
+				if(chargeView){
+					$("#client_phone_code").select2("data",{id:-1,"text":userinfo.phonecode});
+					
+					$scope.client_name=userinfo.name;
+					$scope.client_surname=userinfo.surname;
+					$scope.client_phonecode=userinfo.phonecode;
+					$scope.client_phonenumber=userinfo.telnumber;
+					$scope.client_login=userinfo.email;
+					if($scope.isclient){
+						$("#client_company_country").select2("data",{id:-1,"text":userinfo.address.country});
+						$scope.client_company_name=userinfo.compnay_name;
+						$scope.client_company_country=userinfo.address.country;
+						$scope.client_company_address=userinfo.address.address;
+						$scope.client_company_city=userinfo.address.city;
+						$scope.client_zipcode=userinfo.address.zipcode;
+						
+					}
+					if($scope.isClientUser)
+					{
+						$scope.client_jobtitle=userinfo.title;
+					}
+				}
+				$("#edit-profile-client").modal("show");
+			}
+		}
+		var varifypasswordForm=function()
+		{
+			messages=new Array();
+			if($scope.current_password===undefined)
+			{
+				messages.push("Please add your current password");
+			}
+			if($scope.new_password===undefined)
+			{
+				messages.push("Please add your new password");
+			}
+			if($scope.repeat_new_password===undefined)
+			{
+				messages.push("Please re-tape your new password");
+			}
+			if($scope.repeat_new_password!=undefined && $scope.new_password!=undefined && $scope.new_password!=$scope.repeat_new_password)
+			{
+				messages.push("Passwords miss match");
+			}
+			return messages;
+		}
+		$scope.changePassword=function()
+		{
+			var messages =varifypasswordForm();
+			if(messages.length>0)
+			{
+				swal("Please fill all information",messages.join("\n"),"warning");
+			}
+			else
+			{
+				var successfunc=function()
+				{
+					swal("Password updated successfully","Password updated successfully","success");
+					$scope.openEditProfil(false);
+					$("#change-password").modal("hide");
+				}
+				var failureFunction=function(mesg)
+				{
+					swal("Oops something bad happen",mesg,"error");
+				}
+				var data={
+					"login":Login.getLoggedUser().userinfo.email,
+					"new_password":$scope.new_password,
+					"current_password":$scope.current_password
+				}
+				Login.changePassword(data,successfunc,failureFunction);
+			}
+		}
+		var verifyClientForm=function()
+		{
+			var messages =[];
+			if($scope.client_surname===undefined)
+			{
+				messages.push("Please fill the surname");
+			}
+			if($scope.client_name===undefined)
+			{
+				messages.push("Please fill the name");
+			}
+			if($scope.client_phonecode===undefined)
+			{
+				messages.push("Please fill the phone code");
+			}
+			if($scope.client_phonenumber===undefined)
+			{
+				messages.push("Please fill the phone number");
+			}
+			if($scope.client_login===undefined)
+			{
+				messages.push("Please fill the email");
+			}
+			if($scope.client_company_city===undefined && $scope.isclient)
+			{
+				messages.push("Please fill the city");
+			}
+			if($scope.client_company_country===undefined && $scope.isclient)
+			{
+				messages.push("Please fill the country");
+			}
+			if($scope.client_company_name===undefined && $scope.isclient)
+			{
+				messages.push("Please fill the compnay name");
+			}
+			
+			if($scope.client_company_address===undefined && $scope.isclient)
+			{
+				messages.push("Please fill the address field");
+			}
+			if($scope.client_zipcode===undefined && $scope.isclient)
+			{
+				messages.push("Please fill the zipcode field");
+			}
+			if($scope.client_jobtitle===undefined && $scope.isClientUser)
+			{
+				messages.push("Please fill the job title field");
+			}
+			
+			return messages;
+		}
+		$scope.updateClientProfil=function()
+		{
+			var messages=verifyClientForm();
+			if(messages.length>0)
+			{
+				
+				swal("Please fill all information",messages.join("\n"),"warning");
+			}
+			else{
+				var failureFunction=function(msg)
+				{
+					swal("Oops!!", msg, "error");
+				}
+				var succesfunc=function(msg)
+				{
+					var user=Login.getLoggedUser();
+					user.userinfo.name=$scope.client_name;
+					user.userinfo.surname=$scope.client_surname;
+					user.userinfo.phonecode=$scope.client_phonecode;
+					user.userinfo.telnumber=$scope.client_phonenumber;
+					user.userinfo.email=$scope.client_login;
+					if($scope.isclient){
+						user.userinfo.compnay_name=$scope.client_company_name;
+						user.userinfo.address.country=$scope.client_company_country,					user.userinfo.address.address=$scope.client_company_address;
+						user.userinfo.address.city=$scope.client_company_city;
+						user.userinfo.address.zipcode=$scope.client_zipcode;
+					}
+					$scope.name=user.userinfo.name;
+					$scope.surname=user.userinfo.surname;
+					$scope.company=user.userinfo.compnay_name;
+					Login.upadteLoggedinUser(user);
+					$("#edit-profile-client").modal("hide");
+				}
+				var client={
+					"id":Login.getLoggedUser().userinfo.id,
+					"email":$scope.client_login,
+					"login":$scope.client_login,
+					"name":$scope.client_name,
+					"surname":$scope.client_surname,
+					"phonecode":$scope.client_phonecode
+
+				};
+				if($scope.isclient)
+				{
+					client.address={
+					"city":$scope.client_company_city,
+					"country":$scope.client_company_country,
+					"address":$scope.client_company_address,
+					"zipcode":$scope.client_zipcode
+					};
+					client.companyname=$scope.client_company_name;
+					client.telnumber=$scope.client_phonenumber;
+					Client.addClient(client,succesfunc,failureFunction,"PUT");
+				}
+				if($scope.isClientUser)
+				{
+					client.title=$scope.client_jobtitle;
+					client.phonenumber=$scope.client_phonenumber;
+					Cuser.addUser(client,succesfunc,failureFunction,"PUT");
+				}
+			}
+			
+		}
+		
 		$scope.totalmessages=0;
 		var getnewMessagesNumber=function()
 		{
@@ -3360,6 +3560,7 @@ Controllers.controller('ContractCtrl', ['$scope',"Login","$routeParams","$locati
 		var sucessFunc=function()
 		{
 			swal("Congratulation","Welcome to flexwork please login again to start using flexwork tool","info");
+			$location.url("/dashboard");
 		}
 		var failureFunc=function()
 		{

@@ -94,9 +94,14 @@ services.factory("Links",[function(){
 	var teamPerformanceLink=baseUrl+path+"/private/team/performance";
 	var ticketReportByMonthLink=baseUrl+path+"/private/project/restricted/report/ticket";
 	var dateReportByMonthLink=baseUrl+path+"/private/project/restricted/report/date";
+	var changePasswordLink=baseUrl+path+"/private/password/change";
 	this.getLoginLink=function()
 	{
 		return LoginLink;
+	}
+	this.getChangePasswordLink=function()
+	{
+		return changePasswordLink;
 	}
 	this.getAllteamMembersLink=function()
 	{
@@ -474,6 +479,26 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 		{
 			this.lastlink=path;
 		}
+		this.changePassword=function(data,successfunc,failurefunc)
+		{
+			if(this.getLoggedUser())
+			{
+				$http({
+					method:"PUT", 
+					url:Links.getChangePasswordLink(),
+					data:data,
+					headers: {'x-crm-access-token': this.getLoggedUser().token.token}
+				}).success(function (data, status, headers, config) {
+					successfunc();
+	            }).error(function (data, status, headers, config) {
+	            	if(status==403)
+	            		failurefunc("wrong password");
+	            	else
+	            		failurefunc("Something bad happen please try again later");
+	            });
+				
+			}
+		}
 		this.contractSigned=function()
 		{
 			if(this.getLoggedUser()){
@@ -488,7 +513,8 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 		this.signContract=function(successFunc,failureFunc,customer_id)
 		{
 			var me=this;
-			if(this.getLoggedUser())
+			var user=this.getLoggedUser();
+			if(user)
 			{
 				$http({
 					method:"GET", 
@@ -496,7 +522,8 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 					headers: {'x-crm-access-token': this.getLoggedUser().token.token}
 				}).success(function (data, status, headers, config) {
 					successFunc();
-					me.logout(false);
+					user.signed=true;
+					me.upadteLoggedinUser(user);
 	            }).error(function (data, status, headers, config) {
 	            	if(status==403)
 	            		me.logout();
@@ -505,6 +532,11 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 	            });
 				
 			}
+		}
+		this.upadteLoggedinUser=function(user)
+		{
+			$cookies.remove('loggeduser');
+			$cookies.put('loggeduser', JSON.stringify(user));
 		}
 		this.doLogin=function(login,password,funcsucess,funcfailure)
 		{

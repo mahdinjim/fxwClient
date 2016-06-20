@@ -41,3 +41,9 @@ directives.directive("activateTab",function(){
     });
   }
 });
+directives.directive("selectTwo",function(){
+  return function(scope,element,attrs)
+  {
+    $(element).select2();
+  }
+});

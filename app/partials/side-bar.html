@@ -1,5 +1,5 @@
  <script>
-        $('select').select2();
+        $('.select2').select2();
     </script>
 <div ng-controller="SideBarCtrl">
     <nav class="navbar-default navbar-static-side" role="navigation">
@@ -33,7 +33,7 @@
                                 </a>
                                 
                                 <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                                <li><a >Profile</a></li>
+                                <li><a data-toggle="modal"  ng-click="openEditProfil(true)">Profile</a></li>
                                 <!-- <li><a >Settings</a></li> -->
                                 <li class="divider"></li>
                                 <li><a ng-click="logout()">Log out</a></li>
@@ -46,8 +46,8 @@
                     <li class="mini-navbar-account">
                         <a href="#"><i class="fa fa-user"></i> <span class="nav-label">Account</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level collapse">
-                            <li><a href="profile-fxw.html">Profile</a></li>
-                            <li><a href="settings-fxw.html">Settings</a></li>
+                            <li><a data-toggle="modal"  ng-click="openEditProfil(true)">Profile</a></li>
+                            <!-- <li><a href="settings-fxw.html">Settings</a></li> -->
                             <li class="divider"></li>
                             <li><a ng-click="logout()">Log out</a></li>
                         </ul>
@@ -131,7 +131,7 @@
                         </div>
                     </div>
                     <div class="form-group mb0">
-                        <select data-placeholder="Select Skills" class="chosen-select" multiple style="width:100%;" tabindex="2" ng-model="projectskills">
+                        <select data-placeholder="Select Skills" class="select2 chosen-select" multiple style="width:100%;" tabindex="2" ng-model="projectskills">
                             <optgroup label="OOP">
                                 <option value="PHP">PHP</option>
                                 <option value="Java">Java</option>
@@ -172,49 +172,168 @@
             </div>
         </div>
     </div> 
-    <!--success modal-->
-    <div class="modal inmodal fade" id="success" tabindex="-1" role="dialog"  aria-hidden="true" style="top:150px;">
-        <div class="modal-dialog modal-sm">
+
+      <!--modal edit profile-->
+    <div class="modal inmodal fade" id="edit-profile-client" role="dialog" aria-hidden="true" style="overflow-y: scroll;">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <div class="modal-title"><i class="glyphicon glyphicon-ok-circle"> Alright :)</i></div>
+                    <h4 class="modal-title"><i class="fa fa-user modal-fa-icon"></i> Profile</h4>
                 </div>
-                <div class="modal-body">
-                   <p class="modal-content-center m-0"></p>
+                <div class="modal-body p0">
+                  <!--row2-->
+                  <div class="row">
+                      <!--user ibox-->
+                      <div class="col-lg-12">
+                        <div class="ibox-content">
+                          <div class="row">
+                             <div class="col-md-12">
+                                  <h4>Contact</h4>
+                                 <div class="form-group">
+                                     <input type="text" class="form-control login-first-name" placeholder="First Name" required="" ng-model="client_name">
+                                     <input type="text" class="form-control login-last-name" placeholder="Last Name" required="" ng-model="client_surname">
+                                     <div class="clear-both"></div>
+                                 </div>
+                                 <div class="form-group" ng-if="isClientUser">
+                                     <input type="text" class="form-control" placeholder="Job Title" required="" value="UI / UX Designer" ng-model="client_jobtitle">
+                                 </div>
+                                 <div class="form-group m-0">
+                                     <!--select-->
+                                     <div class="select-option f-left m-0" style="width: 30%; margin-right: 2.5% ! important;">
+                                         <select id="client_phone_code" class="select2" ng-model="client_phonecode">
+                                             <option>+49</option>
+                                             <option selected="selected">+90</option>
+                                             <option>+216</option>
+                                         </select>
+                                     </div>
+                                     <input type="text" class="form-control"  placeholder="Telephone" style="width: 67.5%;" ng-model="client_phonenumber">
+                                 </div>
+                             </div><!--col-md-->
+                          </div><!--row-->
+                        </div>
+                        <!-- ibox -->
+
+                        <div class="ibox-content">
+                          <div class="row">
+                             <div class="col-md-12">
+                                <h4 class="">User Access</h4>
+                                 <div class="form-group">
+                                     <input type="email" class="form-control" placeholder="Email" required="" ng-model="client_login">
+                                 </div>
+                                 <div class="form-group">
+                                       <button type="button" class="btn btn-default btn-sm" data-dismiss="modal" data-toggle="modal" data-target="#change-password"><i class="fa fa-lock"></i> change password</button>
+                                 </div>
+                                 <div class="form-group m-0" ng-if="isclient">
+                                     <!--select-->
+                                     <div class="select-option m-0" style="width: 100%;">
+                                         <select class="select2" disabled="disabled">
+                                             <option>Role</option>
+                                             <option selected="selected">Administrator</option>
+                                         </select>
+                                     </div>
+                                 </div>
+                             </div><!--col-md-->
+                          </div><!--row-->
+                        </div>
+                        <!-- ibox -->
+                          <div class="ibox-content mt15" ng-if="isclient">
+                            <div class="row">
+                               <div class="col-md-12">
+                                 <h4>Company</h4>
+                                 <div class="form-group">
+                                     <input type="text" class="form-control" placeholder="Company Name" required="" ng-model="$parent.client_company_name">
+                                 </div>
+                                 <h4 class="mt15">Location</h4>
+                                 <div class="form-group">
+                                     <input type="text" class="form-control" placeholder="City" required="" ng-model="$parent.client_company_city">
+                                 </div>
+                                 <div class="form-group">
+                                     <div class="select-option m-0" style="width: 100%;">
+                                         <select ng-model="$parent.client_company_country" id="client_company_country" select-two>
+                                             <option >Turkey</option>
+                                             <option>Tunisia</option>
+                                             <option>Germany</option>
+                                         </select>
+                                     </div>
+                                 </div>
+                                 <div class="form-group">
+                                     <input type="text" class="form-control" placeholder="Zipcode" required="" ng-model="$parent.client_zipcode">
+                                 </div>
+                                 <div class="form-group mb-0">
+                                     <textarea class="form-control" placeholder="Address" style="height:83px;" ng-model="$parent.client_company_address">Gülbahara Mah. Karanfil Sk. 6</textarea>
+                                 </div>
+                               </div><!--col-md-->
+                            </div><!--row-->
+                          </div>
+                          <!-- ibox-->
+
+                      </div>
+                      <!-- col-lg--->
+                  </div>
+                  <!-- row -->
+
                 </div>
-                
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="hr-line-solid"></div>
+                            <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" ng-click="updateClientProfil()">Save</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div> 
-    <!--failure modal-->
-    <div class="modal inmodal fade" id="failure" tabindex="-1" role="dialog"  aria-hidden="true" style="top:150px;">
-        <div class="modal-dialog modal-sm">
+    </div>
+
+    <!--modal change password-->
+    <div class="modal inmodal fade" id="change-password" role="dialog"  aria-hidden="true" >
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <div class="modal-title"><i class="glyphicon glyphicon-remove-circle"> Oopss :(</i></div>
+                    <button type="button" class="close" data-dismiss="modal" data-toggle="modal" data-target="#edit-profile"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"><i class="fa fa-lock modal-fa-icon"></i> Change password</h4>
                 </div>
-                <div class="modal-body">
-                   <p class="modal-content-center m-0"></p>
+                <div class="modal-body p0">
+                  <!--row2-->
+                  <div class="row">
+                      <!--user ibox-->
+                      <div class="col-lg-12">
+
+                        <div class="ibox-content pb0">
+                          <div class="row">
+                             <div class="col-md-12">
+                                  <div class="form-group">
+                                      <input type="password" class="form-control" placeholder="Current password" required="" ng-model="current_password">
+                                  </div>
+                                 <div class="form-group">
+                                     <input type="password" class="form-control login-first-name" placeholder="New Password" required="" ng-model="new_password">
+                                     <input type="password" class="form-control login-last-name" placeholder="New Password, again" required="" ng-model="repeat_new_password">
+                                     <div class="clear-both"></div>
+                                 </div>
+                             </div><!--col-md-->
+                          </div><!--row-->
+                        </div>
+                        <!-- ibox -->
+                      </div>
+                      <!-- col-lg--->
+                  </div>
+                  <!-- row -->
                 </div>
-                
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="hr-line-solid"></div>
+                            <button type="button" class="btn btn-white" data-dismiss="modal" ng-click="openEditProfil(false)">Close</button>
+                            <button type="button" class="btn btn-primary" ng-click="changePassword()">Save</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div> 
-<!--warning modal-->
-    <div class="modal inmodal fade" id="warning" tabindex="-1" role="dialog"  aria-hidden="true" style="top:150px;">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <div class="modal-title"><i class="glyphicon glyphicon-warning-sign"> Hey hey!!</i></div>
-                </div>
-                <div class="modal-body">
-                   <p class="modal-content-center m-0"></p>
-                </div>
-                
-            </div>
-        </div>
-    </div> 
+    </div>
+
+
 </div>
+    
