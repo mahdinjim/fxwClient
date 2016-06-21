@@ -1,3 +1,4 @@
+
 <div id="wrapper">
     <div side-bar>
     </div>
@@ -141,43 +142,45 @@
                            <div class="ibox-content">
                                 <div class="row">
                                     <!-- filter-->
-                                    <!-- <div class="col-md-12 pb10">
+                                    <div class="col-md-12 pb10">
                                         <div class="col-md-8 p0">   
                                             <div class="form-group fleft mr10 mb10">
                                                 <div class="select-option select-project m-0" style="width: 150px;">
-                                                    <select class="select2">
-                                                        <option selected="selected">all type</option>
-                                                        <option>feature</option>
-                                                        <option>bug</option>
-                                                        <option>concept</option>
-                                                        <option>design</option>
+                                                    <select class="select2" select-two ng-model="$parent.selectedType" ng-change="filter()">
+                                                        <option selected="selected" value="all">all type</option>
+                                                        <option value="Feature">feature</option>
+                                                        <option value="Bug">bug</option>
+                                                        <option value="Concept">concept</option>
+                                                        <option value="Design">design</option>
                                                     </select>
                                                 </div>
                                             </div>
                                             
                                             <div class="form-group fleft mr10 mb10">
                                                 <div class="select-option select-project m-0" style="width: 150px;">
-                                                    <select class="select2">
-                                                        <option selected="selected">all status</option>
-                                                        <option>draft</option>
-                                                        <option>estimation</option>
-                                                        <option>go production</option>
-                                                        <option>waiting</option>
-                                                        <option>production</option>
-                                                        <option>accept</option>
-                                                        <option>done</option>
+                                                    <select class="select2"  ng-model="$parent.selectedStatus" ng-change="filter()" select-two>
+                                                        <option selected="selected" value="all" >all status</option>
+                                                        <option value="draft">draft</option>
+                                                        <option value="estimation">estimation</option>
+                                                        <option value="goproduction">go production</option>
+                                                        <option value="waiting">waiting</option>
+                                                        <option value="production">production</option>
+                                                        <option value="testing">Q&A</option>
+                                                        <option value="accept">in confirmation</option>
+                                                        <option value="reject">rejected</option>
+                                                        <option value="done">done</option>
                                                     </select>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-4 p0" >
                                             <div class="input-group project-search">
-                                                <input type="text" placeholder="search" class="input-sm form-control"> 
-                                                <span class="input-group-btn"><button type="button" class="btn btn-sm btn-primary"> go!</button> </span>
+                                                <input type="text" placeholder="search" class="input-sm form-control" ng-model="$parent.searchWord" my-enter="filter()"> 
+                                                <span class="input-group-btn"><button type="button" class="btn btn-sm btn-primary" ng-click="filter()" > go!</button> </span>
                                             </div>
                                         </div>
                                         <div style="clear:both;"></div>
-                                    </div> -->
+                                    </div>
                                     <!-- end filter-->
                                     
                                     <!-- table project list -->

@@ -1663,12 +1663,97 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	$scope.hasteam=true;
 	$scope.ticketStatus=Ticket.ticketstatus;
 	var channel_id=null;
+	var originalticket=new Array();
+	$scope.selectedType="all";
+	$scope.selectedStatus="all";
+	$scope.searchWord="";
+	var filterAll=function()
+	{
+
+		result=new Array();
+		console.log($scope.selectedStatus);
+		if($scope.selectedType!="all" && $scope.selectedStatus!="all" && $scope.searchWord!="")
+		{
+			for(i=0;i<originalticket.length;i++)
+			{
+				if(originalticket[i].status==$scope.selectedStatus && originalticket[i].type==$scope.selectedType && originalticket[i].title.indexOf($scope.searchWord)!=-1 )
+					result.push(originalticket[i]);
+			}
+
+		}
+		else if($scope.selectedType!="all" && $scope.selectedStatus!="all")
+		{
+			for(i=0;i<originalticket.length;i++)
+			{
+				if(originalticket[i].status==$scope.selectedStatus && originalticket[i].type==$scope.selectedType  )
+					result.push(originalticket[i]);
+			}
+
+		}
+		else if($scope.selectedType!="all"  && $scope.searchWord!="")
+		{
+			for(i=0;i<originalticket.length;i++)
+			{
+				if(originalticket[i].type==$scope.selectedType && originalticket[i].title.indexOf($scope.searchWord)!=-1 )
+					result.push(originalticket[i]);
+			}
+
+		}
+		else if($scope.selectedStatus!="all" && $scope.searchWord!="")
+		{
+			for(i=0;i<originalticket.length;i++)
+			{
+				if(originalticket[i].status==$scope.selectedStatus && originalticket[i].title.indexOf($scope.searchWord)!=-1 )
+					result.push(originalticket[i]);
+			}
+
+		}
+		else if($scope.selectedStatus!="all")
+		{
+			for(i=0;i<originalticket.length;i++)
+			{
+				if(originalticket[i].status==$scope.selectedStatus)
+					result.push(originalticket[i]);
+			}
+
+		}
+		else if($scope.selectedType!="all")
+		{
+			for(i=0;i<originalticket.length;i++)
+			{
+				if(originalticket[i].type==$scope.selectedType)
+					result.push(originalticket[i]);
+			}
+
+		}
+		else if($scope.searchWord!="")
+		{
+			for(i=0;i<originalticket.length;i++)
+			{
+				if(originalticket[i].title.indexOf($scope.searchWord)!=-1 )
+					result.push(originalticket[i]);
+			}
+
+		}
+		else
+		{
+			result=originalticket;
+		}
+		return result;
+	}
+	$scope.filter=function()
+	{
+
+		var result=filterAll();
+		$scope.tickets=result;
+	}
 	var updateTickets=function()
 	{
 		var successFunc=function(data)
 		{
 			$scope.hasTicket=true;
-			$scope.tickets=data;
+			originalticket=data;
+			$scope.tickets=filterAll();
 		}
 		var failureFunc=function()
 		{
