@@ -1676,7 +1676,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		{
 			for(i=0;i<originalticket.length;i++)
 			{
-				if(originalticket[i].status==$scope.selectedStatus && originalticket[i].type==$scope.selectedType && originalticket[i].title.indexOf($scope.searchWord)!=-1 )
+				if(originalticket[i].status==$scope.selectedStatus && originalticket[i].type==$scope.selectedType && originalticket[i].title.toLowerCase().indexOf($scope.searchWord.toLowerCase())!=-1 )
 					result.push(originalticket[i]);
 			}
 
@@ -1694,7 +1694,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		{
 			for(i=0;i<originalticket.length;i++)
 			{
-				if(originalticket[i].type==$scope.selectedType && originalticket[i].title.indexOf($scope.searchWord)!=-1 )
+				if(originalticket[i].type==$scope.selectedType && originalticket[i].title.toLowerCase().indexOf($scope.searchWord.toLowerCase())!=-1 )
 					result.push(originalticket[i]);
 			}
 
@@ -1703,7 +1703,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		{
 			for(i=0;i<originalticket.length;i++)
 			{
-				if(originalticket[i].status==$scope.selectedStatus && originalticket[i].title.indexOf($scope.searchWord)!=-1 )
+				if(originalticket[i].status==$scope.selectedStatus && originalticket[i].title.toLowerCase().indexOf($scope.searchWord.toLowerCase())!=-1 )
 					result.push(originalticket[i]);
 			}
 
@@ -1730,7 +1730,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		{
 			for(i=0;i<originalticket.length;i++)
 			{
-				if(originalticket[i].title.indexOf($scope.searchWord)!=-1 )
+				if(originalticket[i].title.toLowerCase().indexOf($scope.searchWord.toLowerCase())!=-1 )
 					result.push(originalticket[i]);
 			}
 
