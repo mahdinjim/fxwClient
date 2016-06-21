@@ -1792,6 +1792,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 				data.team[i].photo="img/users/profile_default_small.jpg";
 		Params.setProject(data);
 		$scope.team=data.team;
+		originalticket=data.tickets;
 		$scope.tickets=data.tickets;
 		$scope.projectDescription=data.description;
 		$scope.projectSkilss=data.skills;
