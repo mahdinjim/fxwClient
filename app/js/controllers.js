@@ -1659,7 +1659,6 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	$scope.isAdmin=false;
 	$scope.isTeamLeader=false;
 	$scope.isMember=false;
-	$(".select2").select2();
 	$scope.hasteam=true;
 	$scope.ticketStatus=Ticket.ticketstatus;
 	var channel_id=null;

@@ -59,8 +59,8 @@
                         <ul id="projecttab" class="nav nav-second-level collapse" >
                             <li ng-repeat='project in projects'>
                                 <a href="#/pdetails?project_id={{project.id}}" ng-if="isclient"><span class="nav-label">{{project.name}}</a>
-                                <a href="#/pdetails?project_id={{project.id}}" ng-if="!isclient">{{project.company}}
-                                    <span class="navi-project-name">{{project.name}}</span>
+                                <a href="#/pdetails?project_id={{project.id}}" ng-if="!isclient">{{project.name}}
+                                    <span class="navi-project-name">{{project.company}}</span>
                                 </a>
                             </li>
                             <li ng-if="canAdd"><a ng-click="openAddprojectModel()"><span style="border-bottom: 1px dotted;">+ Add Project</span></a></li>
