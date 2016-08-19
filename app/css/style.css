@@ -8091,3 +8091,62 @@ body.md-skin {
     display: none;
   }
 }
+
+/*extras*/
+select.select3 {
+    padding:4px 25px 4px 4px;
+    height: 34px;
+    margin: 0;
+    background: #fff;
+    color:#888;
+    border:none;
+    outline:none;
+    display: inline-block;
+    -webkit-appearance:none;
+    -moz-appearance:none;
+    appearance:none;
+    cursor:pointer;
+    width: 215px;
+    font-family: 'Open Sans';
+    font-weight: 400;
+    border: 1px solid #e5e6e7;
+    border-radius: 3px;
+}
+
+select.select3:hover{
+  border-color: #1ab394;
+  transition: all 0.5s;
+}
+
+/* Targetting Webkit browsers only. FF will show the dropdown arrow with so much padding. */
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    select.select3 {padding-right:18px}
+}
+
+label.label3 {position:relative}
+label.label3:after {
+  color: #aaa;
+  content: "\f107";
+  font-family: "FontAwesome";
+  font-size: 11px;
+  padding: 0 0 2px;
+  pointer-events: none;
+  position: absolute;
+  right: 12px;
+  top: 9px;
+}
+label.label3:before {
+  background: transparent;
+  content: "";
+  display: block;
+  height: 33px;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 34px;
+}
+.laoder{
+  width: 100%;
+  text-align: center;
+}

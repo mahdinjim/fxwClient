@@ -1,7 +1,7 @@
   <!-- message -->
     <script type='text/javascript'>
             $('.chat-discussion').slimScroll({
-            start:"bottom"
+            height:'100vh - 390px'
         });
        
     </script>
@@ -41,8 +41,10 @@
                             <div class="ibox-content chat-message-box">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="chat-discussion">
-                                        <div><img src="img/loading.gif" style="width:100%" ng-if="loadingmessages"></div>    
+                                        <div class="chat-discussion" scroll-bottom="messages">
+                                        <div class="laoder" ng-if="loadingmessages">
+                                            <img width="40" height="40" src="img/ring.gif">
+                                          </div>
                                             <div class="chat-message left" ng-repeat="message in messages">
                                                 <img width="38" alt="Picture" src="{{message.userphoto}}" class="message-avatar" heigth="38">
                                                 <div class="message">
@@ -82,8 +84,10 @@
                             <div class="ibox-box-title">
                                 <h5 class="m-0"><i class="fa fa-users"></i> Team</h5>
                             </div>
+                            <div class="laoder" ng-if="loadingteam">
+                                            <img width="40" height="40" src="img/ring.gif">
+                            </div>
                         </div><!--end ibox-box-->
-                        <div><img src="img/loading.gif" style="width:100%" ng-if="loadingteam"></div>
                     <div ng-repeat="member in members">
 
                         <div class="ibox-box float-e-margins mb-0 chat-user-box">

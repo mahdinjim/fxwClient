@@ -63,10 +63,14 @@ Controllers.controller("MenuNavCtrl",['$scope','Login',function ($scope,Login){
 	}
 	
 }]);
-Controllers.controller("SideBarCtrl",['$scope','Login','Chat','Client','Project','$location','Cuser',
-	function SideBarCtrl($scope,Login,Chat,Client,Project,$location,Cuser)
+Controllers.controller("SideBarCtrl",['$scope','Login','Chat','Client','Project','$location','Cuser',"Params",
+	function SideBarCtrl($scope,Login,Chat,Client,Project,$location,Cuser,Params)
 	{
-		console.log(Login.getLoggedUser().userinfo);
+		var succsfunc=function(data)
+		{
+			$scope.skills=data;
+		}
+		Params.getSkills(succsfunc);
 		if($location.path()=="/pdetails")
 		{
 			$scope.projectactive=true;
@@ -304,27 +308,26 @@ Controllers.controller("SideBarCtrl",['$scope','Login','Chat','Client','Project'
 		$scope.totalmessages=0;
 		var getnewMessagesNumber=function()
 		{
-			
+			var channels =new Array();
 			for(i=0;i<$scope.channels.length;i++)
 			{
-				var end =$scope.channels.length-1;
-				var sum=0;
-				var successfunc=function(data,channel,i,end,sum)
-				{
-					if(data.result)
-						channel.newmessages=data.undread_count;
-					else
-						channel.newmessages=0;
-					
-					if(i==end)
-					{
-						$scope.totalmessages=sum;
-					}
-					
-				}
-				Chat.getNewMessagesNumber($scope.channels[i],successfunc,i,end);
-
+				channels.push({"group_id":$scope.channels[i].id});
 			}
+			var data={"groups":channels};
+			var successfunc=function(data)
+			{
+				$scope.totalmessages=data.total;
+				for(i=0;i<$scope.channels.length;i++)
+				{
+					for(j=0;j<data.groups.length;j++)
+					{
+						if(data.groups[j].group_id==$scope.channels[i].id)
+							$scope.channels[i].newmessages=data.groups[j].count;
+					}
+				}
+			}
+
+			Chat.getNewMessagesNumber(data,successfunc);
 		}
 		$scope.openclosetab=function(id)
 		{
@@ -337,7 +340,7 @@ Controllers.controller("SideBarCtrl",['$scope','Login','Chat','Client','Project'
 				$scope.channels=data.channels;
 				$scope.projects=data.projects;
 				getnewMessagesNumber();
-				var newmessagesinterval=setInterval(getnewMessagesNumber, 20000);
+				var newmessagesinterval=setInterval(getnewMessagesNumber, 50000);
 				$scope.$on('$routeChangeStart',function(){
 					clearInterval(newmessagesinterval);
 				});
@@ -1567,12 +1570,12 @@ Controllers.controller("ChatCtrl",["$scope","$rootScope","Chat","$routeParams","
 	$scope.loadingteam=true;
 	$scope.loadingmessages=true;
 	$scope.messageto=null;
+	$scope.messages=[];
 	var project_id=$routeParams.project_id;
 	$scope.goToProject=function()
 	{
-		$location.url("/pdetails").search({"project_id": project_id});
+		$location.url("/pdetails/"+project_id);
 	}
-	console.log($routeParams.project_id);
 	if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER")
 	{
 		$('#messForm').show();
@@ -1591,7 +1594,6 @@ Controllers.controller("ChatCtrl",["$scope","$rootScope","Chat","$routeParams","
 			$scope.messages.push(data.message.message);
 		}
 		Chat.sendMessage($routeParams.channel_id,$scope.messagetext,successFunc);
-		console.log($scope.messagetext);
 		$scope.messageto=null;
 		$scope.messagetext="";
 	}
@@ -1670,7 +1672,6 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	{
 
 		result=new Array();
-		console.log($scope.selectedStatus);
 		if($scope.selectedType!="all" && $scope.selectedStatus!="all" && $scope.searchWord!="")
 		{
 			for(i=0;i<originalticket.length;i++)
@@ -1985,7 +1986,6 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		var success=function()
 		{
 			$('#add-member').modal('hide');
-			console.log("New members added successfully");
 		}
 		var failure=function()
 		{
@@ -2078,7 +2078,6 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 				var index=$scope.team.indexOf(member);
 				$scope.team.splice(index,1);
 				oldmembers.splice(index, 1);
-				console.log("members deleted successfully");
 			}
 			var failure=function()
 			{
@@ -2222,7 +2221,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	}
 	$scope.openKeybox=function()
 	{
-		$location.url("/keybox").search({"project_id": project_id});
+		$location.url("/keybox/"+project_id);
 	}
 	$scope.hideshowForm=function(visible){
 		if(visible)
@@ -2250,7 +2249,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	{
 		if(channel_id!=null)
 		{
-			$location.url("/messaging").search({"channel_id": channel_id});
+			$location.url("/messaging/"+channel_id);
 		}
 		else
 		{
@@ -2623,9 +2622,9 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	{
 		
 		swal({
-                title: "You reject the estimation for", 
+                title: "You reject the estimation for ticket", 
                 //html: '<p><i class="fa fa-star project-type"></i>'+ticket.title+'</p>',
-                text:"hello",
+                //text:"hello",
                 type: "info",
                 showCancelButton: true,
                 cancelButtonText: "cancel",
@@ -2763,7 +2762,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	$scope.openStoriesView=function(ticket)
 	{
 		Params.setTicket(ticket);
-		$location.path("/stories");
+		$location.path("/stories/"+project_id+"/"+ticket.id);
 	}
 	Project.getProjectDetails($routeParams.project_id,succesFunc,failureFunc);
 }]);
@@ -2841,7 +2840,7 @@ Controllers.controller('KeyboxCtrl', ['$scope','KeyBox',"$routeParams","Login","
 	}
 	$scope.resetKeybox=function()
 	{
-		$location.url("/pdetails").search({"project_id": project_id});
+		$location.url("/pdetails/"+project_id);
 	}
 	$scope.saveKeyBox=function()
 	{
@@ -2849,7 +2848,6 @@ Controllers.controller('KeyboxCtrl', ['$scope','KeyBox',"$routeParams","Login","
 		{
 			var failureFunc=function()
 			{
-				console.log("failure");
 			}
 			var successFunc=null;
 			if(i==$scope.configs.length-1)
@@ -2863,7 +2861,6 @@ Controllers.controller('KeyboxCtrl', ['$scope','KeyBox',"$routeParams","Login","
 			{
 				successFunc=function()
 				{
-					console.log('success');
 				}
 			}
 			if($scope.configs[i].id==-1)
@@ -2894,47 +2891,80 @@ Controllers.controller('KeyboxCtrl', ['$scope','KeyBox',"$routeParams","Login","
 	}
 	
 }]);
-Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Team','Ticket',"Task", function ($scope,Login,Params,$location,Team,Ticket,Task) {
+Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Team','Ticket',"Task","$routeParams","Project", function ($scope,Login,Params,$location,Team,Ticket,Task,$routeParams,Project) {
 	$scope.isclient=false;
 	$scope.isAdmin=false;
 	$scope.isTeamLeader=false;
 	$scope.isMember=false;
-	var project=Params.getProject();
-	var ticket=Params.getTicket();
-	$scope.company_name=project.customer;
-	$scope.project_name=project.name;
-	$scope.team=project.team;
-	$scope.ticket_name=ticket.title;
-	$scope.ticket_id=ticket.displayId;
-	$scope.ticket_type=ticket.type;
+	var clipboard=new Clipboard('.btnCopy');
+	$scope.currentUrl=window.location.href;
+	clipboard.on('error', function(e) {
+    	swal("Safari is not supported","Safari is not supported, please copy link from browser","info");
+	});
+	var project_id=$routeParams.project_id;
+	var ticket_id=$routeParams.ticket_id;
+	var loadProject=function()
+	{
+		var success=function(project)
+		{
+			$scope.company_name=project.customer;
+			$scope.project_name=project.name;
+			$scope.docs=project.docs;
+			$scope.team=project.team;
+			if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN")
+			{
+				$scope.isAdmin=true;
+			}
+			else if(project.teamLeader.id==Login.getLoggedUser().userinfo.id && Login.getLoggedUser().userinfo.email==project.teamLeader.email)
+			{
+
+				$scope.isTeamLeader=true;
+			}
+			else if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER"|| Login.getLoggedUser().userinfo.roles[0]=="ROLE_KEYACCOUNT"){
+				$scope.isclient=true;
+			}
+			else
+			{
+				$scope.isMember=true;
+			}
+		}
+		var failure=function()
+		{
+			swal("Can't load ticket details","Can't load ticket details","error");
+		}
+		Project.getProjectDetails(project_id,success,failure);
+	}
 	$scope.ticketStatus=Ticket.ticketstatus;
-	$scope.ticket_decription=ticket.description;
-	$scope.ticket_status=ticket.status;
-	$scope.ticket_realtime=ticket.realtime;
-	$scope.ticket_estimation=ticket.estimation;
 	$scope.username=Login.getLoggedUser().userinfo.surname+ " "+Login.getLoggedUser().userinfo.name;
-	$scope.tasks=ticket.tasks;
-	$scope.totaltasks=ticket.taskscount;
-	$scope.finishedtasks=ticket.finishedtasks;
-	$scope.rejectionmessage=ticket.rejectionmessage;
-	$scope.docs=project.docs;
+	
+	
 	var updateView=function()
 	{
 		sucessFunc=function(data)
 		{
-			$scope.tasks=data;
-			ticket.tasks=data;
-			localStorage.ticket=JSON.stringify(ticket);
+			$scope.ticket_name=data.title;
+			$scope.ticket_id=data.displayId;
+			$scope.ticket_type=data.type;
+			
+			$scope.ticket_decription=data.description;
+			$scope.ticket_status=data.status;
+			$scope.ticket_realtime=data.realtime;
+			$scope.ticket_estimation=data.estimation;
+			$scope.tasks=data.tasks;
+			$scope.totaltasks=data.taskscount;
+			$scope.finishedtasks=data.finishedtasks;
+			$scope.rejectionmessage=data.rejectionmessage;
 		}
 		failureFunc=function(err)
 		{
-			console.log(err);
+			swal("Can't load ticket details","Can't load ticket details","error");
 		}
-		Task.getAllTasks(sucessFunc,failureFunc,ticket.id);
+		Task.getAllTasks(sucessFunc,failureFunc,ticket_id);
 	}
-	updateView();
+	
 	var loadRoles=function(data){
 		$scope.teamroles=data;
+		loadProject();
 	}
 	var selectedtask;
 	$scope.openAddEstimation=function(estimation,task)
@@ -3163,14 +3193,14 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 	{
 		var estimation=0;
 		var complete=true;
-		for(i=0;i<ticket.tasks.length;i++)
+		for(i=0;i<$scope.tasks.length;i++)
 		{
-			if(ticket.tasks[i].estimation==null)
+			if($scope.tasks[i].estimation==null)
 			{
 				complete=false;
 			}
 			else
-				estimation+=ticket.tasks[i].estimation;
+				estimation+=$scope.tasks[i].estimation;
 		}
 		if(complete){
 			swal({
@@ -3186,16 +3216,14 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 	            	
 					var successFunc=function(data)
 					{
-						ticket.estimation=data.estimation;
-						$scope.ticket_estimation=ticket.estimation;
-						updateStatus(Ticket.ticketstatus.Goproduction);
+						updateView();
 						swal.close();
 					}
 					var failureFunc=function()
 					{
 						swal("Oops!","Can't send estimation to client");
 					}
-					Ticket.sendToClient(successFunc,failureFunc,ticket.id);
+					Ticket.sendToClient(successFunc,failureFunc,ticket_id);
 						
 						
 	        });
@@ -3222,14 +3250,14 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 	        	
 				var successFunc=function(data)
 				{
-					updateStatus(Ticket.ticketstatus.Production);
+					updateView();
 					swal.close();
 				}
 				var failureFunc=function()
 				{
 					swal("Oops!","Can't send estimation to client");
 				}
-				Ticket.sendToProd(successFunc,failureFunc,ticket.id);
+				Ticket.sendToProd(successFunc,failureFunc,ticket_id);
 						
 						
 	        });
@@ -3239,7 +3267,6 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 		
 		swal({
                 title: "You accept and close the ticket", 
-                html: '<p><i class="fa fa-star project-type"></i>'+ticket.title+'</p>',
                 type: "info",
                 showCancelButton: true,
                 cancelButtonText: "cancel",
@@ -3257,14 +3284,14 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 	                    confirmButtonColor: "#1ab394",
 	                    confirmButtonText: "close"
 	                });
-					updateStatus(Ticket.ticketstatus.Done);
+					updateView();
 				}
 				var failureFunc=function()
 				{
 					swal("Can't accept ticket","We couldn't accept the ticket","error");
 
 				}
-                Ticket.acceptTicket(successFunc,failureFunc,ticket.id);
+                Ticket.acceptTicket(successFunc,failureFunc,ticket_id);
             });
 	}
 	$scope.openRejectModal=function()
@@ -3286,7 +3313,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
                 confirmButtonColor: "#1ab394",
                 confirmButtonText: "close"
             });
-			updateStatus(Ticket.ticketstatus.Reject);
+			updateView();
 			$("#reject-ticket").modal("hide");
 		}
 		var failureFunc=function()
@@ -3302,7 +3329,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 		{
 			var rejectionmessage=$scope.rejectionmessage;
 		}
-		var data={"ticket_id":ticket.id,"message":rejectionmessage};
+		var data={"ticket_id":ticket_id,"message":rejectionmessage};
         Ticket.rejectTicket(successFunc,failureFunc,data);
            
 	}
@@ -3311,9 +3338,6 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 		swal({   title: "Finishing task..",   text: "This task will be Finish very soon..",   timer: 5000,   showConfirmButton: false });
 		var successFunc=function(data)
 		{
-			ticket.finishedtasks+=1;
-			if(data.done)
-				updateStatus(Ticket.ticketstatus.Testing)
 			updateView();
 		}
 		var failureFunc=function()
@@ -3406,11 +3430,11 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 					"id":$scope.assignto.id
 				}
 			};
-			for(i=0;i<project.team.length;i++)
+			for(i=0;i<$scope.team.length;i++)
 			{
-				if(project.team[i].role.role==$scope.teamroles.TeamLeader.role)
+				if($scope.team[i].role.role==$scope.teamroles.TeamLeader.role)
 				{
-					data.owner=project.team[i].id;
+					data.owner=$scope.team[i].id;
 				}
 			}
 			var successFunc=function()
@@ -3431,7 +3455,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 			}
 			else
 			{
-				data.ticket_id=ticket.id;
+				data.ticket_id=ticket_id;
 				Task.craeteTask(successFunc,failureFunc,data);
 			}
 		}
@@ -3444,14 +3468,14 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 	{
 		var realtime=0;
 		var complete=true;
-		for(i=0;i<ticket.tasks.length;i++)
+		for(i=0;i<$scope.tasks.length;i++)
 		{
-			if(ticket.tasks[i].realtime==null)
+			if($scope.tasks[i].realtime==null)
 			{
 				complete=false;
 			}
 			else
-				realtime+=ticket.tasks[i].realtime;
+				realtime+=$scope.tasks[i].realtime;
 		}
 		if(complete){
 			swal({
@@ -3467,16 +3491,15 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 	            	
 					var successFunc=function(data)
 					{
-						ticket.realtime=data.realtime;
-						$scope.ticket_estimation=ticket.realtime;
-						updateStatus(Ticket.ticketstatus.Accept);
+						
+						updateView();
 						swal.close();
 					}
 					var failureFunc=function()
 					{
 						swal("Oops!","Can't deliver ticket to client");
 					}
-					Ticket.deliverToClient(successFunc,failureFunc,ticket.id);
+					Ticket.deliverToClient(successFunc,failureFunc,ticket_id);
 						
 						
 	        });
@@ -3491,7 +3514,6 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 		
 		swal({
                 title: "You start the ticket:",
-                html: '<p><i class="fa fa-star project-type"></i>'+ticket.title+'</p>',
                 type: "info",
                 showCancelButton: true,
                 cancelButtonText: "cancel",
@@ -3509,21 +3531,21 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 	                    confirmButtonColor: "#1ab394",
 	                    confirmButtonText: "close"
 	                });
-					updateStatus(Ticket.ticketstatus.Estimation);
+					updateView();
 				}
 				var failureFunc=function()
 				{
 					swal("Can't start estimation","We couldn't statrt the estimation process","error");
 
 				}
-                Ticket.startEstimation(successFunc,failureFunc,ticket.id);
+                Ticket.startEstimation(successFunc,failureFunc,ticket_id);
             });
 	}
 	$scope.acceptEstimation=function()
 	{
 		
 		swal({
-                title: "You confirm the estimation of "+ ticket.estimation+"h for", 
+                title: "You confirm the estimation of "+ $scope.ticket_estimation+"h for", 
                 html: '<p><i class="fa fa-star project-type"></i> Contracting Process</p><div class="col-lg-12 acenter mb20"><div class="checkbox checkbox-alert checkbox-primary mt-5 mb-5"><input type="checkbox" id="checkbox3"><label for="checkbox3">I accept the <a href="#" target="_blank">Terms and Conditions</a></label></div></div>',
                 type: "info",
                 showCancelButton: true,
@@ -3542,23 +3564,23 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 	                    confirmButtonColor: "#1ab394",
 	                    confirmButtonText: "close"
 	                });
-					updateStatus(Ticket.ticketstatus.Waiting);
+					updateView();
 				}
 				var failureFunc=function()
 				{
 					swal("Can't accept estimation","We couldn't accept the estimation","error");
 
 				}
-                Ticket.acceptEstimation(successFunc,failureFunc,ticket.id);
+                Ticket.acceptEstimation(successFunc,failureFunc,ticket_id);
             });
 	}
 	$scope.rejectEstimation=function()
 	{
 		
 		swal({
-                title: "You reject the estimation for", 
+                title: "You reject the estimation for the ticket", 
                 //html: '<p><i class="fa fa-star project-type"></i>'+ticket.title+'</p>',
-                text:"hello",
+                //text:"hello",
                 type: "info",
                 showCancelButton: true,
                 cancelButtonText: "cancel",
@@ -3576,45 +3598,30 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 	                    confirmButtonColor: "#1ab394",
 	                    confirmButtonText: "close"
 	                });
-					updateStatus(Ticket.ticketstatus.Estimation);
+					updateView();
 				}
 				var failureFunc=function()
 				{
 					swal("Can't reject estimation","We couldn't reject the estimation","error");
 
 				}
-                Ticket.rejectEstimation(successFunc,failureFunc,ticket.id);
+                Ticket.rejectEstimation(successFunc,failureFunc,ticket_id);
             });
 	}
 	Team.loadRoles(loadRoles);
 	var tikettypes=function(data)
 	{
 		$scope.tickettypes=data;
+		updateView();
 	}
 	Ticket.loadTicketTypes(tikettypes);
 	$scope.backToProject=function()
 	{
-		$location.url("/pdetails").search({"project_id": project.id});
+		$location.url("/pdetails/"+project_id);
 	}
 	$scope.openKeybox=function()
 	{
-		$location.url("/keybox").search({"project_id": project.id});
-	}
-	if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN")
-	{
-		$scope.isAdmin=true;
-	}
-	else if(project.teamLeader.id==Login.getLoggedUser().userinfo.id && Login.getLoggedUser().userinfo.email==project.teamLeader.email)
-	{
-
-		$scope.isTeamLeader=true;
-	}
-	else if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER"|| Login.getLoggedUser().userinfo.roles[0]=="ROLE_KEYACCOUNT"){
-		$scope.isclient=true;
-	}
-	else
-	{
-		$scope.isMember=true;
+		$location.url("/keybox/"+project_id);
 	}
 	$scope.uploadFile=function()
 	{
@@ -3627,13 +3634,13 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
         	{
         		$scope.docs=data;
         	}
-        	Task.listFiles(successFunc,project.id);
+        	Task.listFiles(successFunc,project_id);
         }
         failureFunc=function()
         {
         	swal("Can't upload file","we can't upload file please try again later","error");
         }
-        Task.uploadFile(successFunc,failureFunc,formData,project.id);
+        Task.uploadFile(successFunc,failureFunc,formData,project_id);
 	}
 }]);
 Controllers.controller('ContractCtrl', ['$scope',"Login","$routeParams","$location", function ($scope,Login,$routeParams,$location) {
@@ -3654,13 +3661,18 @@ Controllers.controller('ContractCtrl', ['$scope',"Login","$routeParams","$locati
 		Login.signContract(sucessFunc,failureFunc,customerid);
 	}
 }]);
-Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","Project","$location","Team",function ($scope,Login,$routeParams,Project,$location,Team) {
+Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","Project","$location","Team","Params",function ($scope,Login,$routeParams,Project,$location,Team,Params) {
 	var customerid=$routeParams.cid;
 	if(customerid==undefined)
 		$location.path("/client");
 	var loadRoles=function(data){
 		$scope.teamroles=data;
 	}
+	var succsfunc=function(data)
+	{
+		$scope.skills=data;
+	}
+	Params.getSkills(succsfunc);
 	Team.loadRoles(loadRoles);
 	var selectedPorject=null;
 	updateView=function()
@@ -3926,7 +3938,6 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 		var success=function()
 		{
 			$('#add-member').modal('hide');
-			console.log("New members added successfully");
 		}
 		var failure=function()
 		{
@@ -4019,7 +4030,6 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 				var index=$scope.team.indexOf(member);
 				$scope.team.splice(index,1);
 				oldmembers.splice(index, 1);
-				console.log("members deleted successfully");
 			}
 			var failure=function()
 			{

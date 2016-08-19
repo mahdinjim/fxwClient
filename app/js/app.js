@@ -38,31 +38,31 @@ crmapp.config(["$routeProvider",
 				templateUrl:'partials/cuserprofile.html',
 				controller:'CuserCtrl'
 			}).
-			when('/messaging',{
+			when('/messaging/:project_id/:channel_id',{
 				templateUrl:'partials/messaging.html',
 				controller:'ChatCtrl'
 			}).
-			when('/pdetails',{
+			when('/pdetails/:project_id',{
 				templateUrl:'partials/pdetails.html',
 				controller:'ProjectCtrl'
 			}).
-			when('/keybox',{
+			when('/keybox/:project_id',{
 				templateUrl:'partials/keybox.html',
 				controller:'KeyboxCtrl'
 			}).
-			when('/stories',{
+			when('/stories/:project_id/:ticket_id',{
 				templateUrl:'partials/stories.html',
 				controller:'StoriesCtrl'
 			}).
-			when('/acceptcontract',{
+			when('/acceptcontract/:cid',{
 				templateUrl:'partials/terms.html',
 				controller:'ContractCtrl'
 			}).
-			when('/clientprojects',{
+			when('/clientprojects/:cid',{
 				templateUrl:'partials/clientprojects.html',
 				controller:'ClientProjectsCtrl'
 			}).
-			when('/report',{
+			when('/report/:project_id/:pname',{
 				templateUrl:'partials/hourreports.html',
 				controller:'ReportCtrl'
 			}).
@@ -71,7 +71,7 @@ crmapp.config(["$routeProvider",
       		});
 	}
 ]);      		
-crmapp.run(['$rootScope', '$location', 'Login','Chat', function ($rootScope, $location, Login,Chat) {
+crmapp.run(['$rootScope', '$location', 'Login','Chat','$templateCache', function ($rootScope, $location, Login,Chat,$templateCache) {
     $rootScope.$on('$routeChangeStart', function (event) {
     	
     	if(!Login.getLoggedUser())
@@ -103,4 +103,7 @@ crmapp.run(['$rootScope', '$location', 'Login','Chat', function ($rootScope, $lo
 	    
         
     });
+    $rootScope.$on('$viewContentLoaded', function() {
+      $templateCache.removeAll();
+   });
 }]);

@@ -27,7 +27,7 @@
                                 <a data-toggle="dropdown" class="dropdown-toggle">
                                     <span class="clear"> 
                                         <span class="block m-t-xs"> <strong class="font-bold">{{company}}</strong></span> 
-                                        <span class="text-muted text-xs block">{{name}} {{surname}} </span> 
+                                        <span class="text-muted text-xs block">{{name}} {{surname}} hello</span> 
                                         <span class="text-muted text-xs block">{{title}}<b class="caret"></b></span> 
                                     </span> 
                                 </a>
@@ -58,8 +58,8 @@
                         <a><i class="fa fa-clone"></i> <span class="nav-label">Projects</span> <span class="fa arrow"></span></a>
                         <ul id="projecttab" class="nav nav-second-level collapse" >
                             <li ng-repeat='project in projects'>
-                                <a href="#/pdetails?project_id={{project.id}}" ng-if="isclient"><span class="nav-label">{{project.name}}</a>
-                                <a href="#/pdetails?project_id={{project.id}}" ng-if="!isclient">{{project.name}}
+                                <a href="#/pdetails/{{project.id}}" ng-if="isclient"><span class="nav-label">{{project.name}}</a>
+                                <a href="#/pdetails/{{project.id}}" ng-if="!isclient">{{project.name}}
                                     <span class="navi-project-name">{{project.company}}</span>
                                 </a>
                             </li>
@@ -70,7 +70,7 @@
                     <li ng-if="doDisplay('/messaging')" ng-click="openclosetab('messagetab')" ng-class="{'active':(messageactive)}" activate-tab>
                         <a ><i class="fa fa-comments"></i> <span class="nav-label">Messages</span> <span class="label label-danger pull-right">{{totalmessages}}</span></span></a>
                         <ul id="messagetab" class="nav nav-second-level collapse">
-                            <li  ng-repeat='channel in channels'><a href="#/messaging?channel_id={{channel.id}}&project_id={{channel.project_id}}"><span class="nav-label">{{channel.name}}</span> <span class="label label-default pull-right">{{channel.newmessages}}</span></a></li>
+                            <li  ng-repeat='channel in channels'><a href="#/messaging/{{channel.project_id}}/{{channel.id}}"><span class="nav-label">{{channel.name}}</span> <span class="label label-default pull-right">{{channel.newmessages}}</span></a></li>
                         </ul> 
                     </li>
 
@@ -90,8 +90,8 @@
                         <a><i class="fa fa-check-square"></i> <span class="nav-label">Report</span></a>
                         <ul id="reportab" class="nav nav-second-level collapse">
                             <li ng-repeat='project in projects'>
-                                <a href="#/report?project_id={{project.id}}&pname={{project.name}}" ng-if="isclient"><span class="nav-label">{{project.name}}</a>
-                                <a href="#/report?project_id={{project.id}}" ng-if="!isclient">{{project.company}}
+                                <a href="#/report/{{project.id}}/{{project.name}}" ng-if="isclient"><span class="nav-label">{{project.name}}</a>
+                                <a href="#/report/{{project.id}}/{{project.name}}" ng-if="!isclient">{{project.company}}
                                     <span class="navi-project-name">{{project.name}}</span>
                                 </a>
                             </li>
@@ -132,33 +132,8 @@
                     </div>
                     <div class="form-group mb0">
                         <select data-placeholder="Select Skills" class="select2 chosen-select" multiple style="width:100%;" tabindex="2" ng-model="projectskills">
-                            <optgroup label="OOP">
-                                <option value="PHP">PHP</option>
-                                <option value="Java">Java</option>
-                                <option value="C#">C#</option>
-                                <option value="Python">Python</option>
-                                <option value="vb.net">vb.net</option>
-                                <option value="Ruby on Rails">Ruby on Rails</option>
-                                <option value="Objective C">Objective C</option>
-                                <option value="Action Script">Action Script</option>
-                                <option value="Pearl">Pearl</option>
-                            </optgroup>
-                            <optgroup label="Design">
-                                <option value="Web Design">Web Design</option>
-                                <option value="User Interface Design">User Interface Design</option>
-                                <option value="User Experience Design">User Experience Design</option>
-                                <option value="Mobile Design">Mobile Design</option>
-                                <option value="Responsive Design">Responsive Design</option>
-                                <option value="Graphic Design">Graphic Design</option>
-                            </optgroup>
-                            <optgroup label="Frontend Developement">
-                                <option value="HTML 5 &amp; CSS 3">HTML 5 &amp; CSS 3</option>
-                                <option value="jQuery">jQuery</option>
-                                <option value="Javascript">Javascript</option>
-                                <option value="Bootstrap Framework">Bootstrap Framework</option>
-                                <option value="Gumby Framework">Gumby Framework</option>
-                                <option value="WordPress Template">WordPress Template</option>
-                            </optgroup>
+                            <option ng-repeat="skill in skills" value="{{skill}}">{{skill}} </option>
+                            
                         </select>
                     </div>
                     

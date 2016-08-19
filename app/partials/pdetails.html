@@ -194,6 +194,7 @@
                                                         <td width="150" class="project-table-head">ID</td>
                                                         <td width="1100" class="project-table-head">Title</td>
                                                         <td width="100" class="project-table-head">Estimation</td>
+                                                        <td width="100" class="project-table-head">REAL TIME</td>
                                                         <td width="300" class="project-table-head">Status</td>
                                                         <td width="300" class="project-table-head aright">Action</td>
                                                     </tr>
@@ -219,6 +220,11 @@
                                                         </td>
                                                         <td class="project-estimation" ng-if="ticket.type!=tickettypes[2].type && ticket.estimation==null">
                                                            
+                                                        </td>
+                                                        <td class="project-real-time" ng-if="ticket.realtime!=null">
+                                                            {{ticket.realtime}}h
+                                                        </td>
+                                                        <td class="project-real-time" ng-if="ticket.realtime==null">
                                                         </td>
                                                         <td class="project-estimation" ng-if="ticket.type==tickettypes[2].type">
                                                             <i class="fa fa-bug"></i>
@@ -284,6 +290,11 @@
                                                         </td>
                                                         <td class="project-estimation" ng-if="ticket.type!=tickettypes[2].type && ticket.estimation==null">
                                                            
+                                                        </td>
+                                                        <td class="project-real-time" ng-if="ticket.realtime!=null">
+                                                            {{ticket.realtime}}h
+                                                        </td>
+                                                        <td class="project-real-time" ng-if="ticket.realtime==null">
                                                         </td>
                                                         <td class="project-estimation" ng-if="ticket.type==tickettypes[2].type">
                                                             <i class="fa fa-bug"></i>
@@ -362,6 +373,11 @@
                                                         </td>
                                                         <td class="project-estimation" ng-if="ticket.type!=tickettypes[2].type && ticket.estimation==null">
                                                            
+                                                        </td>
+                                                        <td class="project-real-time" ng-if="ticket.realtime!=null">
+                                                            {{ticket.realtime}}h
+                                                        </td>
+                                                        <td class="project-real-time" ng-if="ticket.realtime==null">
                                                         </td>
                                                         <td class="project-estimation" ng-if="ticket.type==tickettypes[2].type">
                                                             <i class="fa fa-bug"></i>
@@ -485,7 +501,7 @@
                                             </td>
                                              <td class="bold" ng-if="!prod.isTeamLeader">
                                                 <div class="select-option">
-                                                 <select class="select2" id="memberrole" ng-click="changeRole(prod,0)">
+                                                 <select class="select3" id="memberrole" ng-click="changeRole(prod,0)">
                                                     <option value="teamlead">Team leader</option>
                                                     <option value="member" selected >Member</option>
                                        

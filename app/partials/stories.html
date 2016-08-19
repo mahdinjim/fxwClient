@@ -66,6 +66,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <a class="btn btn-default btn-bitbucket btn-m mr5" ng-click="backToProject()"><i class="fa fa-angle-left mr5"></i> back to project</a>
+                                <a class="btn btn-default btn-bitbucket btn-m mr5 btnCopy" data-clipboard-text="{{currentUrl}}"><i class="fa fa-link mr5"></i> copy link</a>
                                 <a class="btn btn-default btn-bitbucket btn-m mr5"ng-click="openKeybox()"><i class="fa fa-lock mr5"></i> keybox</button>
                                 <a ng-if="!isclient" class="btn btn-default btn-bitbucket btn-m mr5" href="https://fxw.slack.com/" target="_blank"><i class="fa fa-slack mr5" ng-if="!isclient"></i> slack</a>
                                 <a ng-if="!isclient" class="btn btn-default btn-bitbucket btn-m mr5" href="https://www.pivotaltracker.com/" target="_blank"><i class="fa fa-circle-o mr5" ng-if="!isclient"></i> pivotal</a>
@@ -111,11 +112,18 @@
                                                 </div>
                                             </div>
                                             <div class="col-lg-4 pr0 aright" ng-if="ticket_status!=ticketStatus.Draft.status && ticket_status!=ticketStatus.Estimation.status">
-                                                <h2 class="mb5 bold">
-                                                    <i class="fa fa-clock-o"></i> 
-                                                    <span class="hour">{{ticket_estimation}} h</span>
+                                            <div class="" style="display: inline-block;text-align: right; margin-right: 10px;padding-right:10px; border-right: 1px solid #eee;" ng-if="ticket_estimation!=null" >
+                                                <span class="">Estimation</span>
+                                                <h2 class="">
+                                                  <span class="hour">{{ticket_estimation}} h</span>
                                                 </h2>
-                                                <span class="project-details-realtime mb10" ng-if="ticket_status==ticketStatus.Accept.status || ticket_status==ticketStatus.Done.status || ticket_status==ticketStatus.Reject.status" >Realtime {{ticket_realtime}} h</span>
+                                              </div>
+                                              <div class="" style="display: inline-block;text-align: left" ng-if="ticket_realtime!=null">
+                                                <span class="">Real Time</span>
+                                                <h2 class="bold">
+                                                  <span class="hour">{{ticket_realtime}} h</span>
+                                                </h2>
+                                              </div>
                                             </div>
                                         </div>
                                     </div>

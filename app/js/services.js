@@ -470,11 +470,11 @@ services.factory("Links",[function(){
 services.factory("Login",['$http','$location','$cookies',"$route","Links",
 	function($http,$location,$cookies,$route,Links){
 		var lastlink=null;
-		var Admin_Access=["/login","/dashboard","/client","/teamprofile","/team","/messaging","/pdetails","/keybox","/stories","/clientprojects","/report"];
-		var Client_Access=["/login","/dashboard","/cuser","/cuserprofile","/messaging","/pdetails","/keybox","/stories","/acceptcontract","/report"];
-		var KeyAccount_Access=["/login","/dashboard","/pdetails","/messaging","/client","/keybox","/stories"];
-		var TeamLeader_Access=["/login","/dashboard","/pdetails","/messaging","/keybox","/stories"];
-		var TeamMember_Access=["/login","/dashboard","/pdetails","/messaging","/keybox","/stories"];
+		var Admin_Access=["/login","/dashboard","/client","/teamprofile","/team",/\/messaging/,/\/pdetails/,/\/keybox/,/\/stories/,/\/clientprojects/,/\/report/];
+		var Client_Access=["/login","/dashboard","/cuser","/cuserprofile",/\/messaging/,/\/pdetails/,/\/keybox/,/\/stories/,"/acceptcontract",/\/report/];
+		var KeyAccount_Access=["/login","/dashboard",/\/pdetails/,/\/messaging/,"/client",/\/keybox/,/\/stories/];
+		var TeamLeader_Access=["/login","/dashboard",/\/pdetails/,/\/messaging/,/\/keybox/,/\/stories/];
+		var TeamMember_Access=["/login","/dashboard",/\/pdetails/,/\/messaging/,/\/keybox/,/\/stories/];
 		this.setLastLink=function(path)
 		{
 			this.lastlink=path;
@@ -506,7 +506,7 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 				 if(role=="ROLE_CUSTOMER")
 				 	if(!this.getLoggedUser().userinfo.signed)
 				 	{
-				 		$location.url("/acceptcontract?cid="+this.getLoggedUser().userinfo.id);
+				 		$location.url("/acceptcontract/"+this.getLoggedUser().userinfo.id);
 				 	}
 			}
 		}
@@ -521,9 +521,10 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 					url:Links.getAcceptContractLink()+"/"+customer_id,
 					headers: {'x-crm-access-token': this.getLoggedUser().token.token}
 				}).success(function (data, status, headers, config) {
-					successFunc();
-					user.signed=true;
+					
+					user.userinfo.signed=true;
 					me.upadteLoggedinUser(user);
+					successFunc();
 	            }).error(function (data, status, headers, config) {
 	            	if(status==403)
 	            		me.logout();
@@ -610,41 +611,53 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 				return false;
 			if(role=="ROLE_ADMIN")
 			{
-				if(Admin_Access.indexOf(path)>0 )
+				if(this.checkStrings(Admin_Access,path) )
 					return true;
 				else
 					return false;
 			}
 			else if(role=="ROLE_CUSTOMER" || role=="ROLE_CUSER")
 			{
-				if(Client_Access.indexOf(path)>0 )
+				if(this.checkStrings(Client_Access,path)  )
 					return true;
 				else
 					return false;
 			}
 			else if(role=="ROLE_TEAMLEADER")
 			{
-				if(TeamLeader_Access.indexOf(path)>0 )
+				if(this.checkStrings(TeamLeader_Access,path) )
 					return true;
 				else
 					return false;
 			}
 			else if(role=="ROLE_KEYACCOUNT")
 			{
-				if(KeyAccount_Access.indexOf(path)>0 )
+				if(this.checkStrings(KeyAccount_Access,path) )
 					return true;
 				else
 					return false;
 			}
 			else if(role=="ROLE_DEVELOPER" || role=="ROLE_DESIGNER" || role=="ROLE_TESTER" || role=="ROLE_SYSADMIN")
 			{
-				if(TeamMember_Access.indexOf(path)>0 )
+				if(this.checkStrings(TeamMember_Access,path) )
 					return true;
 				else
 					return false;
 			}
 
 		}
+		this.checkStrings=function(table,string)
+		{
+			for(i=0;i<table.length;i++)
+			{
+				if(string.search(table[i])>=0)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
 		this.isTokenExpired=function(successFunc)
 		{
 			var loggedUser=this.getLoggedUser();
@@ -1185,11 +1198,12 @@ services.factory("Cuser",["$http",'Login','Links',function($http,Login,Links){
 		}
 		return this;
 }]);
-services.factory('Params',function(){
+services.factory('Params',["$http",function($http){
 	var teamMember=null;
 	var cuser=null;
 	var project=null;
 	var ticket=null;
+	var skills=null;
 	return {
 		setTeamMember:function(data){
 			teamMember=data;
@@ -1229,9 +1243,31 @@ services.factory('Params',function(){
 
 			}
 			return ticket;
+		},
+		getSkills:function(success)
+		{
+			var me=this;
+			if(this.skills==null)
+			{
+				$http({
+				method:"get", 
+				url:"locals/skills.txt",
+				}).success(function (data, status, headers, config) {
+					var array = data.split('\n');
+					success(array);
+					me.skills=array;
+				}).error(function (data, status, headers, config) {
+					console.log(data);
+	            });
+			}
+			else
+			{
+				success(this.skills);
+			}
+			
 		}
 	}
-});
+}]);
 services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
 	this.team=null;
 	this.first=null;
@@ -1409,26 +1445,19 @@ services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
             });
         }
 	}
-	this.getNewMessagesNumber=function(channel,successfunction,i,end)
+	this.getNewMessagesNumber=function(data,successfunction)
 	{
 		if(Login.getLoggedUser())
 		{
 			
 			var me =this;
 			$http({
-				method:"GET", 
-				url:Links.getNewMessageNumberLink()+"/"+channel.id,
-				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+				method:"POST", 
+				url:Links.getNewMessageNumberLink(),
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token},
+				data:data
 			}).success(function (data, status, headers, config) {
-				if(i==0)
-				{
-					me.newmessagesCount=0;
-				}
-				if(data.result)
-					me.newmessagesCount+=parseInt(data.undread_count);
-				else
-					me.newmessagesCount+=0;
-				successfunction(data,channel,i,end,me.newmessagesCount);
+				successfunction(data);
             }).error(function (data, status, headers, config) {
             	if(status==403)
             		Login.logout();
