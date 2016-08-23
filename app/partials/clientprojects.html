@@ -138,7 +138,7 @@
                                                         <td class="project-actions">
                                                             <button type="button" class="btn btn-white btn-sm" ng-click="openAddprojectModelFromclient(project)"><i class="fa fa-pencil"></i> </button>
                                                             <button type="button" class="btn btn-white btn-sm" ng-click="openAddMember(project)"><i class="fa fa-users"></i> </button>
-                                                            <a href="#/pdetails?project_id={{project.id}}" class="btn btn-default btn-sm" target="_self"><i class="fa fa-sign-in"></i></a>
+                                                            <a href="#/pdetails/{{project.id}}" class="btn btn-default btn-sm" target="_self"><i class="fa fa-sign-in"></i></a>
                                                         </td> 
                                                     </tr>
 
@@ -229,7 +229,7 @@
                                             </td>
                                             <td class="bold" ng-if="!prod.isTeamLeader">
                                                 
-                                                 <select  id="memberrole" ng-click="changeRole(prod,0)">
+                                                 <select  id="memberrole" ng-click="changeRole(prod,0)" class="select3">
                                                     <option value="teamlead">Team leader</option>
                                                     <option value="member" selected >Member</option>
                                        

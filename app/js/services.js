@@ -95,6 +95,8 @@ services.factory("Links",[function(){
 	var ticketReportByMonthLink=baseUrl+path+"/private/project/restricted/report/ticket";
 	var dateReportByMonthLink=baseUrl+path+"/private/project/restricted/report/date";
 	var changePasswordLink=baseUrl+path+"/private/password/change";
+	var markBilledLink=baseUrl+path+"/private/management/project/ticket/billed";
+	var markPayedLink=baseUrl+path+"/private/management/project/ticket/payed";
 	this.getLoginLink=function()
 	{
 		return LoginLink;
@@ -464,6 +466,14 @@ services.factory("Links",[function(){
 	this.getDateReportByMonthLink=function()
 	{
 		return dateReportByMonthLink;
+	}
+	this.getMarkBilledLink=function()
+	{
+		return markBilledLink;
+	}
+	this.getMarkPayedLink=function()
+	{
+		return markPayedLink;
 	}
 	return this;
 }]);
@@ -2022,6 +2032,46 @@ services.service('Ticket', ["$http","Login","Links",function ($http,Login,Links)
     	
             });
         }	
+	}
+	this.markAsbilled=function(successfunc,failurefunc,ticket_id)
+	{
+		if(Login.getLoggedUser())
+		{
+			$http({
+				method:"GET", 
+				url:Links.getMarkBilledLink()+"/"+ticket_id,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+				successfunc(data);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+    				Login.logout();
+    			else
+    				failurefunc();
+
+    	
+            });
+        }
+	}
+	this.markAsPayed=function(successfunc,failurefunc,ticket_id)
+	{
+		if(Login.getLoggedUser())
+		{
+			$http({
+				method:"GET", 
+				url:Links.getMarkPayedLink()+"/"+ticket_id,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+				successfunc(data);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+    				Login.logout();
+    			else
+    				failurefunc();
+
+    	
+            });
+        }
 	}
 }]);
 services.service('Task', ["$http","Login","Links",function ($http,Login,Links) {

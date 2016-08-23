@@ -1661,6 +1661,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	$scope.isAdmin=false;
 	$scope.isTeamLeader=false;
 	$scope.isMember=false;
+	$scope.isKeyAccount=false;
 	$scope.hasteam=true;
 	$scope.ticketStatus=Ticket.ticketstatus;
 	var channel_id=null;
@@ -1780,6 +1781,10 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	}
 	else{
 		$scope.isMember=true;
+	}
+	if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_KEYACCOUNT")
+	{
+		$scope.isKeyAccount=true;
 	}
 	$scope.username=Login.getLoggedUser().userinfo.name+ " "+Login.getLoggedUser().userinfo.surname;
 	var ticketupdater=null;
@@ -2763,6 +2768,32 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	{
 		Params.setTicket(ticket);
 		$location.path("/stories/"+project_id+"/"+ticket.id);
+	}
+	$scope.markAsBilled=function(ticket)
+	{
+		var successfunc=function()
+		{
+			updateTickets();
+		}
+		var failurefunc=function()
+		{
+			swal("Can't bill ticket","We couldn't mark the ticket as billed","error");
+
+		}
+		Ticket.markAsbilled(successfunc,failurefunc,ticket.id);
+	}
+	$scope.markAsPayed=function(ticket)
+	{
+		var successfunc=function()
+		{
+			updateTickets();
+		}
+		var failurefunc=function()
+		{
+			swal("Can't bill ticket","We couldn't mark the ticket as billed","error");
+
+		}
+		Ticket.markAsPayed(successfunc,failurefunc,ticket.id);
 	}
 	Project.getProjectDetails($routeParams.project_id,succesFunc,failureFunc);
 }]);

@@ -103,7 +103,7 @@ crmapp.run(['$rootScope', '$location', 'Login','Chat','$templateCache', function
 	    
         
     });
-    $rootScope.$on('$viewContentLoaded', function() {
-      $templateCache.removeAll();
-   });
+   //  $rootScope.$on('$viewContentLoaded', function() {
+   //    $templateCache.removeAll();
+   // });
 }]);
