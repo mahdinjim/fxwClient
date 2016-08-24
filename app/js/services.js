@@ -97,6 +97,7 @@ services.factory("Links",[function(){
 	var changePasswordLink=baseUrl+path+"/private/password/change";
 	var markBilledLink=baseUrl+path+"/private/management/project/ticket/billed";
 	var markPayedLink=baseUrl+path+"/private/management/project/ticket/payed";
+	var markmanyBilledLink=baseUrl+path+"/private/management/project/ticket/manybilled";
 	this.getLoginLink=function()
 	{
 		return LoginLink;
@@ -474,6 +475,10 @@ services.factory("Links",[function(){
 	this.getMarkPayedLink=function()
 	{
 		return markPayedLink;
+	}
+	this.getMarkmanyBilledLink=function()
+	{
+		return markmanyBilledLink;
 	}
 	return this;
 }]);
@@ -2061,6 +2066,27 @@ services.service('Ticket', ["$http","Login","Links",function ($http,Login,Links)
 				method:"GET", 
 				url:Links.getMarkPayedLink()+"/"+ticket_id,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+				successfunc(data);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+    				Login.logout();
+    			else
+    				failurefunc();
+
+    	
+            });
+        }
+	}
+	this.markManyAsBilled=function(successfunc,failurefunc,tickets)
+	{
+		if(Login.getLoggedUser())
+		{
+			$http({
+				method:"POST", 
+				url:Links.getMarkmanyBilledLink(),
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token},
+				data:tickets
 			}).success(function (data, status, headers, config) {
 				successfunc(data);
             }).error(function (data, status, headers, config) {

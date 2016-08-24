@@ -4179,16 +4179,90 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 
 	}
 }]);
-Controllers.controller('ReportCtrl',['$scope','$routeParams','Project',function($scope,$routeParams,Project)
+Controllers.controller('ReportCtrl',['$scope','$routeParams','Project','Ticket','Login',function($scope,$routeParams,Project,Ticket,Login)
 {
 	var project_id = $routeParams.project_id;
-	$scope.isTicketReport=false;
-	$scope.isDateReport=true;
+	var ticketStatus=Ticket.ticketstatus;
+	$scope.isTicketReport=true;
+	$scope.isDateReport=false;
 	var d = new Date();
 	$scope.month=d.getMonth()+1;
 	$scope.year=d.getFullYear();
 	$scope.project_name=$routeParams.pname;
+	var dataObject=null;
+	$scope.paymentstatus="all";
+	$scope.showMarker=false;
+	$scope.filterPayment=function()
+	{
+		$scope.showMarker=false;
+		var filtred=new Array();
+		if($scope.paymentstatus=="all")
+		{
+			$scope.data=dataObject.data;
+			$scope.totalestimation=dataObject.totalestimated;
+			$scope.totalrealtime=dataObject.totalrealtime;
+		}
+		else
+		{
+			$scope.totalestimation=0;
+			$scope.totalrealtime=0;
+			for(i=0;i<dataObject.data.length;i++)
+			{
+				if($scope.paymentstatus=="open")
+				{
+					if(dataObject.data[i].status==ticketStatus.Done.status && dataObject.data[i].open)
+					{
+						filtred.push(dataObject.data[i]);
+						$scope.totalrealtime+=parseFloat(dataObject.data[i].totalhours);
+						$scope.totalestimation+=parseFloat(dataObject.data[i].totalestimatedhours);
 
+					}
+					if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_KEYACCOUNT" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN")
+						$scope.showMarker=true;
+				}
+				if($scope.paymentstatus=="billed")
+				{
+					if(dataObject.data[i].billed)
+					{
+						filtred.push(dataObject.data[i]);
+						$scope.totalrealtime+=parseFloat(dataObject.data[i].totalhours);
+						$scope.totalestimation+=parseFloat(dataObject.data[i].totalestimatedhours);
+					}
+				}
+				if($scope.paymentstatus=="payed")
+				{
+					if(dataObject.data[i].payed)
+					{
+						filtred.push(dataObject.data[i]);
+						$scope.totalrealtime+=parseFloat(dataObject.data[i].totalhours);
+						$scope.totalestimation+=parseFloat(dataObject.data[i].totalestimatedhours);
+					}
+				}
+			}
+			$scope.data=filtred;	
+		}
+		
+	}
+	$scope.markasAllAsbilled=function()
+	{
+		var sucessFunc=function()
+		{
+			$scope.paymentstatus="all";
+			$scope.showMarker=false;
+			updateTicketView($scope.month,$scope.year);
+		}
+		var failureFunc=function()
+		{
+			swal("Can't bill tickets","Oopps!! can't bill the tickets please try again later","error");
+		}
+		var tickets=new Array();
+		for(i=0;i<$scope.data.length;i++)
+		{
+			tickets.push($scope.data[i].id);
+		}
+		var obj={"tickets":tickets};
+		Ticket.markManyAsBilled(sucessFunc,failureFunc,obj);
+	}
 	$scope.changeView=function(number){
 		if(number==0)
 		{
@@ -4204,7 +4278,10 @@ Controllers.controller('ReportCtrl',['$scope','$routeParams','Project',function(
 	}
 	var successFunc=function(data)
 	{
-		$scope.data=data;
+		$scope.data=data.data;
+		dataObject=data;
+		$scope.totalestimation=data.totalestimated;
+		$scope.totalrealtime=data.totalrealtime;
 	}
 	var failureFunc=function()
 	{
@@ -4249,5 +4326,5 @@ Controllers.controller('ReportCtrl',['$scope','$routeParams','Project',function(
 		}
 		Project.getDateReportbyMonth(successFunc,failureFunc,month,year,project_id);
 	}
-	updateDateView($scope.month,$scope.year);
+	updateTicketView($scope.month,$scope.year);
 }]);

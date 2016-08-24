@@ -31,8 +31,9 @@
                           <div class="col-md-6"></div>
                           <div class="col-md-6 aright">
                               <div class="btn-group">
+                                <a ng-click="changeView(1)" ng-class="{'btn btn-white btn-bitbucket btn-m':isTicketReport,'btn btn-default btn-bitbucket btn-m':!isTicketReport}"><i class="fa fa-clone mr5"></i> sort by ticket</a>
                                   <a ng-click="changeView(0)" ng-class="{'btn btn-white btn-bitbucket btn-m':isDateReport,'btn btn-default btn-bitbucket btn-m':!isDateReport}"><i class="fa fa-calendar mr5"></i> sort by date</a>
-                                  <a ng-click="changeView(1)" ng-class="{'btn btn-white btn-bitbucket btn-m':isTicketReport,'btn btn-default btn-bitbucket btn-m':!isTicketReport}"><i class="fa fa-clone mr5"></i> sort by ticket</a>
+                                  
                               </div>
                           </div>
                       </div>
@@ -73,16 +74,41 @@
                                                     <option value="2011">2011</option>
                                                     <option value="2010">2010</option>
                                                   </select>
+
                                               </div>
                                           </div>
 
+                                          <div class="form-group fleft mr10 mb10">
+                                            <select class="select3" ng-model="paymentstatus" ng-change="filterPayment()">
+                                                    <option value="all" selected="selected">All</option>
+                                                    <option value="open">Not Billed</option>
+                                                    <option value="billed">Billed</option>
+                                                    <option value="payed">Payed</option>
+                                            </select>
+                                            <button class="btn btn-primary btn-bitbucket btn-xs" type="button" ng-if="showMarker" ng-click="markasAllAsbilled()">mark as billed</button>
+                                          </div>
+
                                         </div>
-                                        <!-- <div class="col-md-4 p0">
-                                            <div class="input-group project-search">
+                                        <div class="col-md-4 p0 aright">
+
+                                            <div class="" style="display: inline-block;text-align: right; margin-right: 10px;padding-right:10px; border-right: 1px solid #eee;">
+                                                <span class="">Estimation</span>
+                                                <h2 class="">
+                                                  <span class="hour">{{totalestimation}} h</span>
+                                                </h2>
+                                              </div>
+                                              <div class="" style="display: inline-block;text-align: left">
+                                                <span class="">Real Time</span>
+                                                <h2 class="bold">
+                                                  <span class="hour">{{totalrealtime}} h</span>
+                                                </h2>
+                                              </div>
+                                            
+                                            <!-- <div class="input-group project-search">
                                                 <input type="text" placeholder="search" class="input-sm form-control">
                                                 <span class="input-group-btn"><button type="button" class="btn btn-sm btn-primary"> go!</button> </span>
-                                            </div>
-                                        </div> -->
+                                            </div> -->
+                                        </div> 
                                         <div style="clear:both;"></div>
                                     </div>
                                     <!-- end filter-->
@@ -98,8 +124,8 @@
                                                     <thead>
                                                       <tr>
                                                           <td width="400" class="table-head">{{date.date}}</td>
-                                                          <td width="800" class="table-head"></td>
-                                                          <td width="150" class="table-head"></td>
+                                                          <td width="800" class="table-head realt-time"></td>
+                                                          <td width="150" class="table-head realt-time"><i class="fa fa-clock-o"> {{date.totalestimatedhours}} h</td>
                                                           <td width="150" class="table-head realt-time"><i class="fa fa-clock-o"></i> {{date.totalhours}} h</td>
                                                       </tr>
                                                     </thead>
@@ -137,8 +163,14 @@
                                                     <thead>
                                                       <tr>
                                                           <td width="600" class="table-head">{{ticket.title}}</td>
-                                                          <td width="600" class="table-head"></td>
-                                                          <td width="150" class="table-head"></td>
+                                                          <td width="300" class="table-head">
+                                                            {{ticket.status}} / 
+                                                            <span ng-if="ticket.open">not billed</span>
+                                                            <span ng-if="ticket.billed && !ticket.payed">billed</span>
+                                                            <span ng-if="ticket.payed">payed</span>
+                                                          </td>
+
+                                                          <td width="150" class="table-head realt-time"><i class="fa fa-clock-o"> {{ticket.totalestimatedhours}} h</td>
                                                           <td width="150" class="table-head realt-time"><i class="fa fa-clock-o"></i> {{ticket.totalhours}} h</td>
                                                       </tr>
                                                     </thead>

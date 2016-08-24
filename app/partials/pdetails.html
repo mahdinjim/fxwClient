@@ -257,13 +257,20 @@
                                                             <button type="button" class="btn btn-danger btn-xs fxw-alert-reject-ticket" ng-click="openRejectModal(ticket)"><i class="fa fa-undo"></i> reject</button>
                                                             <small>please accept &amp; close ticket</small>
                                                         </td>
-                                                        <td class="project-status" ng-if="ticket.status==ticketStatus.Done.status">
+                                                         <td class="project-status" ng-if="ticket.status==ticketStatus.Done.status && isKeyAccount">
+                                                            <span class="label label-default label-nobg" ng-if="ticket.open"><i class="fa fa-check"></i> done / not billed</span>
+                                                            <span class="label label-default label-nobg" ng-if="ticket.billed && !ticket.payed"><i class="fa fa-check"></i> done / billed</span>
+                                                            <span class="label label-default label-nobg" ng-if="ticket.payed"><i class="fa fa-check"></i> done / payed</span> 
+                                                        </td>
+                                                        <td class="project-status" ng-if="ticket.status==ticketStatus.Done.status && !isKeyAccount">
                                                             <span class="label label-default label-nobg"><i class="fa fa-check"></i> done</span>
                                                         </td>
                                                          <td class="project-status" ng-if="ticket.status==ticketStatus.Reject.status">
                                                             <span class="label label-default label-nobg"></i> Rejected</span>
                                                         </td>
                                                         <td class="project-actions">
+                                                            <a ng-if="isKeyAccount && ticket.status==ticketStatus.Done.status && ticket.open" ng-click="markAsBilled(ticket)" class="btn btn-white btn-sm">bill</a>
+                                                            <a ng-if="isKeyAccount && ticket.status==ticketStatus.Done.status && ticket.billed && !ticket.payed" ng-click="markAsPayed(ticket)" class="btn btn-white btn-sm">pay</a>
                                                             <button type="button" class="btn btn-white btn-sm" data-toggle="modal" data-target="#edit-ticket" ng-if="ticket.status==ticketStatus.Draft.status" ng-click="openCreateTicket(ticket)"><i class="fa fa-pencil"></i> </button>
                                                             <button type="button" class="btn btn-white btn-sm fxw-alert-archive-ticket" ng-if="ticket.status==ticketStatus.Goproduction.status || ticket.status==ticketStatus.Draft.status" ng-click="deleteTicket(ticket)"><i class="fa fa-trash" ></i> </button>
                                                             <a ng-click="openStoriesView(ticket)" class="btn btn-white btn-sm"><i class="fa fa-search"></i> details</a>
@@ -427,11 +434,7 @@
                                                            <span class="label label-default label-nobg"><img src="img/ellipsis.gif" width="15" height="15"> in acceptance</span>
                                                         
                                                         </td>
-                                                        <td class="project-status" ng-if="ticket.status==ticketStatus.Done.status && isKeyAccount">
-                                                            <span class="label label-default label-nobg" ng-if="ticket.open"><i class="fa fa-check"></i> done / not billed</span>
-                                                            <span class="label label-default label-nobg" ng-if="ticket.billed && !ticket.payed"><i class="fa fa-check"></i> done / billed</span>
-                                                            <span class="label label-default label-nobg" ng-if="ticket.payed"><i class="fa fa-check"></i> done / payed</span> 
-                                                        </td>
+                                                       
                                                         <td class="project-status" ng-if="ticket.status==ticketStatus.Done.status">
                                                             <span class="label label-default label-nobg"><i class="fa fa-check"></i> done</span>
                                                         </td>
@@ -441,8 +444,7 @@
                                                         
                                                         </td>
                                                         <td class="project-actions">
-                                                            <a ng-if="isKeyAccount && ticket.status==ticketStatus.Done.status && ticket.open" ng-click="markAsBilled(ticket)" class="btn btn-white btn-sm">bill</a>
-                                                            <a ng-if="isKeyAccount && ticket.status==ticketStatus.Done.status && ticket.billed && !ticket.payed" ng-click="markAsPayed(ticket)" class="btn btn-white btn-sm">pay</a>
+
                                                             <a ng-click="openStoriesView(ticket)" class="btn btn-white btn-sm"><i class="fa fa-search"></i> details</a>
                                                         </td> 
                                                     </tr>
