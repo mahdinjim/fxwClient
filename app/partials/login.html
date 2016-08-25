@@ -11,12 +11,17 @@
                 <div class="form-group">
                     <input  class="form-control" placeholder="E-Mail" required="" ng-model="login">
                 </div>
+                
                 <div class="form-group">
                     <input type="password" class="form-control" placeholder="Password" required="" ng-model="password">
                 </div>
+                <div class="form-group">
+                    <input type="checkbox" id="checkbox3" ng-model="stayloggedin" value="true">
+                    <label for="checkbox3">Keep me logged in</label>
+                </div>
                 <button type="submit" class="btn btn-primary block full-width m-b" id="loginbtn">Login</button>
                 <div class="errormsg">{{errors}}</div>
-
+                
                 <!-- <a href="forgot-password-fxw.html"><small>Forgot password?</small></a> -->
                 <!--<div class="hr-line-solid"></div>
                 <p class="text-muted text-center"><small>Do not have an account?</small></p>

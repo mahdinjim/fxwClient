@@ -132,8 +132,8 @@
                     <div class="col-md-9 p0">
                        <div class="btn-group fleft mr10 mb10">
                            
-                                <select   ng-change="loadPerformancebyMonth()" ng-model="selectedMonth" id="monthlyselect" class="select3">
-                                    <option value="0" selected="selected">month</option>
+                                <select ng-model="$parent.selectedMonth"   ng-change="loadPerformancebyMonth()" class="select3">
+                                    <option value="0">month</option>
                                     <option value="1">january</option>
                                     <option value="2">february</option>
                                     <option value="3">march</option>
@@ -500,33 +500,7 @@
                             <h4>Skills</h4>
                             <div class="form-group m-0">
                                 <select data-placeholder="Select Skills" class="select2 chosen-select" multiple style="width:100%;" tabindex="2" ng-model="skills" id="skillsselct">
-                                    <optgroup label="OOP">
-                                        <option value="PHP">PHP</option>
-                                        <option value="Java">Java</option>
-                                        <option value="C#">C#</option>
-                                        <option value="Python">Python</option>
-                                        <option value="vb.net">vb.net</option>
-                                        <option value="Ruby on Rails">Ruby on Rails</option>
-                                        <option value="Objective C">Objective C</option>
-                                        <option value="Action Script">Action Script</option>
-                                        <option value="Pearl">Pearl</option>
-                                    </optgroup>
-                                    <optgroup label="Design">
-                                        <option value="Web Design">Web Design</option>
-                                        <option value="User Interface Design">User Interface Design</option>
-                                        <option value="User Experience Design">User Experience Design</option>
-                                        <option value="Mobile Design">Mobile Design</option>
-                                        <option value="Responsive Design">Responsive Design</option>
-                                        <option value="Graphic Design">Graphic Design</option>
-                                    </optgroup>
-                                    <optgroup label="Frontend Developement">
-                                        <option value="HTML 5 &amp; CSS 3">HTML 5 &amp; CSS 3</option>
-                                        <option value="jQuery">jQuery</option>
-                                        <option value="Javascript">Javascript</option>
-                                        <option value="Bootstrap Framework">Bootstrap Framework</option>
-                                        <option value="Gumby Framework">Gumby Framework</option>
-                                        <option value="WordPress Template">WordPress Template</option>
-                                    </optgroup>
+                                   <option ng-repeat="skill in skillsset" value="{{skill}}">{{skill}} </option>
                                 </select>
                             </div>
                             <div class="hr-line-solid"></div>

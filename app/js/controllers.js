@@ -1,6 +1,7 @@
 var Controllers=angular.module('Controllers',[]);
 Controllers.controller('LoginCtrl',['$scope','Login','$location',
 	function LoginCtrl($scope,Login,$location){
+		$scope.stayloggedin=false;
 		$scope.loginFunction=function()
 		{
 			$('#loginbtn').prop('disabled', true);
@@ -29,8 +30,8 @@ Controllers.controller('LoginCtrl',['$scope','Login','$location',
 					$scope.errors=mess;
 					$('#loginbtn').prop('disabled', false);
 				};
-					
-				Login.doLogin(login,password,successfunc,failureFunction);
+				console.log($scope.stayloggedin);	
+				Login.doLogin(login,password,$scope.stayloggedin,successfunc,failureFunction);
 			}
 			else if(login===undefined && password!=undefined)
 			{
@@ -480,6 +481,9 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
     
 
     $scope.tab="operations";
+    var d = new Date();
+    $scope.selectedMonth=""+(d.getMonth()+1);;
+
     $scope.isoperation=true;
     $scope.isexpertise=false;
     $scope.week1=new Array();
@@ -487,6 +491,7 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 	$scope.week3=new Array();
 	$scope.week4=new Array();
 	$scope.week5=new Array();
+	
     var roles=null;
     Team.loadRoles(function(data)
 	{
@@ -690,8 +695,8 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 	};
 	$scope.loadPerformancebyMonth=function()
 	{
-		month=$( "#monthlyselect" ).val();
-		if(month!=0){
+		month=$scope.selectedMonth;
+		if(month!="0"){
 			var sucessFunc=function(data)
 			{
 				createWeekPerformance(data);
@@ -844,6 +849,11 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 	}
 	$scope.openmemberForm=function(member)
 	{
+		var succsfunc=function(data)
+		{
+			$scope.skillsset=data;
+		}
+		Params.getSkills(succsfunc);
 		//BAD: Is not a very good solution to use jquery to initiate values
 		if(member!=null)
 		{
@@ -3002,17 +3012,12 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 	{
 		if(estimation!=null)
 		{
-			if(estimation==1)
-				$("#selectest").select2("data",{"id":1,'text':"1 h"});
-			if(estimation==2)
-				$("#selectest").select2("data",{"id":2,'text':"2 h"});
-			if(estimation==3)
-				$("#selectest").select2("data",{"id":3,'text':"3 h"});
-			if(estimation==4)
-				$("#selectest").select2("data",{"id":4,'text':"4 h"});
+			$("#selectest").select2("data",{"id":estimation,'text':estimation+" h"});
 		}
 		else
 			$("#selectest").select2("val","Select");
+		$scope.isfrontend=task.frontend;
+		$scope.isbackend=task.backend;
 		selectedtask=task;
 		$("#add-estimation").modal("show");
 	}
@@ -3034,6 +3039,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 	{
 		updateRealtimes(task);
 		selectedtask=task;
+
 		$("#add-realtime").modal("show");
 	}
 	$scope.setEstimation=function()
@@ -3394,6 +3400,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 	{
 		if(story==null)
 		{
+			$scope.storytype="empty";
 			$('#add-story').modal("show");
 			$scope.isedit=false;
 			$scope.storytitle="";
@@ -3414,6 +3421,10 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 		{
 			$('#add-story').modal("show");
 			$scope.isedit=true;
+			if(story.frontend)
+				$scope.storytype="frontend";
+			if(story.backend)
+				$scope.storytype="backend";
 			$scope.storytitle=story.title;
 			$scope.storydescription=story.description;
 			if($scope.team.length==0){
@@ -3446,6 +3457,10 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 		{
 			messgaes.push("please assign the story to a team member");
 		}
+		if($scope.storytype=="empty")
+		{
+			messgaes.push("please choose a story type");
+		}
 		return messages;
 	}
 	$scope.createStory=function()
@@ -3461,6 +3476,16 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 					"id":$scope.assignto.id
 				}
 			};
+			if($scope.storytype=="frontend")
+			{
+				data.frontend=true;
+				data.backend=false;
+			}
+			if($scope.storytype=="backend")
+			{
+				data.frontend=false;
+				data.backend=true;
+			}
 			for(i=0;i<$scope.team.length;i++)
 			{
 				if($scope.team[i].role.role==$scope.teamroles.TeamLeader.role)

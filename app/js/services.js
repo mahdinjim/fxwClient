@@ -98,6 +98,7 @@ services.factory("Links",[function(){
 	var markBilledLink=baseUrl+path+"/private/management/project/ticket/billed";
 	var markPayedLink=baseUrl+path+"/private/management/project/ticket/payed";
 	var markmanyBilledLink=baseUrl+path+"/private/management/project/ticket/manybilled";
+	var logoutlink=baseUrl+path+"/private/logout";
 	this.getLoginLink=function()
 	{
 		return LoginLink;
@@ -480,6 +481,10 @@ services.factory("Links",[function(){
 	{
 		return markmanyBilledLink;
 	}
+	this.getLogoutLink=function()
+	{
+		return logoutlink;
+	}
 	return this;
 }]);
 services.factory("Login",['$http','$location','$cookies',"$route","Links",
@@ -554,12 +559,13 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 			$cookies.remove('loggeduser');
 			$cookies.put('loggeduser', JSON.stringify(user));
 		}
-		this.doLogin=function(login,password,funcsucess,funcfailure)
+		this.doLogin=function(login,password,stayloggedin,funcsucess,funcfailure)
 		{
 			postdata={
 				"grant_type":"password",
 				"password":password,
-				"login":login
+				"login":login,
+				"stayloggedin":stayloggedin
 			};
 			$http({
 				method:"POST", 
@@ -598,20 +604,29 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 			}
 		}
 		this.logout=function(savelast){
-			$cookies.remove("loggeduser");
-			/*if(savelast===undefined || savelast==null)
-			 {
-			 	savelast=true;
-			 }*/
-			savelast=false;
-			if(savelast)
-			{
-				var last=$location.path();
-				$location.url('/login?last='+last);
+			$http({
+				method:"GET", 
+				url:Links.getLogoutLink(),
+				headers: {'x-crm-access-token': this.getLoggedUser().token.token}
+				
+			}).success(function (data, status, headers, config) {
+				$cookies.remove("loggeduser");
+				/*if(savelast===undefined || savelast==null)
+				 {
+				 	savelast=true;
+				 }*/
+				savelast=false;
+				if(savelast)
+				{
+					var last=$location.path();
+					$location.url('/login?last='+last);
 
-			}
-			else
-				$location.url("/login");
+				}
+				else
+					$location.url("/login");
+            }).error(function (data, status, headers, config) {
+            });
+			
 			
 		}
 		this.haveAccess=function(path)

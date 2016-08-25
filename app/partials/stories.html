@@ -567,8 +567,8 @@
                     <div class="row">
                         <div class="col-lg-12"> 
                             <div class="form-group project-status">
-                                <div class="select-option m0" style="width:100%;">
-                                    <select class="select2" ng-model="estimation" id="selectest">
+                                <div class="select-option m0" style="width:100%;" ng-if="isbackend">
+                                    <select select-two ng-model="$parent.estimation" id="selectest" >
                                         <option selected="selected" >Select</option>
                                         <option value="0.5">0.5 h</option>
                                         <option value="1">1 h</option>
@@ -578,6 +578,27 @@
                                         <option value="3">3 h</option>
                                         <option value="3.5">3.5 h</option>
                                         <option value="4">4 h</option>
+                                    </select>
+                                </div>
+                                 <div class="select-option m0" style="width:100%;" ng-if="isfrontend">
+                                    <select select-two ng-model="$parent.estimation" id="selectest">
+                                        <option selected="selected" >Select</option>
+                                        <option value="0.5">0.5 h</option>
+                                        <option value="1">1 h</option>
+                                        <option value="1.5">1.5 h</option>
+                                        <option value="2">2 h</option>
+                                        <option value="2.5">2.5 h</option>
+                                        <option value="3">3 h</option>
+                                        <option value="3.5">3.5 h</option>
+                                        <option value="4">4 h</option>
+                                        <option value="4.5">4.5 h</option>
+                                        <option value="5">5 h</option>
+                                        <option value="5.5">5.5 h</option>
+                                        <option value="6">6 h</option>
+                                        <option value="6.5">6.5 h</option>
+                                        <option value="7">7 h</option>
+                                        <option value="7.5">7.5 h</option>
+                                        <option value="8">8 h</option>
                                     </select>
                                 </div>
                             </div>
@@ -654,7 +675,13 @@
                                     </select>
                                 </div>
                             </div>
-                            
+                            <div class="form-group" >
+                                <select class="select3" placeholder="Story Title" ng-model="storytype" style="width:100%;">
+                                    <option value="empty">Story type</option>
+                                    <option value="backend">Backend</option>
+                                    <option value="frontend">Frontend</option>
+                                </select>
+                            </div>
                             <div class="form-group m0">
                                  <textarea class="form-control textarea-keybox" placeholder="Description" ng-model="storydescription"></textarea>
                             </div>
