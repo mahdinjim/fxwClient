@@ -11,7 +11,7 @@ crmapp.config(["$routeProvider",
 		
 		$routeProvider.
 			when('/login',{
-				templateUrl:'partials/login.html',
+				templateUrl:'partials/login.html?v=1.0',
 				controller:'LoginCtrl'
 			}).
 			when('/dashboard',{

@@ -4,7 +4,7 @@
 import json
 from pprint import pprint
 import sys
-import pxssh
+from pexpect import pxssh
 import getpass
 
 
