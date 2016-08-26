@@ -1,5 +1,3 @@
-
-just testing the new branch
 var services = angular.module('Services',['ngResource','ngCookies']);
 services.factory("Links",[function(){
 	var baseUrl=globalSeetings.baseUrl;
