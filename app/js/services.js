@@ -495,11 +495,11 @@ services.factory("Links",[function(){
 services.factory("Login",['$http','$location','$cookies',"$route","Links",
 	function($http,$location,$cookies,$route,Links){
 		var lastlink=null;
-		var Admin_Access=["/login","/dashboard","/client","/teamprofile","/team",/\/messaging/,/\/pdetails/,/\/keybox/,/\/stories/,/\/clientprojects/,/\/report/];
-		var Client_Access=["/login","/dashboard","/cuser","/cuserprofile",/\/messaging/,/\/pdetails/,/\/keybox/,/\/stories/,"/acceptcontract",/\/report/];
-		var KeyAccount_Access=["/login","/dashboard",/\/pdetails/,/\/messaging/,"/client",/\/keybox/,/\/stories/,/\/clientprojects/];
-		var TeamLeader_Access=["/login","/dashboard",/\/pdetails/,/\/messaging/,/\/keybox/,/\/stories/];
-		var TeamMember_Access=["/login","/dashboard",/\/pdetails/,/\/messaging/,/\/keybox/,/\/stories/];
+		var Admin_Access=["","/login","/dashboard","/client","/teamprofile","/team",/\/messaging/,/\/pdetails/,/\/keybox/,/\/stories/,/\/clientprojects/,/\/report/];
+		var Client_Access=["","/login","/dashboard","/cuser","/cuserprofile",/\/messaging/,/\/pdetails/,/\/keybox/,/\/stories/,"/acceptcontract",/\/report/];
+		var KeyAccount_Access=["","/login","/dashboard",/\/pdetails/,/\/messaging/,"/client",/\/keybox/,/\/stories/,/\/clientprojects/];
+		var TeamLeader_Access=["","/login","/dashboard",/\/pdetails/,/\/messaging/,/\/keybox/,/\/stories/];
+		var TeamMember_Access=["","/login","/dashboard",/\/pdetails/,/\/messaging/,/\/keybox/,/\/stories/];
 		this.setLastLink=function(path)
 		{
 			this.lastlink=path;
