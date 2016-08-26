@@ -87,15 +87,15 @@
                         <!-- end buttons & team -->
 
                         <!-- info1 -->
-                        <div class="row" ng-if="isclient && !issigned">
-                            <!-- <div class="col-lg-12 p0">
+                        <div class="row" ng-if="isclient">
+                            <div class="col-lg-12 p0" ng-if="!contractprepared">
                                 <div class="col-lg-12">
                                      <div class="alert alert-warning" style="font-size:14px;">
-                                        <i class="fa fa-phone-square mr5"></i> Your contract is in progress. <b class="ml5">Janine</b> will call you about details.
+                                        <i class="fa fa-phone-square mr5"></i> Your contract is being prepared and here you will soon be informed.
                                     </div>
                                 </div>
-                            </div> -->
-                            <div class="col-lg-12 p0">
+                            </div>
+                            <div class="col-lg-12 p0" ng-if="contractprepared && !issigned">
                                 <div class="col-lg-12">
                                      <div class="alert alert-success" style="font-size:14px;">
                                         <i class="fa fa-file-text mr5"></i> Your contract is ready. Please confirm to start your project. 

@@ -126,13 +126,16 @@
                                                              
                                                         <td class="project-status">
                                                             <span class="rate" ng-if="project.rate!=null"><i class="fa fa-euro"></i> {{project.rate}}</span>
-                                                            <button ng-if="project.rate==null" type="button" class="btn btn-danger btn-xs" data-toggle="modal" ng-click="openRate(project)"><i class="fa fa-plus"></i> add</button>
+                                                            
+                                                        </td>
+                                                        <td class="project-status" ng-if="!project.contractprepared">
+                                                            <button type="button" class="btn btn-danger btn-xs" ng-click="openPrepareContract(project)"><i class="fa fa-plus"></i> add contract</button>
                                                         </td>
                                                         <td class="project-status" ng-if="project.signed">
                                                             <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#see-contract"><i class="fa fa-check"></i> accepted</button>
                                                             <small>accepted on {{project.signaturedate}}</small>
                                                         </td>
-                                                        <td class="project-status" ng-if="!project.signed">
+                                                        <td class="project-status" ng-if="project.contractprepared && !project.signed">
                                                             <span class="label label-default label-nobg"><img width="15" height="15" src="img/ellipsis.gif"> in acceptance</span>
                                                         </td>
                                                         <td class="project-actions">
@@ -255,6 +258,34 @@
             </div>
         </div>
     </div>
+<div class="modal inmodal fade" id="prepare-project" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-m">
+        <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"><i class="fa fa-plus modal-fa-icon"></i> Prepare contract</h4>
+
+                </div>
+                <div class="modal-body">
+                   <div class="form-group">
+                        <input type="text" class="form-control niput-lg" placeholder="Project Title" ng-model="projectname" disabled>
+                    </div>
+                    <div class="form-group">
+                         <textarea class="form-control textarea-keybox" placeholder="Description" ng-model="apdescription"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control input-lg fleft budgetlimit" style="width:92%" placeholder="0" ng-model="prate">
+                        <label class="fleft euro">€</label>
+                        <div class="clear-both"></div>
+                    </div> 
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" ng-click="prepareContract()">Save</button>
+                </div>
+            </div>
+    </div>
+</div>
 <div class="modal inmodal fade" id="admin-add-project" role="dialog"  aria-hidden="true">
         <div class="modal-dialog modal-m">
             <div class="modal-content">
@@ -269,10 +300,10 @@
                         <input type="text" class="form-control input-lg" placeholder="Project Title" ng-model="aprojecttitle">
                     </div>
                     <div class="form-group">
-                         <textarea class="form-control textarea-keybox" placeholder="Description" ng-model="apdescription"></textarea>
+                         <textarea class="form-control textarea-keybox" placeholder="Briefing" ng-model="apbriefing"></textarea>
                     </div>
                     <div class="form-group mb0">
-                        <select data-placeholder="Select Skills" class="select2 chosen-select" multiple style="width:100%;" tabindex="2" ng-model="aprojectskills" id="apskillsselct">
+                        <select data-placeholder="Select Technologies" class="select2 chosen-select" multiple style="width:100%;" tabindex="2" ng-model="aprojectskills" id="apskillsselct">
                             <option ng-repeat="skill in skills" value="{{skill}}">{{skill}} </option>
                         </select>
                     </div>

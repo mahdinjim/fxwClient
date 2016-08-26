@@ -27,7 +27,7 @@
                                 <a data-toggle="dropdown" class="dropdown-toggle">
                                     <span class="clear"> 
                                         <span class="block m-t-xs"> <strong class="font-bold">{{company}}</strong></span> 
-                                        <span class="text-muted text-xs block">{{name}} {{surname}} hello</span> 
+                                        <span class="text-muted text-xs block">{{name}} {{surname}}</span> 
                                         <span class="text-muted text-xs block">{{title}}<b class="caret"></b></span> 
                                     </span> 
                                 </a>
@@ -121,7 +121,7 @@
                         <input type="text" class="form-control input-lg" placeholder="Project Title" ng-model="projecttitle">
                     </div>
                     <div class="form-group">
-                         <textarea class="form-control textarea-keybox" placeholder="Description" ng-model="description"></textarea>
+                         <textarea class="form-control textarea-keybox" placeholder="Briefing" ng-model="briefing"></textarea>
                     </div>
                      <div class="form-group" id="clientSelectionArea">
                         <div class="select-option m-0" style="width: 100%;">
@@ -131,7 +131,7 @@
                         </div>
                     </div>
                     <div class="form-group mb0">
-                        <select data-placeholder="Select Skills" class="select2 chosen-select" multiple style="width:100%;" tabindex="2" ng-model="projectskills">
+                        <select data-placeholder="Select Technologies" class="select2 chosen-select" multiple style="width:100%;" tabindex="2" ng-model="projectskills">
                             <option ng-repeat="skill in skills" value="{{skill}}">{{skill}} </option>
                             
                         </select>

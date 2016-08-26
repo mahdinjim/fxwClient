@@ -84,7 +84,7 @@ services.factory("Links",[function(){
 	var listdocumentsLink=baseUrl+path+"/private/project/file/list";
 	var acceptContractLink=baseUrl+path+"/private/customer/contract/accept";
 	var acceptProjectContractLink=baseUrl+path+"/private/project/restricted/accept";
-	var listProjectByClientLink=baseUrl+path+"/private/super/project/client/list";
+	var listProjectByClientLink=baseUrl+path+"/private/management/project/client/list";
 	var assignRateLink=baseUrl+path+"/private/super/project/rate";
 	var updateprojectLink=baseUrl+path+"/private/project/restricted/update";
 	var addRealtimeLink=baseUrl+path+"/private/project/task/realtime/create";
@@ -99,6 +99,7 @@ services.factory("Links",[function(){
 	var markPayedLink=baseUrl+path+"/private/management/project/ticket/payed";
 	var markmanyBilledLink=baseUrl+path+"/private/management/project/ticket/manybilled";
 	var logoutlink=baseUrl+path+"/private/logout";
+	var prepareContractLink=baseUrl+path+"/private/management/project/contract";
 	this.getLoginLink=function()
 	{
 		return LoginLink;
@@ -485,6 +486,10 @@ services.factory("Links",[function(){
 	{
 		return logoutlink;
 	}
+	this.getPrepareContractLink=function()
+	{
+		return prepareContractLink;
+	}
 	return this;
 }]);
 services.factory("Login",['$http','$location','$cookies',"$route","Links",
@@ -492,7 +497,7 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 		var lastlink=null;
 		var Admin_Access=["/login","/dashboard","/client","/teamprofile","/team",/\/messaging/,/\/pdetails/,/\/keybox/,/\/stories/,/\/clientprojects/,/\/report/];
 		var Client_Access=["/login","/dashboard","/cuser","/cuserprofile",/\/messaging/,/\/pdetails/,/\/keybox/,/\/stories/,"/acceptcontract",/\/report/];
-		var KeyAccount_Access=["/login","/dashboard",/\/pdetails/,/\/messaging/,"/client",/\/keybox/,/\/stories/];
+		var KeyAccount_Access=["/login","/dashboard",/\/pdetails/,/\/messaging/,"/client",/\/keybox/,/\/stories/,/\/clientprojects/];
 		var TeamLeader_Access=["/login","/dashboard",/\/pdetails/,/\/messaging/,/\/keybox/,/\/stories/];
 		var TeamMember_Access=["/login","/dashboard",/\/pdetails/,/\/messaging/,/\/keybox/,/\/stories/];
 		this.setLastLink=function(path)
@@ -610,12 +615,16 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 				headers: {'x-crm-access-token': this.getLoggedUser().token.token}
 				
 			}).success(function (data, status, headers, config) {
-				$cookies.remove("loggeduser");
+				
+				
+            }).error(function (data, status, headers, config) {
+            });
+            $cookies.remove("loggeduser");
 				/*if(savelast===undefined || savelast==null)
 				 {
 				 	savelast=true;
 				 }*/
-				savelast=false;
+			savelast=false;
 				if(savelast)
 				{
 					var last=$location.path();
@@ -624,9 +633,6 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 				}
 				else
 					$location.url("/login");
-            }).error(function (data, status, headers, config) {
-            });
-			
 			
 		}
 		this.haveAccess=function(path)
@@ -1770,6 +1776,28 @@ services.factory('Project',["$http","Login",'Links',function($http,Login,Links){
             });
 			
 		}
+	}
+	this.prepareContract=function(successFunc,failureFunc,data)
+	{
+		if(Login.getLoggedUser())
+		{
+			$http({
+				method:"POST", 
+				url:Links.getPrepareContractLink(),
+				data:data,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+
+				successFunc();
+
+	        }).error(function (data, status, headers, config) {
+	        	if(status==403)
+	        		Login.logout();
+	        	else
+	        		failureFunc("error");
+	        	
+	        });
+	    }
 	}
 	return this;
 }

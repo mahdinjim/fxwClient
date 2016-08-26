@@ -422,7 +422,7 @@ Controllers.controller("SideBarCtrl",['$scope','Login','Chat','Client','Project'
 				messages.push("Please add the project title</br>");
 
 			}
-			if($scope.description===undefined)
+			if($scope.briefing===undefined)
 			{
 				messages.push("Please add the project description</br>");
 				
@@ -453,7 +453,7 @@ Controllers.controller("SideBarCtrl",['$scope','Login','Chat','Client','Project'
 			{
 				var project={
 					"name":$scope.projecttitle,
-					"description":$scope.description,
+					"briefing":$scope.briefing,
 					"skills":""+$scope.projectskills
 				}
 				if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_KEYACCOUNT")
@@ -1679,6 +1679,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	$scope.selectedType="all";
 	$scope.selectedStatus="all";
 	$scope.searchWord="";
+	$scope.contractprepared=true;
 	var filterAll=function()
 	{
 
@@ -1813,6 +1814,8 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		$scope.projectSkilss=data.skills;
 		$scope.budget=data.budget;
 		$scope.issigned=data.signed;
+		if(data.contractprepared!=null)
+			$scope.contractprepared=data.contractprepared;
 		$scope.client=data.client;
 		if(data.teamLeader!=undefined)
 			$scope.teamlead=data.teamLeader;
@@ -3731,11 +3734,19 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 	Params.getSkills(succsfunc);
 	Team.loadRoles(loadRoles);
 	var selectedPorject=null;
+	var update=null;
 	updateView=function()
 	{
 		successFunc=function(data)
 		{
 			$scope.projects=data;
+			if(update===null)
+			{
+				var update=setInterval(updateView(), 5000);
+				$scope.$on('$routeChangeStart',function(){
+					clearInterval(update);
+				});
+			}
 		}
 		failureFunc=function()
 		{
@@ -3775,10 +3786,55 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 	}
 	updateView();
 
-	var update=setInterval(updateView(), 5000);
-	$scope.$on('$routeChangeStart',function(){
-					clearInterval(update);
-				});
+	$scope.openPrepareContract=function(project)
+	{
+		$("#prepare-project").modal('show');
+		selectedproject=project;
+		$scope.projectname=project.name;
+	}
+	var verifyContractForm=function()
+	{
+		var messages=[];
+		if($scope.apdescription===undefined || $scope.apdescription==null || $scope.apdescription=="")
+		{
+			messages.push('Please add project description\n');
+		}
+		if($scope.prate===undefined || $scope.prate==null || $scope.prate=="")
+		{
+			messages.push('Please add project rate\n');
+		}
+		if(isNaN($scope.prate))
+		{
+			messages.push('rate must be a numeric value\n');
+		}
+		return messages;
+	}
+	$scope.prepareContract=function()
+	{
+		var messages=verifyContractForm();
+		if(messages.length==0)
+		{
+			var succsfunc=function()
+			{
+				updateView();
+				$("#prepare-project").modal('hide');
+			}
+			var failurefunc=function()
+			{
+				swal("Can't send contract","Can't send contract please try again later");
+			}
+			var data={
+				"project_id":selectedproject.id,
+				"description":$scope.apdescription,
+				"rate":$scope.prate
+			}
+			Project.prepareContract(succsfunc,failurefunc,data);
+		}
+		else
+		{
+			swal("Form info",messages.join(""),"warning");
+		}
+	}
 	$scope.openAddprojectModelFromclient=function(project)
 	{
 		$scope.selectedClient=customerid;
@@ -3786,14 +3842,14 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 		if(project==null){
 			
 			$scope.aprojecttitle=undefined;
-			$scope.apdescription=undefined;
+			$scope.apbriefing=undefined;
 			$scope.aprojectskills=undefined;
 			$scope.iedit=false;
 		}
 		else
 		{
 			$scope.aprojecttitle=project.name;;
-			$scope.apdescription=project.description;
+			$scope.apbriefing=project.briefing;
 			$scope.aprojectskills=project.skills.split(",");
 			$("#apskillsselct").select2("val",$scope.aprojectskills);
 			$scope.iedit=true;
@@ -3809,7 +3865,7 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 			messages.push("Please add the project title\n");
 
 		}
-		if($scope.apdescription===undefined)
+		if($scope.apbriefing===undefined)
 		{
 			messages.push("Please add the project description\n");
 			
@@ -3832,7 +3888,7 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 		{
 			var project={
 				"name":$scope.aprojecttitle,
-				"description":$scope.apdescription,
+				"briefing":$scope.apbriefing,
 				"skills":""+$scope.aprojectskills
 			}
 			if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_KEYACCOUNT")
