@@ -51,6 +51,7 @@ module.exports = function(grunt) {
                 files:[
                     {expand: true, src: ['./LESS/**'], dest: './production/'},
                     {expand: true, src: ['./img/**'], dest: './production/'},
+                    {expand: true, src: ['./locals/**'], dest: './production/'},
                     {expand: true, src: ['./font-awesome/**'], dest: './production/'},
                     {expand: true, src: ['./css/patterns/**'], dest: './production/'},
                     {expand: true, src: ['./css/plugins/datapicker/datapicker3.min.css'], dest: './production/'},
@@ -83,6 +84,7 @@ module.exports = function(grunt) {
                     {expand: true, src: ['./lib/angular/angular-resource.min.js'], dest: './production/'},
                     {expand: true, src: ['./lib/angular/angular-cookies.min.js'], dest: './production/'},
                     {expand: true, src: ['./lib/angular/angular-sanitize.min.js'], dest: './production/'},
+                    {expand: true, src: ['./lib/node_modules/clipboard/dist/clipboard.min.js'], dest: './production/'},
                     {expand: true, src: ['./partials/**'], dest: './production/'}
                 ]
             }
