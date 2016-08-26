@@ -583,7 +583,9 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 				data.token.experationDate.date=data.token.experationDate.date.replace(" ","T");
 				user.userinfo=data.user;
 				user.token=data.token;
-				$cookies.put('loggeduser', JSON.stringify(user));
+				var CurrentDate = new Date();
+				CurrentDate.setMonth(CurrentDate.getMonth() + 12);
+				$cookies.put('loggeduser', JSON.stringify(user),{expires:CurrentDate});
 				funcsucess();
                
             }).error(function (data, status, headers, config) {
