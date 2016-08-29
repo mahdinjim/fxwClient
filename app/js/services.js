@@ -686,9 +686,11 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 		}
 		this.checkStrings=function(table,string)
 		{
+			if(string=="")
+				return true;
 			for(i=0;i<table.length;i++)
 			{
-				if(string.search(table[i])>=0)
+				if(table[i]!="" && string.search(table[i])>=0)
 				{
 					return true;
 				}
