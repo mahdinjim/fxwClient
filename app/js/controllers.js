@@ -4350,6 +4350,7 @@ Controllers.controller('ReportCtrl',['$scope','$routeParams','Project','Ticket',
 			$scope.isTicketReport=false;
 			$scope.isDateReport=true;
 			updateDateView($scope.month,$scope.year);
+			$scope.showMarker=false;
 		}
 		else if (number==1) {
 			$scope.isTicketReport=true;
