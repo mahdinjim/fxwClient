@@ -2957,7 +2957,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 			$scope.ticket_type=data.type;
 			
 			$scope.ticket_decription=data.description;
-			$scope.ticket_status=data.status;
+			=data.status;
 			$scope.ticket_realtime=data.realtime;
 			$scope.ticket_estimation=data.estimation;
 			$scope.tasks=data.tasks;
@@ -2981,7 +2981,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 	{
 		$scope.isbackend=false;
 		$scope.isfrontend=false;
-		if(task.type==$scope.taskTypes.Concept.type && task.type==$scope.taskTypes.Uidesign.type && task.type==$scope.taskTypes.Uicoding.type)
+		if(task.type==$scope.taskTypes.Concept.type || task.type==$scope.taskTypes.Uidesign.type || task.type==$scope.taskTypes.Uicoding.type)
 			$scope.isfrontend=true;
 		else
 			$scope.isbackend=true;
@@ -3385,6 +3385,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 			$scope.isedit=false;
 			$scope.storytitle="";
 			$scope.storydescription="";
+			story.assignto=null;
 			if($scope.team.length==0){
 				var selectdata={"id":-1,text:"No team found"};
 				$("#selectassign").select2("data",selectdata);
