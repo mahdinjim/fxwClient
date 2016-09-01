@@ -2957,7 +2957,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 			$scope.ticket_type=data.type;
 			
 			$scope.ticket_decription=data.description;
-			=data.status;
+			$scope.ticket_status=data.status;
 			$scope.ticket_realtime=data.realtime;
 			$scope.ticket_estimation=data.estimation;
 			$scope.tasks=data.tasks;
