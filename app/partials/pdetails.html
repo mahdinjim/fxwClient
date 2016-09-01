@@ -144,7 +144,7 @@
                                     <!-- filter-->
                                     <div class="col-md-12 pb10">
                                         <div class="col-md-8 p0">   
-                                            <div class="form-group fleft mr10 mb10">
+                                            <!-- <div class="form-group fleft mr10 mb10">
                                                 <div class="select-option select-project m-0" style="width: 150px;">
                                                     <select class="select2" select-two ng-model="$parent.selectedType" ng-change="filter()">
                                                         <option selected="selected" value="all">all type</option>
@@ -155,7 +155,7 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            
+                                             -->
                                             <div class="form-group fleft mr10 mb10">
                                                 <div class="select-option select-project m-0" style="width: 150px;">
                                                     <select class="select2"  ng-model="$parent.selectedStatus" ng-change="filter()" select-two>
@@ -254,7 +254,7 @@
                                                         </td>
                                                         <td class="project-status" ng-if="ticket.status==ticketStatus.Accept.status">
                                                             <button type="button" class="btn btn-primary btn-xs fxw-alert-accept-ticket" ng-click="acceptTicket(ticket)"><i class="fa fa-chevron-right" ></i> acccept</button>
-                                                            <button type="button" class="btn btn-danger btn-xs fxw-alert-reject-ticket" ng-click="openRejectModal(ticket)"><i class="fa fa-undo"></i> reject</button>
+                                                            <button type="button" class="btn btn-danger btn-xs fxw-alert-reject-ticket" ng-click="openAddBug(ticket)"><i class="fa fa-undo"></i> add bug</button>
                                                             <small>please accept &amp; close ticket</small>
                                                         </td>
                                                          <td class="project-status" ng-if="ticket.status==ticketStatus.Done.status && isKeyAccount">
@@ -646,23 +646,6 @@
                     <h4 class="modal-title"><i class="fa fa-plus modal-fa-icon"></i> Add Ticket</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="row mb10 header-ticket-types">
-                        <div class="col-lg-12">
-                            <div class="form-group radio-toolbar header-toolbar">
-                                <input class="feature" type="radio" id="radio1" name="radios" value="feature" checked ng-click="setFeature()">
-                                <label class="feature" for="radio1"><i class="fa fa-star"></i> Feature</label>
-
-                                <input class="bug" type="radio" id="radio2" name="radios" value="bug" ng-click="setBug()">
-                                <label class="bug" for="radio2"><i class="fa fa-bug"></i> Bug</label>
-
-                                <input class="concept" type="radio" id="radio3" name="radios" value="concept" ng-click="setConcept()">
-                                <label class="concept" for="radio3"><i class="fa fa-file"></i> Concept</label>
-
-                                <input class="design" type="radio" id="radio4" name="radios" value="design" ng-click="setDesign()">
-                                <label class="design" for="radio4"><i class="fa fa-tint"></i> Design</label> 
-                            </div>
-                        </div>
-                    </div>
                     <div class="row">
                         <div class="col-lg-12"> 
                             <div class="form-group">
@@ -1042,6 +1025,35 @@
             </div>
         </div>
     </div>
+    <div class="modal inmodal fade" id="add-bug" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"><i class="fa fa-plus modal-fa-icon" ></i> Add Bug</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12"> 
+
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Bug Title" ng-model="storytitle">
+                            </div>
+                            <div class="form-group m0">
+                                 <textarea class="form-control textarea-keybox" placeholder="Description" ng-model="storydescription"></textarea>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" ng-click="createStory()">Save</button>
+                </div>
+            </div>
+        </div>
+       
+</div>
 <div class="modal inmodal fade" id="see-contract" role="dialog"  aria-hidden="true">
         <div class="modal-dialog modal-m">
             <div class="modal-content">

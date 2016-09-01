@@ -100,6 +100,8 @@ services.factory("Links",[function(){
 	var markmanyBilledLink=baseUrl+path+"/private/management/project/ticket/manybilled";
 	var logoutlink=baseUrl+path+"/private/logout";
 	var prepareContractLink=baseUrl+path+"/private/management/project/contract";
+	var taskTypesLink=baseUrl+path+"/private/task/types";
+	var acceptBugLink=baseUrl+path+"/private/task/accept";
 	this.getLoginLink=function()
 	{
 		return LoginLink;
@@ -489,6 +491,14 @@ services.factory("Links",[function(){
 	this.getPrepareContractLink=function()
 	{
 		return prepareContractLink;
+	}
+	this.getTaskTypesLink=function()
+	{
+		return taskTypesLink;
+	}
+	this.getAcceptBugLink=function()
+	{
+		return acceptBugLink;
 	}
 	return this;
 }]);
@@ -2344,6 +2354,48 @@ services.service('Task', ["$http","Login","Links",function ($http,Login,Links) {
             }).error(function (data, status, headers, config) {
             	if(status==403)
             		Login.logout();
+            });
+        }
+	}
+	this.loadTaskTypes=function(successFunc)
+	{
+		if(Login.getLoggedUser())
+			{
+				if(sessionStorage.tickettypes==null)
+				{
+					$http({
+						method:"GET", 
+						url:Links.getTaskTypesLink(),
+						headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+					}).success(function (data, status, headers, config) {
+						sessionStorage.tickettypes=JSON.stringify(data);
+						successFunc(data);
+		            }).error(function (data, status, headers, config) {
+		            	if(status==403)
+	        				Login.logout();
+	        	
+		            });
+		        }
+		        else
+		        	successFunc(JSON.parse(sessionStorage.tickettypes));
+	        }
+	}
+	this.acceptBug=function(successfunc,failurefunc,data)
+	{
+		if(Login.getLoggedUser())
+		{
+			$http({
+				method:"POST", 
+				url:Links.getAcceptBugLink(),
+				data:data,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token,'Content-Type': undefined}
+			}).success(function (data, status, headers, config) {
+                successfunc(data);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failurefunc(data.error);
             });
         }
 	}

@@ -67,10 +67,7 @@
                             <div class="col-md-6">
                                 <a class="btn btn-default btn-bitbucket btn-m mr5" ng-click="backToProject()"><i class="fa fa-angle-left mr5"></i> back to project</a>
                                 <a class="btn btn-default btn-bitbucket btn-m mr5 btnCopy" data-clipboard-text="{{currentUrl}}"><i class="fa fa-link mr5"></i> copy link</a>
-                                <a class="btn btn-default btn-bitbucket btn-m mr5"ng-click="openKeybox()"><i class="fa fa-lock mr5"></i> keybox</button>
-                                <a ng-if="!isclient" class="btn btn-default btn-bitbucket btn-m mr5" href="https://fxw.slack.com/" target="_blank"><i class="fa fa-slack mr5" ng-if="!isclient"></i> slack</a>
-                                <a ng-if="!isclient" class="btn btn-default btn-bitbucket btn-m mr5" href="https://www.pivotaltracker.com/" target="_blank"><i class="fa fa-circle-o mr5" ng-if="!isclient"></i> pivotal</a>
-                                <a ng-if="!isclient" class="btn btn-default btn-bitbucket btn-m mr5" href="https://github.com" target="_blank"><i class="fa fa-github mr5" ></i> github</a>
+                                <a class="btn btn-default btn-bitbucket btn-m mr5"ng-click="openKeybox()"><i class="fa fa-lock mr5"></i> keybox</a>
                             </div>
                             <div class="col-md-6">
                                 <div class="project-people">
@@ -141,15 +138,10 @@
                                                 <div class="col-lg-12 project-status p5 aright" ng-if="ticket_status==ticketStatus.Draft.status">
                                                    <span class="label label-default label-nobg"><i class="fa fa-genderless"></i> draft</span>
                                                 </div>
-                                                <div class="col-lg-12 project-status p5 aright" ng-if="ticket_status==ticketStatus.Estimation.status && ticket_type!=tickettypes[2].type">
+                                                <div class="col-lg-12 project-status p5 aright" ng-if="ticket_status==ticketStatus.Estimation.status">
                                                    <button class="btn btn-primary btn-bitbucket btn-xs" type="button" ng-click="addStory(null)"><i class="fa fa-plus mr5"></i> add story</button>
                                                    <button type="button" class="btn btn-danger btn-xs" ng-click="sendToClient()"><i class="fa fa-chevron-right"></i> send to client</button>
                                                    <small>client started ticket</small>
-                                                </div>
-                                                <div class="col-lg-12 project-status p5 aright" ng-if="ticket_status==ticketStatus.Estimation.status && ticket_type==tickettypes[2].type">
-                                                   <button class="btn btn-primary btn-bitbucket btn-xs" type="button" ng-click="addStory(null)"><i class="fa fa-plus mr5"></i> add story</button>
-                                                    <button type="button" class="btn btn-success btn-xs" ng-click="sendToProduction()"><i class="fa fa-chevron-right"></i> send to production</button>
-                                                   <small>send ticket to production</small>
                                                 </div>
                                                  <div class="col-lg-12 project-status p5 aright" ng-if="ticket_status==ticketStatus.Goproduction.status">
                                                    <span class="label label-default label-nobg"><img src="img/ellipsis.gif" width="15" height="15"> waiting confirmation</span>
@@ -166,6 +158,7 @@
                                                    <span class="label label-default label-nobg"><img src="img/ellipsis.gif" width="15" height="15"> in acceptance</span>
                                                 </div>
                                                 <div class="col-lg-12 project-status p5 aright" ng-if="ticket_status==ticketStatus.Testing.status">
+                                                    <button class="btn btn-primary btn-bitbucket btn-xs" type="button" ng-click="openAddBug(null)" ng-if="isTeamLeader"><i class="fa fa-plus mr5"></i> add bug</button>
                                                     <button type="button" class="btn btn-danger btn-xs" ng-click='deliverToclient()'><i class="fa fa-chevron-right"></i> deliver ticket</button>
                                                    <small>all stories done</small>
                                                 </div> 
@@ -222,15 +215,12 @@
                                                    <button type="button" class="btn btn-primary btn-xs fxw-alert-start-estimation " ng-click="startEstimation()"><i class="fa fa-chevron-right"></i> start</button>
                                                    <small>please start estimation</small>
                                                 </div>
-                                                <div class="col-lg-12 project-status p5 aright" ng-if="ticket_status==ticketStatus.Estimation.status && ticket_type!=tickettypes[2].type">
+                                                <div class="col-lg-12 project-status p5 aright" ng-if="ticket_status==ticketStatus.Estimation.status">
                                                    <span class="label label-default label-nobg"><img src="img/ellipsis.gif" width="15" height="15"> in estimation</span>
-                                                </div>
-                                                <div class="col-lg-12 project-status p5 aright" ng-if="ticket_status==ticketStatus.Estimation.status && ticket_type==tickettypes[2].type">
-                                                   <span class="label label-default label-nobg"><img src="img/ellipsis.gif" width="15" height="15"> in precheck</span>
                                                 </div>
                                                  <div class="col-lg-12 project-status p5 aright" ng-if="ticket_status==ticketStatus.Goproduction.status">
                                                  <button type="button"  ng-click='acceptEstimation()' class="btn btn-primary btn-xs fxw-alert-confirm-estimation"><i class="fa fa-chevron-right"></i> confirm</button>
-                                                 <button type="button" class="btn btn-danger btn-xs fxw-alert-reject-ticket" ng-click="rejectEstimation()"><i class="fa fa-undo"></i> reject</button>
+                                                 <button type="button" class="btn btn-danger btn-xs fxw-alert-reject-ticket" ng-click="openAddBug()"><i class="fa fa-plus mr5"></i> add bug</button>
                                                  <small>please confirm for production</small>
                                                 </div>
                                                 <div class="col-lg-12 project-status p5 aright" ng-if="ticket_status==ticketStatus.Waiting.status">
@@ -241,7 +231,7 @@
                                                 </div>
                                                 <div class="col-lg-12 project-status p5 aright" ng-if="ticket_status==ticketStatus.Accept.status">
                                                    <button ng-click="acceptTicket()" type="button" class="btn btn-primary btn-xs fxw-alert-accept-ticket"><i class="fa fa-chevron-right" ></i> acccept</button>
-                                                   <button type="button" class="btn btn-danger btn-xs fxw-alert-reject-ticket" ng-click="openRejectModal()"><i class="fa fa-undo"></i> reject</button>
+                                                   <button type="button" class="btn btn-danger btn-xs fxw-alert-reject-ticket" ng-click="openAddBug(null)"><i class="fa fa-undo"></i> add bug</button>
                                                    <small>please accept &amp; close ticket</small>
                                                 </div>
                                                 <div class="col-lg-12 project-status p5 aright" ng-if="ticket_status==ticketStatus.Testing.status">
@@ -285,7 +275,10 @@
                                                             </td>
                                                             <td class="project-title">
                                                                 {{story.title}}
-                                                                 <small>Assign to: <b>{{story.assignto.name}}</b></small>
+                                                                 <small ng-if="story.assignto!=null">Assign to: <b>{{story.assignto.name}}</b></small>
+                                                                 <small ng-if="story.assignto==null">Not assigned</b></small>
+                                                                  <a class="project-details-see-description" name="{{story.id}}" onClick="toggle_visibility(this.name);">see description <i class="fa fa-angle-down"></i></a>
+                                                                  <span class="row none" id="{{story.id}}"><small>{{story.description}}</small></span>
                                                             </td>
                                                             <td class="project-estimation" ng-if="isclient && story.estimation!=null">
                                                                 <i class="fa fa-clock-o"></i> 
@@ -294,19 +287,14 @@
                                                             <td class="project-estimation" ng-if="isclient && story.estimation==null">
                                                                 
                                                             </td>
-                                                             <td class="project-estimation" ng-if="!isclient && ticket_status==ticketStatus.Estimation.status && story.estimation==null">
+                                                             <td class="project-estimation" ng-if="!isclient &&  story.estimation==null">
                                                                 <button type="button" class="btn btn-primary btn-bitbucket btn-xs" ng-click="openAddEstimation(null,story)"><i class="fa fa-plus mr5"></i> add</button>
                                                              </td>
-                                                              <td class="project-estimation" ng-if="!isclient && ticket_status==ticketStatus.Estimation.status && story.estimation!=null">                                                    
+                                                              <td class="project-estimation" ng-if="!isclient && story.estimation!=null">                                                    
                                                                 <i class="fa fa-clock-o"></i> 
                                                                 <span class="hour">{{story.estimation}} h</span>
-                                                                <a ng-click="openAddEstimation(story.estimation,story)"><small>edit</small></a>
+                                                                <a ng-if="story.type!=taskTypes.Bug.type && ticket_status==ticketStatus.Estimation.status" ng-click="openAddEstimation(story.estimation,story)"><small>edit</small></a>
                                                              </td>
-                                                             <td class="project-estimation" ng-if="!isclient && ticket_status!=ticketStatus.Estimation.status">                                                    
-                                                                <i class="fa fa-clock-o"></i> 
-                                                                <span class="hour">{{story.estimation}} h</span>
-                                                             </td>
-
                                                             <td class="project-realtime" ng-if="isclient && story.realtime!=null && ticket_status!=ticketStatus.Production.status">
                                                                 <i class="fa fa-clock-o"></i> 
                                                                 <span class="hour">{{story.realtime}} h</span>
@@ -316,64 +304,50 @@
                                                              <td class="project-realtime" ng-if="isclient && story.realtime==null">
                                                                
                                                             </td>
-                                                             <td class="project-realtime" ng-if="!isclient  && ticket_status==ticketStatus.Estimation.status">
+                                                             <td class="project-realtime" ng-if="!isclient  && story.realtime==null && !story.isstarted">
                                                                
                                                             </td>
-                                                            <td class="project-realtime" ng-if="!isclient  && ticket_status==ticketStatus.Goproduction.status">
-                                                               
-                                                            </td>
-                                                            <td class="project-realtime" ng-if="!isclient && ticket_status==ticketStatus.Waiting.status">
-                                                              
-                                                            </td>
-                                                            <td class="project-realtime" ng-if="!isclient && story.realtime==null && ticket_status==ticketStatus.Production.status && !story.isstarted ">
-                                                               
-                                                            </td>
-                                                            <td class="project-realtime" ng-if="!isclient && story.realtime==null && ticket_status==ticketStatus.Production.status && story.isstarted && story.workedhours==0">
+                                                            <td class="project-realtime" ng-if="!isclient && story.realtime==null  && story.isstarted && story.workedhours==0">
                                                                 <button ng-click="openAddRealtime(null,story)" type="button" class="btn btn-primary btn-bitbucket btn-xs"><i class="fa fa-plus mr5"></i> add</button>
                                                             </td>
-                                                            <td class="project-realtime" ng-if="!isclient && story.realtime==null && ticket_status==ticketStatus.Production.status && story.isstarted && story.workedhours!=0">
+                                                            <td class="project-realtime" ng-if="!isclient && story.realtime==null && story.isstarted && story.workedhours!=0 && !story.finished">
                                                                 <i class="fa fa-clock-o"></i> 
                                                                 <span class="hour">{{story.workedhours}} h</span>
                                                                 <a  ng-click="openAddRealtime(null,story)"><small>+ add</small></a>
                                                             </td>
-                                                             <td class="project-realtime" ng-if="!isclient && !story.finished && story.realtime!=null &&(ticket_status==ticketStatus.Production.status || ticket_status==ticketStatus.Testing.status)">
+                                                             <td class="project-realtime" ng-if="!isclient &&  story.realtime!=null">
                                                                  <i class="fa fa-clock-o"></i> 
                                                                 <span class="hour">{{story.realtime}} h</span>
                                                                 
                                                             </td>
-                                                            <td class="project-realtime" ng-if="!isclient && story.finished && story.realtime==null &&ticket_status==ticketStatus.Testing.status">
+                                                            <td class="project-realtime" ng-if="!isclient && story.finished && story.realtime==null ">
                                                                  <i class="fa fa-clock-o"></i> 
                                                                 <span class="hour">{{story.workedhours}} h</span>
                                                                 <a  ng-click="openAddRealtime(null,story)"><small>+ add</small></a>
                                                                 
-                                                            </td>
-                                                            <td class="project-realtime" ng-if="!isclient && story.finished && story.realtime!=null &&(ticket_status==ticketStatus.Production.status || ticket_status==ticketStatus.Testing.status)">
-                                                                 <i class="fa fa-clock-o"></i> 
-                                                                <span class="hour">{{story.realtime}} h</span>
-                                                                
-                                                            </td>
-                                                              <td class="project-realtime" ng-if="!isclient && story.finished && (ticket_status==ticketStatus.Done.status || ticket_status==ticketStatus.Accept.status || ticket_status==ticketStatus.Reject.status)">
-                                                                <i class="fa fa-clock-o"></i> 
-                                                                <span class="hour">{{story.realtime}} h</span>
                                                             </td>
                                                             <td class="project-status" ng-if="isclient">
-                                                                 <span class="label label-default label-nobg" ng-if="!story.isstarted"><i class="fa fa-genderless"></i> waiting</span>
+                                                                 <span class="label label-default label-nobg" ng-if="!story.isstarted && story.accepted"><i class="fa fa-genderless"></i> waiting</span>
                                                                  <span class="label label-default label-nobg" ng-if="story.isstarted && !story.finished"><i class="fa fa-genderless"></i> production</span>
                                                                   <span class="label label-default label-nobg" ng-if="story.finished"><i class="fa fa-check"></i> finished</span>
+                                                                   <span class="label label-default label-nobg" ng-if="!story.accepted"><i class="fa fa-check"></i> in acceptance</span>
                                                             </td>
-                                                             <td class="project-status" ng-if="!isclient && ticket_status==ticketStatus.Production.status">
-                                                                 <button ng-if="!story.isstarted" type="button" class="btn btn-primary btn-bitbucket btn-xs" ng-click='startTask(story)'>start</button>
-                                                                <button ng-if="story.isstarted && !story.finished" type="button" class="btn btn-primary btn-bitbucket btn-xs" ng-click="finishTask(story)">finish</button>
-                                                                  <span class="label label-default label-nobg" ng-if="story.finished"><i class="fa fa-check"></i> finished</span>
+                                                             <td class="project-status" ng-if="!isclient">
+                                                                 <button ng-if="story.accepted && !story.isstarted" type="button" class="btn btn-primary btn-bitbucket btn-xs" ng-click='startTask(story)'>start</button>
+                                                                <button ng-if="story.accepted && story.isstarted && !story.finished" type="button" class="btn btn-primary btn-bitbucket btn-xs" ng-click="finishTask(story)">finish</button>
+                                                                <span class="label label-default label-nobg" ng-if="story.finished"><i class="fa fa-check"></i> finished</span>
+                                                                <span class="label label-default label-nobg" ng-if="!story.accepted && !isTeamLeader"><i class="fa fa-check"></i> in acceptance</span>
+                                                                <span class="label label-default label-nobg" ng-if="!story.accepted && isTeamLeader">
+                                                                    <button type="button" ng-click="AcceptBug(story,true)" class="btn btn-primary btn-bitbucket btn-xs"><i class="fa fa-chevron-right" ></i> accept</button>
+                                                                    <button type="button" ng-click="AcceptBug(story,false)" class="btn btn-danger btn-bitbucket btn-xs"><i class="fa fa-undo"></i> reject</button>
+                                                                </span>
                                                             </td>
-                                                             <td class="project-status" ng-if="!isclient && ticket_status!=ticketStatus.Production.status">
-                                                                 <span class="label label-default label-nobg" ng-if="!story.isstarted"><i class="fa fa-genderless"></i> waiting</span>
-                                                                 <span class="label label-default label-nobg" ng-if="story.isstarted && !story.finished"><i class="fa fa-genderless"></i> production</span>
-                                                                  <span class="label label-default label-nobg" ng-if="story.finished"><i class="fa fa-check"></i> finished</span>
-                                                            </td>
-                                                            <td class="project-action" ng-if="!isclient">
+                                                            <td class="project-action" ng-if="!isclient && story.type!=taskTypes.Bug.type">
                                                                 <button class="btn btn-white btn-sm" type="button" ng-click="addStory(story)" ng-if="ticket_status==ticketStatus.Estimation.status"><i class="fa fa-pencil"></i> </button>
                                                                 <button class="btn btn-white btn-sm fxw-alert-delete" type="button" ng-if="ticket_status==ticketStatus.Estimation.status" ng-click="deleteTask(story)"><i class="fa fa-trash"></i> </button>
+                                                            </td >
+                                                            <td class="project-action" ng-if="isTeamLeader && story.type==taskTypes.Bug.type">
+                                                                 <button class="btn btn-white btn-sm" type="button" ng-click="openAddBug(story)"><i class="fa fa-pencil"></i> </button>
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -676,11 +650,44 @@
                                 </div>
                             </div>
                             <div class="form-group" >
-                                <select class="select3" placeholder="Story Title" ng-model="storytype" style="width:100%;">
-                                    <option value="empty">Story type</option>
-                                    <option value="backend">Backend</option>
-                                    <option value="frontend">Frontend</option>
+                                <select class="select3" ng-options="type as type.text for type in taskTypes.types track by type.type" ng-model="storytype" style="width:100%;">
                                 </select>
+                            </div>
+                            <div class="form-group m0">
+                                 <textarea class="form-control textarea-keybox" placeholder="Description" ng-model="storydescription"></textarea>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" ng-click="createStory()">Save</button>
+                </div>
+            </div>
+        </div>
+       
+</div>
+<div class="modal inmodal fade" id="add-bug" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" ng-if='!isedit'><i class="fa fa-plus modal-fa-icon" ></i> Add Bug</h4>
+                    <h4 class="modal-title" ng-if='isedit'><i class="fa fa-plus modal-fa-icon" ></i> Edit Bug</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12"> 
+
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Bug Title" ng-model="storytitle">
+                            </div>
+                            <div class="form-group" ng-if='isTeamLeader'>
+                                <div class="select-option m-0" style="width:100%;">
+                                       <select select-two  ng-model="$parent.assignto" id="selectassignbug" ng-options="[member.name,' ',member.surname,', ',member.role.Text].join('') for member in team track by member.order">
+                                    </select>
+                                </div>
                             </div>
                             <div class="form-group m0">
                                  <textarea class="form-control textarea-keybox" placeholder="Description" ng-model="storydescription"></textarea>
@@ -716,6 +723,27 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" ng-click="rejectTicket(rejectedticket)">Reject</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<div class="modal inmodal fade" id="reject-bug" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"><i class="fa fa-plus modal-fa-icon"></i> Reject Bug</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                            <div class="form-group mb0">
+                                 <textarea class="form-control textarea-keybox" placeholder="Rejection message" ng-model="rejectionbugmessage"></textarea>
+                            </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" ng-click="rejectBug()">Reject</button>
                 </div>
             </div>
         </div>

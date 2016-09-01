@@ -1666,7 +1666,7 @@ Controllers.controller("ChatCtrl",["$scope","$rootScope","Chat","$routeParams","
 	}
 	Chat.getChannelInfo($routeParams.channel_id,succesFunc,messagingssuccsFunc,failureFunc,0);
 }]);
-Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login","Team","$location","Ticket","Params",function($scope,Project,$routeParams,Login,Team,$location,Ticket,Params){
+Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login","Team","$location","Ticket","Params","Task",function($scope,Project,$routeParams,Login,Team,$location,Ticket,Params,Task){
 	$scope.isclient=false;
 	$scope.isAdmin=false;
 	$scope.isTeamLeader=false;
@@ -2275,83 +2275,10 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		}
 	}
 	var editedTicket=null;
-	$scope.setFeature=function()
-	{
-		$scope.conceptselct=false;
-		$scope.designselct=false;
-		$scope.bugselct=false;
-		$scope.devselct=true;
-	}
-	$scope.setBug=function()
-	{
-		$scope.conceptselct=false;
-		$scope.designselct=false;
-		$scope.bugselct=true;
-		$scope.devselct=false;
-	}
-	$scope.setConcept=function()
-	{
-		$scope.conceptselct=true;
-		$scope.designselct=false;
-		$scope.bugselct=false;
-		$scope.devselct=false;
-	}
-	$scope.setDesign=function()
-	{
-		$scope.conceptselct=false;
-		$scope.designselct=true;
-		$scope.bugselct=false;
-		$scope.devselct=false;
-	}
 	$scope.openCreateTicket=function(ticket)
 	{
 		if(ticket!=null)
 		{
-			if(ticket.type==$scope.tickettypes[4].type){
-				$scope.conceptselct=false;
-				$scope.designselct=true;
-				$scope.featureselct=false;
-				$scope.bugselct=false;
-				$scope.devselct=false;
-				//$("#radio3").trigger('click');
-				}
-			else if(ticket.type==$scope.tickettypes[3].type){
-				$scope.conceptselct=true;
-				$scope.designselct=false;
-				$scope.featureselct=false;
-				$scope.bugselct=false;
-				$scope.devselct=false;
-				$("#radio2").attr("checked", "checked");
-				
-			}
-			else if(ticket.type==$scope.tickettypes[1].type)
-			{
-				$scope.conceptselct=false;
-				$scope.designselct=false;
-				
-				$scope.bugselct=false;
-				$scope.devselct=true;
-				//$("#radio1").attr("checked", "checked");
-				$("#radio1").prop("checked", true);
-				$("#radio2").prop("checked", false);
-				$("#radio3").prop("checked", false);
-				$("#radio4").prop("checked", false);
-				
-				
-			}
-			else if(ticket.type==$scope.tickettypes[2].type)
-			{
-				$scope.conceptselct=false;
-				$scope.designselct=false;
-				$scope.featureselct=false;
-				$scope.bugselct=true;
-				$scope.devselct=false;
-				$("#radio1").prop("checked", false);
-				$("#radio2").prop("checked", true);
-				$("#radio3").prop("checked", false);
-				$("#radio4").prop("checked", false);
-				
-			}
 			$scope.isedit=true;
 			$scope.tickettitle=ticket.title;
 			$scope.ticketdescription=ticket.description;
@@ -2390,22 +2317,6 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 			{
 				data.ticket_id=editedTicket.id;
 			}
-			if($scope.designselct){
-				data.type=$scope.tickettypes[4].type;
-			}
-			else if($scope.conceptselct){
-				data.type=$scope.tickettypes[3].type;
-			}
-			else if($scope.devselct)
-			{
-				data.type=$scope.tickettypes[1].type;
-		
-			}
-			else if($scope.bugselct){
-				data.type=$scope.tickettypes[2].type;
-			}
-			
-			
 			var successFunc=function()
 			{
 				swal("Ticket Created", "Ticket created successfully", "success");
@@ -2808,6 +2719,55 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		}
 		Ticket.markAsPayed(successfunc,failurefunc,ticket.id);
 	}
+	var verifyBugForm=function()
+	{
+		var messages=[];
+		if($scope.storytitle==undefined || $scope.storytitle=="" || $scope.storytitle==null)
+		{
+			messgaes.push("please enter a bug title");
+		}
+		if($scope.storydescription==undefined || $scope.storydescription=="" || $scope.storydescription==null)
+		{
+			messgaes.push("please enter a bug description");
+		}
+		return messages;
+	}
+	$scope.openAddBug=function(ticket)
+	{
+		$('#add-bug').modal("show");
+		$scope.storytitle="";
+		$scope.storydescription="";
+		selectedticket=ticket;	
+	}
+	$scope.createStory=function()
+	{
+		var messages=verifyBugForm();
+		if(messages.length==0)
+		{
+			var data ={
+				"title":$scope.storytitle,
+				"description":$scope.storydescription,
+				"type":"bug"
+			};
+			var successFunc=function()
+			{
+
+				$('#add-bug').modal("hide");
+				swal("Bug added","Your bug has been sent to teamleader for check and acceptance","success");
+			}
+			var failureFunc=function()
+			{
+				swal("Oops","Something wrong happend please try again later","error");	
+			}
+	
+			data.ticket_id=selectedticket.id;
+			Task.craeteTask(successFunc,failureFunc,data);
+		}
+		else
+		{
+			swal("Please fill those information",messages.join('\n'),"warning");
+		}
+	}
 	Project.getProjectDetails($routeParams.project_id,succesFunc,failureFunc);
 }]);
 Controllers.controller('KeyboxCtrl', ['$scope','KeyBox',"$routeParams","Login","$location", function ($scope,KeyBox,$routeParams,Login,$location) {
@@ -2933,6 +2893,7 @@ Controllers.controller('KeyboxCtrl', ['$scope','KeyBox',"$routeParams","Login","
 			}
 		}
 	}
+
 	
 }]);
 Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Team','Ticket',"Task","$routeParams","Project", function ($scope,Login,Params,$location,Team,Ticket,Task,$routeParams,Project) {
@@ -2947,6 +2908,11 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 	});
 	var project_id=$routeParams.project_id;
 	var ticket_id=$routeParams.ticket_id;
+	var getTasktypes=function(data)
+	{
+		$scope.taskTypes=data;
+	}
+	Task.loadTaskTypes(getTasktypes);
 	var loadProject=function()
 	{
 		var success=function(project)
@@ -3013,14 +2979,18 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 	var selectedtask;
 	$scope.openAddEstimation=function(estimation,task)
 	{
+		$scope.isbackend=false;
+		$scope.isfrontend=false;
+		if(task.type==$scope.taskTypes.Concept.type && task.type==$scope.taskTypes.Uidesign.type && task.type==$scope.taskTypes.Uicoding.type)
+			$scope.isfrontend=true;
+		else
+			$scope.isbackend=true;
 		if(estimation!=null)
 		{
 			$("#selectest").select2("data",{"id":estimation,'text':estimation+" h"});
 		}
 		else
 			$("#selectest").select2("val","Select");
-		$scope.isfrontend=task.frontend;
-		$scope.isbackend=task.backend;
 		selectedtask=task;
 		$("#add-estimation").modal("show");
 	}
@@ -3235,7 +3205,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 		var complete=true;
 		for(i=0;i<$scope.tasks.length;i++)
 		{
-			if($scope.tasks[i].estimation==null)
+			if($scope.tasks[i].estimation==null || $scope.tasks[i].assignto==null)
 			{
 				complete=false;
 			}
@@ -3270,7 +3240,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 		}
 		else
 		{
-			swal("Please Complete estimation","Some stories are not estimated yet","info");
+			swal("Please Complete estimation and assign all stories","Some stories are not estimated or assigned yet","info");
 		}
 
 	}
@@ -3375,35 +3345,42 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 	}
 	$scope.finishTask=function(task)
 	{
-		swal({   title: "Finishing task..",   text: "This task will be Finish very soon..",   timer: 5000,   showConfirmButton: false });
+		swal({   title: "Finishing task..",   text: "This task will be Finish very soon..",   timer: 2000,   showConfirmButton: false });
 		var successFunc=function(data)
 		{
 			updateView();
 		}
 		var failureFunc=function()
 		{
-			swal("Oops!","Can't start story please try again later","error");
+			swal("Oops!","Can't finish story please try again later","error");
 		}
 		Task.finishTask(successFunc,failureFunc,task.id)
 	}
 	$scope.startTask=function(task)
 	{
-		swal({   title: "Starting task..",   text: "This task will start very soon..",   timer: 5000,   showConfirmButton: false });
-		var successFunc=function()
+		if(task.estimation!=null)
 		{
-			updateView();
+			swal({   title: "Starting task..",   text: "This task will start very soon..",   timer: 2000,   showConfirmButton: false });
+			var successFunc=function()
+			{
+				updateView();
+			}
+			var failureFunc=function()
+			{
+				swal("Oops!","Can't start story please try again later","error");
+			}
+			Task.startTask(successFunc,failureFunc,task.id)
 		}
-		var failureFunc=function()
+		else
 		{
-			swal("Oops!","Can't start story please try again later","error");
+			swal("Add estimation","please add estimation before starting story","info");
 		}
-		Task.startTask(successFunc,failureFunc,task.id)
 	}
 	$scope.addStory=function(story)
 	{
 		if(story==null)
 		{
-			$scope.storytype="empty";
+			$scope.storytype=$scope.taskTypes.Backend;
 			$('#add-story').modal("show");
 			$scope.isedit=false;
 			$scope.storytitle="";
@@ -3424,10 +3401,14 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 		{
 			$('#add-story').modal("show");
 			$scope.isedit=true;
-			if(story.frontend)
-				$scope.storytype="frontend";
-			if(story.backend)
-				$scope.storytype="backend";
+			for(i=0;i<$scope.taskTypes.types.length;i++)
+			{
+				if(story.type==$scope.taskTypes.types[i].type)
+				{
+					$scope.storytype=$scope.taskTypes.types[i];
+				}
+
+			}
 			$scope.storytitle=story.title;
 			$scope.storydescription=story.description;
 			if($scope.team.length==0){
@@ -3435,11 +3416,16 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 				$("#selectassign").select2("data",selectdata);
 				swal("Add memebers","please add team members before adding stories","error");
 			}
-			else
+			else if(story.assignto!=null)
 			{
 				var selectdata={"id":-1,text:story.assignto.name+" "+story.assignto.surname+","+story.assignto.role.role};
 				$("#selectassign").select2("data",selectdata);
 				$scope.assignto=story.assignto;
+			}
+			else
+			{
+				var selectdata={"id":-1,text:"Assign to"};
+				$("#selectassign").select2("data",selectdata);
 			}
 			selectedtask=story;
 		}
@@ -3456,10 +3442,6 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 		{
 			messgaes.push("please enter a story description");
 		}
-		if($scope.assignto==undefined || $scope.assignto=="" || $scope.assignto==null)
-		{
-			messgaes.push("please assign the story to a team member");
-		}
 		if($scope.storytype=="empty")
 		{
 			messgaes.push("please choose a story type");
@@ -3474,20 +3456,14 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 			var data ={
 				"title":$scope.storytitle,
 				"description":$scope.storydescription,
-				"assignedTo":{
+				"type":$scope.storytype.type
+			};
+			if($scope.assignto!=undefined)
+			{
+				data.assignedTo={
 					"role":$scope.assignto.role.role,
 					"id":$scope.assignto.id
-				}
-			};
-			if($scope.storytype=="frontend")
-			{
-				data.frontend=true;
-				data.backend=false;
-			}
-			if($scope.storytype=="backend")
-			{
-				data.frontend=false;
-				data.backend=true;
+				};
 			}
 			for(i=0;i<$scope.team.length;i++)
 			{
@@ -3500,7 +3476,10 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 			{
 				swal("Success","Story added/edited successfully","success");
 				updateView();
-				$('#add-story').modal("hide");
+				if($scope.storytype==$scope.taskTypes.Bug)
+					$('#add-bug').modal("hide");
+				else
+					$('#add-story').modal("hide");
 			}
 			var failureFunc=function()
 			{
@@ -3701,6 +3680,99 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
         }
         Task.uploadFile(successFunc,failureFunc,formData,project_id);
 	}
+	$scope.openAddBug=function(bug)
+	{
+		$scope.storytype=$scope.taskTypes.Bug;
+		if(bug==null)
+		{
+			$('#add-bug').modal("show");
+			$scope.isedit=false;
+			$scope.storytitle="";
+			$scope.storydescription="";
+			if($scope.team.length==0){
+				var selectdata={"id":-1,text:"No team found"};
+				$("#selectassignbug").select2("data",selectdata);
+				swal("Add memebers","please add team members before adding stories","error");
+			}
+			else
+			{
+				var selectdata={"id":-1,text:"Assign to"};
+				$("#selectassignbug").select2("data",selectdata);
+			}
+			selectedtask=null;
+
+		}
+		else
+		{
+			$('#add-bug').modal("show");
+			$scope.isedit=true;
+			$scope.storytitle=bug.title;
+			$scope.storydescription=bug.description;
+			if($scope.team.length==0){
+				var selectdata={"id":-1,text:"No team found"};
+				$("#selectassignbug").select2("data",selectdata);
+				swal("Add memebers","please add team members before adding stories","error");
+			}
+			else if(bug.assignto!=null)
+			{
+				var selectdata={"id":-1,text:bug.assignto.name+" "+bug.assignto.surname+","+bug.assignto.role.role};
+				$("#selectassignbug").select2("data",selectdata);
+				$scope.assignto=bug.assignto;
+			}
+			else
+			{
+				var selectdata={"id":-1,text:"Assign to"};
+				$("#selectassignbug").select2("data",selectdata);
+			}
+			selectedtask=bug;
+		}
+	}
+	$scope.AcceptBug=function(bug,accepted)
+	{
+		var successFunc=function()
+		{
+			updateView();
+		}
+		var failureFunc=function()
+		{
+			swal("Oops","Something wrong happend please try again later","error");	
+		}
+		if(accepted)
+		{
+			var data={
+				"task_id":bug.id,
+				"accept":true
+			}
+			Task.acceptBug(successFunc,failureFunc,data);
+		}
+		else
+		{
+			$scope.rejectionbugmessage="";
+			selectedtask=bug;
+			$('#reject-bug').modal("show");
+		}
+	}
+	$scope.rejectBug=function()
+	{
+		var successFunc=function()
+		{
+			updateView();
+			$('#reject-bug').modal("hide");
+		}
+		var failureFunc=function()
+		{
+			swal("Oops","Something wrong happend please try again later","error");	
+		}
+		
+		var data={
+			"task_id":selectedtask.id,
+			"accept":false,
+			"reason":$scope.rejectionbugmessage
+		}
+		Task.acceptBug(successFunc,failureFunc,data);
+		
+	}
+
 }]);
 Controllers.controller('ContractCtrl', ['$scope',"Login","$routeParams","$location", function ($scope,Login,$routeParams,$location) {
 	var customerid=$routeParams.cid;
