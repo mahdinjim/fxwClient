@@ -1810,9 +1810,11 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		$scope.team=data.team;
 		originalticket=data.tickets;
 		$scope.tickets=data.tickets;
-		$scope.projectDescription=data.description;
+		$scope.projectDescription=data.briefing;
+		$scope.projectrate=data.rate;
 		$scope.projectSkilss=data.skills;
 		$scope.budget=data.budget;
+		$scope.projectrate=data.rate;
 		$scope.issigned=data.signed;
 		if(data.contractprepared!=null)
 			$scope.contractprepared=data.contractprepared;
