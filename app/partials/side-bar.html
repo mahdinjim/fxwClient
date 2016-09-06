@@ -4,7 +4,7 @@
 <div ng-controller="SideBarCtrl">
     <nav class="navbar-default navbar-static-side" role="navigation">
     <div class="sidebar-collapse">
-                    <ul class="nav metismenu" id="side-menu">
+            <ul class="nav metismenu" id="side-menu" ng-if="isclient">
                         <li class="nav-logo">
                             <div class="nav-logo-element">
                                 <a href="#/dashboard">
@@ -33,14 +33,14 @@
                                 </a>
                                 
                                 <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                                <li><a data-toggle="modal"  ng-click="openEditProfil(true)">Profile</a></li>
-                                <!-- <li><a >Settings</a></li> -->
-                                <li class="divider"></li>
-                                <li><a ng-click="logout()">Log out</a></li>
-                            </ul>
+                                    <li><a data-toggle="modal"  ng-click="openEditProfil(true)">Profile</a></li>
+                                    <!-- <li><a >Settings</a></li> -->
+                                    <li class="divider"></li>
+                                    <li><a ng-click="logout()">Log out</a></li>
+                                </ul>
                         </div>
                         
-                    </li>
+                        </li>
 
                     <!--Mini Navbar Account-->
                     <li class="mini-navbar-account">
@@ -54,7 +54,7 @@
                     </li>
                     <!--End-->
                 
-                    <li ng-if="doDisplay('/dashboard')" ng-click="openclosetab('projecttab')" ng-class="{'active':(projectactive)}" activate-tab>
+                    <li ng-click="openclosetab('projecttab')" ng-class="{'active':(projectactive)}" activate-tab>
                         <a><i class="fa fa-clone"></i> <span class="nav-label">Projects</span> <span class="fa arrow"></span></a>
                         <ul id="projecttab" class="nav nav-second-level collapse" >
                             <li ng-repeat='project in projects'>
@@ -63,30 +63,26 @@
                                     <span class="navi-project-name">{{project.company}}</span>
                                 </a>
                             </li>
-                            <li ng-if="canAdd"><a ng-click="openAddprojectModel()"><span style="border-bottom: 1px dotted;">+ Add Project</span></a></li>
+                            <li><a ng-click="openAddprojectModel()"><span style="border-bottom: 1px dotted;">+ Add Project</span></a></li>
                         </ul>
                     </li>
 
-                    <li ng-if="doDisplay('/messaging')" ng-click="openclosetab('messagetab')" ng-class="{'active':(messageactive)}" activate-tab>
+                    <li  ng-click="openclosetab('messagetab')" ng-class="{'active':(messageactive)}" activate-tab>
                         <a ><i class="fa fa-comments"></i> <span class="nav-label">Messages</span> <span class="label label-danger pull-right">{{totalmessages}}</span></span></a>
                         <ul id="messagetab" class="nav nav-second-level collapse">
                             <li  ng-repeat='channel in channels'><a href="#/messaging/{{channel.project_id}}/{{channel.id}}"><span class="nav-label">{{channel.name}}</span> <span class="label label-default pull-right">{{channel.newmessages}}</span></a></li>
                         </ul> 
                     </li>
 
-                    <li ng-if="doDisplay('/team')" ng-class="{'active':(teamactive)}" activate-tab>
-                        <a href="#/team"><i class="fa fa-users"></i> <span class="nav-label">Team</span></a>
-                    </li>
+                    
 
-                    <li  ng-if="doDisplay('/client')" ng-class="{'active':(clientactive)}" activate-tab>
-                        <a href="#/client"><i class="fa fa-building"></i> <span class="nav-label">Client</span></a>
-                    </li>
+                   
 
-                    <li ng-if="doDisplay('/cuser')" ng-class="{'active':(cuseractive)}" activate-tab>
+                    <li  ng-class="{'active':(cuseractive)}" activate-tab>
                         <a href="#/cuser"><i class="fa fa-users"></i> <span class="nav-label">User</span></a>
                     </li>
 
-                    <li ng-if="doDisplay('/report')" ng-click="openclosetab('reportab')" ng-class="{'active':(reportactive)}" activate-tab>
+                    <li  ng-click="openclosetab('reportab')" ng-class="{'active':(reportactive)}" activate-tab>
                         <a><i class="fa fa-check-square"></i> <span class="nav-label">Report</span></a>
                         <ul id="reportab" class="nav nav-second-level collapse">
                             <li ng-repeat='project in projects'>
@@ -98,11 +94,246 @@
                         </ul>
                     </li>
 
-                    <li ng-if="doDisplay('/invoice')">
-                        <a href="invoice-fxw.html"><i class="fa fa-file-text"></i> <span class="nav-label">Invoice</span></a>
-                    </li>
+                   
 
                      
+
+                </ul>
+                <ul class="nav metismenu" id="side-menu" ng-if="isAdmin">
+                        <li class="nav-logo">
+                            <div class="nav-logo-element">
+                                <a href="#/dashboard">
+                                     <img src="img/logo-flexwork@2.png" width="55" height="49" alt="flexwork.io" title="flexwork.io"/>
+                                </a>
+                            </div>
+                        </li>
+
+                        <!--mobile logo-->
+                        <li class="nav-logo">
+                            <div class="logo-element">
+                                <a href="#/dashboard">
+                                    <img src="img/logo-small-flexwork@2.png" width="45" height="40" alt="fxw.io" title="fxw.io"/>
+                                </a>
+                            </div>
+                        </li>
+
+                        <li class="nav-header">
+                            <div class="dropdown profile-element"> 
+                                <a data-toggle="dropdown" class="dropdown-toggle">
+                                    <span class="clear"> 
+                                        <span class="block m-t-xs"> <strong class="font-bold">{{company}}</strong></span> 
+                                        <span class="text-muted text-xs block">{{name}} {{surname}}</span> 
+                                        <span class="text-muted text-xs block">{{title}}<b class="caret"></b></span> 
+                                    </span> 
+                                </a>
+                                
+                                <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                    <li><a data-toggle="modal"  ng-click="openEditProfil(true)">Profile</a></li>
+                                    <!-- <li><a >Settings</a></li> -->
+                                    <li class="divider"></li>
+                                    <li><a ng-click="logout()">Log out</a></li>
+                                </ul>
+                        </div>
+                        
+                        </li>
+
+                    <!--Mini Navbar Account-->
+                    <li class="mini-navbar-account">
+                        <a href="#"><i class="fa fa-user"></i> <span class="nav-label">Account</span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li><a data-toggle="modal"  ng-click="openEditProfil(true)">Profile</a></li>
+                            <!-- <li><a href="settings-fxw.html">Settings</a></li> -->
+                            <li class="divider"></li>
+                            <li><a ng-click="logout()">Log out</a></li>
+                        </ul>
+                    </li>
+                    <!--End-->
+                
+                    <li ng-click="openclosetab('projecttab')" ng-class="{'active':(projectactive)}" activate-tab>
+                        <a><i class="fa fa-clone"></i> <span class="nav-label">Projects</span> <span class="fa arrow"></span></a>
+                        <ul id="projecttab" class="nav nav-second-level collapse" >
+                            <li ng-repeat='project in projects'>
+                                <a href="#/pdetails/{{project.id}}" ng-if="isclient"><span class="nav-label">{{project.name}}</a>
+                                <a href="#/pdetails/{{project.id}}" ng-if="!isclient">{{project.name}}
+                                    <span class="navi-project-name">{{project.company}}</span>
+                                </a>
+                            </li>
+                            <li><a ng-click="openAddprojectModel()"><span style="border-bottom: 1px dotted;">+ Add Project</span></a></li>
+                        </ul>
+                    </li>
+
+                    <li ng-click="openclosetab('messagetab')" ng-class="{'active':(messageactive)}" activate-tab>
+                        <a ><i class="fa fa-comments"></i> <span class="nav-label">Messages</span> <span class="label label-danger pull-right">{{totalmessages}}</span></span></a>
+                        <ul id="messagetab" class="nav nav-second-level collapse">
+                            <li  ng-repeat='channel in channels'><a href="#/messaging/{{channel.project_id}}/{{channel.id}}"><span class="nav-label">{{channel.name}}</span> <span class="label label-default pull-right">{{channel.newmessages}}</span></a></li>
+                        </ul> 
+                    </li>
+
+                    <li ng-class="{'active':(teamactive)}" activate-tab>
+                        <a href="#/team"><i class="fa fa-users"></i> <span class="nav-label">Team</span></a>
+                    </li>
+
+                    <li ng-class="{'active':(clientactive)}" activate-tab>
+                        <a href="#/client"><i class="fa fa-building"></i> <span class="nav-label">Client</span></a>
+                    </li>
+                    <li ng-click="openclosetab('reportab')" ng-class="{'active':(reportactive)}" activate-tab>
+                        <a><i class="fa fa-check-square"></i> <span class="nav-label">Report</span></a>
+                        <ul id="reportab" class="nav nav-second-level collapse">
+                            <li ng-repeat='project in projects'>
+                                <a href="#/report/{{project.id}}/{{project.name}}" ng-if="isclient"><span class="nav-label">{{project.name}}</a>
+                                <a href="#/report/{{project.id}}/{{project.name}}" ng-if="!isclient">{{project.company}}
+                                    <span class="navi-project-name">{{project.name}}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                   
+
+                     
+
+                </ul>
+                <ul class="nav metismenu" id="side-menu" ng-if="isKeyAccount">
+                        <li class="nav-logo">
+                            <div class="nav-logo-element">
+                                <a href="#/dashboard">
+                                     <img src="img/logo-flexwork@2.png" width="55" height="49" alt="flexwork.io" title="flexwork.io"/>
+                                </a>
+                            </div>
+                        </li>
+
+                        <!--mobile logo-->
+                        <li class="nav-logo">
+                            <div class="logo-element">
+                                <a href="#/dashboard">
+                                    <img src="img/logo-small-flexwork@2.png" width="45" height="40" alt="fxw.io" title="fxw.io"/>
+                                </a>
+                            </div>
+                        </li>
+
+                        <li class="nav-header">
+                            <div class="dropdown profile-element"> 
+                                <a data-toggle="dropdown" class="dropdown-toggle">
+                                    <span class="clear"> 
+                                        <span class="block m-t-xs"> <strong class="font-bold">{{company}}</strong></span> 
+                                        <span class="text-muted text-xs block">{{name}} {{surname}}</span> 
+                                        <span class="text-muted text-xs block">{{title}}<b class="caret"></b></span> 
+                                    </span> 
+                                </a>
+                                
+                                <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                    <li><a data-toggle="modal"  ng-click="openEditProfil(true)">Profile</a></li>
+                                    <!-- <li><a >Settings</a></li> -->
+                                    <li class="divider"></li>
+                                    <li><a ng-click="logout()">Log out</a></li>
+                                </ul>
+                        </div>
+                        
+                        </li>
+
+                    <!--Mini Navbar Account-->
+                    <li class="mini-navbar-account">
+                        <a href="#"><i class="fa fa-user"></i> <span class="nav-label">Account</span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li><a data-toggle="modal"  ng-click="openEditProfil(true)">Profile</a></li>
+                            <!-- <li><a href="settings-fxw.html">Settings</a></li> -->
+                            <li class="divider"></li>
+                            <li><a ng-click="logout()">Log out</a></li>
+                        </ul>
+                    </li>
+                    <!--End-->
+                
+                    <li ng-click="openclosetab('projecttab')" ng-class="{'active':(projectactive)}" activate-tab>
+                        <a><i class="fa fa-clone"></i> <span class="nav-label">Projects</span> <span class="fa arrow"></span></a>
+                        <ul id="projecttab" class="nav nav-second-level collapse" >
+                            <li ng-repeat='project in projects'>
+                                <a href="#/pdetails/{{project.id}}" ng-if="isclient"><span class="nav-label">{{project.name}}</a>
+                                <a href="#/pdetails/{{project.id}}" ng-if="!isclient">{{project.name}}
+                                    <span class="navi-project-name">{{project.company}}</span>
+                                </a>
+                            </li>
+                            <li><a ng-click="openAddprojectModel()"><span style="border-bottom: 1px dotted;">+ Add Project</span></a></li>
+                        </ul>
+                    </li>
+
+                    <li  ng-class="{'active':(clientactive)}" activate-tab>
+                        <a href="#/client"><i class="fa fa-building"></i> <span class="nav-label">Client</span></a>
+                    </li>
+
+                    <li ng-click="openclosetab('reportab')" ng-class="{'active':(reportactive)}" activate-tab>
+                        <a><i class="fa fa-check-square"></i> <span class="nav-label">Report</span></a>
+                        <ul id="reportab" class="nav nav-second-level collapse">
+                            <li ng-repeat='project in projects'>
+                                <a href="#/report/{{project.id}}/{{project.name}}" ng-if="isclient"><span class="nav-label">{{project.name}}</a>
+                                <a href="#/report/{{project.id}}/{{project.name}}" ng-if="!isclient">{{project.company}}
+                                    <span class="navi-project-name">{{project.name}}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                </ul>
+                <ul class="nav metismenu" id="side-menu" ng-if="isMember">
+                        <li class="nav-logo">
+                            <div class="nav-logo-element">
+                                <a href="#/dashboard">
+                                     <img src="img/logo-flexwork@2.png" width="55" height="49" alt="flexwork.io" title="flexwork.io"/>
+                                </a>
+                            </div>
+                        </li>
+
+                        <!--mobile logo-->
+                        <li class="nav-logo">
+                            <div class="logo-element">
+                                <a href="#/dashboard">
+                                    <img src="img/logo-small-flexwork@2.png" width="45" height="40" alt="fxw.io" title="fxw.io"/>
+                                </a>
+                            </div>
+                        </li>
+
+                        <li class="nav-header">
+                            <div class="dropdown profile-element"> 
+                                <a data-toggle="dropdown" class="dropdown-toggle">
+                                    <span class="clear"> 
+                                        <span class="block m-t-xs"> <strong class="font-bold">{{company}}</strong></span> 
+                                        <span class="text-muted text-xs block">{{name}} {{surname}}</span> 
+                                        <span class="text-muted text-xs block">{{title}}<b class="caret"></b></span> 
+                                    </span> 
+                                </a>
+                                
+                                <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                    <li><a data-toggle="modal"  ng-click="openEditProfil(true)">Profile</a></li>
+                                    <!-- <li><a >Settings</a></li> -->
+                                    <li class="divider"></li>
+                                    <li><a ng-click="logout()">Log out</a></li>
+                                </ul>
+                        </div>
+                        
+                        </li>
+
+                    <!--Mini Navbar Account-->
+                    <li class="mini-navbar-account">
+                        <a href="#"><i class="fa fa-user"></i> <span class="nav-label">Account</span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li><a data-toggle="modal"  ng-click="openEditProfil(true)">Profile</a></li>
+                            <!-- <li><a href="settings-fxw.html">Settings</a></li> -->
+                            <li class="divider"></li>
+                            <li><a ng-click="logout()">Log out</a></li>
+                        </ul>
+                    </li>
+                    <!--End-->
+                
+                    <li ng-click="openclosetab('projecttab')" ng-class="{'active':(projectactive)}" activate-tab>
+                        <a><i class="fa fa-clone"></i> <span class="nav-label">Projects</span> <span class="fa arrow"></span></a>
+                        <ul id="projecttab" class="nav nav-second-level collapse" >
+                            <li ng-repeat='project in projects'>
+                                <a href="#/pdetails/{{project.id}}" ng-if="isclient"><span class="nav-label">{{project.name}}</a>
+                                <a href="#/pdetails/{{project.id}}" ng-if="!isclient">{{project.name}}
+                                    <span class="navi-project-name">{{project.company}}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
 
                 </ul>
 

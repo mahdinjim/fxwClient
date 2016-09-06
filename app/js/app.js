@@ -73,7 +73,7 @@ crmapp.config(["$routeProvider",
 ]);      		
 crmapp.run(['$rootScope', '$location', 'Login','Chat','$templateCache', function ($rootScope, $location, Login,Chat,$templateCache) {
     $rootScope.$on('$routeChangeStart', function (event) {
-    	
+    	console.log("route is changing");
     	if(!Login.getLoggedUser())
     	{
     		if($location.path()=="/login")

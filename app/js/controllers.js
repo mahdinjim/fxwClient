@@ -64,14 +64,10 @@ Controllers.controller("MenuNavCtrl",['$scope','Login',function ($scope,Login){
 	}
 	
 }]);
-Controllers.controller("SideBarCtrl",['$scope','Login','Chat','Client','Project','$location','Cuser',"Params",
-	function SideBarCtrl($scope,Login,Chat,Client,Project,$location,Cuser,Params)
+Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Client','Project','$location','Cuser',"Params",
+	function SideBarCtrl($rootScope,$scope,Login,Chat,Client,Project,$location,Cuser,Params)
 	{
-		var succsfunc=function(data)
-		{
-			$scope.skills=data;
-		}
-		Params.getSkills(succsfunc);
+		
 		if($location.path()=="/pdetails")
 		{
 			$scope.projectactive=true;
@@ -96,23 +92,70 @@ Controllers.controller("SideBarCtrl",['$scope','Login','Chat','Client','Project'
 		{
 			$scope.reportactive=true;
 		}
-		$scope.canAdd=false;
-
 		$scope.isclient=false;
 		$scope.isClientUser=false;
 		if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER"){
 			$scope.isclient=true;
 		}
-		if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER")
+		else if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER")
 		{
 			$scope.isClientUser=true;
 		}
-		if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER"  ||Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_KEYACCOUNT")
+		else if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN")
 		{
-			$scope.canAdd=true;
-
+			$scope.isAdmin=true;
 		}
-		
+		else if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_KEYACCOUNT")
+		{
+			$scope.isKeyAccount=true;
+		}
+		else
+		{
+			$scope.isMember=true;
+		}
+		$scope.totalmessages=0;
+		var getnewMessagesNumber=function()
+		{
+			var channels =new Array();
+			for(i=0;i<$scope.channels.length;i++)
+			{
+				channels.push({"group_id":$scope.channels[i].id});
+			}
+			var data={"groups":channels};
+			var successfunc=function(data)
+			{
+				$scope.totalmessages=data.total;
+				for(i=0;i<$scope.channels.length;i++)
+				{
+					for(j=0;j<data.groups.length;j++)
+					{
+						if(data.groups[j].group_id==$scope.channels[i].id)
+							$scope.channels[i].newmessages=data.groups[j].count;
+					}
+				}
+			}
+
+			Chat.getNewMessagesNumber(data,successfunc);
+		}
+		var getprojects=function()
+		{
+			var successfunc=function(data)
+			{
+				$scope.channels=data.channels;
+				$scope.projects=data.projects;
+				if($scope.isAdmin || $scope.isClientUser || $scope.isclient)
+				{
+					getnewMessagesNumber();
+					var newmessagesinterval=setInterval(getnewMessagesNumber, 50000);
+					$scope.$on('$routeChangeStart',function(){
+						clearInterval(newmessagesinterval);
+					});
+				}
+				
+			}
+			Project.getAllproject(successfunc);
+		}
+		getprojects();
 		$scope.openEditProfil=function(chargeView)
 		{
 			var userinfo=Login.getLoggedUser().userinfo;
@@ -305,55 +348,10 @@ Controllers.controller("SideBarCtrl",['$scope','Login','Chat','Client','Project'
 			}
 			
 		}
-		
-		$scope.totalmessages=0;
-		var getnewMessagesNumber=function()
-		{
-			var channels =new Array();
-			for(i=0;i<$scope.channels.length;i++)
-			{
-				channels.push({"group_id":$scope.channels[i].id});
-			}
-			var data={"groups":channels};
-			var successfunc=function(data)
-			{
-				$scope.totalmessages=data.total;
-				for(i=0;i<$scope.channels.length;i++)
-				{
-					for(j=0;j<data.groups.length;j++)
-					{
-						if(data.groups[j].group_id==$scope.channels[i].id)
-							$scope.channels[i].newmessages=data.groups[j].count;
-					}
-				}
-			}
-
-			Chat.getNewMessagesNumber(data,successfunc);
-		}
 		$scope.openclosetab=function(id)
 		{
 			$('#'+id).toggleClass("in");
 		}
-		var getprojects=function()
-		{
-			var successfunc=function(data)
-			{
-				$scope.channels=data.channels;
-				$scope.projects=data.projects;
-				getnewMessagesNumber();
-				var newmessagesinterval=setInterval(getnewMessagesNumber, 50000);
-				$scope.$on('$routeChangeStart',function(){
-					clearInterval(newmessagesinterval);
-				});
-			}
-			Project.getAllproject(successfunc);
-		}
-		
-		getprojects();
-		
-		
-		
-		
 		var userinf= Login.getLoggedUser().userinfo;
 		$scope.name=userinf.name;
 		$scope.surname=userinf.surname;
@@ -365,16 +363,16 @@ Controllers.controller("SideBarCtrl",['$scope','Login','Chat','Client','Project'
 		$scope.logout=function(){
 			Login.logout();
 		}
-		$scope.doDisplay=function(path)
-		{
-			return Login.haveAccess(path);
-		}
-
 		$scope.openAddprojectModel=function()
 		{
 			if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_KEYACCOUNT" )
 			{
 				$scope.canAdd=true;
+				var succsfunc=function(data)
+				{
+					$scope.skills=data;
+				}
+				Params.getSkills(succsfunc);
 				var successfunc =function(customers)
 				{
 					$scope.clients=customers;
@@ -491,12 +489,19 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 	$scope.week3=new Array();
 	$scope.week4=new Array();
 	$scope.week5=new Array();
+	var roles=null;
+	$scope.send=false;
+	$scope.$on('$viewContentLoaded', function(){
+
+	    Team.loadRoles(function(data)
+		{
+			roles=data;
+		});
+		Team.getAllteamMembers(successfunc);
+		
+  	});
 	
-    var roles=null;
-    Team.loadRoles(function(data)
-	{
-		roles=data;
-	});
+   
     $scope.stateChanged=function()
 	{
 		if($scope.send)
@@ -714,8 +719,7 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 			Team.getTeamPerformanceByMonth(sucessFunc,failureFunc,month);
 		}
 	}
-	Team.getAllteamMembers(successfunc);
-	$scope.send=false;
+	
 	if(Params.getTeamMember()!=null)
 	{
 		var member=Params.getTeamMember();
@@ -1133,7 +1137,11 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 		}
 		Client.getAllClients(successfunc,null,page);
 	}
-	updateView($scope.currentpage);
+	
+	$scope.$on('$viewContentLoaded', function(){
+
+	   updateView($scope.currentpage);
+  	});
 	$scope.nextpage=function()
 	{
 		if($scope.currentpage<scope.endpage)
@@ -3806,10 +3814,10 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 	{
 		$scope.skills=data;
 	}
-	Params.getSkills(succsfunc);
-	Team.loadRoles(loadRoles);
+	
 	var selectedPorject=null;
 	var update=null;
+
 	updateView=function()
 	{
 		successFunc=function(data)
@@ -3859,7 +3867,13 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 			Project.assignProjectRate(successFunc,failureFunc,data);
 		}
 	}
-	updateView();
+	$scope.$on('$viewContentLoaded', function(){
+
+	   updateView();
+		Params.getSkills(succsfunc);
+		Team.loadRoles(loadRoles);
+  	});
+	
 
 	$scope.openPrepareContract=function(project)
 	{
