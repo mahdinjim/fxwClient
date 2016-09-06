@@ -872,7 +872,7 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 			$scope.phonecode=member.phonecode;
 			$("#phonecodeselect").select2("val",member.phonecode);
 			$scope.country=member.country;
-			$("#countryselect").select2("val",member.country);
+			//$("#countryselect").select2("data",{id:-1,"text":member.country});
 			$scope.status=member.status;
 			$("#statusselct").select2("val",member.status);
 			$scope.role=member.role.role;
@@ -905,6 +905,7 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 		else{
 			cleanForm();
 			$scope.isedit=false;
+			$("#countryselect").select2("data",{id:-1,"text":"Country"});
 
 		}
 		$('#add-user').modal('show');
@@ -1213,7 +1214,7 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 			$("#keyaccountselect").select2("data",data);
 			$scope.selectedKeyaccount=client.keyaccount.id;
 			$("#phonecode").select2("val",client.phonecode);
-			$("#countryselect").select2("data",{id:-1,text:client.address.country});
+			//$("#countryselect").select2("data",{id:-1,text:client.address.country});
 			$scope.isEdit=true;
 			$scope.oldclient=client;
 		}
