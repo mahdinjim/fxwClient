@@ -853,12 +853,12 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 	}
 	$scope.openmemberForm=function(member)
 	{
+		
 		var succsfunc=function(data)
 		{
 			$scope.skillsset=data;
 		}
 		Params.getSkills(succsfunc);
-		//BAD: Is not a very good solution to use jquery to initiate values
 		if(member!=null)
 		{
 			$scope.email=member.email;
@@ -872,7 +872,7 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 			$scope.phonecode=member.phonecode;
 			$("#phonecodeselect").select2("val",member.phonecode);
 			$scope.country=member.country;
-			//$("#countryselect").select2("data",{id:-1,"text":member.country});
+			$("#countryselect").select2("val",member.country);
 			$scope.status=member.status;
 			$("#statusselct").select2("val",member.status);
 			$scope.role=member.role.role;
@@ -930,7 +930,7 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 		$("#levelselect").select2("val","Level");
 		$("#roleselect").prop("disabled",false);
 		$("#capacityset").val("");
-		$("#phonecodeselect").select2("val","+49");
+		$("#phonecodeselect").select2("val","49");
 		$("#countryselect").select2("val","Country");
 		$("#statusselct").select2("val","Status");
 		$("#roleselect").select2("val","Role");
@@ -1207,6 +1207,7 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 			$scope.address=client.address.address;
 			$scope.city=client.address.city;
 			$scope.country=client.address.country;
+			$("#countryselect").select2("val",client.address.country);
 			$scope.companyname=client.companyname;
 			$scope.zipcode=client.address.zipcode;
 			
@@ -1243,7 +1244,7 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 		
 		$("#keyaccountselect").select2("data",{id:-1,text:"Key Account"});
 		$("#countryselect").select2("data",{id:-1,text:"Country"});
-		$("#phonecode").select2("val","+49");
+		$("#phonecode").select2("val","49");
 	}
 	var verifyForm=function()
 	{
@@ -3871,7 +3872,7 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 	$scope.$on('$viewContentLoaded', function(){
 
 	   updateView();
-		Params.getSkills(succsfunc);
+		
 		Team.loadRoles(loadRoles);
   	});
 	
@@ -3927,6 +3928,7 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 	}
 	$scope.openAddprojectModelFromclient=function(project)
 	{
+		Params.getSkills(succsfunc);
 		$scope.selectedClient=customerid;
 		selectedproject=project;
 		if(project==null){

@@ -1254,7 +1254,10 @@ services.factory('Params',["$http",function($http){
 	var project=null;
 	var ticket=null;
 	var skills=null;
+	if(sessionStorage.skills!=null)
+		skills=JSON.parse(sessionStorage.skills);
 	return {
+		skills:skills,
 		setTeamMember:function(data){
 			teamMember=data;
 		},
@@ -1306,6 +1309,7 @@ services.factory('Params',["$http",function($http){
 					var array = data.split('\n');
 					success(array);
 					me.skills=array;
+					sessionStorage.skills=JSON.stringify(array);
 				}).error(function (data, status, headers, config) {
 					console.log(data);
 	            });
