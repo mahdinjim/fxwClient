@@ -162,7 +162,7 @@ Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Clie
 			if($scope.isclient || $scope.isClientUser)
 			{
 				if(chargeView){
-					$("#client_phone_code").select2("data",{id:-1,"text":userinfo.phonecode});
+					$("#client_phone_code").select2("val",userinfo.phonecode);
 					
 					$scope.client_name=userinfo.name;
 					$scope.client_surname=userinfo.surname;
@@ -170,7 +170,7 @@ Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Clie
 					$scope.client_phonenumber=userinfo.telnumber;
 					$scope.client_login=userinfo.email;
 					if($scope.isclient){
-						$("#client_company_country").select2("data",{id:-1,"text":userinfo.address.country});
+						$("#client_company_country").select2("val",userinfo.address.country);
 						$scope.client_company_name=userinfo.compnay_name;
 						$scope.client_company_country=userinfo.address.country;
 						$scope.client_company_address=userinfo.address.address;
@@ -1449,7 +1449,7 @@ Controllers.controller('CuserCtrl',['$scope','Login','Cuser','$location','Params
 		$scope.phonecode="+49";
 		$scope.phonenumber=undefined;
 		$scope.title=undefined;
-		$("#phonecodeselect").select2("data",{id:1,text:"+49"});
+		$("#phonecodeselect").select2("val","49");
 		$scope.issent=false;
 		
 	}

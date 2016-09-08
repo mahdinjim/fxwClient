@@ -1,12 +1,12 @@
 var directives = angular.module("directives", []);
 directives.directive('sideBar', function() {
 	return {
-    	templateUrl: 'partials/side-bar.html?v=1.2'
+    	templateUrl: 'partials/side-bar.html?v=1.3'
   		};
 });
 directives.directive('navMenu', function() {
 	return {
-    	templateUrl: 'partials/nav-menu.html'
+    	templateUrl: 'partials/nav-menu.html?v=1.0'
   		};
 });
 directives.directive('rightSide', function() {
