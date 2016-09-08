@@ -50,7 +50,7 @@
                                                 <div class="message">
                                                     <a class="message-author" href="#">{{message.username}}</a>
                                                     <span class="message-date">{{message.year}}/{{message.month}}/{{message.day}} {{message.hour}}:{{message.minutes}} </span>
-                                                    <span class="message-content" ng-bind-html="message.text">
+                                                    <span class="message-content" ng-bind-html="message.text | toTrusted">
                                                         
                                                     </span>
                                                 </div>
