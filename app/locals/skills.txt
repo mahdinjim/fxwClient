@@ -445,6 +445,7 @@ Java Remote Method Invocation (Java RMI)
 Java Servlets Development
 JavaFX
 JavaScript
+JavaScript JSX
 JavaServer Faces (JSF)
 JAXB
 JBoss
@@ -765,6 +766,8 @@ Rapid Prototyping
 Raspberry Pi
 Rational Unified Process (RUP)
 Razor Template Engine
+React.js
+React Native
 Real Estate IDX
 Real time stream processing
 Realbasic
