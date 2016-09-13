@@ -3397,7 +3397,6 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 			$scope.isedit=false;
 			$scope.storytitle="";
 			$scope.storydescription="";
-			story.assignto=null;
 			if($scope.team.length==0){
 				var selectdata={"id":-1,text:"No team found"};
 				$("#selectassign").select2("data",selectdata);
