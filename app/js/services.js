@@ -80,7 +80,7 @@ services.factory("Links",[function(){
 	var finishTaskLink=baseUrl+path+"/private/project/task/finish";
 	var realtimeLink=baseUrl+path+"/private/project/task/realtime";
 	var delivertoClientLink=baseUrl+path+"/private/project/ticket/acceptance";
-	var uploadfilelink=baseUrl+path+"/private/project/restricted/file/uplaod";
+	var uploadfilelink=baseUrl+path+"/private/project/restricted/ticket/file/uplaod";
 	var listdocumentsLink=baseUrl+path+"/private/project/file/list";
 	var acceptContractLink=baseUrl+path+"/private/customer/contract/accept";
 	var acceptProjectContractLink=baseUrl+path+"/private/project/restricted/accept";
@@ -102,6 +102,7 @@ services.factory("Links",[function(){
 	var prepareContractLink=baseUrl+path+"/private/management/project/contract";
 	var taskTypesLink=baseUrl+path+"/private/task/types";
 	var acceptBugLink=baseUrl+path+"/private/task/accept";
+	var deleteFileLink=baseUrl+path+"/private/project/file/delete";
 	this.getLoginLink=function()
 	{
 		return LoginLink;
@@ -499,6 +500,10 @@ services.factory("Links",[function(){
 	this.getAcceptBugLink=function()
 	{
 		return acceptBugLink;
+	}
+	this.getDeleteFileLink=function()
+	{
+		return deleteFileLink;
 	}
 	return this;
 }]);
@@ -2322,19 +2327,38 @@ services.service('Task', ["$http","Login","Links",function ($http,Login,Links) {
             });
         }
 	}
-	this.uploadFile=function(successFunc,failureFunc,data,project_id)
+	this.uploadTicketFile=function(successFunc,failureFunc,data,ticket_id)
 	{
 		if(Login.getLoggedUser())
 		{
 			var me =this;
 			$http({
 				method:"POST", 
-				url:Links.getUplaodfileLink()+"/"+project_id,
+				url:Links.getUplaodfileLink()+"/"+ticket_id,
 				transformRequest: angular.identity,
 				data:data,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token,'Content-Type': undefined}
 			}).success(function (data, status, headers, config) {
                 successFunc(data);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failureFunc(data.error);
+            });
+        }
+	}
+	this.deleteFile=function(successFunc,failurefunc,file_id)
+	{
+		if(Login.getLoggedUser())
+		{
+			var me =this;
+			$http({
+				method:"DELETE", 
+				url:Links.getDeleteFileLink()+"/"+file_id,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+                successFunc();
             }).error(function (data, status, headers, config) {
             	if(status==403)
             		Login.logout();

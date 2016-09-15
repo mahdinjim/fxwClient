@@ -2563,9 +2563,9 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	{
 		
 		swal({
-                title: "You reject the estimation for ticket", 
+                title: "Reedit Ticket", 
                 //html: '<p><i class="fa fa-star project-type"></i>'+ticket.title+'</p>',
-                //text:"hello",
+                text:"Your ticket will be saved as draft and you have to restart estimation after reediting this ticket.\n  Would you like to reedit the ticket now?",
                 type: "info",
                 showCancelButton: true,
                 cancelButtonText: "cancel",
@@ -2578,7 +2578,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 					swal(
 	                {
 	                    title: "Great!",
-	                    text: "Estimation rejected successfully", 
+	                    text: "Ticket is in draft now you can re-edit and start it again", 
 	                    type: "success",
 	                    confirmButtonColor: "#1ab394",
 	                    confirmButtonText: "close"
@@ -2931,7 +2931,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 		{
 			$scope.company_name=project.customer;
 			$scope.project_name=project.name;
-			$scope.docs=project.docs;
+			//$scope.docs=project.docs;
 			$scope.team=project.team;
 			if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN")
 			{
@@ -2976,6 +2976,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 			$scope.totaltasks=data.taskscount;
 			$scope.finishedtasks=data.finishedtasks;
 			$scope.rejectionmessage=data.rejectionmessage;
+			$scope.docs=data.docs;
 		}
 		failureFunc=function(err)
 		{
@@ -3628,9 +3629,9 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 	{
 		
 		swal({
-                title: "You reject the estimation for the ticket", 
+                title: "Reedit Ticket", 
                 //html: '<p><i class="fa fa-star project-type"></i>'+ticket.title+'</p>',
-                //text:"hello",
+                text:"Your ticket will be saved as draft and you have to restart estimation after reediting this ticket. \nWould you like to reedit the ticket now?",
                 type: "info",
                 showCancelButton: true,
                 cancelButtonText: "cancel",
@@ -3643,7 +3644,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 					swal(
 	                {
 	                    title: "Great!",
-	                    text: "Estimation rejected successfully", 
+	                    text: "Your ticket is in draft now you can re-edit and start it again", 
 	                    type: "success",
 	                    confirmButtonColor: "#1ab394",
 	                    confirmButtonText: "close"
@@ -3680,17 +3681,52 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
         successFunc=function()
         {
         	$("#upload-file").modal('hide');
-        	successFunc=function(data)
-        	{
-        		$scope.docs=data;
-        	}
-        	Task.listFiles(successFunc,project_id);
+        	updateView();
         }
         failureFunc=function()
         {
         	swal("Can't upload file","we can't upload file please try again later","error");
         }
-        Task.uploadFile(successFunc,failureFunc,formData,project_id);
+        Task.uploadTicketFile(successFunc,failureFunc,formData,ticket_id);
+	}
+	$scope.deleteFileTicket=function(file_id)
+	{
+		swal({
+                title: "Are you sure?",
+                text: 'You want to delete the file',
+                type: "warning",
+                showCancelButton: true,
+                cancelButtonText: "cancel",
+                confirmButtonColor: "#ed5565",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false
+            }, function () {
+                var successFunc=function()
+                {
+                	swal(
+	                {
+	                    title: "Deleted!",
+	                    text: "You deleted it!", 
+	                    type: "success",
+	                    confirmButtonColor: "#1ab394",
+	                    confirmButtonText: "close"
+	                });
+	                updateView();
+                }
+                var failureFunc=function()
+                {
+                	swal(
+	                {
+	                    title: "Oops!",
+	                    text: "Task not deleted please try again later", 
+	                    type: "error",
+	                    confirmButtonColor: "#1ab394",
+	                    confirmButtonText: "close"
+	                });
+                }
+                Task.deleteFile(successFunc,failureFunc,file_id);
+               
+            });
 	}
 	$scope.openAddBug=function(bug)
 	{

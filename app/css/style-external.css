@@ -1988,16 +1988,16 @@ tr.new td{
 }
 
 .project-files li a {
-  border-bottom: 1px dotted #aaa;
   color: #676a6c;
   font-size: 12px;
   line-height: 30px;
-  margin-left: 10px;
-  padding-bottom: 3px;
+  margin-left: 0px;
+  padding-bottom: 0px;
+  margin-bottom: 10px;
 }
 .project-files li a:hover {
-  border-bottom: 1px dotted #1ab394;
   color: #1ab394;
+  padding-bottom: 0px;
 }
 .project-files .fa{
   margin-right: 5px;
@@ -2713,4 +2713,19 @@ label.label3:before {
   font-size: 12px;
   color: #666;
   margin-top: 10px;
+}
+.project-files a.ticketFile{
+  width: 80%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  float: left;
+}
+.ticketFileTrash{
+  height: 30px;
+  width: 20%;
+  float: left;
+  text-align: right;
+  border: 0px;
+  background: none;
 }

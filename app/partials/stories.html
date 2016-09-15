@@ -220,7 +220,7 @@
                                                 </div>
                                                  <div class="col-lg-12 project-status p5 aright" ng-if="ticket_status==ticketStatus.Goproduction.status">
                                                  <button type="button"  ng-click='acceptEstimation()' class="btn btn-primary btn-xs fxw-alert-confirm-estimation"><i class="fa fa-chevron-right"></i> confirm</button>
-                                                 <button type="button" class="btn btn-danger btn-xs fxw-alert-reject-ticket" ng-click="openAddBug()"><i class="fa fa-plus mr5"></i> add bug</button>
+                                                 <button type="button" class="btn btn-danger btn-xs fxw-alert-reject-ticket" ng-click="rejectEstimation()"><i class="fa fa-plus mr5"></i> re-edit</button>
                                                  <small>please confirm for production</small>
                                                 </div>
                                                 <div class="col-lg-12 project-status p5 aright" ng-if="ticket_status==ticketStatus.Waiting.status">
@@ -504,12 +504,12 @@
                     <div class="col-lg-3">
                         <div class="ibox">
                             <div class="ibox-content">
-                                    <h3><i class="fa fa-paperclip mr10"></i>project files</h3>
+                                    <h3><i class="fa fa-paperclip mr10"></i>ticket files</h3>
                                     <ul class="list-unstyled project-files" ng-if="docs.length==0">
                                         <li>- no files -</li>
                                     </ul>
                                     <ul class="list-unstyled project-files" ng-if="docs.length>0">
-                                        <li ng-repeat="doc in docs"><a href="{{doc.link}}" target="_blank"><i class="fa fa-download"></i> {{doc.name}}</a></li>
+                                        <li ng-repeat="doc in docs" ><a href="{{doc.link}}" target="_blank" class="ticketFile"><i class="fa fa-download"></i> {{doc.name}}</a><button class="ticketFileTrash fxw-alert-delete" ng-click="deleteFileTicket(doc.id)"><i class="fa fa-close"></i></button></li>
                                     </ul>
                                     <div class="text-center m-t-md" ng-if="isclient">
                                         <a  class="btn btn-xs btn-default" data-toggle="modal" data-target="#upload-file"><i class="fa fa-upload"></i> upload file</a>
