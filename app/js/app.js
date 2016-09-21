@@ -4,7 +4,8 @@ var crmapp=angular.module("crmapp",[
 	'ngSanitize',
 	'ngCookies',
 	'directives',
-	'Controllers'
+	'Controllers',
+	'textAngular'
 	]);
 crmapp.config(["$routeProvider",
 	function($routeProvider){
@@ -70,7 +71,7 @@ crmapp.config(["$routeProvider",
         		redirectTo: '/dashboard'
       		});
 	}
-]);      		
+]);
 crmapp.run(['$rootScope', '$location', 'Login','Chat','$templateCache', function ($rootScope, $location, Login,Chat,$templateCache) {
     $rootScope.$on('$routeChangeStart', function (event) {
     	console.log("route is changing");

@@ -599,7 +599,7 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-lg-12">
-                             <p>{{projectDescription}}
+                             <p ng-bind-html="projectDescription">
                              </p>
                         </div>
                         <div class="col-lg-12 mt20">
@@ -651,7 +651,7 @@
                                 <input type="text" class="form-control" placeholder="Title" ng-model="tickettitle">
                             </div>
                             <div class="form-group mb0">
-                                 <textarea class="form-control textarea-keybox" placeholder="Description" ng-model="ticketdescription"></textarea>
+                                 <div text-angular  ta-toolbar="[['h3','p','bold','ul','ol','insertLink','undo']]" ng-model="ticketdescription"></div>
                             </div>
 
                         </div>
