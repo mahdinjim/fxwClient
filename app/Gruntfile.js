@@ -85,10 +85,10 @@ module.exports = function(grunt) {
                     {expand: true, src: ['./lib/angular/angular-cookies.min.js'], dest: './production/'},
                     {expand: true, src: ['./lib/angular/angular-sanitize.min.js'], dest: './production/'},
                     {expand: true, src: ['./lib/node_modules/clipboard/dist/clipboard.min.js'], dest: './production/'},
-                    {expand: true, src: ['./lib/node_modules/textangular/dist/textAngular-rangy.min.js'], dest: './production/'},,
+                    {expand: true, src: ['./lib/node_modules/textangular/dist/textAngular-rangy.min.js'], dest: './production/'},
                     {expand: true, src: ['./lib/node_modules/textangular/dist/textAngular.min.js'], dest: './production/'},
                     {expand: true, src: ['./lib/node_modules/textangular/dist/textAngular-sanitize.min.js'], dest: './production/'},
-                    {expand: true, src: ['./lib/node_modules/textangular/dist/textAngular.css'], dest: './production/'}
+                    {expand: true, src: ['./lib/node_modules/textangular/dist/textAngular.css'], dest: './production/'},
                     {expand: true, src: ['./partials/**'], dest: './production/'}
                 ]
             }
