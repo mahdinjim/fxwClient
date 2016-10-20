@@ -2967,7 +2967,6 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 			$scope.ticket_name=data.title;
 			$scope.ticket_id=data.displayId;
 			$scope.ticket_type=data.type;
-			
 			$scope.ticket_decription=data.description;
 			$scope.ticket_status=data.status;
 			$scope.ticket_realtime=data.realtime;
@@ -2977,6 +2976,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 			$scope.finishedtasks=data.finishedtasks;
 			$scope.rejectionmessage=data.rejectionmessage;
 			$scope.docs=data.docs;
+			$scope.openbug=data.bugopen;
 		}
 		failureFunc=function(err)
 		{
@@ -3373,6 +3373,11 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 	{
 		if(task.estimation!=null)
 		{
+			if(task.type!="bug" && $scope.ticket_status!=$scope.ticketStatus.Production.status)
+			{
+				swal("Ticket not in production","This ticket is not in production yet","info");
+				return;
+			}
 			swal({   title: "Starting task..",   text: "This task will start very soon..",   timer: 2000,   showConfirmButton: false });
 			var successFunc=function()
 			{
@@ -3820,6 +3825,19 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 		Task.acceptBug(successFunc,failureFunc,data);
 		
 	}
+	$scope.deliverBugs=function()
+	{
+		var successFunc=function()
+		{
+			$scope.openbug=false;
+			swal("Bugs delivred","Bugs are successfully delivred to client","success");
+		}
+		var failurefunc=function()
+		{
+			swal("Oops","Something wrong happend please try again later","error");
+		}
+		Task.deliverBugs(successFunc,failurefunc,ticket_id);
+	}
 
 }]);
 Controllers.controller('ContractCtrl', ['$scope',"Login","$routeParams","$location", function ($scope,Login,$routeParams,$location) {
@@ -3884,6 +3902,46 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 		$("#add-rate").modal("show");
 		selectedproject=project;
 	}
+	$scope.openAddEstimation=function(project)
+	{
+		if(project.estimation!=null)
+		{
+			$scope.pestimation=project.estimation;
+			$scope.pperiod=project.period;
+		}
+		else
+		{
+			$scope.pestimation="";
+			$scope.pperiod="";
+		}
+		$("#add-estimation").modal("show");
+		selectedproject=project;
+	}
+	$scope.assignEstimation=function()
+	{
+		if($scope.pperiod!="" && $scope.pperiod!=undefined && $scope.pestimation!="" && $scope.pestimation!=undefined)
+		{
+			data={
+				"project_id":selectedproject.id,
+				"estimation":$scope.pestimation,
+				"period":$scope.pperiod
+			}
+			var successFunc=function()
+			{
+				updateView();
+				$("#add-estimation").modal("hide");
+			}
+			var failureFunc=function()
+			{
+				swal("Oops!","Can't set the rate please try again later","error");
+			}
+			Project.assignProjectEstimation(successFunc,failureFunc,data);
+		}
+		else
+		{
+			swal("Missing values","Please add project estimation in hours and project period in Months","warning");
+		}
+	}
 	$scope.assignRate=function()
 	{
 		if($scope.prate!="" && $scope.prate!=null && $scope.prate!=undefined)
@@ -3899,7 +3957,7 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 			}
 			var failureFunc=function()
 			{
-				swal("Oops!","Can't set the rate please try agaib later","error");
+				swal("Oops!","Can't set the rate please try again later","error");
 			}
 			Project.assignProjectRate(successFunc,failureFunc,data);
 		}
@@ -4409,11 +4467,13 @@ Controllers.controller('ReportCtrl',['$scope','$routeParams','Project','Ticket',
 			$scope.data=dataObject.data;
 			$scope.totalestimation=dataObject.totalestimated;
 			$scope.totalrealtime=dataObject.totalrealtime;
+			$scope.btime=dataObject.btime;
 		}
 		else
 		{
 			$scope.totalestimation=0;
 			$scope.totalrealtime=0;
+			$scope.btime=0;
 			for(i=0;i<dataObject.data.length;i++)
 			{
 				if($scope.paymentstatus=="open")
@@ -4423,6 +4483,10 @@ Controllers.controller('ReportCtrl',['$scope','$routeParams','Project','Ticket',
 						filtred.push(dataObject.data[i]);
 						$scope.totalrealtime+=parseFloat(dataObject.data[i].totalhours);
 						$scope.totalestimation+=parseFloat(dataObject.data[i].totalestimatedhours);
+						if(dataObject.data[i].totalestimatedhours>dataObject.data[i].totalhours)
+							$scope.btime+=dataObject.data[i].totalhours;
+						else
+							$scope.btime+=dataObject.data[i].totalestimatedhours;
 
 					}
 					if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_KEYACCOUNT" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN")
@@ -4435,6 +4499,10 @@ Controllers.controller('ReportCtrl',['$scope','$routeParams','Project','Ticket',
 						filtred.push(dataObject.data[i]);
 						$scope.totalrealtime+=parseFloat(dataObject.data[i].totalhours);
 						$scope.totalestimation+=parseFloat(dataObject.data[i].totalestimatedhours);
+						if(dataObject.data[i].totalestimatedhours>dataObject.data[i].totalhours)
+							$scope.btime+=dataObject.data[i].totalhours;
+						else
+							$scope.btime+=dataObject.data[i].totalestimatedhours;
 					}
 				}
 				if($scope.paymentstatus=="payed")
@@ -4444,6 +4512,10 @@ Controllers.controller('ReportCtrl',['$scope','$routeParams','Project','Ticket',
 						filtred.push(dataObject.data[i]);
 						$scope.totalrealtime+=parseFloat(dataObject.data[i].totalhours);
 						$scope.totalestimation+=parseFloat(dataObject.data[i].totalestimatedhours);
+						if(dataObject.data[i].totalestimatedhours>dataObject.data[i].totalhours)
+							$scope.btime+=dataObject.data[i].totalhours;
+						else
+							$scope.btime+=dataObject.data[i].totalestimatedhours;
 					}
 				}
 			}
@@ -4491,6 +4563,7 @@ Controllers.controller('ReportCtrl',['$scope','$routeParams','Project','Ticket',
 		dataObject=data;
 		$scope.totalestimation=data.totalestimated;
 		$scope.totalrealtime=data.totalrealtime;
+		$scope.btime=data.btime;
 	}
 	var failureFunc=function()
 	{
@@ -4536,4 +4609,24 @@ Controllers.controller('ReportCtrl',['$scope','$routeParams','Project','Ticket',
 		Project.getDateReportbyMonth(successFunc,failureFunc,month,year,project_id);
 	}
 	updateTicketView($scope.month,$scope.year);
+}]);
+Controllers.controller('DashboardCtrl',['$scope','$routeParams','Login',function($scope,$routeParams,Login)
+{
+	if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN")
+	{
+		$scope.isadmin=true;
+	}
+}]);
+Controllers.controller('adminDashCtrl',['$scope','$routeParams','Login','Dashboard',function($scope,$routeParams,Login,Dashboard)
+{
+	console.log("getting data");
+	var successFunc=function(data)
+	{
+		$scope.dashData=data;
+	}
+	var failurefunc=function()
+	{
+		swal("Can't generate admin dashboard","Oopps!! can't generate admin dashboard please try again later","error");
+	}
+	Dashboard.loadAdminDashboard(successFunc,failurefunc);
 }]);

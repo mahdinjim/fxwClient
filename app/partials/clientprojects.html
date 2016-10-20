@@ -95,6 +95,7 @@
                                                         <td width="250" class="project-table-head">Tickets</td>
                                                         <td width="900" class="project-table-head">Team</td>
                                                         <td width="150" class="project-table-head">Rate</td>
+                                                        <td width="150" class="project-table-head">Estimation</td>
                                                         <td width="100" class="project-table-head">Contract</td>
                                                         <td width="500" class="project-table-head aright">Action</td>
                                                     </tr>
@@ -128,7 +129,12 @@
                                                             <span class="rate" ng-if="project.rate!=null"><i class="fa fa-euro"></i> {{project.rate}}</span>
                                                             
                                                         </td>
-                                                        <td class="project-status" ng-if="!project.contractprepared">
+                                                        <td class="project-status">
+                                                            <span class="rate" ng-if="project.estimation!=null"><i class="fa"></i> {{project.estimation}} h | {{project.period}} m</span>
+                                                            <a ng-if="project.estimation!=null" ng-click="openAddEstimation(project)"><small>+ edit</small></a>
+                                                            <button type="button" class="btn btn-danger btn-xs" ng-click="openAddEstimation(project)" ng-if="project.estimation==null"><i class="fa fa-plus"></i> add</button>
+                                                        </td>
+                                                        <td class="project-status" ng-if="!project.estimation">
                                                             <button type="button" class="btn btn-danger btn-xs" ng-click="openPrepareContract(project)"><i class="fa fa-plus"></i> add contract</button>
                                                         </td>
                                                         <td class="project-status" ng-if="project.signed">
@@ -181,6 +187,33 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" ng-click="assignRate()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+     <div class="modal inmodal fade" id="add-estimation" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"><i class="fa fa-plus modal-fa-icon"></i> add estimation</h4>
+                </div>
+                <div class="modal-body">
+                    <p>The project estimation is</p>
+                    <div class="form-group m0">
+                        <input type="text" class="form-control input-lg fleft budgetlimit" placeholder="Hours" style="width: 215px;" ng-model="pestimation">
+                        <label class="fleft euro">H</label>
+                        <div class="clear-both"></div>
+                    </div>
+                    <div class="form-group m0">
+                        <input type="text" class="form-control input-lg fleft budgetlimit" placeholder="Month" style="width: 215px;" ng-model="pperiod">
+                        <label class="fleft euro">M</label>
+                        <div class="clear-both"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" ng-click="assignEstimation()">Save</button>
                 </div>
             </div>
         </div>

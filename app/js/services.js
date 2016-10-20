@@ -103,6 +103,9 @@ services.factory("Links",[function(){
 	var taskTypesLink=baseUrl+path+"/private/task/types";
 	var acceptBugLink=baseUrl+path+"/private/task/accept";
 	var deleteFileLink=baseUrl+path+"/private/project/file/delete";
+	var deliverBugToClientLink=baseUrl+path+"/private/ticket/bug/deliver/";
+	var assignProjectEstimationLink=baseUrl+path+"/private/project/estimation";
+	var adminDashboardLink=baseUrl+path+"/private/super/dashboard";
 	this.getLoginLink=function()
 	{
 		return LoginLink;
@@ -504,6 +507,18 @@ services.factory("Links",[function(){
 	this.getDeleteFileLink=function()
 	{
 		return deleteFileLink;
+	}
+	this.getDeliverBugToClientLink=function()
+	{
+		return deliverBugToClientLink;
+	}
+	this.getassignEstimationProjectLink=function()
+	{
+		return assignProjectEstimationLink;
+	}
+	this.getAdminDashboardLink=function()
+	{
+		return adminDashboardLink;
 	}
 	return this;
 }]);
@@ -1533,7 +1548,7 @@ services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
 			if(Login.getLoggedUser().userinfo.compnay_name==undefined)
 				username="flexwork";
 			else
-				username=Login.getLoggedUser().userinfo.compnay_name;
+				username=Login.getLoggedUser().userinfo.name;
 			var postdata={
 				"message":text,
 				"client":username
@@ -1577,7 +1592,22 @@ services.factory('Project',["$http","Login",'Links',function($http,Login,Links){
 			
 		}
 	}
-	
+	this.assignProjectEstimation=function(successfunc,failurefunc,data)
+	{
+		$http({
+			method:"POST", 
+			data:data,
+			url:Links.getassignEstimationProjectLink(),
+			headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+		}).success(function (data, status, headers, config) {
+			successfunc();
+        }).error(function (data, status, headers, config) {
+        	if(status==403)
+        		Login.logout();
+        	else
+        		failurefunc();
+        });
+	}
 	this.getTicketReportbyMonth=function(successFunc,failureFunc,month,year,project_id)
 	{
 		if(Login.getLoggedUser())
@@ -2288,6 +2318,25 @@ services.service('Task', ["$http","Login","Links",function ($http,Login,Links) {
             });
         }
 	}
+	this.deliverBugs=function(successFunc,failureFunc,ticket_id)
+	{
+		if(Login.getLoggedUser())
+		{
+			var me =this;
+			$http({
+				method:"GET", 
+				url:Links.getDeliverBugToClientLink()+ticket_id,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+                successFunc(data);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failureFunc(data.error);
+            });
+        }
+	}
 	this.finishTask=function(successFunc,failureFunc,task_id)
 	{
 		if(Login.getLoggedUser())
@@ -2424,6 +2473,27 @@ services.service('Task', ["$http","Login","Links",function ($http,Login,Links) {
             		Login.logout();
             	else
             		failurefunc(data.error);
+            });
+        }
+	}
+}]);
+services.service('Dashboard', ["$http","Login","Links",function ($http,Login,Links) {
+	this.loadAdminDashboard=function(successFunc,failurefunc)
+	{
+		if(Login.getLoggedUser())
+		{
+			var me =this;
+			$http({
+				method:"GET", 
+				url:Links.getAdminDashboardLink(),
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+                successFunc(data);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failurefunc();
             });
         }
 	}

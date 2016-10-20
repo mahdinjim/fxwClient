@@ -153,8 +153,11 @@
                                                 <div class="col-lg-12 project-status p5 aright" ng-if="ticket_status==ticketStatus.Production.status">
                                                     <span class="label label-default label-nobg"><img src="img/ellipsis.gif" width="15" height="15"> in production ({{totaltasks}}/{{finishedtasks}})</span>
                                                 </div>
-                                                <div class="col-lg-12 project-status p5 aright" ng-if="ticket_status==ticketStatus.Accept.status">
+                                                <div class="col-lg-12 project-status p5 aright" ng-if="ticket_status==ticketStatus.Accept.status && !openbug">
                                                    <span class="label label-default label-nobg"><img src="img/ellipsis.gif" width="15" height="15"> in acceptance</span>
+                                                </div>
+                                                <div class="col-lg-12 project-status p5 aright" ng-if="ticket_status==ticketStatus.Accept.status && openbug">
+                                                  <button type="button" class="btn btn-danger btn-xs" ng-click='deliverBugs()'><i class="fa fa-chevron-right"></i> deliver bugs</button>
                                                 </div>
                                                 <div class="col-lg-12 project-status p5 aright" ng-if="ticket_status==ticketStatus.Testing.status">
                                                     <button class="btn btn-primary btn-bitbucket btn-xs" type="button" ng-click="openAddBug(null)" ng-if="isTeamLeader"><i class="fa fa-plus mr5"></i> add bug</button>
@@ -715,7 +718,7 @@
                 <div class="modal-body">
                     <div class="row">
                             <div class="form-group mb0">
-                                 <textarea class="form-control textarea-keybox" placeholder="Rejection message" ng-model="rejectionmessage"></textarea>
+                                <div text-angular  ta-toolbar="[['h3','p','bold','ul','ol','insertLink','undo']]" ng-model="rejectionmessage"></div>
                             </div>
                     </div>
                 </div>

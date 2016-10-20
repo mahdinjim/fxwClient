@@ -81,9 +81,9 @@
                                           <div class="form-group fleft mr10 mb10">
                                             <select ng-if='isTicketReport' class="select3" ng-model="$parent.paymentstatus" ng-change="filterPayment()" >
                                                     <option value="all" selected="selected">All</option>
-                                                    <option value="open">Not Billed</option>
-                                                    <option value="billed">Billed</option>
-                                                    <option value="payed">Payed</option>
+                                                    <option value="open">Done/Not Billed</option>
+                                                    <option value="billed">Done/Billed</option>
+                                                    <option value="payed">Done/Payed</option>
                                             </select>
                                             <button class="btn btn-primary btn-bitbucket btn-xs" type="button" ng-if="showMarker" ng-click="markasAllAsbilled()">mark as billed</button>
                                           </div>
@@ -97,10 +97,16 @@
                                                   <span class="hour">{{totalestimation}} h</span>
                                                 </h2>
                                               </div>
-                                              <div class="" style="display: inline-block;text-align: left">
+                                              <div class="" style="display: inline-block;text-align: left; margin-right: 10px;padding-right:10px; border-right: 1px solid #eee;">
                                                 <span class="">Real Time</span>
                                                 <h2 class="bold">
                                                   <span class="hour">{{totalrealtime}} h</span>
+                                                </h2>
+                                              </div>
+                                               <div class="" style="display: inline-block;text-align: left" ng-if='isTicketReport'>
+                                                <span class="">Billable Time</span>
+                                                <h2 class="bold">
+                                                  <span class="hour">{{btime}} h</span>
                                                 </h2>
                                               </div>
                                             
@@ -170,8 +176,9 @@
                                                             <span ng-if="ticket.payed">payed</span>
                                                           </td>
 
-                                                          <td width="150" class="table-head realt-time"><i class="fa fa-clock-o"> {{ticket.totalestimatedhours}} h</td>
+                                                          <td width="150" class="table-head realt-time"><i class="fa fa-clock-o"></i> {{ticket.totalestimatedhours}} h</td>
                                                           <td width="150" class="table-head realt-time"><i class="fa fa-clock-o"></i> {{ticket.totalhours}} h</td>
+                                                          <td width="150" class="table-head realt-time"><i class="fa fa-clock-o"></i> {{ticket.btime}} h</td>
                                                       </tr>
                                                     </thead>
                                                     <tbody>
@@ -180,6 +187,7 @@
                                                           <td width="600" class="table-info">Date</td>
                                                           <td width="150" class="table-info estimation">Estimation</td>
                                                           <td width="150" class="table-info real-time">Real Time</td>
+                                                          <td width="150" class="table-info real-time">Billable Time</td>
                                                       </tr>
 
                                                       <tr ng-repeat="story in ticket.stories">

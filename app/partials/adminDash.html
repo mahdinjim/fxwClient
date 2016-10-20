@@ -1,0 +1,35 @@
+<div ng-controller="adminDashCtrl" class="ibox">
+	<div class="ibox-content">
+		<div class="project-list">
+	        <div class="table-responsive">
+	            <table class="table table-hover">
+	                <tbody>
+		                <tr>
+		                    <td width="250" class="project-table-head"></td>
+		                    <td width="100" class="project-table-head">Jan</td>
+		                    <td width="100" class="project-table-head">Feb</td>
+		                    <td width="100" class="project-table-head">Mar</td>
+		                    <td width="100" class="project-table-head">Apr</td>
+		                    <td width="100" class="project-table-head">Mai</td>
+		                    <td width="100" class="project-table-head">Jun</td>
+		                    <td width="100" class="project-table-head">Jul</td>
+		                    <td width="100" class="project-table-head">AUG</td>
+		                    <td width="100" class="project-table-head">SEP</td>
+		                    <td width="100" class="project-table-head">OCT</td>
+		                    <td width="100" class="project-table-head">NOV</td>
+		                     <td width="100" class="project-table-head">DEC</td>
+		                </tr>
+		                <tr ng-repeat="project in dashData.projects">
+		                	<td class="project-title"> {{project.name}}<small>{{project.company}}</small></td>
+		                	<td ng-repeat="month in project.months">{{month.billable}}</td>
+		                </tr>
+		                <tr>
+		                	<td class="project-title">Total</td>
+		                	<td ng-repeat="tot in dashData.total">{{tot.billable}}</tr>
+		                </tr>
+	            	</tbody>
+	        	</table>
+	    	</div>
+		</div>
+	</div>
+</div>
