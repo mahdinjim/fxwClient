@@ -365,14 +365,15 @@ Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Clie
 		}
 		$scope.openAddprojectModel=function()
 		{
-			if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_KEYACCOUNT" )
-			{
-				$scope.canAdd=true;
-				var succsfunc=function(data)
+			var succsfunc=function(data)
 				{
 					$scope.skills=data;
 				}
 				Params.getSkills(succsfunc);
+			if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_KEYACCOUNT" )
+			{
+				$scope.canAdd=true;
+				
 				var successfunc =function(customers)
 				{
 					$scope.clients=customers;
@@ -3872,7 +3873,17 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 	
 	var selectedPorject=null;
 	var update=null;
-
+	$scope.acceptContract=function(project)
+	{
+		var successFunc=function(){
+			updateView();
+		}
+		var failureFunc=function()
+		{
+			swal("Can't accept contract","Sorry please try again later");
+		}
+		Project.acceptContract(successFunc,failureFunc,project.id);
+	}
 	updateView=function()
 	{
 		successFunc=function(data)

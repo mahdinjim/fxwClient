@@ -48,8 +48,8 @@
                         <div class="row mb20">
                             <div class="col-md-6">
 
-                                <button class="btn btn-primary btn-bitbucket btn-m mr5" type="button" ng-click="openCreateTicket(null)" ng-if="isclient && issigned"><i class="fa fa-plus mr5"></i> add ticket</button>
-                                <button class="btn btn-primary btn-bitbucket btn-m mr5" type="button" ng-click="openCreateTicket(null)" ng-if="isclient && !issigned" disabled><i class="fa fa-plus mr5"></i> add ticket</button>
+                                <button class="btn btn-primary btn-bitbucket btn-m mr5" type="button" ng-click="openCreateTicket(null)" ng-if="isclient"><i class="fa fa-plus mr5"></i> add ticket</button>
+                               <!--  <button class="btn btn-primary btn-bitbucket btn-m mr5" type="button" ng-click="openCreateTicket(null)" ng-if="isclient && !issigned" disabled><i class="fa fa-plus mr5"></i> add ticket</button> -->
                                  <button class="btn btn-default btn-bitbucket btn-m mr5" type="button" data-target="#project-description" data-toggle="modal"><i class="fa fa-file-text mr5"></i> description</button>
                                 <!-- <button class="btn btn-default btn-bitbucket btn-m mr5" type="button" data-target="#budgetlimit" data-toggle="modal" ng-if="isclient"><i class="fa fa-thumb-tack mr5" ></i> budgetlimit</button> -->
                                 <button class="btn btn-default btn-bitbucket btn-m mr5" type="button" ng-click="openKeybox()"><i class="fa fa-lock mr5"></i> keybox</button>
@@ -87,7 +87,7 @@
                         <!-- end buttons & team -->
 
                         <!-- info1 -->
-                        <div class="row" ng-if="isclient">
+                        <!-- <div class="row" ng-if="isclient">
                             <div class="col-lg-12 p0" ng-if="!contractprepared">
                                 <div class="col-lg-12">
                                      <div class="alert alert-warning" style="font-size:14px;">
@@ -104,7 +104,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="ibox" ng-if="isclient && !hasTicket">
                            <div class="ibox-content">
@@ -116,8 +116,7 @@
 
                                     <div class="col-md-12 acenter">
                                          <p class="mb20 first-ticket-info">add your <i class="fa fa-angle-down mr5 ml5"></i> first ticket</p>
-                                        <button class="btn btn-primary btn-bitbucket btn-xs mr5" type="button" ng-click="openCreateTicket(null)" ng-if="issigned"><i class="fa fa-plus mr5" ></i> add ticket</button>
-                                        <button class="btn btn-primary btn-bitbucket btn-xs mr5" type="button" ng-click="openCreateTicket(null)" ng-if="!issigned" disabled><i class="fa fa-plus mr5"></i> add ticket</button>
+                                        <button class="btn btn-primary btn-bitbucket btn-xs mr5" type="button" ng-click="openCreateTicket(null)"><i class="fa fa-plus mr5" ></i> add ticket</button>
                                     </div>
 
                                 </div>

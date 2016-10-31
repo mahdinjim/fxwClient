@@ -95,8 +95,9 @@
                                                         <td width="250" class="project-table-head">Tickets</td>
                                                         <td width="900" class="project-table-head">Team</td>
                                                         <td width="150" class="project-table-head">Rate</td>
-                                                        <td width="150" class="project-table-head">Estimation</td>
+                                                        <td width="200" class="project-table-head">Estimation</td>
                                                         <td width="100" class="project-table-head">Contract</td>
+                                                        <td width="100" class="project-table-head">Sign</td>
                                                         <td width="500" class="project-table-head aright">Action</td>
                                                     </tr>
 
@@ -134,15 +135,17 @@
                                                             <a ng-if="project.estimation!=null" ng-click="openAddEstimation(project)"><small>+ edit</small></a>
                                                             <button type="button" class="btn btn-danger btn-xs" ng-click="openAddEstimation(project)" ng-if="project.estimation==null"><i class="fa fa-plus"></i> add</button>
                                                         </td>
-                                                        <td class="project-status" ng-if="!project.estimation">
-                                                            <button type="button" class="btn btn-danger btn-xs" ng-click="openPrepareContract(project)"><i class="fa fa-plus"></i> add contract</button>
+                                                        <td class="project-status">
+                                                            <button type="button" class="btn btn-danger btn-xs" ng-click="openPrepareContract(project)" ng-if="!project.contractprepared"><i class="fa fa-plus"></i> add contract</button>
+                                                            <span ng-if="project.contractprepared"><i class="fa fa-done"></i> added</span>
                                                         </td>
                                                         <td class="project-status" ng-if="project.signed">
                                                             <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#see-contract"><i class="fa fa-check"></i> accepted</button>
                                                             <small>accepted on {{project.signaturedate}}</small>
                                                         </td>
-                                                        <td class="project-status" ng-if="project.contractprepared && !project.signed">
-                                                            <span class="label label-default label-nobg"><img width="15" height="15" src="img/ellipsis.gif"> in acceptance</span>
+                                                        <td class="project-status" >
+                                                            <span ng-if="!project.contractprepared && !project.signed" class="label label-default label-nobg">no contract</span>
+                                                             <button ng-if="project.contractprepared && !project.signed" class="btn btn-danger btn-xs" ng-click="acceptContract(project)">sign</span>
                                                         </td>
                                                         <td class="project-actions">
                                                             <button type="button" class="btn btn-white btn-sm" ng-click="openAddprojectModelFromclient(project)"><i class="fa fa-pencil"></i> </button>
