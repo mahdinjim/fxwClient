@@ -1,0 +1,63 @@
+ <!--wrapper-->
+<div class="wrapper wrapper-content animated fadeInRight" ng-controller="clientDashCtrl">
+
+  <div class="ibox">
+     <div class="ibox-content">
+          <div class="row mb20 mt20 pt20 pb25">
+
+            <div class="col-md-12 acenter mt20 mb20">
+                <img width="55" height="49" title="flexwork.io" alt="flexwork.io" src="img/logo-grey-flexwork@2.png">
+                <p class="mb20 mt10 first-ticket-info">ticket based workflow</p>
+            </div>
+
+            <div class="col-md-12 acenter pb25">
+              <h1>Hey {{name}}</h1>
+              <div class="mb20">welcome to flexwork.</div>
+            </div>
+
+            <div class="col-md-12 acenter">
+                <button class="btn btn-primary btn-bitbucket btn-lg mr5" type="button" ng-click="openAddprojectModel()"><i class="fa fa-plus mr5"></i> add project</button>
+            </div>
+
+            <div class="col-md-12 acenter pt50">
+              <img src="http://img.fxw.io/email/flexwork-bb-8.png" alt="BB-8" title="BB-8" width="69" height="92">
+            </div>
+
+
+          </div>
+      </div>
+  </div>
+  <div class="clear-both"></div>
+   <div class="modal inmodal fade" id="add-project-dash" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-m">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"><i class="fa fa-plus modal-fa-icon"></i> Add Project</h4>
+                </div>
+                <div class="modal-body">
+                   <div class="form-group">
+                        <input type="text" class="form-control input-lg" placeholder="Project Title" ng-model="projecttitle_dash">
+                    </div>
+                    <div class="form-group">
+                         <div text-angular  ta-toolbar="[['h3','p','bold','ul','ol','insertLink','undo']]" ng-model="briefing_dash"></div>
+                    </div>
+                    <div class="form-group mb0">
+                        <select data-placeholder="Select Technologies" select-two class="chosen-select" multiple style="width:100%;" tabindex="2" ng-model="projectskills_dash">
+                            <option ng-repeat="skill in skills" value="{{skill}}">{{skill}} </option>
+                            
+                        </select>
+                    </div>
+                    
+                   
+                       
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" ng-click="createProject()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div> 
+</div>
+<!--end wrapper-->

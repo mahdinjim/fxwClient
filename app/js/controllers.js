@@ -363,7 +363,7 @@ Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Clie
 		$scope.logout=function(){
 			Login.logout();
 		}
-		$scope.openAddprojectModel=function()
+		var openAddprojectModal=function()
 		{
 			var succsfunc=function(data)
 				{
@@ -413,6 +413,12 @@ Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Clie
 			$("#add-project").modal('show');
 		
 		}
+		$scope.$on('openProjectModal', function(event, args) {
+			openProjectModal();
+
+		});
+		$scope.openAddprojectModel=openAddprojectModal;
+		
 		var verifyForm=function()
 		{
 			var messages=new Array();
@@ -4623,9 +4629,15 @@ Controllers.controller('ReportCtrl',['$scope','$routeParams','Project','Ticket',
 }]);
 Controllers.controller('DashboardCtrl',['$scope','$routeParams','Login',function($scope,$routeParams,Login)
 {
+	$scope.isclient=false;
+	$scope.isadmin=false;
 	if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN")
 	{
 		$scope.isadmin=true;
+	}
+	if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER")
+	{
+		$scope.isclient=true;
 	}
 }]);
 Controllers.controller('adminDashCtrl',['$scope','$routeParams','Login','Dashboard',function($scope,$routeParams,Login,Dashboard)
@@ -4640,4 +4652,71 @@ Controllers.controller('adminDashCtrl',['$scope','$routeParams','Login','Dashboa
 		swal("Can't generate admin dashboard","Oopps!! can't generate admin dashboard please try again later","error");
 	}
 	Dashboard.loadAdminDashboard(successFunc,failurefunc);
+}]);
+Controllers.controller('clientDashCtrl',['$scope','$routeParams','Login','Dashboard','Params',"Project","$location",function($scope,$routeParams,Login,Dashboard,Params,Project,$location)
+{
+	$scope.name=Login.getLoggedUser().userinfo.name;
+	var openAddprojectModal=function()
+		{
+			var succsfunc=function(data)
+				{
+					$scope.skills=data;
+				}
+				Params.getSkills(succsfunc);
+			$("#add-project-dash").modal('show');
+		
+		}
+		$scope.openAddprojectModel=openAddprojectModal;
+		
+		var verifyForm=function()
+		{
+			var messages=new Array();
+			if($scope.projecttitle_dash===undefined)
+			{
+				messages.push("Please add the project title\n");
+
+			}
+			if($scope.briefing_dash===undefined)
+			{
+				messages.push("Please add the project description\n");
+				
+			}
+			if($scope.projectskills_dash===undefined)
+			{
+				messages.push("Please add the project required skills\n");
+				
+			}
+			
+			return messages;
+		}
+		$scope.createProject=function()
+		{
+			var messages =verifyForm();
+			if(messages.length>0)
+			{
+				swal("Complete information",messages,"info");
+			}
+			else
+			{
+				var project={
+					"name":$scope.projecttitle_dash,
+					"briefing":$scope.briefing_dash,
+					"skills":""+$scope.projectskills_dash
+				}
+				var successFunc=function(data)
+				{
+					$("#add-project-dash").modal('hide');
+					$location.url("/pdetails/"+data.project_id)
+					swal("Project Created", "Project added successfully", "success");
+					
+
+				}
+				var failureFunc=function()
+				{
+					
+					swal("Oops!!", "Something bad happend please try again later", "error");
+				}
+				Project.createProject(project,successFunc,failureFunc);
+			}
+		}
 }]);

@@ -27,39 +27,8 @@
             </div>
             <!--end header title-->
             <ng-include src="'partials/adminDash.html'" ng-if="isadmin"></ng-include>
-
-            <!--wrapper-->
-            <div class="wrapper wrapper-content animated fadeInRight">
-
-              <div class="ibox">
-                 <div class="ibox-content">
-                      <div class="row mb20 mt20 pt20 pb25">
-
-                        <div class="col-md-12 acenter mt20 mb20">
-                            <img width="55" height="49" title="flexwork.io" alt="flexwork.io" src="img/logo-grey-flexwork@2.png">
-                            <p class="mb20 mt10 first-ticket-info">ticket based workflow</p>
-                        </div>
-
-                        <div class="col-md-12 acenter pb25">
-                          <h1>Hey Muhammed</h1>
-                          <div class="mb20">welcome to flexwork.</div>
-                        </div>
-
-                        <div class="col-md-12 acenter">
-                            <button class="btn btn-primary btn-bitbucket btn-lg mr5" type="button" data-target="#add-project" data-toggle="modal"><i class="fa fa-plus mr5"></i> add project</button>
-                        </div>
-
-                        <div class="col-md-12 acenter pt50">
-                          <img src="http://img.fxw.io/email/flexwork-bb-8.png" alt="BB-8" title="BB-8" width="69" height="92">
-                        </div>
-
-
-                      </div>
-                  </div>
-              </div>
-              <div class="clear-both"></div>
-            </div>
-            <!--end wrapper-->
+            <ng-include src="'partials/clientDashboard.html'" ng-if="isclient"></ng-include>
+           
 
 
             <!--end wrapper-->

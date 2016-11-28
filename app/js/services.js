@@ -1656,7 +1656,7 @@ services.factory('Project',["$http","Login",'Links',function($http,Login,Links){
 			url:Links.getCreateProjectLink(),
 			headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 		}).success(function (data, status, headers, config) {
-			successfunc();
+			successfunc(data);
         }).error(function (data, status, headers, config) {
         	if(status==403)
         		Login.logout();
