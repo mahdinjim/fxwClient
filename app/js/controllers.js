@@ -4706,9 +4706,7 @@ Controllers.controller('clientDashCtrl',['$scope','$routeParams','Login','Dashbo
 				var successFunc=function(data)
 				{
 					$("#add-project-dash").modal('hide');
-					$location.url("/pdetails/"+data.project_id)
-					swal("Project Created", "Project added successfully", "success");
-					
+					$location.url("/pdetails/"+data.project_id);
 
 				}
 				var failureFunc=function()
