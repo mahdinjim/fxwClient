@@ -1544,11 +1544,7 @@ services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
 		var me =this;
 		if(Login.getLoggedUser())
 		{
-			var username;
-			if(Login.getLoggedUser().userinfo.compnay_name==undefined)
-				username="flexwork";
-			else
-				username=Login.getLoggedUser().userinfo.name;
+			var username=Login.getLoggedUser().userinfo.name;
 			var postdata={
 				"message":text,
 				"client":username
