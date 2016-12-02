@@ -3,7 +3,7 @@
     <div side-bar>
     </div>
     <div id="page-wrapper" class="gray-bg">
-            
+
         <div nav-menu></div>
           <!--header title-->
             <div class="row wrapper border-bottom white-bg page-heading">
@@ -25,7 +25,7 @@
                         </li>
                     </ol>
                     <ol class="breadcrumb" ng-if="isclient">
-                        
+
                         <li>
                             {{company_name}}
                         </li>
@@ -53,27 +53,25 @@
                                  <button class="btn btn-default btn-bitbucket btn-m mr5" type="button" data-target="#project-description" data-toggle="modal"><i class="fa fa-file-text mr5"></i> description</button>
                                 <!-- <button class="btn btn-default btn-bitbucket btn-m mr5" type="button" data-target="#budgetlimit" data-toggle="modal" ng-if="isclient"><i class="fa fa-thumb-tack mr5" ></i> budgetlimit</button> -->
                                 <button class="btn btn-default btn-bitbucket btn-m mr5" type="button" ng-click="openKeybox()"><i class="fa fa-lock mr5"></i> keybox</button>
-                                <a ng-if="!isclient" class="btn btn-default btn-bitbucket btn-m mr5" href="https://fxw.slack.com/" target="_blank"><i class="fa fa-slack mr5" ></i> slack</a>
-                                <a class="btn btn-default btn-bitbucket btn-m mr5" href="https://www.pivotaltracker.com/" target="_blank" ng-if="!isclient"><i class="fa fa-circle-o mr5"></i> pivotal</a>
-                                <a class="btn btn-default btn-bitbucket btn-m mr5" href="https://github.com" target="_blank" ng-if="!isclient"><i class="fa fa-github mr5"></i> github</a>
+                                <button class="btn btn-default btn-bitbucket btn-m mr5" type="button" data-target="#notifications" data-toggle="modal"><i class="fa fa-bell mr5"></i> notifications</button>
                             </div>
-                          
-                            
+
+
                             <div class="col-md-6">
                                 <div class="project-people" >
                                     <a href="" class="fxwlink-member" ng-click="openAddMember()" ng-if="isAdmin || isTeamLeader"><small><i class="fa fa-plus" ></i> add member</small></a>
-                                
-                                
+
+
                                     <a ng-click="openmessages()" class="fxwlink-member" ng-if="hasteam && isclient"><small><i class="fa fa-comments"></i> see messages</small></a>
-                                
-                                
+
+
                                     <a href="" class="team-lead" ng-repeat="member in team" ng-if='member.isTeamLeader' ><img alt="{{member.name}}"  class="img-circle" src="{{member.photo}}"></a>
                                     <a href="" ng-repeat="member in team" ng-if='!member.isTeamLeader'><img alt="{{member.name}}" class="img-circle" src="{{member.photo}}"></a>
-                                    
-                                
+
+
                                 </div>
                             </div>
-                        
+
                         <!-- end buttons & team -->
                             <div class="col-md-6" ng-if="isclient && !hasteam">
                                 <div class="project-people">
@@ -98,9 +96,9 @@
                             <div class="col-lg-12 p0" ng-if="contractprepared && !issigned">
                                 <div class="col-lg-12">
                                      <div class="alert alert-success" style="font-size:14px;">
-                                        <i class="fa fa-file-text mr5"></i> Your contract is ready. Please confirm to start your project. 
+                                        <i class="fa fa-file-text mr5"></i> Your contract is ready. Please confirm to start your project.
                                          <button class="btn btn-primary btn-bitbucket btn-xs mr5 ml10" type="button" data-toggle="modal" data-target="#see-contract"><i class="fa fa-chevron-right mr5"></i> see details &amp; confirm</button>
-                                        
+
                                     </div>
                                 </div>
                             </div>
@@ -109,7 +107,7 @@
                         <div class="ibox" ng-if="isclient && !hasTicket">
                            <div class="ibox-content">
                                 <div class="row mb20 mt20 pt20 pb20">
-                                    
+
                                     <div class="col-md-12 acenter mt20 mb5">
                                         <img width="55" height="49" title="flexwork.io" alt="flexwork.io" src="img/logo-grey-flexwork@2.png">
                                     </div>
@@ -125,7 +123,7 @@
                         <div class="ibox" ng-if="!isclient && !hasTicket">
                            <div class="ibox-content">
                                 <div class="row mb20 mt20 pt20 pb20">
-                                    
+
                                     <div class="col-md-12 acenter mt20 mb5">
                                         <img width="55" height="49" title="flexwork.io" alt="flexwork.io" src="img/logo-grey-flexwork@2.png">
                                     </div>
@@ -142,7 +140,7 @@
                                 <div class="row">
                                     <!-- filter-->
                                     <div class="col-md-12 pb10">
-                                        <div class="col-md-8 p0">   
+                                        <div class="col-md-8 p0">
                                             <!-- <div class="form-group fleft mr10 mb10">
                                                 <div class="select-option select-project m-0" style="width: 150px;">
                                                     <select class="select2" select-two ng-model="$parent.selectedType" ng-change="filter()">
@@ -173,14 +171,14 @@
                                         </div>
                                         <div class="col-md-4 p0" >
                                             <div class="input-group project-search">
-                                                <input type="text" placeholder="search" class="input-sm form-control" ng-model="$parent.searchWord" my-enter="filter()"> 
+                                                <input type="text" placeholder="search" class="input-sm form-control" ng-model="$parent.searchWord" my-enter="filter()">
                                                 <span class="input-group-btn"><button type="button" class="btn btn-sm btn-primary" ng-click="filter()" > go!</button> </span>
                                             </div>
                                         </div>
                                         <div style="clear:both;"></div>
                                     </div>
                                     <!-- end filter-->
-                                    
+
                                     <!-- table project list -->
                                     <div class="col-md-12">
                                         <div class="project-list">
@@ -190,9 +188,9 @@
                                                     <tr>
                                                         <td width="50" class="project-table-head"></td>
                                                         <td width="150" class="project-table-head">ID</td>
-                                                        <td width="1100" class="project-table-head">Title</td>
+                                                        <td width="800" class="project-table-head">Title</td>
                                                         <td width="100" class="project-table-head">Estimation</td>
-                                                        <td width="100" class="project-table-head">REAL TIME</td>
+                                                        <td width="200" class="project-table-head">REAL TIME</td>
                                                         <td width="300" class="project-table-head">Status</td>
                                                         <td width="300" class="project-table-head aright">Action</td>
                                                     </tr>
@@ -214,13 +212,13 @@
                                                         <td class="project-estimation" ng-if="ticket.type!=tickettypes[2].type && ticket.estimation!=null">
                                                             {{ticket.estimation}}h
                                                             <a ng-click="openTicketDetails(ticket)"><small>see details</small></a>
-                                                            
                                                         </td>
                                                         <td class="project-estimation" ng-if="ticket.type!=tickettypes[2].type && ticket.estimation==null">
-                                                           
+
                                                         </td>
                                                         <td class="project-real-time" ng-if="ticket.realtime!=null">
-                                                            {{ticket.realtime}}h
+                                                            <b>{{ticket.realtime}}h</b>
+                                                            <a ng-click="openTicketDetails(ticket)"><small>see details</small></a>
                                                         </td>
                                                         <td class="project-real-time" ng-if="ticket.realtime==null">
                                                         </td>
@@ -259,7 +257,7 @@
                                                          <td class="project-status" ng-if="ticket.status==ticketStatus.Done.status && isKeyAccount">
                                                             <span class="label label-default label-nobg" ng-if="ticket.open"><i class="fa fa-check"></i> done / not billed</span>
                                                             <span class="label label-default label-nobg" ng-if="ticket.billed && !ticket.payed"><i class="fa fa-check"></i> done / billed</span>
-                                                            <span class="label label-default label-nobg" ng-if="ticket.payed"><i class="fa fa-check"></i> done / payed</span> 
+                                                            <span class="label label-default label-nobg" ng-if="ticket.payed"><i class="fa fa-check"></i> done / payed</span>
                                                         </td>
                                                         <td class="project-status" ng-if="ticket.status==ticketStatus.Done.status && !isKeyAccount">
                                                             <span class="label label-default label-nobg"><i class="fa fa-check"></i> done</span>
@@ -268,12 +266,12 @@
                                                             <span class="label label-default label-nobg"></i> Rejected</span>
                                                         </td>
                                                         <td class="project-actions">
-                                                            <a ng-if="isKeyAccount && ticket.status==ticketStatus.Done.status && ticket.open" ng-click="markAsBilled(ticket)" class="btn btn-white btn-sm">bill</a>
-                                                            <a ng-if="isKeyAccount && ticket.status==ticketStatus.Done.status && ticket.billed && !ticket.payed" ng-click="markAsPayed(ticket)" class="btn btn-white btn-sm">pay</a>
-                                                            <button type="button" class="btn btn-white btn-sm" data-toggle="modal" data-target="#edit-ticket" ng-if="ticket.status==ticketStatus.Draft.status" ng-click="openCreateTicket(ticket)"><i class="fa fa-pencil"></i> </button>
-                                                            <button type="button" class="btn btn-white btn-sm fxw-alert-archive-ticket" ng-if="ticket.status==ticketStatus.Goproduction.status || ticket.status==ticketStatus.Draft.status" ng-click="deleteTicket(ticket)"><i class="fa fa-trash" ></i> </button>
-                                                            <a ng-click="openStoriesView(ticket)" class="btn btn-white btn-sm"><i class="fa fa-search"></i> details</a>
-                                                        </td> 
+                                                            <a ng-if="isKeyAccount && ticket.status==ticketStatus.Done.status && ticket.open" ng-click="markAsBilled(ticket)" class="btn btn-white btn-sm mb5">bill</a>
+                                                            <a ng-if="isKeyAccount && ticket.status==ticketStatus.Done.status && ticket.billed && !ticket.payed" ng-click="markAsPayed(ticket)" class="btn btn-white btn-sm mb5">pay</a>
+                                                            <button type="button" class="btn btn-white btn-sm mb5" data-toggle="modal" data-target="#edit-ticket" ng-if="ticket.status==ticketStatus.Draft.status" ng-click="openCreateTicket(ticket)"><i class="fa fa-pencil"></i> </button>
+                                                            <button type="button" class="btn btn-white btn-sm mb5 fxw-alert-archive-ticket" ng-if="ticket.status==ticketStatus.Goproduction.status || ticket.status==ticketStatus.Draft.status" ng-click="deleteTicket(ticket)"><i class="fa fa-trash" ></i> </button>
+                                                            <a ng-click="openStoriesView(ticket)" class="btn btn-white btn-sm mb5"><i class="fa fa-search"></i> details</a>
+                                                        </td>
                                                     </tr>
                                                     <tr ng-if="isAdmin || isTeamLeader" ng-repeat="ticket in tickets">
                                                         <td class="project-type">
@@ -292,10 +290,10 @@
                                                         <td class="project-estimation" ng-if="ticket.type!=tickettypes[2].type && ticket.estimation!=null">
                                                             {{ticket.estimation}}h
                                                             <a ng-click="openTicketDetails(ticket)"><small>see details</small></a>
-                                                            
+
                                                         </td>
                                                         <td class="project-estimation" ng-if="ticket.type!=tickettypes[2].type && ticket.estimation==null">
-                                                           
+
                                                         </td>
                                                         <td class="project-real-time" ng-if="ticket.realtime!=null">
                                                             {{ticket.realtime}}h
@@ -307,7 +305,7 @@
                                                             <a ng-click="openBuginfo(ticket.description)"><small>see details</small></a>
                                                         </td>
                                                         <td class="project-status" ng-if="ticket.status==ticketStatus.Draft.status">
-                                                            <span class="label label-default label-nobg"><i class="fa fa-genderless"></i> draft</span>  
+                                                            <span class="label label-default label-nobg"><i class="fa fa-genderless"></i> draft</span>
                                                         </td>
                                                         <td class="project-status" ng-if="ticket.status==ticketStatus.Estimation.status && ticket.type!=tickettypes[2].type">
                                                             <button type="button" class="btn btn-primary btn-xs" ng-click="openStoriesView(ticket)"><i class="fa fa-chevron-right"></i> estimation</button>
@@ -315,56 +313,56 @@
                                                             <small>client started ticket</small>
                                                         </td>
                                                          <td class="project-status" ng-if="ticket.status==ticketStatus.Estimation.status && ticket.type==tickettypes[2].type">
-                                                            
+
                                                             <button type="button" class="btn btn-primary btn-xs" ng-click="openStoriesView(ticket)"><i class="fa fa-chevron-right"></i> check</button>
                                                             <button type="button" class="btn btn-success btn-xs"ng-click="openSendToProdModal(ticket)"><i class="fa fa-chevron-right"></i> send to production</button>
                                                             <small>client started ticket</small>
-                                                        
+
                                                         </td>
                                                         <td class="project-status" ng-if="ticket.status==ticketStatus.Goproduction.status">
-                                                            
+
                                                             <span class="label label-default label-nobg"><img src="img/ellipsis.gif" width="15" height="15"> waiting confirmation</span>
-                                                        
+
                                                         </td>
                                                         <td class="project-status" ng-if="ticket.status==ticketStatus.Waiting.status">
-                                                           
+
                                                             <button type="button" class="btn btn-success btn-xs" ng-click="openSendToProdModal(ticket)"><i class="fa fa-chevron-right"></i> send to production</button>
                                                             <small>client confirmed estimation</small>
-                                                        
+
                                                         </td>
                                                         <td class="project-status" ng-if="ticket.status==ticketStatus.Production.status">
                                                             <span class="label label-default label-nobg"><img src="img/ellipsis.gif" width="15" height="15"> in production ({{ticket.taskscount}}/{{ticket.finishedtasks}})</span>
                                                         </td>
                                                         <td class="project-status" ng-if="ticket.status==ticketStatus.Testing.status">
-                                                            
+
                                                             <button type="button" class="btn btn-danger btn-xs"ng-click='openDeliverToClientModal(ticket)'><i class="fa fa-chevron-right"></i> deliver to client</button>
                                                             <small>all stories done</small>
-                                                        
+
                                                         </td>
                                                         <td class="project-status" ng-if="ticket.status==ticketStatus.Accept.status">
-                                                            
+
                                                            <span class="label label-default label-nobg"><img src="img/ellipsis.gif" width="15" height="15"> in acceptance</span>
-                                                        
+
                                                         </td>
                                                         <td class="project-status" ng-if="ticket.status==ticketStatus.Done.status && isAdmin">
                                                             <span class="label label-default label-nobg" ng-if="ticket.open"><i class="fa fa-check"></i> done / not billed</span>
                                                             <span class="label label-default label-nobg" ng-if="ticket.billed && !ticket.payed"><i class="fa fa-check"></i> done / billed</span>
-                                                            <span class="label label-default label-nobg" ng-if="ticket.payed"><i class="fa fa-check"></i> done / payed</span> 
+                                                            <span class="label label-default label-nobg" ng-if="ticket.payed"><i class="fa fa-check"></i> done / payed</span>
                                                         </td>
                                                         <td class="project-status" ng-if="ticket.status==ticketStatus.Done.status && isTeamLeader">
                                                             <span class="label label-default label-nobg"><i class="fa fa-check"></i> done</span>
                                                         </td>
                                                          <td class="project-status" ng-if="ticket.status==ticketStatus.Reject.status">
                                                             <button type="button" class="btn btn-danger btn-xs" ng-click="openRejectionMessage(ticket)"><i class="fa fa-commenting"></i> see messages</button>
-                                                            <small>client reject ticket</small> 
-                                                        
+                                                            <small>client reject ticket</small>
+
                                                         </td>
                                                         <td class="project-actions">
                                                             <a ng-if="isAdmin && ticket.status==ticketStatus.Done.status && ticket.open" ng-click="markAsBilled(ticket)" class="btn btn-white btn-sm">bill</a>
                                                             <a ng-if="isAdmin && ticket.status==ticketStatus.Done.status && ticket.billed && !ticket.payed" ng-click="markAsPayed(ticket)" class="btn btn-white btn-sm">pay</a>
                                                             <a ng-click="openStoriesView(ticket)" class="btn btn-white btn-sm"><i class="fa fa-search"></i> details</a>
-                                                            
-                                                        </td> 
+
+                                                        </td>
                                                     </tr>
                                                     <tr ng-if="isMember" ng-repeat="ticket in tickets">
                                                         <td class="project-type">
@@ -383,10 +381,10 @@
                                                         <td class="project-estimation" ng-if="ticket.type!=tickettypes[2].type && ticket.estimation!=null">
                                                             {{ticket.estimation}}h
                                                             <a ng-click="openTicketDetails(ticket)"><small>see details</small></a>
-                                                            
+
                                                         </td>
                                                         <td class="project-estimation" ng-if="ticket.type!=tickettypes[2].type && ticket.estimation==null">
-                                                           
+
                                                         </td>
                                                         <td class="project-real-time" ng-if="ticket.realtime!=null">
                                                             {{ticket.realtime}}h
@@ -398,56 +396,56 @@
                                                             <a ng-click="openBuginfo(ticket.description)"><small>see details</small></a>
                                                         </td>
                                                         <td class="project-status" ng-if="ticket.status==ticketStatus.Draft.status">
-                                                            <span class="label label-default label-nobg"><i class="fa fa-genderless"></i> draft</span>  
+                                                            <span class="label label-default label-nobg"><i class="fa fa-genderless"></i> draft</span>
                                                         </td>
                                                         <td class="project-status" ng-if="ticket.status==ticketStatus.Estimation.status && ticket.type!=tickettypes[2].type">
                                                             <button type="button" class="btn btn-primary btn-xs" ng-click="openStoriesView(ticket)"><i class="fa fa-chevron-right"></i> estimation</button>
                                                             <small>client started ticket</small>
                                                         </td>
                                                          <td class="project-status" ng-if="ticket.status==ticketStatus.Estimation.status && ticket.type==tickettypes[2].type">
-                                                            
+
                                                             <button type="button" class="btn btn-primary btn-xs" ng-click="openStoriesView(ticket)"><i class="fa fa-chevron-right"></i> check</button>
                                                             <small>client started ticket</small>
-                                                        
+
                                                         </td>
                                                         <td class="project-status" ng-if="ticket.status==ticketStatus.Goproduction.status">
-                                                            
+
                                                             <span class="label label-default label-nobg"><img src="img/ellipsis.gif" width="15" height="15"> waiting confirmation</span>
-                                                        
+
                                                         </td>
                                                         <td class="project-status" ng-if="ticket.status==ticketStatus.Waiting.status">
-                                                           
+
                                                             <span class="label label-default label-nobg"><i class="fa fa-genderless"></i> waiting ({{ticket.taskscount}}/{{ticket.finishedtasks}})</span>
-                                                        
+
                                                         </td>
                                                         <td class="project-status" ng-if="ticket.status==ticketStatus.Production.status">
                                                             <span class="label label-default label-nobg"><img src="img/ellipsis.gif" width="15" height="15"> in production ({{ticket.taskscount}}/{{ticket.finishedtasks}})</span>
                                                         </td>
                                                         <td class="project-status" ng-if="ticket.status==ticketStatus.Testing.status">
-                                                            
+
                                                            <span class="label label-default label-nobg"><img src="img/ellipsis.gif" width="15" height="15"> in QA</span>
-                                                        
+
                                                         </td>
                                                         <td class="project-status" ng-if="ticket.status==ticketStatus.Accept.status">
-                                                            
+
                                                            <span class="label label-default label-nobg"><img src="img/ellipsis.gif" width="15" height="15"> in acceptance</span>
-                                                        
+
                                                         </td>
-                                                       
+
                                                         <td class="project-status" ng-if="ticket.status==ticketStatus.Done.status">
                                                             <span class="label label-default label-nobg"><i class="fa fa-check"></i> done</span>
                                                         </td>
                                                          <td class="project-status" ng-if="ticket.status==ticketStatus.Reject.status">
                                                             <button type="button" class="btn btn-danger btn-xs" ng-click="openRejectionMessage(ticket)"><i class="fa fa-commenting"></i> see messages</button>
-                                                            <small>client reject ticket</small> 
-                                                        
+                                                            <small>client reject ticket</small>
+
                                                         </td>
                                                         <td class="project-actions">
 
                                                             <a ng-click="openStoriesView(ticket)" class="btn btn-white btn-sm"><i class="fa fa-search"></i> details</a>
-                                                        </td> 
+                                                        </td>
                                                     </tr>
-                                                    
+
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -485,8 +483,8 @@
                             <div class="form-group fleft m0 mr10">
                                 <div class="select-option m-0" style="width: 360px;">
                                     <select  class="select2" ng-model="addedmember" id="selectdevmember" ng-options="[member.name,' ',member.surname,', ',member.role.Text].join('') for member in devteammembers track by member.order">
-                                       
-                                       
+
+
                                     </select>
                                 </div>
                             </div>
@@ -511,7 +509,7 @@
                                                  <select class="select3" id="memberrole" ng-click="changeRole(prod,1)">
                                                     <option value="teamlead" selected >Team leader</option>
                                                     <option value="member" >Member</option>
-                                       
+
                                                 </select>
                                             </div>
                                             </td>
@@ -520,7 +518,7 @@
                                                  <select class="select3" id="memberrole" ng-click="changeRole(prod,0)">
                                                     <option value="teamlead">Team leader</option>
                                                     <option value="member" selected >Member</option>
-                                       
+
                                                 </select>
                                             </div>
                                             </td>
@@ -528,7 +526,7 @@
                                                 <button type="button" class="btn btn-white btn-sm fxw-alert-delete" role="button" ng-click="deleteTeamMember(prod)" ng-if='prod.role.role!=teamroles.TeamLeader.role'><i class="fa fa-close"></i></button>
                                             </td>
                                         </tr>
-                                        
+
                                     </tbody>
                                 </table>
                             </div>
@@ -554,10 +552,10 @@
                 <div class="modal-body">
                    <p class="modal-content-center m-0"></p>
                 </div>
-                
+
             </div>
         </div>
-    </div> 
+    </div>
     <!--failure modal-->
     <div class="modal inmodal fade" id="teamfailure" tabindex="-1" role="dialog"  aria-hidden="true" style="top:150px;">
         <div class="modal-dialog modal-sm">
@@ -569,10 +567,10 @@
                 <div class="modal-body">
                    <p class="modal-content-center m-0"></p>
                 </div>
-                
+
             </div>
         </div>
-    </div> 
+    </div>
 <!--warning modal-->
     <div class="modal inmodal fade" id="teamwarning" tabindex="100" role="dialog"  aria-hidden="true" style="top:150px;">
         <div class="modal-dialog modal-sm">
@@ -584,10 +582,10 @@
                 <div class="modal-body">
                    <p class="modal-content-center m-0"></p>
                 </div>
-                
+
             </div>
         </div>
-    </div> 
+    </div>
     <!--modal project description-->
     <div class="modal inmodal fade" id="project-description" role="dialog"  aria-hidden="true">
         <div class="modal-dialog modal-m">
@@ -613,7 +611,46 @@
                 </div>
             </div>
         </div>
-    </div>  
+    </div>
+    <!--modal notifications-->
+    <div class="modal inmodal fade" id="notifications" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-m">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"><i class="fa fa-bell modal-fa-icon"></i> notifications</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                      <div class="col-md-12">
+                          <div class="form-group mb-0">
+                              <div class="row">
+                                  <label class="col-lg-6 add-user-label">Email Notification</label>
+                                  <div class="col-lg-6 add-user-switch">
+                                      <input type="checkbox" class="js-switch_1" checked/>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="hr-line-solid"></div>
+                      </div><!--col-md-->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" ng-click="assignBudget()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- switch script-->
+    <script>
+        $(document).ready(function(){
+            var elem_1 = document.querySelector('.js-switch_1');
+            var switchery_1 = new Switchery(elem_1, { color: '#1AB394' });
+        });
+    </script>
+
     <div class="modal inmodal fade" id="budgetlimit" role="dialog"  aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
@@ -635,7 +672,7 @@
                 </div>
             </div>
         </div>
-    </div> 
+    </div>
      <!--modal add ticket-->
     <div class="modal inmodal fade" id="add-ticket" role="dialog"  aria-hidden="true">
         <div class="modal-dialog modal-md">
@@ -646,7 +683,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-lg-12"> 
+                        <div class="col-lg-12">
                             <div class="form-group">
                                 <input type="text" class="form-control" placeholder="Title" ng-model="tickettitle">
                             </div>
@@ -716,7 +753,7 @@
                 </div>
             </div>
         </div>
-      
+
 
     </div>
 </div>
@@ -729,7 +766,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-lg-12"> 
+                        <div class="col-lg-12">
                             <!-- table project list -->
                                             <div class="project-list">
                                                 <div class="table-responsive">
@@ -756,23 +793,23 @@
                                                                 <small>Assign to: <b>{{task.assignto.name}}</b></small>
                                                             </td>
                                                             <td class="project-estimation">
-                                                                <i class="fa fa-clock-o"></i> 
+                                                                <i class="fa fa-clock-o"></i>
                                                                 <span class="hour">{{task.estimation}} h</span>
                                                             </td>
                                                             <td class="project-realtime">
-                                                                <i class="fa fa-clock-o"></i> 
+                                                                <i class="fa fa-clock-o"></i>
                                                                 <span class="hour" ng-if="task.realtime!=null">{{task.realtime}} h</span>
                                                             </td>
                                                             <td class="project-status">
                                                                  <span class="label label-default label-nobg" ng-if="!task.isstarted"><i class="fa fa-genderless"></i> waiting</span>
                                                                   <span class="label label-default label-nobg" ng-if="task.isstarted && !task.finished"><i class="fa fa-genderless"></i> production</span>
-                                                                   
+
                                                                    <span class="label label-default label-nobg" ng-if="task.isstarted && task.finished"><i class="fa fa-check"></i>  finished</span>
                                                             </td>
                                                         </tr>
 
-                                                       
-                                                
+
+
                                                     </tbody>
                                                     </table>
                                                 </div>
@@ -798,7 +835,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-lg-12"> 
+                        <div class="col-lg-12">
                             <!-- table project list -->
                                             <div class="project-list">
                                                 <div class="table-responsive">
@@ -825,11 +862,11 @@
                                                                 <small>Assign to: <b>{{task.assignto.name}}</b></small>
                                                             </td>
                                                             <td class="project-estimation">
-                                                                <i class="fa fa-clock-o"></i> 
+                                                                <i class="fa fa-clock-o"></i>
                                                                 <span class="hour">{{task.estimation}} h</span>
                                                             </td>
                                                             <td class="project-realtime">
-                                                                <i class="fa fa-clock-o"></i> 
+                                                                <i class="fa fa-clock-o"></i>
                                                                 <span class="hour" ng-if="task.realtime!=null">{{task.realtime}} h</span>
                                                             </td>
                                                             <td class="project-status">
@@ -840,7 +877,7 @@
                                                             </td>
                                                         </tr>
 
-                                                                                              
+
                                                     </tbody>
                                                     </table>
                                                 </div>
@@ -867,7 +904,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-lg-12"> 
+                        <div class="col-lg-12">
                             <!-- table project list -->
                                             <div class="project-list">
                                                 <div class="table-responsive">
@@ -893,7 +930,7 @@
                                                                 <small>Assign to: <b>{{task.assignto.name}}</b></small>
                                                             </td>
                                                             <td class="project-estimation">
-                                                                <i class="fa fa-clock-o"></i> 
+                                                                <i class="fa fa-clock-o"></i>
                                                                 <span class="hour">{{task.estimation}} h</span>
                                                             </td>
                                                             <td class="project-status">
@@ -926,7 +963,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-lg-12"> 
+                        <div class="col-lg-12">
                             <!-- table project list -->
                                             <div class="project-list">
                                                 <div class="table-responsive">
@@ -953,11 +990,11 @@
                                                                 <small>Assign to: <b>{{task.assignto.name}}</b></small>
                                                             </td>
                                                             <td class="project-estimation">
-                                                                <i class="fa fa-clock-o"></i> 
+                                                                <i class="fa fa-clock-o"></i>
                                                                 <span class="hour">{{task.estimation}} h</span>
                                                             </td>
                                                             <td class="project-realtime">
-                                                                <i class="fa fa-clock-o"></i> 
+                                                                <i class="fa fa-clock-o"></i>
                                                                 <span class="hour" ng-if="task.realtime!=null">{{task.realtime}} h</span>
                                                             </td>
                                                             <td class="project-status">
@@ -966,7 +1003,7 @@
                                                                    <span class="label label-default label-nobg" ng-if="task.isstarted && !task.finished"><i class="fa fa-genderless"></i> production</span>
                                                                    <span class="label label-default label-nobg" ng-if="task.isstarted && task.finished"><i class="fa fa-check"></i>  finished</span>
                                                             </td>
-                                                        </tr>                                         
+                                                        </tr>
                                                     </tbody>
                                                     </table>
                                                 </div>
@@ -994,7 +1031,7 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-lg-12">
-                             <!-- table project list -->    
+                             <!-- table project list -->
                                     <div class="table-responsive">
                                         <table class="table table-hover responsive">
                                             <tbody>
@@ -1010,7 +1047,7 @@
                                                     <td class="reject-message">
                                                       {{rejectiommsg}}
                                                     </td>
-                                                </tr>                                                                                                  
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -1033,7 +1070,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-lg-12"> 
+                        <div class="col-lg-12">
 
                             <div class="form-group">
                                 <input type="text" class="form-control" placeholder="Bug Title" ng-model="storytitle">
@@ -1041,7 +1078,7 @@
                             <div class="form-group m0">
                                  <div text-angular  ta-toolbar="[['h3','p','bold','ul','ol','insertLink','undo']]" ng-model="storydescription"></div>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -1051,7 +1088,7 @@
                 </div>
             </div>
         </div>
-       
+
 </div>
 <div class="modal inmodal fade" id="see-contract" role="dialog"  aria-hidden="true">
         <div class="modal-dialog modal-m">
@@ -1075,7 +1112,7 @@
                                     </div>
                                     <div class="col-md-4 pr0 mb20 aright">
                                         <h2 class="mt0 mb5 bold">
-                                            <i class="fa fa-euro"></i> 
+                                            <i class="fa fa-euro"></i>
                                             <span class="hour">{{projectrate}}</span>
                                         </h2>
                                         <span class="project-details-info mb10">per hour</span>
@@ -1092,7 +1129,7 @@
                                            {{client.address.zipcode}} {{client.address.city}} - {{client.address.country}} <br/><br/>
                                             Represented by <br/><b>{{client.name}} {{client.surname}}</b>
                                         </p>
-                                        
+
                                     </div>
                                     <div class="col-md-2 acenter mt20">
                                         <i class="fa fa-angle-left"></i>
@@ -1110,7 +1147,7 @@
                                     </div>
                                 </div>
                                 <hr class="clear-both"/>
-                               
+
                                 <div class="col-md-12 mb20 p0">
                                     <i>The client <b>adnatives</b> solmen in li aede dakka <b>flexwork.io</b>. Li lingues differe solmen in li grammatica, li pronunciation e li plu commun vocabules.</i>
                                 </div>
@@ -1142,7 +1179,7 @@
                                         <p>Li Europan lingues es membres del sam familie. Lor separat existentie es un myth. Por scientie, musica, sport etc, litot Europa usa li sam vocabular.</p>
                                         <p>Li lingues differe solmen in li grammatica, li pronunciation e li plu commun vocabules.</p>
                                         <hr/>
-                                    </div>                   
+                                    </div>
                                 </div>
                                 <hr class="clear-both"/>
                                 <div class="col-md-12">
@@ -1164,5 +1201,5 @@
                 </form>
             </div>
         </div>
-    </div> 
+    </div>
 </div>
