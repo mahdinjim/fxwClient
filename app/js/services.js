@@ -106,6 +106,7 @@ services.factory("Links",[function(){
 	var deliverBugToClientLink=baseUrl+path+"/private/ticket/bug/deliver/";
 	var assignProjectEstimationLink=baseUrl+path+"/private/project/estimation";
 	var adminDashboardLink=baseUrl+path+"/private/super/dashboard";
+	var disableEmailNotifLink=baseUrl+path+"/private/project/emailnotif/disable/"
 	this.getLoginLink=function()
 	{
 		return LoginLink;
@@ -519,6 +520,10 @@ services.factory("Links",[function(){
 	this.getAdminDashboardLink=function()
 	{
 		return adminDashboardLink;
+	}
+	this.getDisableEmailNotifLink=function()
+	{
+		return disableEmailNotifLink;
 	}
 	return this;
 }]);
@@ -1816,6 +1821,26 @@ services.factory('Project',["$http","Login",'Links',function($http,Login,Links){
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 			}).success(function (data, status, headers, config) {
 				successFunc(data);
+				
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failureFunc();
+            });
+			
+		}
+	}
+	this.disableEmailNotif=function(succesFunc,failureFunc,project_id,activate)
+	{
+		if(Login.getLoggedUser())
+		{
+			$http({
+				method:"GET", 
+				url:Links.getDisableEmailNotifLink()+project_id+"/"+activate,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+				succesFunc(data);
 				
             }).error(function (data, status, headers, config) {
             	if(status==403)

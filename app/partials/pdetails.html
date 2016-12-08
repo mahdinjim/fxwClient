@@ -53,7 +53,7 @@
                                  <button class="btn btn-default btn-bitbucket btn-m mr5" type="button" data-target="#project-description" data-toggle="modal"><i class="fa fa-file-text mr5"></i> description</button>
                                 <!-- <button class="btn btn-default btn-bitbucket btn-m mr5" type="button" data-target="#budgetlimit" data-toggle="modal" ng-if="isclient"><i class="fa fa-thumb-tack mr5" ></i> budgetlimit</button> -->
                                 <button class="btn btn-default btn-bitbucket btn-m mr5" type="button" ng-click="openKeybox()"><i class="fa fa-lock mr5"></i> keybox</button>
-                                <button class="btn btn-default btn-bitbucket btn-m mr5" type="button" data-target="#notifications" data-toggle="modal"><i class="fa fa-bell mr5"></i> notifications</button>
+                                <button class="btn btn-default btn-bitbucket btn-m mr5" type="button" data-target="#notifications" data-toggle="modal" ng-if="isclient"><i class="fa fa-bell mr5"></i> notifications</button>
                             </div>
 
 
@@ -626,8 +626,8 @@
                           <div class="form-group mb-0">
                               <div class="row">
                                   <label class="col-lg-6 add-user-label">Email Notification</label>
-                                  <div class="col-lg-6 add-user-switch">
-                                      <input type="checkbox" class="js-switch_1" checked/>
+                                  <div class="col-lg-6 add-user-switch" ng-click="disableEmailNotif()">
+                                      <input type="checkbox" class="js-switch_1" ng-click="disableEmailNotif()" id="emailNotifCheck"/>
                                   </div>
                               </div>
                           </div>
@@ -637,20 +637,10 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" ng-click="assignBudget()">Save</button>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- switch script-->
-    <script>
-        $(document).ready(function(){
-            var elem_1 = document.querySelector('.js-switch_1');
-            var switchery_1 = new Switchery(elem_1, { color: '#1AB394' });
-        });
-    </script>
-
     <div class="modal inmodal fade" id="budgetlimit" role="dialog"  aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">

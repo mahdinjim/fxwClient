@@ -1697,6 +1697,8 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	$scope.selectedStatus="all";
 	$scope.searchWord="";
 	$scope.contractprepared=true;
+    var elem_1 = document.querySelector('.js-switch_1');
+    var switchery_1 = null;
 	var filterAll=function()
 	{
 
@@ -1816,10 +1818,26 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	}
 	$scope.username=Login.getLoggedUser().userinfo.name+ " "+Login.getLoggedUser().userinfo.surname;
 	var ticketupdater=null;
+	$scope.disableEmailNotif=function()
+	{
+		var activate=$("#emailNotifCheck").prop("checked");
+		var success=function()
+		{
+			$("#notifications").modal(('hide'));
+		}
+		var error=function()
+		{
+			swal("Oops!!","We can't disable project for this project","error");
+		}
+		Project.disableEmailNotif(success,error,project_id,activate);
+	}
+	
 	var succesFunc=function(data)
 	{
 		$scope.company_name=data.customer;
 		$scope.project_name=data.name;
+		$("#emailNotifCheck").prop("checked",!data.EmailNotifDisabled);
+		switchery_1=new Switchery(elem_1, { color: '#1AB394' });
 		for(i=0;i<data.team.length;i++)
 			if(data.team[i].photo==null)
 				data.team[i].photo="img/users/profile_default_small.jpg";
