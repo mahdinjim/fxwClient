@@ -13,6 +13,15 @@ Controllers.controller('LoginCtrl',['$scope','Login','$location',
 					
 					$location.path('/dashboard');
 					$scope.errors="";
+					if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER"){
+						window.Intercom("boot", {
+						   app_id: "bf90791k",
+						   name: Login.getLoggedUser().userinfo.name+" "+Login.getLoggedUser().userinfo.surname,
+						   email: Login.getLoggedUser().userinfo.email, // Email address
+						   created_at: new Date().getTime() // Signup date as a Unix timestamp
+						});
+					}
+					
 					setTimeout(function() {
 			                toastr.options = {
 			                    closeButton: true,

@@ -74,7 +74,7 @@ crmapp.config(["$routeProvider",
 ]);
 crmapp.run(['$rootScope', '$location', 'Login','Chat','$templateCache', function ($rootScope, $location, Login,Chat,$templateCache) {
     $rootScope.$on('$routeChangeStart', function (event) {
-    	console.log("route is changing");
+    	window.Intercom("update");
     	if(!Login.getLoggedUser())
     	{
     		if($location.path()=="/login")
@@ -85,6 +85,14 @@ crmapp.run(['$rootScope', '$location', 'Login','Chat','$templateCache', function
     	}
     	else
     	{
+    		if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER"){
+				window.Intercom("boot", {
+				   app_id: "bf90791k",
+				   name: Login.getLoggedUser().userinfo.name+" "+Login.getLoggedUser().userinfo.surname,
+				   email: Login.getLoggedUser().userinfo.email, // Email address
+				   created_at: new Date().getTime() // Signup date as a Unix timestamp
+				});
+			}
     		Login.contractSigned();
     		if(!Login.haveAccess())
     		{

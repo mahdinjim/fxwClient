@@ -657,6 +657,7 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
             }).error(function (data, status, headers, config) {
             });
             $cookies.remove("loggeduser");
+            window.Intercom("shutdown");
 				/*if(savelast===undefined || savelast==null)
 				 {
 				 	savelast=true;
