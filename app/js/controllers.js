@@ -1130,6 +1130,29 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 	$scope.isSent=false;
 	$scope.currentpage=1;
 	$scope.isEdit=false;
+	$scope.activateClient=function(client_id,activate)
+	{	
+		swal({
+            title: "Are you sure?",
+            text: 'You want to activate/desactivate client account?',
+            type: "warning",
+            showCancelButton: true,
+            cancelButtonText: "cancel",
+            confirmButtonColor: "#ed5565",
+            confirmButtonText: "Yes, just do it!",
+            closeOnConfirm: true
+	    }, function () {
+	    	var sucessFunc=function()
+			{
+				updateView($scope.currentpage);
+			}
+			var failurefunc=function()
+			{
+				swal("Client activate","Can't activate/desactivate this client due to system error","error");
+			}
+			Client.desactivateClient(sucessFunc,failurefunc,client_id,activate);
+	    });
+	}
 	if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN")
 	{
 		$scope.isadmin=true;
