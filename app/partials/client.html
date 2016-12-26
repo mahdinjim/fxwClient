@@ -91,7 +91,8 @@
                                              <div class="btn-table-mobile">
                                                  <button type="button" class="btn btn-white btn-sm" ng-click="OpenCreateModal(client)"><i class="fa fa-pencil"></i> </button>
                                         <a href="#/clientprojects/{{client.id}}" class="btn btn-white btn-sm"><i class="fa fa-search"></i> details</a>
-                                                
+                                                <button type="button" class="btn btn-danger" ng-click="activateClient(client.id,false)" ng-if="client.active"> des</button>
+                                        <button type="button" class="btn btn-primary" ng-click="activateClient(client.id,true)" ng-if="!client.active"> act</button>
                                             </div>
                                         </td>
                                     </tr>
