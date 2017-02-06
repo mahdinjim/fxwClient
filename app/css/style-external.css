@@ -76,21 +76,25 @@
 .fright{float: right;}
 
 body{
-  background-color: #333;
+  background-color: #f9f9f9;
 }
 
 .nav-header {
-  background: #333;
+  background: #f9f9f9;
   padding: 15px 25px !important;
 }
 
 #side-menu > li.active {
-  background-color: #222;
+  background-color: #eee;
+  color: #333;
 }
 .nav-second-level > li.active{
   background-color: #333;
 }
-
+.nav > li.active > a {
+  color: #333;
+  font-weight: bold;
+}
 body.mini-navbar .nav-header {
   padding: 0  !important;
 }
@@ -165,19 +169,23 @@ body.mini-navbar .mini-navbar-account{
 }
 
 .nav-second-level li a:hover, .nav-second-level li a:focus{
-  background-color: #333 !important;
+  background-color: #f9f9f9 !important;
+  color: #333;
 }
 
 .navbar-default .nav > li > a:hover, .navbar-default .nav > li > a:focus{
-  background-color: #222 ;
+  background-color: #eee;
+  color: #333;
 }
 
 .nav > li > a .label.label-default.pull-right{
   display: flex;
 }
-
+.nav-header a {
+  color: #333;
+}
 .nav-header .text-muted{
-  color: #aaa;
+  color: #333;
 }
 
 .add-project-button a .fa, .add-project-button a .nav-label{
@@ -296,7 +304,7 @@ a.fxwlink-dark:hover{
 .ibox-users {
   background: white;
   clear: both;
-  margin-bottom: 25px;
+  margin-bottom: 0px;
   margin-top: 0;
   min-height: 210px;
   padding: 0;
@@ -469,8 +477,8 @@ a.fxwlink-dark:hover{
 }
 
 .btn-default {
-  background-color: #d1dade;
-  border-color: #d1dade;
+  background-color: #f1f1f1;
+  border-color: #f1f1f1;
   color: #5e5e5e;
 }
 
@@ -479,8 +487,8 @@ a.fxwlink-dark:hover{
 .btn-default:active,
 .btn-default.active,
 .open .dropdown-toggle.btn-default {
-  background-color: #c4cfd6;
-  border-color: #c4cfd6;
+  background-color: #f4f4f4;
+  border-color: #f4f4f4;
   color: #5e5e5e;
 }
 
@@ -497,8 +505,9 @@ a.fxwlink-dark:hover{
 }
 
 .footer {
-  background: #f3f3f4;
+  background: #fff;
   font-size: 10px;
+  z-index: 9999;
 }
 
 .footer a {
@@ -523,17 +532,16 @@ a.fxwlink-dark:hover{
 
 .close {
   font-size: 40px;
-  margin-right: 10px;
 }
 
 .modal-header {
   background: transparent !important;
   color: #1ab394;
-  padding: 20px !important;
+  padding: 15px 0px !important;
   border-bottom: 1px solid #eee;
 }
 .modal-body {
-  padding: 20px;
+  padding: 15px 0px;
 }
 .inmodal .modal-body{
   background: transparent;
@@ -552,7 +560,7 @@ a.fxwlink-dark:hover{
 }
 .modal-footer {
   border-top: 0px;
-  padding: 0 20px 15px;
+  padding: 0 20px 0px;
 }
 #right-sidebar {
   z-index: 99;
@@ -616,7 +624,7 @@ a.delete-date{
 }
 
 .nav > li > a {
-  color: #aaa;
+  color: #333;
   font-weight: 300;
   text-transform: lowercase;
 
@@ -1613,8 +1621,9 @@ a.message-author{
   font-weight: 600;
 }
 
-.project-details-status-area{
-  background-color: #555;
+.project-details-status-area {
+    background-color: #fff;
+    border-bottom: 1px solid #f3f3f4;
 }
 
 .project-details-status-area .project-status small{
@@ -1849,6 +1858,7 @@ tr.new td{
 
 .project-people a{
   display: inline-block;
+  margin-right: 5px;
 }
 
 .project-people a.team-lead{
@@ -2302,6 +2312,16 @@ tr.new td{
   font-weight: 500;
   text-transform: lowercase;
 }
+.navbar-minimalize.btn-primary{
+  background-color: #ccc;
+  border-color: #ccc;
+  color: #ffffff;
+}
+.navbar-minimalize.btn-primary:hover, .navbar-minimalize.btn-primary:focus, .navbar-minimalize.btn-primary:active, .navbar-minimalize.btn-primary.active{
+    background-color: #bbb;
+    border-color: #bbb;
+    color: #ffffff;
+}
 
 .modal-footer .btn-warning{
   text-transform: lowercase;
@@ -2434,6 +2454,7 @@ li.key-account a{
 #ticket-description .col-lg-12{
   padding: 20px 45px 20px 45px;
   margin-bottom: 20px;
+  background-color: #f9f9f9;
 }
 
 .header-add-member{
@@ -2709,9 +2730,10 @@ label.label3:before {
   text-align: center;
 }
 .beta{
+  color: #bbb;
   display: block;
   font-size: 12px;
-  color: #666;
+  font-weight: normal;
   margin-top: 10px;
 }
 .project-files a.ticketFile{
@@ -2728,4 +2750,72 @@ label.label3:before {
   text-align: right;
   border: 0px;
   background: none;
+}
+.btn-right{
+  height: 34px;
+  margin-left: 5px;
+}
+.gray-bg{
+  background-color: #fff;
+}
+.white-bg {
+  background-color: #f9f9f9;
+}
+.breadcrumb {
+  background-color: #f9f9f9;
+}
+.ibox-content.keybox {
+  background-color: #f7f7f7;
+}
+.ibox .ibox-content .col-md-12 {
+  padding: 0px;
+}
+.ibox .ibox-content{
+  border: 0px !important;
+  padding: 0 15px 15px;
+}
+.modal-backdrop {
+  background-color: #fff !important;
+}
+.modal-backdrop.in {
+  opacity: 1;
+}
+.modal-content {
+    border: 0 none;
+    box-shadow: none;
+}
+.btn-toolbar{
+  margin-bottom: 5px;
+}
+.project-list table tr td {
+  border-bottom: 1px solid #f9f9f9;
+}
+.ibox-content.keybox {
+  padding: 20px;
+  border-radius: 5px;
+  border-top: 4px solid #e7eaec !important;
+  height: 240px;
+}
+.breadcrumb > li + li::before {
+  color: #ccc;
+}
+.breadcrumb > li {
+  color: #ccc;
+}
+.border-bottom {
+  border-bottom: 1px solid #f1f1f1 !important;
+}
+#page-wrapper {
+  border-left: 1px solid #f1f1f1;
+}
+.loginInputs{
+  border: 0px;
+  border-bottom: 1px solid #aaa;
+  border-radius: 0px;
+  background-color: transparent;
+  padding: 0px;
+  font-size: 16px;
+}
+.ft-login{
+  color: #aaa;
 }

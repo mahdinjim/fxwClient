@@ -2,7 +2,7 @@
        <div side-bar>
        </div>
 <div id="page-wrapper" class="gray-bg">
-            
+
 <div nav-menu></div>
 
             <!--header title-->
@@ -28,12 +28,58 @@
 
                       <!-- buttons & team -->
                       <div class="row mb20">
-                          <div class="col-md-6"></div>
+                          <div class="col-md-6">
+                            <div class="select-month m0" style="width: 225px;">
+                                <select class="select2" id="selectedmonth" ng-click="changeDate()">
+                                <option value="0" >Select Customer</option>
+                                <option value="1">flexwork.io</option>
+                                <option value="2">Meng GmbH</option>
+                                <option value="3">Mercury Ltd. </option>
+                                <option value="4">mindfacture gmbh &amp; co. kg </option>
+                                <option value="5">easykfz.com</option>
+                                <option value="6">FLP Consulting AG</option>
+                                <option value="7">Consolidate Software GmbH &amp; Co KG </option>
+                                <option value="8" selected="">navabi GmbH</option>
+                                <option value="9">Big Data Labs Ltd. Şti </option>
+                                <option value="10">SHOPMACHER eCommerce GmbH &amp; Co. KG </option>
+                                <option value="11">eetmee GmbH</option>
+                                <option value="12">bam! interactive marketing GmbH</option>
+                                <option value="13">antwerpes ag </option>
+                                <option value="14">intomedia GmbH</option>
+                                <option value="15">helllicht medien GmbH</option>
+                                <option value="16">Dr. Gerdewal Consulting </option>
+                                <option value="17">STR8 GmbH &amp; Co. KG </option>
+                                <option value="18">B&amp;B. Markenagentur GmbH </option>
+                                <option value="19">zweibusch GbR</option>
+                                <option value="20">Atfront AG</option>
+                                <option value="21">taste! digital communication GmbH </option>
+                                <option value="22">greatcontent AG</option>
+                                <option value="23">BET Büro für Energiewirtschaft und technische Planung GmbH </option>
+                                <option value="24">S.WERK AG </option>
+                                <option value="25">Grafikdesignstudio Torben Kania e.U. </option>
+                                <option value="26">Teamprove GmbH</option>
+                                <option value="27">allthirds GbR</option>
+                                <option value="28">PTnC UG</option>
+                                <option value="29">Bright Solutions GmbH</option>
+                                <option value="30">IOVAVUM Business Software GmbH</option>
+                                <option value="31">brandung GmbH &amp; Co. KG</option>
+                                <option value="32">Werbeagentur - Colak &amp; Partner </option>
+                                <option value="33">Netstack GbR</option>
+                                </select>
+                            </div>
+                            <div class="select-month m0 ml10" style="width: 225px;">
+                                <select class="select2" id="selectedmonth" ng-click="changeDate()">
+                                <option value="0" >Select Project</option>
+                                <option value="1">navabi ux tests</option>
+                                <option value="2">Responsive LPs</option>
+                                </select>
+                            </div>
+                            <button type="button" class="btn btn-white btn-sm btn-right" ng-click=""><i class="fa fa-arrow-right"></i></button>
+                          </div>
                           <div class="col-md-6 aright">
                               <div class="btn-group">
                                 <a ng-click="changeView(1)" ng-class="{'btn btn-white btn-bitbucket btn-m':isTicketReport,'btn btn-default btn-bitbucket btn-m':!isTicketReport}"><i class="fa fa-clone mr5"></i> sort by ticket</a>
-                                  <a ng-click="changeView(0)" ng-class="{'btn btn-white btn-bitbucket btn-m':isDateReport,'btn btn-default btn-bitbucket btn-m':!isDateReport}"><i class="fa fa-calendar mr5"></i> sort by date</a>
-                                  
+                                <a ng-click="changeView(0)" ng-class="{'btn btn-white btn-bitbucket btn-m':isDateReport,'btn btn-default btn-bitbucket btn-m':!isDateReport}"><i class="fa fa-calendar mr5"></i> sort by date</a>
                               </div>
                           </div>
                       </div>
@@ -45,7 +91,7 @@
                                     <!-- filter-->
                                     <div class="col-md-12 pb10">
                                         <div class="col-md-8 p0">
-                                          <div class="calander f-left  m0">
+                                          <div class="calander f-left  m0 mr10">
                                               <div class="select-icon-calander"><i class="fa fa-calendar"></i></div>
                                               <div class="select-month">
                                                   <select class="select2" id="selectedmonth" ng-click="changeDate()">
@@ -74,16 +120,15 @@
                                                     <option value="2011">2011</option>
                                                     <option value="2010">2010</option>
                                                   </select>
-
                                               </div>
                                           </div>
 
                                           <div class="form-group fleft mr10 mb10">
-                                            <select ng-if='isTicketReport' class="select3" ng-model="$parent.paymentstatus" ng-change="filterPayment()" >
-                                                    <option value="all" selected="selected">All</option>
-                                                    <option value="open">Done/Not Billed</option>
-                                                    <option value="billed">Done/Billed</option>
-                                                    <option value="payed">Done/Payed</option>
+                                            <select ng-if='isTicketReport' class="select3" ng-model="$parent.paymentstatus" ng-change="filterPayment()" style="width:160px;">
+                                                  <option value="all" selected="selected">All</option>
+                                                  <option value="open">Done/Not Billed</option>
+                                                  <option value="billed">Done/Billed</option>
+                                                  <option value="payed">Done/Payed</option>
                                             </select>
                                             <button class="btn btn-primary btn-bitbucket btn-xs" type="button" ng-if="showMarker" ng-click="markasAllAsbilled()">mark as billed</button>
                                           </div>
@@ -93,28 +138,28 @@
 
                                             <div class="" style="display: inline-block;text-align: right; margin-right: 10px;padding-right:10px; border-right: 1px solid #eee;">
                                                 <span class="">Estimation</span>
-                                                <h2 class="">
+                                                <h2 class="aright">
                                                   <span class="hour">{{totalestimation}} h</span>
                                                 </h2>
                                               </div>
                                               <div class="" style="display: inline-block;text-align: left; margin-right: 10px;padding-right:10px; border-right: 1px solid #eee;">
                                                 <span class="">Real Time</span>
-                                                <h2 class="bold">
+                                                <h2 class="bold aright">
                                                   <span class="hour">{{totalrealtime}} h</span>
                                                 </h2>
                                               </div>
                                                <div class="" style="display: inline-block;text-align: left" ng-if='isTicketReport'>
                                                 <span class="">Billable Time</span>
-                                                <h2 class="bold">
+                                                <h2 class="bold aright">
                                                   <span class="hour">{{btime}} h</span>
                                                 </h2>
                                               </div>
-                                            
+
                                             <!-- <div class="input-group project-search">
                                                 <input type="text" placeholder="search" class="input-sm form-control">
                                                 <span class="input-group-btn"><button type="button" class="btn btn-sm btn-primary"> go!</button> </span>
                                             </div> -->
-                                        </div> 
+                                        </div>
                                         <div style="clear:both;"></div>
                                     </div>
                                     <!-- end filter-->
@@ -149,7 +194,7 @@
                                                           <td class="estimation"><span class="hour">{{story.estimation}} h</span></td>
                                                           <td class="real-time"><span class="hour">{{story.realtime}} h</span></td>
                                                       </tr>
-                                                      
+
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -170,7 +215,7 @@
                                                       <tr>
                                                           <td width="600" class="table-head">{{ticket.title}}</td>
                                                           <td width="300" class="table-head">
-                                                            {{ticket.status}} / 
+                                                            {{ticket.status}} /
                                                             <span ng-if="ticket.open">not billed</span>
                                                             <span ng-if="ticket.billed && !ticket.payed">billed</span>
                                                             <span ng-if="ticket.payed">payed</span>
@@ -196,7 +241,7 @@
                                                           <td class="estimation"><span class="hour">{{story.estimation}} h</span></td>
                                                           <td class="real-time"><span class="hour">{{story.realtime}} h</span></td>
                                                       </tr>
-                                                      
+
                                                     </tbody>
                                                 </table>
                                             </div>

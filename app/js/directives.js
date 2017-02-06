@@ -1,7 +1,7 @@
 var directives = angular.module("directives", []);
 directives.directive('sideBar', function() {
 	return {
-    	templateUrl: 'partials/side-bar.html?v=1.3'
+    	templateUrl: 'partials/side-bar.html?v=1.4'
   		};
 });
 directives.directive('navMenu', function() {
@@ -23,7 +23,7 @@ directives.directive('myEnter', function () {
     return function (scope, element, attrs) {
         element.bind("keydown keypress", function (event) {
             if(event.which === 13) {
-              
+
                 scope.$apply(function (){
                     scope.$eval(attrs.myEnter);
                 });
@@ -37,7 +37,7 @@ directives.directive("activateTab",function(){
   return function(scope,element,attrs){
     var selected=element;
     element.bind("click",function(event){
-      
+
       selected.addClass("active");
     });
   }
