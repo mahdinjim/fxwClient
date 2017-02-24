@@ -103,8 +103,16 @@ Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Clie
 		}
 		$scope.isclient=false;
 		$scope.isClientUser=false;
+		$scope.noJiraAccount=true
 		if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER"){
 			$scope.isclient=true;
+			if(Login.getLoggedUser().userinfo.pmtools.length >0)
+			{
+				if(Login.getLoggedUser().userinfo.pmtools.indexOf("Jira") > -1)
+				{
+					$scope.noJiraAccount=false;
+				}
+			}
 		}
 		else if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER")
 		{
@@ -317,7 +325,8 @@ Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Clie
 					user.userinfo.email=$scope.client_login;
 					if($scope.isclient){
 						user.userinfo.compnay_name=$scope.client_company_name;
-						user.userinfo.address.country=$scope.client_company_country,					user.userinfo.address.address=$scope.client_company_address;
+						user.userinfo.address.country=$scope.client_company_country;					
+						user.userinfo.address.address=$scope.client_company_address;
 						user.userinfo.address.city=$scope.client_company_city;
 						user.userinfo.address.zipcode=$scope.client_zipcode;
 					}
@@ -487,6 +496,78 @@ Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Clie
 				}
 				Project.createProject(project,successFunc,failureFunc);
 			}
+		}
+		verifyJiraForm=function()
+		{
+			var messages = [];
+			if($scope.jira_url==="" || $scope.jira_url === undefined)
+				messages.push("Please enter jira account link");
+			if($scope.jira_login==="" || $scope.jira_login === undefined)
+				messages.push("Please enter jira account login");
+			if($scope.Jira_passeword==="" || $scope.Jira_passeword === undefined)
+				messages.push("Please enter jira account password");
+			return messages;
+		}
+		$scope.saveJiraAccount=function()
+		{
+			var messages = verifyJiraForm();
+			if(messages.length >0)
+			{
+				swal("missing info",messages.join('\n'),"warning");
+			}
+			else
+			{
+				var data = {
+					"link": $scope.jira_url,
+					"creds": $scope.jira_login+":"+$scope.password
+				}
+				var errorfunc = function(status)
+				{
+					if(status === 401)
+						swal("Account not valid","The account information are not valid","error");
+					if(status === 400)
+						swal("Missing information","You entred missing information","error");
+					else
+						swal("Server error","Server error please try again later","error");
+				}
+				var succsfunc =function()
+				{
+					$scope.noJiraAccount=false;
+					$scope.openEditProfil(false);
+					var user = Login.getLoggedUser();
+					user.userinfo.pmtools.push("Jira");
+					Login.upadteLoggedinUser(user);
+					$("#jira_form").modal("hide");
+
+				}
+				var client_id = Login.getLoggedUser().userinfo.id;
+				var client_token = Login.getLoggedUser().token.token;
+				Client.linkJiraAccount(succsfunc,errorfunc,client_id,client_token,data);
+			}
+		}
+		$scope.unlikJiraAccount = function()
+		{
+			var errorfunc = function(status)
+			{
+				if(status === 401)
+					swal("Account not valid","The account information are not valid","error");
+				if(status === 400)
+					swal("Missing information","You entred missing information","error");
+				else
+					swal("Server error","Server error please try again later","error");
+			}
+			var succsfunc =function()
+			{
+				swal("Success","Account deleted successfully","success");
+				$scope.noJiraAccount=true;
+				var user = Login.getLoggedUser();
+				var index = user.userinfo.pmtools.indexOf("Jira");
+				user.userinfo.pmtools.splice(index,1);
+				Login.upadteLoggedinUser(user);
+			}
+			var client_id = Login.getLoggedUser().userinfo.id;
+			var client_token = Login.getLoggedUser().token.token;
+			Client.unlinkJiraAccount(succsfunc,errorfunc,client_id,client_token);
 		}
 		
 	}

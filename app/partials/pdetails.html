@@ -46,7 +46,7 @@
 
                         <!-- buttons & team -->
                         <div class="row mb20">
-                            <div class="col-md-6">
+                            <div class="col-md-8">
 
                                 <button class="btn btn-primary btn-bitbucket btn-m mr5" type="button" ng-click="openCreateTicket(null)" ng-if="isclient"><i class="fa fa-plus mr5"></i> add ticket</button>
                                <!--  <button class="btn btn-primary btn-bitbucket btn-m mr5" type="button" ng-click="openCreateTicket(null)" ng-if="isclient && !issigned" disabled><i class="fa fa-plus mr5"></i> add ticket</button> -->
@@ -54,10 +54,11 @@
                                 <!-- <button class="btn btn-default btn-bitbucket btn-m mr5" type="button" data-target="#budgetlimit" data-toggle="modal" ng-if="isclient"><i class="fa fa-thumb-tack mr5" ></i> budgetlimit</button> -->
                                 <button class="btn btn-default btn-bitbucket btn-m mr5" type="button" ng-click="openKeybox()"><i class="fa fa-lock mr5"></i> keybox</button>
                                 <button class="btn btn-default btn-bitbucket btn-m mr5" type="button" data-target="#notifications" data-toggle="modal" ng-if="isclient"><i class="fa fa-bell mr5"></i> notifications</button>
+                                <button class="btn btn-default btn-bitbucket btn-m mr5" type="button" data-target="#notifications" data-toggle="modal" ng-if="isclient"></i> Link jira project</button>
                             </div>
 
 
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="project-people" >
                                     <a href="" class="fxwlink-member" ng-click="openAddMember()" ng-if="isAdmin || isTeamLeader"><small><i class="fa fa-plus" ></i> add member</small></a>
 

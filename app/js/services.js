@@ -108,6 +108,9 @@ services.factory("Links",[function(){
 	var adminDashboardLink=baseUrl+path+"/private/super/dashboard";
 	var disableEmailNotifLink=baseUrl+path+"/private/project/emailnotif/disable/";
 	var desactivateClientLink=baseUrl+path+"/private/client/desactivate/";
+	var linkJiraAccountLink = baseUrl+path+"/private/jira/account/add/";
+	var getJiraProjectLink=baseUrl+path+"private/jira/project/";
+	var unlinkJiraAccountLink = baseUrl+path+"/private/jira/account/unlink/";
 	this.getLoginLink=function()
 	{
 		return LoginLink;
@@ -529,6 +532,18 @@ services.factory("Links",[function(){
 	this.getDesactivateClientLink=function()
 	{
 		return desactivateClientLink;
+	}
+	this.getLinkJiraAccountLink=function()
+	{
+		return linkJiraAccountLink;
+	}
+	this.getGetJiraProjectLink=function()
+	{
+		return getJiraProjectLink;
+	}
+	this.getunlinkJiraAccountLink = function()
+	{
+		return unlinkJiraAccountLink;
 	}
 	return this;
 }]);
@@ -1102,6 +1117,44 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",func
 // }]);
 services.factory('Client', ['$http','Login',"Links",function ($http,Login,Links) {
 	
+	
+	this.unlinkJiraAccount=function(successfunc,failurefunc,client_id,token)
+	{
+		if(Login.getLoggedUser())
+		{
+			$http({
+					method:"get", 
+					url:Links.getunlinkJiraAccountLink()+client_id+"/"+token,
+					headers: {'Content-Type': 'application/json','x-crm-access-token': Login.getLoggedUser().token.token}
+				}).success(function (data, status, headers, config) {
+					successfunc();
+				}).error(function (data, status, headers, config) {
+					if(status==403)
+        				Login.logout()
+        			else
+	            		failurefunc(status);
+	            });
+		}
+	}
+	this.linkJiraAccount=function(successfunc,failurefunc,client_id,token,data)
+	{
+		if(Login.getLoggedUser())
+		{
+			$http({
+					method:"post", 
+					url:Links.getLinkJiraAccountLink()+client_id+"/"+token,
+					data:data,
+					headers: {'Content-Type': 'application/json','x-crm-access-token': Login.getLoggedUser().token.token}
+				}).success(function (data, status, headers, config) {
+					successfunc();
+				}).error(function (data, status, headers, config) {
+					if(status==403)
+        				Login.logout()
+        			else
+	            		failurefunc(status);
+	            });
+		}
+	}
 	this.desactivateClient = function(successfunc,failurefunc,client_id,activate)
 	{
 		if(Login.getLoggedUser())
