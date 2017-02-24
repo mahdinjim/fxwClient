@@ -9,7 +9,7 @@
                             <div class="nav-logo-element">
                                 <a href="#/dashboard">
                                      <img src="img/logo-flexwork@2.png" width="55" height="49" alt="flexwork.io" title="flexwork.io"/>
-                                     <span class="beta">Beta</span>
+                                     <span class="beta">beta</span>
                                 </a>
                             </div>
                         </li>
@@ -18,7 +18,8 @@
                         <li class="nav-logo">
                             <div class="logo-element">
                                 <a href="#/dashboard">
-                                    <img src="img/logo-small-flexwork@2.png" width="45" height="40" alt="fxw.io" title="fxw.io"/>
+                                  <img src="img/logo-small-flexwork@2.png" width="45" height="40" alt="fxw.io" title="fxw.io"/>
+                                  <span class="beta">beta</span>
                                 </a>
                             </div>
                         </li>
@@ -34,10 +35,10 @@
                                 </a>
 
                                 <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                                    <li><a data-toggle="modal"  ng-click="openEditProfil(true)">Profile</a></li>
+                                    <li><a data-toggle="modal"  ng-click="openEditProfil(true)"><i class="fa fa-user"></i> Profile</a></li>
                                     <!-- <li><a >Settings</a></li> -->
                                     <li class="divider"></li>
-                                    <li><a ng-click="logout()">Log out</a></li>
+                                    <li><a ng-click="logout()"><i class="fa fa-sign-out"></i>  Log out</a></li>
                                 </ul>
                         </div>
 
@@ -64,7 +65,7 @@
                                     <span class="navi-project-name">{{project.company}}</span>
                                 </a>
                             </li>
-                            <li><a ng-click="openAddprojectModel()"><span style="border-bottom: 1px dotted;">+ Add Project</span></a></li>
+                            <li><a ng-click="openAddprojectModel()"><span style="border-bottom: 1px dotted;display:inline-block;">+ Add Project</span></a></li>
                         </ul>
                     </li>
 
@@ -80,11 +81,11 @@
 
 
                     <li  ng-class="{'active':(cuseractive)}" activate-tab>
-                        <a href="#/cuser"><i class="fa fa-users"></i> <span class="nav-label">User</span></a>
+                        <a href="#/cuser"><i class="fa fa-users"></i> <span class="nav-label">Users</span></a>
                     </li>
 
                     <li  ng-click="openclosetab('reportab')" ng-class="{'active':(reportactive)}" activate-tab>
-                        <a><i class="fa fa-check-square"></i> <span class="nav-label">Report</span></a>
+                        <a><i class="fa fa-search"></i> <span class="nav-label">Reports</span></a>
                         <ul id="reportab" class="nav nav-second-level collapse">
                             <li ng-repeat='project in projects'>
                                 <a href="#/report/{{project.id}}/{{project.name}}" ng-if="isclient"><span class="nav-label">{{project.name}}</a>
@@ -96,12 +97,8 @@
                     </li>
 
                     <li  ng-class="{'active':(cuseractive)}" activate-tab>
-                        <a href="#/invoice"><i class="fa fa-arrow-right"></i> <span class="nav-label">Invoice</span></a>
+                        <a href="#/invoice"><i class="fa fa-file"></i> <span class="nav-label">Invoices</span></a>
                     </li>
-
-
-
-
                 </ul>
                 <ul class="nav metismenu" id="side-menu" ng-if="isAdmin">
                         <li class="nav-logo">
@@ -175,14 +172,14 @@
                     </li>
 
                     <li ng-class="{'active':(teamactive)}" activate-tab>
-                        <a href="#/team"><i class="fa fa-users"></i> <span class="nav-label">Team</span></a>
+                        <a href="#/team"><i class="fa fa-users"></i> <span class="nav-label">Teams</span></a>
                     </li>
 
                     <li ng-class="{'active':(clientactive)}" activate-tab>
-                        <a href="#/client"><i class="fa fa-building"></i> <span class="nav-label">Client</span></a>
+                        <a href="#/client"><i class="fa fa-building"></i> <span class="nav-label">Clients</span></a>
                     </li>
                     <li ng-click="openclosetab('reportab')" ng-class="{'active':(reportactive)}" activate-tab>
-                        <a><i class="fa fa-check-square"></i> <span class="nav-label">Report</span></a>
+                        <a><i class="fa fa-search"></i> <span class="nav-label">Reports</span></a>
                         <ul id="reportab" class="nav nav-second-level collapse">
                             <li ng-repeat='project in projects'>
                                 <a href="#/report/{{project.id}}/{{project.name}}" ng-if="isclient"><span class="nav-label">{{project.name}}</a>
@@ -193,7 +190,9 @@
                         </ul>
                     </li>
 
-
+                    <li  ng-class="{'active':(cuseractive)}" activate-tab>
+                        <a href="#/invoiceadmin"><i class="fa fa-file"></i> <span class="nav-label">Invoices</span></a>
+                    </li>
 
 
 

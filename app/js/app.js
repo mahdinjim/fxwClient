@@ -70,6 +70,15 @@ crmapp.config(["$routeProvider",
 			when('/invoice',{
 				templateUrl:'partials/invoice.html',
 			}).
+			when('/invoicedetails',{
+				templateUrl:'partials/invoicedetails.html',
+			}).
+			when('/invoiceadmin',{
+				templateUrl:'partials/adminInvoice.html',
+			}).
+			when('/admininvoicepaids',{
+				templateUrl:'partials/adminInvoicePaids.html',
+			}).
 			otherwise({
         		redirectTo: '/dashboard'
       		});

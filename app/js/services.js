@@ -535,8 +535,8 @@ services.factory("Links",[function(){
 services.factory("Login",['$http','$location','$cookies',"$route","Links",
 	function($http,$location,$cookies,$route,Links){
 		var lastlink=null;
-		var Admin_Access=["","/login","/dashboard","/client","/teamprofile","/team","/messaging","/pdetails","/keybox","/stories","/clientprojects","/report"];
-		var Client_Access=["","/login","/dashboard","/cuser","/cuserprofile","/messaging","/pdetails","/keybox","/stories","/acceptcontract","/report","/invoice"];
+		var Admin_Access=["","/login","/dashboard","/client","/teamprofile","/team","/messaging","/pdetails","/keybox","/stories","/clientprojects","/report","/invoiceadmin", "/admininvoicepaids"];
+		var Client_Access=["","/login","/dashboard","/cuser","/cuserprofile","/messaging","/pdetails","/keybox","/stories","/acceptcontract","/report","/invoice","/invoicedetails"];
 		var KeyAccount_Access=["","/login","/dashboard","/pdetails","/client","/keybox","/stories","/clientprojects","/report"];
 		var TeamLeader_Access=["","/login","/dashboard","/pdetails","/keybox","/stories"];
 		var TeamMember_Access=["","/login","/dashboard","/pdetails","/keybox","/stories"];

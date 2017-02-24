@@ -1,35 +1,45 @@
-<body class="gray-bg">
 
-    <div class="middle-box text-center loginscreen animated fadeInDown">
-        <div>
-            <div>
-                <h1 class="logo-name"><img src="img/logo-login-flexwork@2.png" width="85" height="75" alt="flexwork.io" title="flexwork.io"/></h1>
+    <div class="container-fluid text-center loginscreen animated fadeInDown" style="min-height: 100%; height: 100%;">
+        <div class="row" style="min-height: 100%; height: 100%;">
+
+            <div class="col-md-4" style="background-color: #fff;height: 100%;min-height: 100%;padding: 60px;">
+              <div>
+                  <h1 class="logo-name"><img src="img/logo-login-flexwork@2.png" width="85" height="75" alt="flexwork.io" title="flexwork.io"/></h1>
+              </div>
+              <!--
+              <h3>Welcome to flexwork.io</h3>
+              <p>Create your project and start your ticket</p>-->
+              <form class="m-t" role="form"  ng-submit="loginFunction()">
+                  <div class="form-group">
+                      <input  class="form-control loginInputs" placeholder="email" required="" ng-model="login">
+                  </div>
+
+                  <div class="form-group mb5">
+                      <input type="password" class="form-control loginInputs" placeholder="password" required="" ng-model="password">
+                  </div>
+                  <div class="input-group mb5">
+                      <div class="checkbox checkbox-primary">
+                          <input type="checkbox" id="checkbox3" ng-model="stayloggedin" value="true">
+                          <label for="checkbox3">keep me logged in</label>
+                      </div>
+                  </div>
+                  <button type="submit" class="btn btn-primary block full-width m-b" id="loginbtn">Login</button>
+                  <div class="errormsg">{{errors}}</div>
+
+                  <!-- <a href="forgot-password-fxw.html"><small>Forgot password?</small></a> -->
+                  <!--<div class="hr-line-solid"></div>
+                  <p class="text-muted text-center"><small>Do not have an account?</small></p>
+                  <a class="btn btn-sm btn-white btn-block" href="register-fxw.html">Request an account</a>-->
+              </form>
+              <div class="col-md-12 acenter flexylogin">
+                <img src="img/flexy-login@2.png" alt="flexy" title="flexy" width="135" height="100">
+              </div>
+              <p class="m-t ft-login mt20"><small> &copy;2015 - 2017 &middot; <b>flexwork.io</b></small></p>
             </div>
-            <!--
-            <h3>Welcome to flexwork.io</h3>
-            <p>Create your project and start your ticket</p>-->
-            <form class="m-t" role="form"  ng-submit="loginFunction()">
-                <div class="form-group">
-                    <input  class="form-control loginInputs" placeholder="E-Mail" required="" ng-model="login">
-                </div>
 
-                <div class="form-group mb5">
-                    <input type="password" class="form-control loginInputs" placeholder="Password" required="" ng-model="password">
-                </div>
-                <div class="input-group mb5">
-                    <div class="checkbox checkbox-primary">
-                        <input type="checkbox" id="checkbox3" ng-model="stayloggedin" value="true">
-                        <label for="checkbox3">Remember me</label>
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-primary block full-width m-b" id="loginbtn">Login</button>
-                <div class="errormsg">{{errors}}</div>
+            <div class="col-md-8 full-height-vh p0 hidden-xs hidden-sm">
+              <div class="login-billboard-image" style="background-image: url(img/bg.png);"></div>
+            </div>
 
-                <!-- <a href="forgot-password-fxw.html"><small>Forgot password?</small></a> -->
-                <!--<div class="hr-line-solid"></div>
-                <p class="text-muted text-center"><small>Do not have an account?</small></p>
-                <a class="btn btn-sm btn-white btn-block" href="register-fxw.html">Request an account</a>-->
-            </form>
-            <p class="m-t ft-login mt20"><small> &copy;2015 - 2017 &middot; <b>flexwork.io</b></small></p>
         </div>
     </div>

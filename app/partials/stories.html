@@ -22,7 +22,7 @@
             <!--header title-->
             <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-lg-9">
-                    <h2><i class="fa fa-clone"></i> ticket details</h2>
+                    <h2>ticket details</h2>
                     <ol class="breadcrumb" ng-if="!isclient">
                         <li>
                            {{username}}
@@ -67,7 +67,7 @@
                             <div class="col-md-6">
                                 <a class="btn btn-default btn-bitbucket btn-m mr5" ng-click="backToProject()"><i class="fa fa-angle-left mr5"></i> back to project</a>
                                 <a class="btn btn-default btn-bitbucket btn-m mr5 btnCopy" data-clipboard-text="{{currentUrl}}"><i class="fa fa-link mr5"></i> copy link</a>
-                                <a class="btn btn-default btn-bitbucket btn-m mr5"ng-click="openKeybox()"><i class="fa fa-lock mr5"></i> keybox</a>
+                                <!--<a class="btn btn-default btn-bitbucket btn-m mr5"ng-click="openKeybox()"><i class="fa fa-lock mr5"></i> keybox</a>-->
                             </div>
                             <div class="col-md-6">
                                 <div class="project-people">
@@ -93,10 +93,11 @@
                                             <div class="col-lg-8 pl0">
                                                 <div class="project-details-title">
                                                     <div class="project-details-title-box mb5">
+                                                        <!--
                                                         <i class="fa fa-star project-details-type-icon mr5 mt5" ng-if="ticket_type==tickettypes[1].type"></i>
                                                         <i class="fa fa-bug project-details-type-icon mr5 mt5" ng-if="ticket_type==tickettypes[2].type"></i>
                                                         <i class="fa fa-file project-details-type-icon mr5 mt5" ng-if="ticket_type==tickettypes[3].type"></i>
-                                                        <i class="fa fa-tint project-details-type-icon mr5 mt5" ng-if="ticket_type==tickettypes[4].type"></i>
+                                                        <i class="fa fa-tint project-details-type-icon mr5 mt5" ng-if="ticket_type==tickettypes[4].type"></i>-->
                                                         <h2 class="project-title-h2"> {{ticket_name}}</h2>
                                                         <div class="clear-both"></div>
                                                     </div>
@@ -125,15 +126,14 @@
                                         </div>
                                     </div>
 
-                                    <div class="row none" id="ticket-description">
+                                    <div class="row row m0" id="ticket-description">
                                         <div class="col-lg-12" ng-bind-html="ticket_decription">
-                                          <div class=""
                                         </div>
                                     </div>
 
                                     <!-- status area -->
                                     <div class="row" ng-if="isTeamLeader || isAdmin">
-                                        <div class="col-lg-12 pt0 pb20" >
+                                        <div class="col-lg-12 pt0" >
                                             <div class="project-details-status-area p10">
                                                 <div class="col-lg-12 project-status p5 aright" ng-if="ticket_status==ticketStatus.Draft.status">
                                                    <span class="label label-default label-nobg"><i class="fa fa-genderless"></i> draft</span>
@@ -177,7 +177,7 @@
                                     </div>
                                     </div>
                                     <div class="row" ng-if="isMember">
-                                        <div class="col-lg-12 pt0 pb20">
+                                        <div class="col-lg-12 pt0">
                                             <div class="project-details-status-area p10">
                                                <div class="col-lg-12 project-status p5 aright" ng-if="ticket_status==ticketStatus.Draft.status">
                                                     <span class="label label-default label-nobg"><i class="fa fa-genderless"></i> draft</span>
@@ -212,7 +212,7 @@
                                         </div>
                                     </div>
                                     <div class="row" ng-if="isclient">
-                                        <div class="col-lg-12 pt0 pb20">
+                                        <div class="col-lg-12 pt0">
                                             <div class="project-details-status-area p10">
                                               <div class="col-lg-12 project-status p5 aright" ng-if="ticket_status==ticketStatus.Draft.status">
                                                    <button type="button" class="btn btn-primary btn-xs fxw-alert-start-estimation " ng-click="startEstimation()"><i class="fa fa-chevron-right"></i> start</button>
