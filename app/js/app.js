@@ -9,7 +9,7 @@ var crmapp=angular.module("crmapp",[
 	]);
 crmapp.config(["$routeProvider",
 	function($routeProvider){
-		
+
 		$routeProvider.
 			when('/login',{
 				templateUrl:'partials/login.html?v=1.0',
@@ -67,6 +67,18 @@ crmapp.config(["$routeProvider",
 				templateUrl:'partials/hourreports.html',
 				controller:'ReportCtrl'
 			}).
+			when('/invoice',{
+				templateUrl:'partials/invoice.html',
+			}).
+			when('/invoicedetails',{
+				templateUrl:'partials/invoicedetails.html',
+			}).
+			when('/invoiceadmin',{
+				templateUrl:'partials/adminInvoice.html',
+			}).
+			when('/admininvoicepaids',{
+				templateUrl:'partials/adminInvoicePaids.html',
+			}).
 			otherwise({
         		redirectTo: '/dashboard'
       		});
@@ -107,10 +119,10 @@ crmapp.run(['$rootScope', '$location', 'Login','Chat','$templateCache', function
 	    if($location.search().last!=undefined)
 	    {
 	    	$location.url($location.search().last);
-	    	
+
 	    }
-	    
-        
+
+
     });
    //  $rootScope.$on('$viewContentLoaded', function() {
    //    $templateCache.removeAll();

@@ -76,21 +76,25 @@
 .fright{float: right;}
 
 body{
-  background-color: #333;
+  background-color: #f9f9f9;
 }
 
 .nav-header {
-  background: #333;
+  background: #f9f9f9;
   padding: 15px 25px !important;
 }
 
 #side-menu > li.active {
-  background-color: #222;
+  background-color: #f5f5f5;
+  color: #333;
 }
 .nav-second-level > li.active{
   background-color: #333;
 }
-
+.nav > li.active > a {
+  color: #333;
+  font-weight: normal;
+}
 body.mini-navbar .nav-header {
   padding: 0  !important;
 }
@@ -100,7 +104,8 @@ body.mini-navbar .nav-header{
 }
 
 .mini-navbar .nav-second-level {
-  background-color: #333;
+  background-color: #f1f1f1;
+  color: #333;
 }
 
 .dark-bg{
@@ -165,19 +170,23 @@ body.mini-navbar .mini-navbar-account{
 }
 
 .nav-second-level li a:hover, .nav-second-level li a:focus{
-  background-color: #333 !important;
+  background-color: #f9f9f9 !important;
+  color: #333;
 }
 
 .navbar-default .nav > li > a:hover, .navbar-default .nav > li > a:focus{
-  background-color: #222 ;
+  background-color: #f1f1f1;
+  color: #333;
 }
 
 .nav > li > a .label.label-default.pull-right{
   display: flex;
 }
-
+.nav-header a {
+  color: #333;
+}
 .nav-header .text-muted{
-  color: #aaa;
+  color: #333;
 }
 
 .add-project-button a .fa, .add-project-button a .nav-label{
@@ -296,7 +305,7 @@ a.fxwlink-dark:hover{
 .ibox-users {
   background: white;
   clear: both;
-  margin-bottom: 25px;
+  margin-bottom: 0px;
   margin-top: 0;
   min-height: 210px;
   padding: 0;
@@ -460,27 +469,23 @@ a.fxwlink-dark:hover{
   padding: 5px 0px 5px;
 }
 /* end ibox */
-
-
 .checkbox-primary input[type="checkbox"]:checked + label::before,
 .checkbox-primary input[type="radio"]:checked + label::before {
   background-color: #1ab394 !important;
   border-color: #1ab394 !important;
 }
-
 .btn-default {
-  background-color: #d1dade;
-  border-color: #d1dade;
+  background-color: #fff;
+  border-color: #fff;
   color: #5e5e5e;
 }
-
 .btn-default:hover,
 .btn-default:focus,
 .btn-default:active,
 .btn-default.active,
 .open .dropdown-toggle.btn-default {
-  background-color: #c4cfd6;
-  border-color: #c4cfd6;
+  background-color: #f4f4f4;
+  border-color: #f4f4f4;
   color: #5e5e5e;
 }
 
@@ -497,8 +502,9 @@ a.fxwlink-dark:hover{
 }
 
 .footer {
-  background: #f3f3f4;
+  background: #fff;
   font-size: 10px;
+  z-index: 999;
 }
 
 .footer a {
@@ -523,17 +529,16 @@ a.fxwlink-dark:hover{
 
 .close {
   font-size: 40px;
-  margin-right: 10px;
 }
 
 .modal-header {
   background: transparent !important;
   color: #1ab394;
-  padding: 20px !important;
+  padding: 15px 0px !important;
   border-bottom: 1px solid #eee;
 }
 .modal-body {
-  padding: 20px;
+  padding: 15px 0px;
 }
 .inmodal .modal-body{
   background: transparent;
@@ -545,14 +550,14 @@ a.fxwlink-dark:hover{
 }
 .inmodal .modal-title {
     font-size: 24px;
-    font-weight: 600;
+    font-weight: 300;
     text-align: left;
     color: #333;
     text-transform: lowercase;
 }
 .modal-footer {
   border-top: 0px;
-  padding: 0 20px 15px;
+  padding: 0 0px 0px;
 }
 #right-sidebar {
   z-index: 99;
@@ -616,7 +621,7 @@ a.delete-date{
 }
 
 .nav > li > a {
-  color: #aaa;
+  color: #333;
   font-weight: 300;
   text-transform: lowercase;
 
@@ -1326,7 +1331,14 @@ a.message-author{
   padding: 7px 20px 7px 52px;
 }
 
-
+.nav-second-level li a .nav-label {
+  width: 115px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block !important;
+  vertical-align: middle;
+}
 .login-content{
   color: #17a688;
 }
@@ -1528,7 +1540,7 @@ a.message-author{
   color: #aaa;
   font-size: 12px;
   font-weight: 400;
-  margin-left: 30px;
+  margin-left: 0px;
 }
 
 .project-details-title-minus{
@@ -1543,7 +1555,7 @@ a.message-author{
 .project-details-see-description{
   font-weight:400;
   font-size:12px;
-  color: #aaa;
+  color: #333;
 }
 
 .project-details-see-description:hover{
@@ -1582,6 +1594,7 @@ a.message-author{
 
 .project-details-box h2{
   color: #000;
+  text-align: right;
 }
 
 .project-title-h2{
@@ -1613,8 +1626,9 @@ a.message-author{
   font-weight: 600;
 }
 
-.project-details-status-area{
-  background-color: #555;
+.project-details-status-area {
+    background-color: #fff;
+    border-bottom: 1px solid #f3f3f4;
 }
 
 .project-details-status-area .project-status small{
@@ -1845,16 +1859,39 @@ tr.done .notification-avatar{
 tr.new td{
   background:#fffeea;
 }
-
+.project-people a.fxwlink-member {
+  border: 0px;
+  border-radius: 0px;
+  display: inline-block;
+  margin-right: 10px;
+}
 
 .project-people a{
-  display: inline-block;
+  border: 2px solid #dadada;
+ border-radius: 50%;
+ display: inline-block;
+ margin-right: 0;
 }
 
 .project-people a.team-lead{
-  border-right: 1px dotted #aaa;
-  padding-right: 5px;
-  margin-right: 5px;
+  border: 2px solid #1cbb9e;
+  border-radius: 50%;
+  margin-right: 0;
+  padding-right: 0;
+}
+
+.project-people a.team-lead{
+  position: relative;
+  z-index: 99;
+}
+
+.project-people a:nth-child(3){
+  position: relative;
+  z-index: 88;
+}
+.project-people a:nth-child(4){
+  position: relative;
+  z-index: 99;
 }
 
 .project-details-title h2{
@@ -1887,6 +1924,7 @@ tr.new td{
 
 .draft{
   color: #aaa;
+  font-weight: 300;
 }
 
 /* notification */
@@ -2302,6 +2340,16 @@ tr.new td{
   font-weight: 500;
   text-transform: lowercase;
 }
+.navbar-minimalize.btn-primary{
+  background-color: transparent;
+  border-color: #ccc;
+  color: #ccc;
+}
+.navbar-minimalize.btn-primary:hover, .navbar-minimalize.btn-primary:focus, .navbar-minimalize.btn-primary:active, .navbar-minimalize.btn-primary.active{
+    background-color: #bbb;
+    border-color: #bbb;
+    color: #ffffff;
+}
 
 .modal-footer .btn-warning{
   text-transform: lowercase;
@@ -2405,13 +2453,13 @@ li.key-account a{
 }
 
 .page-heading h2{
-  font-weight: 600;
+  font-weight: 300;
   text-transform: lowercase;
   color: #333;
 }
 
 .page-heading h2 .fa{
-  width: 30px;
+  width: 20px;
 }
 
 .btn-add-project{
@@ -2432,8 +2480,11 @@ li.key-account a{
 }
 
 #ticket-description .col-lg-12{
-  padding: 20px 45px 20px 45px;
-  margin-bottom: 20px;
+  /*padding: 20px 45px 20px 45px;
+  margin-bottom: 20px;*/
+  padding: 20px;
+  margin: 0px;
+  background-color: #f9f9f9;
 }
 
 .header-add-member{
@@ -2709,9 +2760,10 @@ label.label3:before {
   text-align: center;
 }
 .beta{
-  display: block;
+  color: #bbb;
+  display: block !important;
   font-size: 12px;
-  color: #666;
+  font-weight: normal;
   margin-top: 10px;
 }
 .project-files a.ticketFile{
@@ -2728,4 +2780,811 @@ label.label3:before {
   text-align: right;
   border: 0px;
   background: none;
+}
+.btn-right{
+  height: 34px;
+  margin-left: 5px;
+}
+.gray-bg{
+  background-color: #fff;
+}
+.white-bg {
+  background-color: #f9f9f9;
+}
+.breadcrumb {
+  background-color: transparent;
+}
+.ibox-content.keybox {
+  background-color: #f7f7f7;
+}
+.ibox .ibox-content .col-md-12 {
+  padding: 0px;
+}
+.ibox .ibox-content{
+  border: 0px !important;
+  padding: 0 15px 15px;
+}
+.modal-backdrop {
+  background-color: #fff !important;
+}
+.modal-backdrop.in {
+  opacity: 1;
+}
+.modal-content {
+    border: 0 none;
+    box-shadow: none;
+}
+.btn-toolbar{
+  margin-bottom: 5px;
+}
+.project-list table tr td {
+  border-bottom: 1px solid #f9f9f9;
+}
+.ibox-content.keybox {
+  padding: 20px;
+  border-radius: 5px;
+  border-top: 4px solid #e7eaec !important;
+  height: 240px;
+}
+.breadcrumb > li + li::before {
+  color: #ccc;
+}
+.breadcrumb > li {
+  color: #aaa;
+}
+.border-bottom {
+  border-bottom: 1px solid #f1f1f1 !important;
+}
+#page-wrapper {
+  border-left: 1px solid #f1f1f1;
+}
+.loginInputs{
+  border: 0px;
+  border-bottom: 1px solid #aaa;
+  border-radius: 0px;
+  background-color: transparent;
+  padding: 0px;
+  font-size: 16px;
+}
+.ft-login{
+  color: #aaa;
+}
+.btn-danger {
+  background-color: transparent;
+  border-color: #ed5565;
+  color: #ed5565;
+}
+.label {
+  background-color: #fff;
+  margin-top: 2px;
+}
+.label-danger, .badge-danger {
+  background-color: transparent;
+  border: 1px solid #ed5565;
+  color: #ed5565;
+}
+.invoicedetails{
+  padding: 50px !important;
+  border: 1px solid #eee;
+}
+.invoicelogo{
+  margin-bottom: 50px;
+}
+.invoice-meta{
+  margin-bottom: 30px;
+}
+.invoice-bill-to p{
+  margin-bottom: 2px;
+}
+.inv-table{
+  font-weight: bold;
+  background:#f9f9f9;
+  text-transform: uppercase;
+}
+.project-list table tr td.border {
+  border-top: 2px solid #eee;
+}
+.project-list table tr td {
+  border-top: medium none;
+  padding: 10px;
+}
+.invoice-footer p{
+  margin-bottom: 3px;
+  color: #aaa;
+}
+.invoice-footer-area{
+  margin-top: 50px;
+}
+.full-height-vh{
+  height: 100%;
+}
+.login-billboard-image {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
+}
+.invoiceadmin-box{
+  background-color: #f9f9f9;
+  border: 1px solid #fff;
+  padding: 15px;
+}
+.invoiceadmin-box h2{
+  margin: 0px;
+  padding-bottom: 20px;
+}
+.bill-box{
+  background-color: #fff;
+  padding:15px;
+  min-height:100px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  box-shadow: 0px 0px 1px 0px rgba(191,191,191,1);
+}
+.bill-info{
+  padding-bottom: 10px;
+  display: flex;
+  border-bottom: 1px solid #ededed;
+}
+.bill-title{
+  width: 50%;
+  float: left;
+}
+.bill-title .projectname{
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.bill-title .clientname{
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  white-space: nowrap;
+  color: #bbbbbb;
+}
+.bill-date{
+  width: 50%;
+  float: left;
+  text-align: right;
+  font-weight: bold;
+}
+.bill-times{
+  padding: 10px 0px;
+  display: block;
+  text-align: right;
+}
+
+.bill-times .bill-estimation{
+  display: inline-block;
+  text-align: right;
+  margin-right: 10px;
+  padding-right: 10px;
+  border-right: 1px solid #ededed;
+}
+.bill-times span{
+  display: block;
+}
+.bill-times span.est,
+.bill-times span.rt{
+  font-size: 12px;
+  color: #bbbbbb;
+}
+.bill-times span.bt{
+  font-size: 12px;
+}
+.bill-times span.esthours,
+.bill-times span.rthours{
+  font-size: 16px;
+  color: #bbbbbb;
+}
+.bill-times span.bthours{
+  font-size: 16px;
+  font-weight: bold;
+}
+.bill-times .bill-realtime{
+  display: inline-block;
+  text-align: right;
+  margin-right: 10px;
+  padding-right: 10px;
+  border-right: 1px solid #ededed;
+}
+.bill-times .bill-billabletime{
+  display: inline-block;
+  text-align: right;
+}
+.bill-btn{
+  padding: 10px 0px 0px;
+  text-align: right;
+  border-top: 1px solid #ededed;
+}
+.bill-paid .calander {
+  display: inline-flex;
+  float: inherit;
+  margin-bottom: 15px;
+}
+.project-pdf a {
+  font-size: 12px;
+  color: #444;
+  border-bottom: 1px dotted #aaa;
+  font-weight: normal;
+}
+tr.done > .project-pdf a {
+  color: #aaa;
+}
+.paid-headline-box{
+  display: flex;
+}
+.paid-title{
+  float: left;
+  width: 50%;
+}
+.paid-link{
+  float: left;
+  width: 50%;
+  text-align: right;
+}
+.paid-link a{
+  color: #aaa;
+  position: relative;
+  top: 5px;
+}
+.paid-link a:hover{
+  color: #1ab394;
+}
+.project-company {
+  color: #bbbbbb;
+  font-size: 14px;
+  font-weight: normal
+}
+.estrt{
+  color: #bbbbbb;
+}
+.bt{
+  font-weight: bold;
+}
+.status-paid {
+  background-color: #1ab394;
+  border-color: #1ab394;
+  color: #ffffff;
+  font-size: 12px;
+  line-height: 1.5;
+  padding: 5px 10px;
+  border-radius: 3px;
+  display: inline-block;
+  font-weight: 400;
+  margin-bottom: 0;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+ul.projectteam{
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+}
+ul.projectteam li{
+  display: inline-block;
+  margin-right: -9px;
+  position: relative;
+}
+ul.projectteam li:nth-child(1){
+  z-index: 90;
+}
+ul.projectteam li:nth-child(2){
+  z-index: 80;
+}
+ul.projectteam li:nth-child(3){
+  z-index: 70;
+}
+.project-search input{
+  background-color: transparent;
+  border: 0px;
+  width: 90% !important
+}
+.project-search .fa{
+  float: left;
+  width: 10%;
+  padding: 8px 0 !important;
+  text-align: center;
+}
+.flexylogin{
+  padding: 50px;
+}
+
+/* form control placeholder fxw color */
+.project-search input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+  color:    #737678;
+  font-weight: normal;
+  text-transform: uppercase;
+}
+.project-search input:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+   color:    #737678;
+   opacity:  1;
+   font-weight: normal;
+   text-transform: uppercase;
+}
+.project-search input::-moz-placeholder { /* Mozilla Firefox 19+ */
+   color:    #737678;
+   opacity:  1;
+   font-weight: normal;
+   text-transform: uppercase;
+}
+.project-search input:-ms-input-placeholder { /* Internet Explorer 10-11 */
+   color:    #737678;
+   font-weight: normal;
+   text-transform: uppercase;
+}
+.bill-times.bt-bar span.esthours, .bill-times.bt-bar span.rthours {
+  color: #737678;
+  font-size: 16px;
+}
+.bill-times.bt-bar span.est, .bill-times.bt-bar span.rt {
+  color: #737678;
+  font-size: 10px;
+  text-transform: uppercase;
+}
+.bill-times.bt-bar span.rthours{
+  font-weight: bold;
+}
+.bill-times.bt-bar .bill-realtime {
+  border-right: 0px solid #ededed;
+  display: inline-block;
+  margin-right: 0px;
+  padding-right: 10px;
+  text-align: right;
+}
+.btn-pdescription{
+  color: #aaa;
+  font-size: 16px;
+  position: relative;
+  text-align: center;
+  top: -2px;
+}
+.btn-pdescription:hover{
+  color: #1ab394;
+}
+.dropdown-menu > li > a {
+  padding: 3px 3px;
+}
+.dropdown-menu > li > a > .fa{
+  width: 25px;
+  text-align: center;
+}
+
+/* --------------------------------
+breadcrumb
+-------------------------------- */
+.cd-breadcrumb, .cd-multi-steps {
+  width: 100%;
+  max-width: 768px;
+  padding: 0.5em 1em;
+  margin: 0px;
+  background-color: #edeff0;
+  border-radius: .25em;
+}
+.cd-breadcrumb:after, .cd-multi-steps:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.cd-breadcrumb li, .cd-multi-steps li {
+  display: inline-block;
+  float: left;
+  margin: 0.5em 0;
+}
+.cd-breadcrumb li::after, .cd-multi-steps li::after {
+  /* this is the separator between items */
+  display: inline-block;
+  content: '\00bb';
+  margin: 0 .6em;
+  color: #959fa5;
+}
+.cd-breadcrumb li:last-of-type::after, .cd-multi-steps li:last-of-type::after {
+  /* hide separator after the last item */
+  display: none;
+}
+.cd-breadcrumb li > *, .cd-multi-steps li > * {
+  /* single step */
+  display: inline-block;
+  font-size: 12px;
+  color: #2c3f4c;
+}
+.cd-breadcrumb li.current > *, .cd-multi-steps li.current > * {
+  /* selected step */
+  color: #1eb0ed;
+}
+.no-touch .cd-breadcrumb a:hover, .no-touch .cd-multi-steps a:hover {
+  /* steps already visited */
+  color: #1eb0ed;
+}
+.cd-breadcrumb.custom-separator li::after, .cd-multi-steps.custom-separator li::after {
+  /* replace the default arrow separator with a custom icon */
+  content: '';
+  height: 16px;
+  width: 16px;
+  background: url(../img/cd-custom-separator.svg) no-repeat center center;
+  vertical-align: middle;
+}
+.cd-breadcrumb.custom-icons li > *::before, .cd-multi-steps.custom-icons li > *::before {
+  /* add a custom icon before each item */
+  content: '';
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+  margin-right: .4em;
+  margin-top: -2px;
+  background: url(../img/cd-custom-icons-01.svg) no-repeat 0 0;
+  vertical-align: middle;
+}
+.cd-breadcrumb.custom-icons li:not(.current):nth-of-type(2) > *::before, .cd-multi-steps.custom-icons li:not(.current):nth-of-type(2) > *::before {
+  /* change custom icon using image sprites */
+  background-position: -20px 0;
+}
+.cd-breadcrumb.custom-icons li:not(.current):nth-of-type(3) > *::before, .cd-multi-steps.custom-icons li:not(.current):nth-of-type(3) > *::before {
+  background-position: -40px 0;
+}
+.cd-breadcrumb.custom-icons li:not(.current):nth-of-type(4) > *::before, .cd-multi-steps.custom-icons li:not(.current):nth-of-type(4) > *::before {
+  background-position: -60px 0;
+}
+.cd-breadcrumb.custom-icons li.current:first-of-type > *::before, .cd-multi-steps.custom-icons li.current:first-of-type > *::before {
+  /* change custom icon for the current item */
+  background-position: 0 -20px;
+}
+.cd-breadcrumb.custom-icons li.current:nth-of-type(2) > *::before, .cd-multi-steps.custom-icons li.current:nth-of-type(2) > *::before {
+  background-position: -20px -20px;
+}
+.cd-breadcrumb.custom-icons li.current:nth-of-type(3) > *::before, .cd-multi-steps.custom-icons li.current:nth-of-type(3) > *::before {
+  background-position: -40px -20px;
+}
+.cd-breadcrumb.custom-icons li.current:nth-of-type(4) > *::before, .cd-multi-steps.custom-icons li.current:nth-of-type(4) > *::before {
+  background-position: -60px -20px;
+}
+@media only screen and (min-width: 768px) {
+  .cd-breadcrumb, .cd-multi-steps {
+    padding: 0 1.2em;
+  }
+  .cd-breadcrumb li, .cd-multi-steps li {
+    margin: 1.2em 0;
+  }
+  .cd-breadcrumb li::after, .cd-multi-steps li::after {
+    margin: 0 1em;
+  }
+  .cd-breadcrumb li > *, .cd-multi-steps li > * {
+    font-size: 12px;
+  }
+}
+
+/* --------------------------------
+
+Triangle breadcrumb
+
+-------------------------------- */
+@media only screen and (min-width: 768px) {
+  .cd-breadcrumb.triangle {
+    /* reset basic style */
+    background-color: transparent;
+    padding: 0;
+  }
+  .cd-breadcrumb.triangle li {
+    position: relative;
+    padding: 0;
+    margin: 0 4px 0 0;
+  }
+  .cd-breadcrumb.triangle li:last-of-type {
+    margin-right: 0;
+  }
+  .cd-breadcrumb.triangle li > * {
+    position: relative;
+    padding: 7px 10px 7px 25px;
+    color: #aaa;
+    background-color: #edeff0;
+    /* the border color is used to style its ::after pseudo-element */
+    border-color: #edeff0;
+  }
+  .cd-breadcrumb.triangle li.current > * {
+    /* selected step */
+    color: #ffffff;
+    background-color: #1eb0ed;
+    border-color: #1eb0ed;
+    font-style: normal !important;
+  }
+  .cd-breadcrumb.triangle li:first-of-type > * {
+    padding-left: 1.6em;
+    border-radius: .25em 0 0 .25em;
+  }
+  .cd-breadcrumb.triangle li:last-of-type > * {
+    padding-right: 1.6em;
+    border-radius: 0 .25em .25em 0;
+  }
+.cd-breadcrumb.triangle a:hover {
+    /* steps already visited */
+    color: #ffffff;
+    background-color: #1cbc9f;
+    border-color: #1cbc9f;
+  }
+  .cd-breadcrumb.triangle li::after, .cd-breadcrumb.triangle li > *::after {
+    /*
+    	li > *::after is the colored triangle after each item
+    	li::after is the white separator between two items
+    */
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 100%;
+    content: '';
+    height: 0;
+    width: 0;
+    /* 48px is the height of the <a> element */
+    border: 24px solid transparent;
+    border-width: 16px 0 15px 10px;
+  }
+  .cd-breadcrumb.triangle li.all::after, .cd-breadcrumb.triangle li.all > *::after {
+    /*
+    	li > *::after is the colored triangle after each item
+    	li::after is the white separator between two items
+    */
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 100%;
+    content: '';
+    height: 0;
+    width: 0;
+    /* 48px is the height of the <a> element */
+    border: 0px solid transparent;
+    border-width: 0px;
+  }
+  .cd-breadcrumb.triangle li.all > * {
+    border-radius: 4px;
+    padding: 7px  20px;
+  }
+    .cd-breadcrumb.triangle li:nth-child(2) > * {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    padding: 7px 10px;
+  }
+  .cd-breadcrumb.triangle li::after {
+    /* this is the white separator between two items */
+    z-index: 1;
+    -webkit-transform: translateX(4px);
+    -moz-transform: translateX(4px);
+    -ms-transform: translateX(4px);
+    -o-transform: translateX(4px);
+    transform: translateX(4px);
+    border-left-color: #ffffff;
+    /* reset style */
+    margin: 0;
+  }
+  .cd-breadcrumb.triangle li > *::after {
+    /* this is the colored triangle after each element */
+    z-index: 2;
+    border-left-color: inherit;
+  }
+  .cd-breadcrumb.triangle li:last-of-type::after, .cd-breadcrumb.triangle li:last-of-type > *::after {
+    /* hide the triangle after the last step */
+    display: none;
+  }
+  .cd-breadcrumb.triangle.custom-separator li::after {
+    /* reset style */
+    background-image: none;
+  }
+  .cd-breadcrumb.triangle.custom-icons li::after, .cd-breadcrumb.triangle.custom-icons li > *::after {
+    /* 50px is the height of the <a> element */
+    border-top-width: 25px;
+    border-bottom-width: 25px;
+  }
+
+  @-moz-document url-prefix() {
+    .cd-breadcrumb.triangle li::after,
+    .cd-breadcrumb.triangle li > *::after {
+      /* fix a bug on Firefix - tooth edge on css triangle */
+      border-left-style: dashed;
+    }
+  }
+}
+/* --------------------------------
+
+Custom icons hover effects - breadcrumb and multi-steps
+
+-------------------------------- */
+@media only screen and (min-width: 768px) {
+  .no-touch .cd-breadcrumb.triangle.custom-icons li:first-of-type a:hover::before, .cd-breadcrumb.triangle.custom-icons li.current:first-of-type em::before, .no-touch .cd-multi-steps.text-center.custom-icons li:first-of-type a:hover::before, .cd-multi-steps.text-center.custom-icons li.current:first-of-type em::before {
+    /* change custom icon using image sprites - hover effect or current item */
+    background-position: 0 -40px;
+  }
+  .no-touch .cd-breadcrumb.triangle.custom-icons li:nth-of-type(2) a:hover::before, .cd-breadcrumb.triangle.custom-icons li.current:nth-of-type(2) em::before, .no-touch .cd-multi-steps.text-center.custom-icons li:nth-of-type(2) a:hover::before, .cd-multi-steps.text-center.custom-icons li.current:nth-of-type(2) em::before {
+    background-position: -20px -40px;
+  }
+  .no-touch .cd-breadcrumb.triangle.custom-icons li:nth-of-type(3) a:hover::before, .cd-breadcrumb.triangle.custom-icons li.current:nth-of-type(3) em::before, .no-touch .cd-multi-steps.text-center.custom-icons li:nth-of-type(3) a:hover::before, .cd-multi-steps.text-center.custom-icons li.current:nth-of-type(3) em::before {
+    background-position: -40px -40px;
+  }
+  .no-touch .cd-breadcrumb.triangle.custom-icons li:nth-of-type(4) a:hover::before, .cd-breadcrumb.triangle.custom-icons li.current:nth-of-type(4) em::before, .no-touch .cd-multi-steps.text-center.custom-icons li:nth-of-type(4) a:hover::before, .cd-multi-steps.text-center.custom-icons li.current:nth-of-type(4) em::before {
+    background-position: -60px -40px;
+  }
+}
+/* --------------------------------
+
+Multi steps indicator
+
+-------------------------------- */
+@media only screen and (min-width: 768px) {
+  .cd-multi-steps {
+    /* reset style */
+    background-color: transparent;
+    padding: 0;
+    text-align: center;
+  }
+
+  .cd-multi-steps li {
+    position: relative;
+    float: none;
+    margin: 0.4em 40px 0.4em 0;
+  }
+  .cd-multi-steps li:last-of-type {
+    margin-right: 0;
+  }
+  .cd-multi-steps li::after {
+    /* this is the line connecting 2 adjacent items */
+    position: absolute;
+    content: '';
+    height: 4px;
+    background: #edeff0;
+    /* reset style */
+    margin: 0;
+  }
+  .cd-multi-steps li.visited::after {
+    background-color: #96c03d;
+  }
+  .cd-multi-steps li > *, .cd-multi-steps li.current > * {
+    position: relative;
+    color: #2c3f4c;
+  }
+
+  .cd-multi-steps.custom-separator li::after {
+    /* reset style */
+    height: 4px;
+    background: #edeff0;
+  }
+
+  .cd-multi-steps.text-center li::after {
+    width: 100%;
+    top: 50%;
+    left: 100%;
+    -webkit-transform: translateY(-50%) translateX(-1px);
+    -moz-transform: translateY(-50%) translateX(-1px);
+    -ms-transform: translateY(-50%) translateX(-1px);
+    -o-transform: translateY(-50%) translateX(-1px);
+    transform: translateY(-50%) translateX(-1px);
+  }
+  .cd-multi-steps.text-center li > * {
+    z-index: 1;
+    padding: .6em 1em;
+    border-radius: .25em;
+    background-color: #edeff0;
+  }
+  .no-touch .cd-multi-steps.text-center a:hover {
+    background-color: #2c3f4c;
+  }
+  .cd-multi-steps.text-center li.current > *, .cd-multi-steps.text-center li.visited > * {
+    color: #ffffff;
+    background-color: #96c03d;
+  }
+  .cd-multi-steps.text-center.custom-icons li.visited a::before {
+    /* change the custom icon for the visited item - check icon */
+    background-position: 0 -60px;
+  }
+
+  .cd-multi-steps.text-top li, .cd-multi-steps.text-bottom li {
+    width: 80px;
+    text-align: center;
+  }
+  .cd-multi-steps.text-top li::after, .cd-multi-steps.text-bottom li::after {
+    /* this is the line connecting 2 adjacent items */
+    position: absolute;
+    left: 50%;
+    /* 40px is the <li> right margin value */
+    width: calc(100% + 40px);
+  }
+  .cd-multi-steps.text-top li > *::before, .cd-multi-steps.text-bottom li > *::before {
+    /* this is the spot indicator */
+    content: '';
+    position: absolute;
+    z-index: 1;
+    left: 50%;
+    right: auto;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    transform: translateX(-50%);
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    background-color: #edeff0;
+  }
+  .cd-multi-steps.text-top li.visited > *::before,
+  .cd-multi-steps.text-top li.current > *::before, .cd-multi-steps.text-bottom li.visited > *::before,
+  .cd-multi-steps.text-bottom li.current > *::before {
+    background-color: #96c03d;
+  }
+  .no-touch .cd-multi-steps.text-top a:hover, .no-touch .cd-multi-steps.text-bottom a:hover {
+    color: #96c03d;
+  }
+  .no-touch .cd-multi-steps.text-top a:hover::before, .no-touch .cd-multi-steps.text-bottom a:hover::before {
+    box-shadow: 0 0 0 3px rgba(150, 192, 61, 0.3);
+  }
+
+  .cd-multi-steps.text-top li::after {
+    /* this is the line connecting 2 adjacent items */
+    bottom: 4px;
+  }
+  .cd-multi-steps.text-top li > * {
+    padding-bottom: 20px;
+  }
+  .cd-multi-steps.text-top li > *::before {
+    /* this is the spot indicator */
+    bottom: 0;
+  }
+
+  .cd-multi-steps.text-bottom li::after {
+    /* this is the line connecting 2 adjacent items */
+    top: 3px;
+  }
+  .cd-multi-steps.text-bottom li > * {
+    padding-top: 20px;
+  }
+  .cd-multi-steps.text-bottom li > *::before {
+    /* this is the spot indicator */
+    top: 0;
+  }
+}
+/* --------------------------------
+
+Add a counter to the multi-steps indicator
+
+-------------------------------- */
+.cd-multi-steps.count li {
+  counter-increment: steps;
+}
+
+.cd-multi-steps.count li > *::before {
+  content: counter(steps) " - ";
+}
+
+@media only screen and (min-width: 768px) {
+  .cd-multi-steps.text-top.count li > *::before,
+  .cd-multi-steps.text-bottom.count li > *::before {
+    /* this is the spot indicator */
+    content: counter(steps);
+    height: 26px;
+    width: 26px;
+    line-height: 26px;
+    font-size: 1.4rem;
+    color: #ffffff;
+  }
+
+  .cd-multi-steps.text-top.count li:not(.current) em::before,
+  .cd-multi-steps.text-bottom.count li:not(.current) em::before {
+    /* steps not visited yet - counter color */
+    color: #2c3f4c;
+  }
+
+  .cd-multi-steps.text-top.count li::after {
+    bottom: 11px;
+  }
+
+  .cd-multi-steps.text-top.count li > * {
+    padding-bottom: 34px;
+  }
+
+  .cd-multi-steps.text-bottom.count li::after {
+    top: 11px;
+  }
+
+  .cd-multi-steps.text-bottom.count li > * {
+    padding-top: 34px;
+  }
 }

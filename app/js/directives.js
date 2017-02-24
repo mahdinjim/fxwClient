@@ -6,7 +6,7 @@ directives.directive('sideBar', function() {
 });
 directives.directive('navMenu', function() {
 	return {
-    	templateUrl: 'partials/nav-menu.html?v=1.0'
+    	templateUrl: 'partials/nav-menu.html?v=1.1'
   		};
 });
 directives.directive('rightSide', function() {
@@ -23,7 +23,7 @@ directives.directive('myEnter', function () {
     return function (scope, element, attrs) {
         element.bind("keydown keypress", function (event) {
             if(event.which === 13) {
-              
+
                 scope.$apply(function (){
                     scope.$eval(attrs.myEnter);
                 });
@@ -37,7 +37,7 @@ directives.directive("activateTab",function(){
   return function(scope,element,attrs){
     var selected=element;
     element.bind("click",function(event){
-      
+
       selected.addClass("active");
     });
   }
