@@ -109,8 +109,10 @@ services.factory("Links",[function(){
 	var disableEmailNotifLink=baseUrl+path+"/private/project/emailnotif/disable/";
 	var desactivateClientLink=baseUrl+path+"/private/client/desactivate/";
 	var linkJiraAccountLink = baseUrl+path+"/private/jira/account/add/";
-	var getJiraProjectLink=baseUrl+path+"private/jira/project/";
+	var getJiraProjectLink=baseUrl+path+"/private/jira/project/";
 	var unlinkJiraAccountLink = baseUrl+path+"/private/jira/account/unlink/";
+	var linkJiraProjectLink = baseUrl + path +"/private/jira/project/link/";
+	var unlinkJiraProjectLink = baseUrl + path +"/private/jira/project/unlink/";
 	this.getLoginLink=function()
 	{
 		return LoginLink;
@@ -544,6 +546,14 @@ services.factory("Links",[function(){
 	this.getunlinkJiraAccountLink = function()
 	{
 		return unlinkJiraAccountLink;
+	}
+	this.getLinkJiraProjectLink = function()
+	{
+		return linkJiraProjectLink;
+	}
+	this.getUnLinkJiraProjectLink = function()
+	{
+		return unlinkJiraProjectLink;
 	}
 	return this;
 }]);
@@ -1649,6 +1659,61 @@ services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
 	return this;
 }]);
 services.factory('Project',["$http","Login",'Links',function($http,Login,Links){
+	this.unLinkJiraProject = function(successfunc,failurefunc,project_id,token)
+	{
+		if(Login.getLoggedUser())
+		{
+			$http({
+				method:"GET",
+				url:Links.getUnLinkJiraProjectLink()+project_id+"/"+token,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+				successfunc();
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failurefunc(status);
+            });
+
+		}
+	}
+	this.linkJiraProject = function(successfunc,failurefunc,data,token)
+	{
+		$http({
+			method:"POST",
+			data:data,
+			url:Links.getLinkJiraProjectLink()+token,
+			headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+		}).success(function (data, status, headers, config) {
+			successfunc();
+        }).error(function (data, status, headers, config) {
+        	if(status==403)
+        		Login.logout();
+        	else
+        		failurefunc(status);
+        });
+	}
+	this.loadJiraProjects=function(successfunc,failurefunc,client_id)
+	{
+		if(Login.getLoggedUser())
+		{
+			$http({
+				method:"GET",
+				url:Links.getGetJiraProjectLink()+client_id,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+				successfunc(data);
+
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failurefunc(status);
+            });
+
+		}
+	}
 	this.acceptContract=function(successFunc,failureFunc,project_id){
 		if(Login.getLoggedUser())
 		{

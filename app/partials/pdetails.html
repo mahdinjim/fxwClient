@@ -59,7 +59,7 @@
                                    <!--<li><a href="#" ><i class="fa fa-thumb-tack mr5" ></i> budgetlimit</a></li>-->
                                    <li><a ng-click="openKeybox()"><i class="fa fa-lock mr5"></i> keybox</a></li>
                                    <li><a data-target="#notifications" data-toggle="modal" ng-if="isclient"><i class="fa fa-bell mr5"></i> notifications</a></li>
-                                   <li><a data-target="#notifications" data-toggle="modal" ng-if="isclient"><i class="fa fa-plug mr5"></i> connect jira</a></li>
+                                   <li><a data-target="#jira_link" data-toggle="modal" ng-if="isclient"><i class="fa fa-plug mr5"></i> connect jira</a></li>
                                  </ul>
                                 </div>
                             </div>
@@ -613,6 +613,47 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+        <!--modal link jira-->
+    <div class="modal inmodal fade" id="jira_link" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-m">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"><i class="fa fa-plug modal-fa-icon"></i> Link jira project</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div ng-if="!haveJiraAccount">
+                            <p>You don't have a jira account configured yet, to be able to connect projects to jira project please connect your jira account following those steps:</p>
+                            <ol>
+                                <li>Connect to fxw app as owner</li>
+                                <li>Go to your profile settings</li>
+                                <li>Click connect jira account</li>
+                            </ol>
+                        </div>
+                          <div class="form-group mb-0" ng-if="haveJiraAccount">
+                              <div class="row" ng-if="!linkedToJiraProject">
+                                  <label class="col-lg-6 add-user-label">Choose a project</label>
+                                  <select id="jiraprojectselection" select-two ng-model="selectedJiraProject.item" ng-options="jproject as jproject.name for jproject in jiraprojects track by jproject.project_id">
+                                </select>
+                              </div>
+                              <div class="row" ng-if="linkedToJiraProject">
+                                <p>This project is already linked to the project {{linkedJiraProjectName}}</p>
+                                <button type="button" class="btn btn-white" ng-click="unlinkJiraProject()">unlink</button>
+                              </div>
+                          </div>
+                          <div class="hr-line-solid"></div>
+                      </div><!--col-md-->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" ng-click="linkJiraProject()">Save</button>
                 </div>
             </div>
         </div>

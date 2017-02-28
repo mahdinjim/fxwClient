@@ -103,7 +103,7 @@ Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Clie
 		}
 		$scope.isclient=false;
 		$scope.isClientUser=false;
-		$scope.noJiraAccount=true
+		$scope.noJiraAccount=true;
 		if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER"){
 			$scope.isclient=true;
 			if(Login.getLoggedUser().userinfo.pmtools.length >0)
@@ -504,7 +504,7 @@ Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Clie
 				messages.push("Please enter jira account link");
 			if($scope.jira_login==="" || $scope.jira_login === undefined)
 				messages.push("Please enter jira account login");
-			if($scope.Jira_passeword==="" || $scope.Jira_passeword === undefined)
+			if($scope.Jira_passeword==="" || $scope.Jira_password === undefined)
 				messages.push("Please enter jira account password");
 			return messages;
 		}
@@ -519,7 +519,7 @@ Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Clie
 			{
 				var data = {
 					"link": $scope.jira_url,
-					"creds": $scope.jira_login+":"+$scope.password
+					"creds": $scope.jira_login+":"+$scope.Jira_password
 				}
 				var errorfunc = function(status)
 				{
@@ -1795,7 +1795,7 @@ Controllers.controller("ChatCtrl",["$scope","$rootScope","Chat","$routeParams","
 	}
 	Chat.getChannelInfo($routeParams.channel_id,succesFunc,messagingssuccsFunc,failureFunc,0);
 }]);
-Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login","Team","$location","Ticket","Params","Task",function($scope,Project,$routeParams,Login,Team,$location,Ticket,Params,Task){
+Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login","Team","$location","Ticket","Params","Task","$rootScope",function($scope,Project,$routeParams,Login,Team,$location,Ticket,Params,Task,$rootScope){
 	$scope.isclient=false;
 	$scope.isAdmin=false;
 	$scope.isTeamLeader=false;
@@ -1811,6 +1811,88 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	$scope.contractprepared=true;
     var elem_1 = document.querySelector('.js-switch_1');
     var switchery_1 = null;
+    $scope.haveJiraAccount=false;
+    $scope.jiraprojects=[];
+    $scope.linkedToJiraProject = false;
+    $scope.linkedJiraProjectName = "";
+    $scope.selectedJiraProject={item:null};
+    $scope.linkJiraProject = function()
+    {
+    	var succesfunc = function()
+    	{
+    		$scope.linkedToJiraProject = true;
+    		$scope.linkedJiraProjectName = $scope.selectedJiraProject.name;
+    		$("#jira_link").modal("hide");
+    	}
+    	var failurefunc = function(status)
+    	{
+    		if(status === 503)
+    			swal("Flewwork api failure","Flexwork api failure, please try again later","error");
+    		else
+    			swal("Bad request","Bad request please verify the information and try again","error");
+    	}
+    	if($scope.selectedJiraProject.item!=null)
+    	{
+    		var data = {
+    			"fxw_project":project_id,
+    			"j_project":$scope.selectedJiraProject.item.project_id,
+    			"project_name":$scope.selectedJiraProject.item.name
+    		}
+    		token = Login.getLoggedUser().token.token;
+    		Project.linkJiraProject(succesfunc,failurefunc,data,token);
+    	}
+    	else
+    		swal("Choose project","Please choose a jira project to link","warning");
+    }
+    $scope.unlinkJiraProject = function()
+    {
+    	var succesfunc = function()
+    	{
+    		$scope.linkedToJiraProject = false;
+    		$scope.linkedJiraProjectName  = "";
+    		if($scope.jiraprojects.length > 0)
+    		{
+    			var selectdata={"id":-1,text:"Please choose a jira project"};
+				$("#jiraprojectselection").select2("data",selectdata);
+    		}
+    		else
+    		{
+    			var selectdata={"id":-1,text:"Couldn't load projects"};
+    			$("#jiraprojectselection").select2("data",selectdata);
+    		}
+    	}
+    	var failurefunc = function()
+    	{
+    		if(status === 503)
+    			swal("Flewwork api failure","Flexwork api failure, please try again later","error");
+    		else
+    			swal("Bad request","Bad request please verify the information and try again","error");
+    	}
+    	token = Login.getLoggedUser().token.token;
+    	Project.unLinkJiraProject(succesfunc,failurefunc,project_id,token);
+    }
+    var loadJiraProjects = function()
+    {
+    	var sucessFunc = function(data)
+    	{
+    		$scope.jiraprojects=data;
+    		var selectdata={"id":-1,text:"Please choose a jira project"};
+			$("#jiraprojectselection").select2("data",selectdata);
+    	}
+    	var failureFunc = function(status)
+    	{
+    		var selectdata="";
+    		if(status === 401)
+    		{
+    			selectdata={"id":-1,text:"Flexwork couldn't connect to jira either bad credentials or server is down"};
+    		}
+			else
+				selectdata={"id":-1,text:"Couldn't load projects"};
+			$("#jiraprojectselection").select2("data",selectdata);
+    	}
+    	var client_id = Login.getLoggedUser().userinfo.id;
+    	Project.loadJiraProjects(sucessFunc,failureFunc,client_id);
+    }
 	var filterAll=function()
 	{
 
@@ -1920,6 +2002,15 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	}
 	else if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER"|| Login.getLoggedUser().userinfo.roles[0]=="ROLE_KEYACCOUNT"){
 		$scope.isclient=true;
+		if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER")
+		{
+			if(Login.getLoggedUser().userinfo.pmtools.indexOf("Jira") > -1)
+			{
+				$scope.haveJiraAccount=true;
+				loadJiraProjects();
+			}
+				
+		}
 	}
 	else{
 		$scope.isMember=true;
@@ -2000,6 +2091,17 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 			$scope.isTeamLeader=false;
 		else
 			$scope.isTeamLeader=false;
+		if(data.pmtools.length > 0)
+		{
+			for(var i = 0;i<data.pmtools.length;i++)
+			{
+				if(data.pmtools[i].tool === "Jira")
+				{
+					$scope.linkedToJiraProject = true;
+					$scope.linkedJiraProjectName = data.pmtools[i].p_name;
+				}
+			}
+		}
 	}
 	$scope.acceptContract=function()
 	{

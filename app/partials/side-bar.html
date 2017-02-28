@@ -945,7 +945,7 @@
                             <div class="row">
                                <div class="col-md-12">
                                  <h4>Connect Accounts</h4>
-                                 <span ng-if="noJiraAccount">
+                                 <span>
                                     <h5 >Jira</h5>
                                      <button ng-if="noJiraAccount" type="button" class="btn btn-white btn-sm" data-dismiss="modal" data-toggle="modal" data-target="#jira_form">+ Connect</button>
                                      <button ng-if="!noJiraAccount" type="button" class="btn btn-white btn-sm" ng-click="unlikJiraAccount()">- Disconnect</button>
@@ -1041,7 +1041,7 @@
                                   </div>
                                  <div class="form-group">
                                      <input type="text" class="form-control login-first-name" placeholder="Jira login" required="" ng-model="jira_login">
-                                     <input type="passeword" class="form-control login-last-name" placeholder="Jira passeword" required="" ng-model="Jira_passeword">
+                                     <input type="password" class="form-control login-last-name" placeholder="Jira password" required="" ng-model="Jira_password">
                                      <div class="clear-both"></div>
                                  </div>
                              </div><!--col-md-->
