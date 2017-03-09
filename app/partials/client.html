@@ -205,9 +205,6 @@
                                 <input type="text" class="form-control login-last-name" placeholder="Last Name" required="" ng-model="surname">
                                 <div class="clear-both"></div>
                             </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Vat" required="" ng-model="vat">
-                            </div>
                             <div class="form-group m-0">
                                 <!--select-->
                                 <div class="select-option f-left m-0" style="width: 30%; margin-right: 2.5% ! important;" >
@@ -429,6 +426,32 @@
                                 </div>
                                 <input type="text" class="form-control" ng-model="phonenumber" placeholder="Telephone" style="width: 67.5%;">
                             </div>
+                            <h4 style="margin-top: 20px;">Billing information</h4>
+                            <div class="form-group">
+                                <input type="text" class="form-control login-first-name" placeholder="Vat" required="" ng-model="vat">
+                                <input type="number" class="form-control login-last-name" placeholder="Tax eg 19" required="" ng-model="tax">
+                                <div class="clear-both"></div>
+                            </div>
+                            <div class="form-group">
+                                 
+                                    <select id="billedfromselect" select-two required="" ng-model="billed_from">
+                                        <option value="De">Germany</option>
+                                        <option value="Tr">Turkey</option>
+                                    </select>
+                                
+                                <div class="clear-both"></div>
+                            </div>
+                             <div class="form-group">
+                                 
+                                    <select id="currencyselect" select-two required="" ng-model="currency">
+                                        <option value="EUR">Euro</option>
+                                        <option value="USD">US dollar</option>
+                                        <option value="TL">Tuskish lira</option>
+                                    </select>
+                                
+                                <div class="clear-both"></div>
+                            </div>
+                            
 
                         </div><!--col-md-->
 

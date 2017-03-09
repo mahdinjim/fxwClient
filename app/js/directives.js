@@ -33,6 +33,20 @@ directives.directive('myEnter', function () {
         });
     };
 });
+directives.directive('anyKey', function () {
+    return function (scope, element, attrs) {
+        element.bind("keyup keypress", function (event) {
+           
+
+                scope.$apply(function (){
+                    scope.$eval(attrs.anyKey);
+                });
+
+                
+            
+        });
+    };
+});
 directives.directive("activateTab",function(){
   return function(scope,element,attrs){
     var selected=element;
@@ -46,6 +60,8 @@ directives.directive("selectTwo",function(){
   return function(scope,element,attrs)
   {
     $(element).select2();
+    if(attrs.inittext != undefined)
+      $(element).select2("data",{id:-1,text:attrs.inittext});
   }
 });
 directives.directive('scrollBottom', function () {

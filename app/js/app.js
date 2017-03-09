@@ -63,21 +63,29 @@ crmapp.config(["$routeProvider",
 				templateUrl:'partials/clientprojects.html',
 				controller:'ClientProjectsCtrl'
 			}).
-			when('/report/:project_id/:pname',{
+			when('/report',{
 				templateUrl:'partials/hourreports.html',
 				controller:'ReportCtrl'
 			}).
 			when('/invoice',{
 				templateUrl:'partials/invoice.html',
+				controller:"InvoiceCtrl"
 			}).
-			when('/invoicedetails',{
+			when('/invoicedetails/:invoiceid',{
 				templateUrl:'partials/invoicedetails.html',
+				controller:"InvoiceCtrl"
+			}).
+			when('/invoice/report/:invoice/:id',{
+				templateUrl:'partials/invoicereport.html',
+				controller:"InvoiceCtrl"
 			}).
 			when('/invoiceadmin',{
 				templateUrl:'partials/adminInvoice.html',
+				controller:"InvoiceCtrl"
 			}).
 			when('/admininvoicepaids',{
 				templateUrl:'partials/adminInvoicePaids.html',
+				controller:"InvoiceCtrl"
 			}).
 			otherwise({
         		redirectTo: '/dashboard'

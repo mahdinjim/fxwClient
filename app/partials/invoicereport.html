@@ -1,0 +1,130 @@
+ <div id="wrapper">
+       <div side-bar>
+       </div>
+<div id="page-wrapper" class="gray-bg">
+
+<div nav-menu></div>
+
+            <!--header title-->
+            <div class="row wrapper border-bottom white-bg page-heading">
+                <div class="col-lg-12">
+                    <h2><i class="fa fa-search"></i> Reports</h2>
+                    <ol class="breadcrumb">
+                        <li>
+                           invoice
+                        </li>
+                        <li>
+                            Reports
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            <!--end header title-->
+
+            <!--main-->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="wrapper wrapper-content animated fadeInUp">
+                        <div class="ibox">
+                           <div class="ibox-content">
+                                <div class="row">
+                                    <!-- filter-->
+                                    <div class="col-md-12 pb10">
+                                        <div class="col-md-12 p0">
+                                          
+                                        <div class="col-md-12 p0 aright">
+
+                                            <div class="" style="display: inline-block;text-align: right; margin-right: 10px;padding-right:10px; border-right: 1px solid #eee;">
+                                                <span class="">Estimation</span>
+                                                <h2 class="aright">
+                                                  <span class="hour">{{totalestimation}} h</span>
+                                                </h2>
+                                              </div>
+                                              <div class="" style="display: inline-block;text-align: left; margin-right: 10px;padding-right:10px; border-right: 1px solid #eee;">
+                                                <span class="">Real Time</span>
+                                                <h2 class="bold aright">
+                                                  <span class="hour">{{totalrealtime}} h</span>
+                                                </h2>
+                                              </div>
+                                               <div class="" style="display: inline-block;text-align: left">
+                                                <span class="">Billable Time</span>
+                                                <h2 class="bold aright">
+                                                  <span class="hour">{{btime}} h</span>
+                                                </h2>
+                                              </div>
+                                        </div>
+                                        <div style="clear:both;"></div>
+                                    </div>
+                                  </div>
+                                    <!-- end filter-->
+
+
+                                   
+                                    <!-- table project list -->
+                                    <div class="col-md-12">
+                                        <div class="report-list"  ng-repeat="ticket in data">
+
+                                          <!--table 1-->
+                                          <div class="table-responsive report-table">
+                                                <table class="table table-hover" >
+                                                    <thead>
+                                                      <tr>
+                                                          <td width="600" class="project-table-head">{{ticket.title}}</td>
+                                                          <td width="300" class="project-table-head">
+                                                            {{ticket.status}} /
+                                                            <span ng-if="ticket.open">not billed</span>
+                                                            <span ng-if="ticket.billed && !ticket.payed">billed</span>
+                                                            <span ng-if="ticket.payed">payed</span>
+                                                          </td>
+
+                                                          <td width="150" class="project-table-head aright realt-time"><i class="fa fa-clock-o"></i> {{ticket.totalestimatedhours}} h</td>
+                                                          <td width="150" class="project-table-head aright realt-time"><i class="fa fa-clock-o"></i> {{ticket.totalhours}} h</td>
+                                                          <td width="150" class="project-table-head aright realt-time"><i class="fa fa-clock-o"></i> {{ticket.btime}} h</td>
+                                                      </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                      <tr>
+                                                          <td width="600" class="table-info">Story</td>
+                                                          <td width="600" class="table-info">Date</td>
+                                                          <td width="150" class="table-info estimation">Estimation</td>
+                                                          <td width="150" class="table-info real-time">Real Time</td>
+                                                          <td width="150" class="table-info real-time">Billable Time</td>
+                                                      </tr>
+
+                                                      <tr ng-repeat="story in ticket.stories">
+                                                          <td class="story">{{story.title}}</td>
+                                                          <td class="date">{{story.date}}</td>
+                                                          <td class="estimation"><span class="hour">{{story.estimation}} h</span></td>
+                                                          <td class="real-time"><span class="hour">{{story.realtime}} h</span></td>
+                                                      </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <!--//table 1-->
+
+
+
+                                        </div>
+                                    </div>
+                                    <!-- end table project list-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--main-->
+
+            <!--footer-->
+            <div class="footer">
+                <div>
+                     &copy;2015 &middot; <b>flexwork.io</b> &middot; <a href="privacy-terms-fxw.html">Privacy and Terms</a> &middot; <a href="imprint-fxw.html">Imprint</a>
+                </div>
+            </div>
+            <!--end footer-->
+
+        </div>
+        <!--end page wrapper-->
+
+    </div>

@@ -85,15 +85,7 @@
                     </li>
 
                     <li  ng-click="openclosetab('reportab')" ng-class="{'active':(reportactive)}" activate-tab>
-                        <a><i class="fa fa-search"></i> <span class="nav-label">Reports</span></a>
-                        <ul id="reportab" class="nav nav-second-level collapse">
-                            <li ng-repeat='project in projects'>
-                                <a href="#/report/{{project.id}}/{{project.name}}" ng-if="isclient"><span class="nav-label">{{project.name}}</a>
-                                <a href="#/report/{{project.id}}/{{project.name}}" ng-if="!isclient">{{project.company}}
-                                    <span class="navi-project-name">{{project.name}}</span>
-                                </a>
-                            </li>
-                        </ul>
+                        <a href="#/report"><i class="fa fa-search"></i> <span class="nav-label">Reports</span></a>
                     </li>
 
                     <li  ng-class="{'active':(cuseractive)}" activate-tab>
@@ -179,15 +171,7 @@
                         <a href="#/client"><i class="fa fa-building"></i> <span class="nav-label">Clients</span></a>
                     </li>
                     <li ng-click="openclosetab('reportab')" ng-class="{'active':(reportactive)}" activate-tab>
-                        <a><i class="fa fa-search"></i> <span class="nav-label">Reports</span></a>
-                        <ul id="reportab" class="nav nav-second-level collapse">
-                            <li ng-repeat='project in projects'>
-                                <a href="#/report/{{project.id}}/{{project.name}}" ng-if="isclient"><span class="nav-label">{{project.name}}</a>
-                                <a href="#/report/{{project.id}}/{{project.name}}" ng-if="!isclient">{{project.company}}
-                                    <span class="navi-project-name">{{project.name}}</span>
-                                </a>
-                            </li>
-                        </ul>
+                        <a href="#/report"> <i class="fa fa-search"></i> <span class="nav-label">Reports</span></a>
                     </li>
 
                     <li  ng-class="{'active':(cuseractive)}" activate-tab>
@@ -265,18 +249,9 @@
                         <a href="#/client"><i class="fa fa-building"></i> <span class="nav-label">Client</span></a>
                     </li>
 
-                    <li ng-click="openclosetab('reportab')" ng-class="{'active':(reportactive)}" activate-tab>
-                        <a><i class="fa fa-check-square"></i> <span class="nav-label">Report</span></a>
-                        <ul id="reportab" class="nav nav-second-level collapse">
-                            <li ng-repeat='project in projects'>
-                                <a href="#/report/{{project.id}}/{{project.name}}" ng-if="isclient"><span class="nav-label">{{project.name}}</a>
-                                <a href="#/report/{{project.id}}/{{project.name}}" ng-if="!isclient">{{project.company}}
-                                    <span class="navi-project-name">{{project.name}}</span>
-                                </a>
-                            </li>
-                        </ul>
+                    <li  ng-click="openclosetab('reportab')" ng-class="{'active':(reportactive)}" activate-tab>
+                        <a href="#/report"><i class="fa fa-search"></i> <span class="nav-label">Reports</span></a>
                     </li>
-
                 </ul>
                 <ul class="nav metismenu" id="side-menu" ng-if="isMember">
                         <li class="nav-logo">

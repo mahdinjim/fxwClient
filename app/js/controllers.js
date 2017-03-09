@@ -1314,6 +1314,7 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 	}
 	$scope.OpenCreateModal=function(client)
 	{
+		debugger;
 		if(client!=null)
 		{
 			$scope.email=client.email;
@@ -1329,7 +1330,20 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 			$("#countryselect").select2("val",client.address.country);
 			$scope.companyname=client.companyname;
 			$scope.zipcode=client.address.zipcode;
-
+			if(client.currency != "")
+			{
+				$scope.currency = client.currency;
+				$("#currencyselect").select2("val",client.currency);
+			}
+			if(client.tax != "")
+			{
+				$scope.tax = client.tax;
+			}
+			if(client.billedFrom != "")
+			{
+				$scope.billed_from = client.billedFrom;
+				$("#billedfromselect").select2("val",client.billedFrom);
+			}
 			var data={"id":0,text:client.keyaccount.name+" "+client.keyaccount.surname};
 			$("#keyaccountselect").select2("data",data);
 			$scope.selectedKeyaccount=client.keyaccount.id;
@@ -1352,18 +1366,22 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 		$scope.name=undefined;
 		$scope.surname=undefined;
 		$scope.vat=undefined;
-		$scope.phonecode="+49";
+		$scope.phonecode = "49";
+		$scope.currency = "EUR";
+		$scope.billed_from = "De";
 		$scope.phonenumber=undefined;
 		$scope.address=undefined;
 		$scope.city=undefined;
 		$scope.country=undefined;
 		$scope.companyname=undefined;
 		$scope.zipcode=undefined;
-		$scope.selectedKeyaccount===undefined
-
+		$scope.selectedKeyaccount=undefined
+		$scope.tax = undefined;
 		$("#keyaccountselect").select2("data",{id:-1,text:"Key Account"});
 		$("#countryselect").select2("data",{id:-1,text:"Country"});
 		$("#phonecode").select2("val","49");
+		$("#currencyselect").select2("val","EUR");
+		$("#billedfromselect").select2("val","De");
 	}
 	var verifyForm=function()
 	{
@@ -1420,6 +1438,11 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 		{
 			messages.push("Please fill the zipcode field");
 		}
+		if($scope.tax !==undefined)
+		{
+			if(isNaN($scope.tax))
+				messages.push("Tax should be a numeric value, if you added % please remove it and try again");
+		}
 		return messages;
 	}
 	$scope.stateChanged=function()
@@ -1440,6 +1463,7 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 			swal("Please fill all information",messages.join("\n"),"warning");
 		}
 		else{
+			debugger;
 			var address={
 			"city":$scope.city,
 			"country":$scope.country,
@@ -1457,8 +1481,12 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 				"telnumber":$scope.phonenumber,
 				"vat":$scope.vat,
 				"address":address,
+				"tax":$scope.tax,
+				"currency":$scope.currency,
+				"billedfrom":$scope.billed_from,
 				"isSent":$scope.isSent
 			};
+			debugger;
 			if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN")
 			{
 				client.keyaccount_id=$scope.selectedKeyaccount;
@@ -1512,6 +1540,19 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 Controllers.controller('CuserCtrl',['$scope','Login','Cuser','$location','Params',function($scope,Login,Cuser,$location,Params){
 	$scope.isSent=false;
 	$scope.isEdit=false;
+	function cleanForm()
+	{
+		$scope.email=undefined;
+		$scope.password=undefined;
+		$scope.name=undefined;
+		$scope.surname=undefined;
+		$scope.phonecode="+49";
+		$scope.phonenumber=undefined;
+		$scope.title=undefined;
+		$("#phonecodeselect").select2("val","49");
+		$scope.issent=false;
+
+	}
 	if(Params.getCuser()!=null)
 	{
 		$scope.email=Params.getCuser().email;
@@ -1559,19 +1600,7 @@ Controllers.controller('CuserCtrl',['$scope','Login','Cuser','$location','Params
 		}
 		$('#add-user').modal('show');
 	}
-	function cleanForm()
-	{
-		$scope.email=undefined;
-		$scope.password=undefined;
-		$scope.name=undefined;
-		$scope.surname=undefined;
-		$scope.phonecode="+49";
-		$scope.phonenumber=undefined;
-		$scope.title=undefined;
-		$("#phonecodeselect").select2("val","49");
-		$scope.issent=false;
-
-	}
+	
 	var validateForm=function()
 	{
 		var messages =[];
@@ -1636,7 +1665,7 @@ Controllers.controller('CuserCtrl',['$scope','Login','Cuser','$location','Params
 					$('#add-user').modal('hide');
 					swal("User Created", msg, "success");
 					updateView();
-					clearForm();
+					cleanForm();
 				}
 			if(olduser==null)
 			{
@@ -1816,6 +1845,8 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
     $scope.linkedToJiraProject = false;
     $scope.linkedJiraProjectName = "";
     $scope.selectedJiraProject={item:null};
+    $scope.estimationTotal=0;
+    $scope.realtimeTotal=0;
     $scope.linkJiraProject = function()
     {
     	var succesfunc = function()
@@ -1895,41 +1926,50 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
     }
 	var filterAll=function()
 	{
-
 		result=new Array();
-		if($scope.selectedType!="all" && $scope.selectedStatus!="all" && $scope.searchWord!="")
+		var est=0;
+		var rt=0;
+		if($scope.selectedStatus === "all" && $scope.searchWord=="")
 		{
 			for(i=0;i<originalticket.length;i++)
 			{
-				if(originalticket[i].status==$scope.selectedStatus && originalticket[i].type==$scope.selectedType && originalticket[i].title.toLowerCase().indexOf($scope.searchWord.toLowerCase())!=-1 )
+				if(originalticket[i].status!=$scope.ticketStatus.Done.status)
+				{
+					if(originalticket[i].estimation!=null)
+						est+=originalticket[i].estimation;
+					if(originalticket[i].realtime!=null)
+						rt+=originalticket[i].realtime;
 					result.push(originalticket[i]);
+				}
+					
 			}
-
 		}
-		else if($scope.selectedType!="all" && $scope.selectedStatus!="all")
+		else if($scope.selectedStatus === "all" && $scope.searchWord!="")
 		{
 			for(i=0;i<originalticket.length;i++)
 			{
-				if(originalticket[i].status==$scope.selectedStatus && originalticket[i].type==$scope.selectedType  )
+				if(originalticket[i].status!=$scope.ticketStatus.Done.status && originalticket[i].title.toLowerCase().indexOf($scope.searchWord.toLowerCase())!=-1)
+				{
+					if(originalticket[i].estimation!=null)
+						est+=originalticket[i].estimation;
+					if(originalticket[i].realtime!=null)
+						rt+=originalticket[i].realtime;
 					result.push(originalticket[i]);
+				}
 			}
-
-		}
-		else if($scope.selectedType!="all"  && $scope.searchWord!="")
-		{
-			for(i=0;i<originalticket.length;i++)
-			{
-				if(originalticket[i].type==$scope.selectedType && originalticket[i].title.toLowerCase().indexOf($scope.searchWord.toLowerCase())!=-1 )
-					result.push(originalticket[i]);
-			}
-
 		}
 		else if($scope.selectedStatus!="all" && $scope.searchWord!="")
 		{
 			for(i=0;i<originalticket.length;i++)
 			{
 				if(originalticket[i].status==$scope.selectedStatus && originalticket[i].title.toLowerCase().indexOf($scope.searchWord.toLowerCase())!=-1 )
+				{
+					if(originalticket[i].estimation!=null)
+						est+=originalticket[i].estimation;
+					if(originalticket[i].realtime!=null)
+						rt+=originalticket[i].realtime;
 					result.push(originalticket[i]);
+				}
 			}
 
 		}
@@ -1938,16 +1978,13 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 			for(i=0;i<originalticket.length;i++)
 			{
 				if(originalticket[i].status==$scope.selectedStatus)
+				{
+					if(originalticket[i].estimation!=null)
+						est+=originalticket[i].estimation;
+					if(originalticket[i].realtime!=null)
+						rt+=originalticket[i].realtime;
 					result.push(originalticket[i]);
-			}
-
-		}
-		else if($scope.selectedType!="all")
-		{
-			for(i=0;i<originalticket.length;i++)
-			{
-				if(originalticket[i].type==$scope.selectedType)
-					result.push(originalticket[i]);
+				}
 			}
 
 		}
@@ -1956,7 +1993,13 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 			for(i=0;i<originalticket.length;i++)
 			{
 				if(originalticket[i].title.toLowerCase().indexOf($scope.searchWord.toLowerCase())!=-1 )
+				{
+					if(originalticket[i].estimation!=null)
+						est+=originalticket[i].estimation;
+					if(originalticket[i].realtime!=null)
+						rt+=originalticket[i].realtime;
 					result.push(originalticket[i]);
+				}
 			}
 
 		}
@@ -1964,11 +2007,13 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		{
 			result=originalticket;
 		}
+		$scope.estimationTotal=est;
+		$scope.realtimeTotal=rt;
 		return result;
 	}
-	$scope.filter=function()
+	$scope.filter=function(status)
 	{
-
+		$scope.selectedStatus = status;
 		var result=filterAll();
 		$scope.tickets=result;
 	}
@@ -1978,7 +2023,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		{
 			$scope.hasTicket=true;
 			originalticket=data;
-			$scope.tickets=filterAll();
+			$scope.tickets=filterAll($scope.selectedStatus);
 		}
 		var failureFunc=function()
 		{
@@ -2047,7 +2092,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		Params.setProject(data);
 		$scope.team=data.team;
 		originalticket=data.tickets;
-		$scope.tickets=data.tickets;
+		$scope.tickets=filterAll();
 		$scope.projectDescription=data.briefing;
 		$scope.projectrate=data.rate;
 		$scope.projectSkilss=data.skills;
@@ -4126,6 +4171,7 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 	{
 		successFunc=function(data)
 		{
+			debugger;
 			$scope.projects=data;
 			if(update===null)
 			{
@@ -4224,6 +4270,7 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 		$("#prepare-project").modal('show');
 		selectedproject=project;
 		$scope.projectname=project.name;
+		$scope.projectcurrency=project.currency;
 	}
 	var verifyContractForm=function()
 	{
@@ -4694,19 +4741,30 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 
 	}
 }]);
-Controllers.controller('ReportCtrl',['$scope','$routeParams','Project','Ticket','Login',function($scope,$routeParams,Project,Ticket,Login)
+Controllers.controller('ReportCtrl',['$scope','$routeParams','Project','Ticket','Login','Client',function($scope,$routeParams,Project,Ticket,Login,Client)
 {
-	var project_id = $routeParams.project_id;
+	var project_id = null;
 	var ticketStatus=Ticket.ticketstatus;
 	$scope.isTicketReport=true;
 	$scope.isDateReport=false;
 	var d = new Date();
 	$scope.month=d.getMonth()+1;
+	$('#selectedmonth').val($scope.month);
 	$scope.year=d.getFullYear();
-	$scope.project_name=$routeParams.pname;
+	$scope.project_name="";
 	var dataObject=null;
 	$scope.paymentstatus="all";
 	$scope.showMarker=false;
+	$scope.showClients=false;
+	$scope.showProjects=false;
+	$scope.filterData = {
+		"selectedproject":null,
+		"selectedclient" : null
+	};
+	
+	var init={id:-1,text:"selected a project"};
+	$('#selectedproject').select2("data",init);
+	
 	$scope.filterPayment=function()
 	{
 		$scope.showMarker=false;
@@ -4857,7 +4915,97 @@ Controllers.controller('ReportCtrl',['$scope','$routeParams','Project','Ticket',
 		}
 		Project.getDateReportbyMonth(successFunc,failureFunc,month,year,project_id);
 	}
-	updateTicketView($scope.month,$scope.year);
+	var loadclients = function()
+	{
+		var successFunc = function(data)
+		{
+			$scope.clients = data;
+			$scope.filterData.selectedclient = data[0];
+			$scope.showClients = true;
+
+			loadProjects(false);
+		}
+		var failurefunc = function()
+		{
+			$scope.showClients = false;
+		}
+		Client.getAllClients(successFunc,failurefunc,1);
+
+	}
+	$scope.LoadByProject = function()
+	{
+		if($scope.filterData.selectedproject != null)
+		{
+			project_id = $scope.filterData.selectedproject.id;
+			$scope.project_name = $scope.filterData.selectedproject.name;
+			if($scope.isTicketReport)
+			{
+				updateTicketView($scope.month,$scope.year);
+			}
+			else
+			{
+				updateDateView($scope.month,$scope.year);
+			}
+		}
+	}
+	$scope.loadByClient = function()
+	{
+		
+		loadProjects(false);
+	}
+	var loadProjects = function(isclient)
+	{
+		var succesfunc = function(data)
+		{
+			hundleProjects(data,true);
+		}
+		var hundleProjects = function(data,showclient)
+		{
+			var loaddedProjects = data;
+			$scope.showClients = showclient;
+			$scope.showProjects = true;
+			$scope.projects = loaddedProjects;
+			$scope.filterData.selectedproject = loaddedProjects[0];
+			project_id = loaddedProjects[0].id;
+			$scope.project_name = loaddedProjects[0].name;
+			if($scope.isTicketReport)
+			{
+				updateTicketView($scope.month,$scope.year);
+			}
+			else
+			{
+				updateDateView($scope.month,$scope.year);
+			}
+			
+
+		}
+		if(isclient)
+		{
+			Project.getAllproject(function(data){
+				hundleProjects(data.projects,false)
+
+			});
+		}
+		else
+		{
+			var client_id = $scope.filterData.selectedclient.id;
+			var failurefunc = function ()
+			{
+				$scope.projects=[];
+				
+			}
+			Project.projectsbyclient(succesfunc,failurefunc,client_id);
+		}
+	}
+	if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER")
+	{
+		loadProjects(true);
+	}
+	else
+	{
+		loadclients();
+	}
+	
 }]);
 Controllers.controller('DashboardCtrl',['$scope','$routeParams','Login',function($scope,$routeParams,Login)
 {
@@ -4949,4 +5097,122 @@ Controllers.controller('clientDashCtrl',['$scope','$routeParams','Login','Dashbo
 				Project.createProject(project,successFunc,failureFunc);
 			}
 		}
+}]);
+Controllers.controller("InvoiceCtrl",["$scope","Login","Invoice","$location","$routeParams",function($scope,Login,Invoice,$location,$routeParams)
+{
+	$scope.unpaidTickets = [];
+	$scope.unpaidInvoices = [];
+	$scope.paidInvoices = [];
+	$scope.listLoaded = false;
+	getInvoiceList = function()
+	{
+		var sucessFunc = function(data)
+		{
+			$scope.unpaidTickets = data.unbilledTicket;
+			$scope.unpaidInvoices = data.unpaidInvoices;
+			$scope.paidInvoices = data.paidInvoices;
+			$scope.listLoaded = true;
+		}
+		var failurefunc = function()
+		{
+			$scope.listLoaded = true;
+		}
+		Invoice.getUnpaidTickets(sucessFunc,failurefunc);
+	}
+	$scope.createInvoice = function(project_id,index)
+	{
+		var sucessFunc = function(data)
+		{
+			$scope.unpaidInvoices.unshift(data);
+			$scope.unpaidTickets.splice(index,1);
+		}
+		var failurefunc = function()
+		{
+			swal("Error","Can't create invoice please try again later","error");
+		}
+		Invoice.createInvoice(sucessFunc,failurefunc,project_id);
+	}
+	$scope.payInvoice = function(invoice_id,index)
+	{
+		var succsfunc = function()
+		{
+			var invoice = $scope.unpaidInvoices[index];
+			$scope.paidInvoices.unshift(invoice);
+			$scope.unpaidInvoices.splice(index,1);
+		}
+		var failurefunc = function()
+		{
+			swal("Error","Can't mark invoice as payed please try again later","error");
+		}
+		Invoice.payInvoice(succsfunc,failurefunc,invoice_id);
+	}
+	$scope.backToInvoices = function()
+	{
+		window.history.back();
+	}
+	if($location.url() == "/admininvoicepaids" || $location.url() == "/invoice")
+	{
+		var d = new Date();
+		$scope.month = d.getMonth()+1;
+		$scope.year = d.getFullYear();
+		$("#selectedmonth").val($scope.month);
+		$scope.allInvoices = [];
+		var loadList = function()
+		{
+			var succsfunc = function(data)
+			{
+				$scope.allInvoices = data;
+			}
+			Invoice.getAllInvoiceList(succsfunc,$scope.month,$scope.year);
+		}
+		loadList();
+		$scope.changeDate = function()
+		{
+			loadList();
+		}
+	}
+	if($location.url().startsWith("/invoicedetails"))
+	{
+		$scope.invoice = {};
+		var invoice_id = $routeParams.invoiceid;
+		var succesfunc = function(data)
+		{
+			$scope.invoice = data;
+		}
+		var failurefunc = function()
+		{
+			swal("Error","Couldn't load invoice details please try again later");
+			window.history.back();
+		}
+		Invoice.loadInvoiceInfo(succesfunc,failurefunc,invoice_id);
+	}
+	if($location.url().startsWith("/invoice/report/"))
+	{
+		$scope.totalestimation = 0;
+		$scope.totalrealtime = 0;
+		$scope.btime=0;
+		$scope.data=[];
+		var successFunc=function(data)
+		{
+			$scope.data=data.data;
+			dataObject=data;
+			$scope.totalestimation=data.totalestimated;
+			$scope.totalrealtime=data.totalrealtime;
+			$scope.btime=data.btime;
+		}
+		var failurefunc = function()
+		{
+			swal("Error","Couldn't load invoice report please try again later");
+			window.history.back();
+		}
+		var id = $routeParams.id;
+		var isInvoice = false;
+		if($routeParams.invoice == "invoice")
+			var isInvoice = true;
+		Invoice.loadInvoiceReport(successFunc,failurefunc,id,isInvoice);
+	}
+	if(Login.getLoggedUser().userinfo.roles[0] === "ROLE_ADMIN")
+	{
+		getInvoiceList();
+	}
 }]);

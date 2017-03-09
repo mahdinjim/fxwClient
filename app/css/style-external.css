@@ -2891,6 +2891,7 @@ label.label3:before {
 .invoice-footer p{
   margin-bottom: 3px;
   color: #aaa;
+  font-size: 10px;
 }
 .invoice-footer-area{
   margin-top: 50px;
@@ -2974,14 +2975,16 @@ label.label3:before {
 }
 .bill-times span.bt{
   font-size: 12px;
+  font-weight: normal !important;
+  text-transform: uppercase;
 }
 .bill-times span.esthours,
 .bill-times span.rthours{
-  font-size: 16px;
+  font-size: 12px;
   color: #bbbbbb;
 }
 .bill-times span.bthours{
-  font-size: 16px;
+  font-size: 12px;
   font-weight: bold;
 }
 .bill-times .bill-realtime{
