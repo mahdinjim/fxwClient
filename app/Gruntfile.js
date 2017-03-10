@@ -89,7 +89,7 @@ module.exports = function(grunt) {
                     {expand: true, src: ['./lib/node_modules/textangular/dist/textAngular.min.js'], dest: './production/'},
                     {expand: true, src: ['./lib/node_modules/textangular/dist/textAngular-sanitize.min.js'], dest: './production/'},
                     {expand: true, src: ['./lib/node_modules/textangular/dist/textAngular.css'], dest: './production/'},
-                    {expand: true, src: ['./partials/**'], dest: './production/'}
+                    {expand: true, src: ['./partials/**'], dest: './production/'},
                     {expand: true, src: ['./img/**'], dest: './production/'}
                 ]
             }
