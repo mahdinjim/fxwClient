@@ -1,0 +1,149 @@
+<div id="wrapper">
+      <div side-bar>
+      </div>
+<div id="page-wrapper" class="gray-bg">
+
+<div nav-menu></div>
+
+           <!--header title-->
+           <div class="row wrapper border-bottom white-bg page-heading">
+               <div class="col-lg-12">
+                   <h2><i class="fa fa-file"></i> Invoice</h2>
+                   <ol class="breadcrumb">
+                       <li>
+                           Invoice
+                       </li>
+                   </ol>
+               </div>
+           </div>
+           <!--end header title-->
+
+           <!--main-->
+           <div class="row">
+               <div class="col-lg-12">
+                   <div class="wrapper wrapper-content animated fadeInUp">
+
+                       <div class="ibox">
+                          <div class="ibox-content">
+                               <div class="row">
+                                 <!-- filter-->
+                                 <div class="col-md-12 pb10">
+                                     <div class="col-md-8 p0">
+                                         <div class="form-group fleft mr10 mb10">
+                                             <div class="select-option select-project m-0" style="width: 150px;">
+                                                 <select select-two ng-model="year" ng-change="changeDate()">
+                                                     <option selected="selected">2017</option>
+                                                     <option >2016</option>
+                                                     <option>2015</option>
+                                                 </select>
+                                             </div>
+                                          </div>
+                                     </div>
+                                     <div class="col-md-4 p0"></div>
+                                     <div style="clear:both;"></div>
+                                 </div>
+                                 <!-- end filter-->
+
+                                   <!-- table project list -->
+                                   <div class="col-md-12">
+                                       <div class="project-list">
+                                           <div class="table-responsive">
+                                               <table class="table table-hover">
+                                                   <tbody>
+                                                   <tr>
+                                                       <td width="150" class="project-table-head">ID</td>
+                                                       <td width="250" class="project-table-head">Date</td>
+                                                       <td width="250" class="project-table-head">Billable Time</td>
+                                                       <td width="250" class="project-table-head">Amount</td>
+                                                       <!-- <td width="300" class="project-table-head">Report</td>
+                                                       <td width="300" class="project-table-head">Invoice</td> -->
+                                                       <td width="200" class="project-table-head">Status</td>
+                                                       <td width="150" class="project-table-head aright"></td>
+                                                   </tr>
+
+                                                   <tr ng-repeat="invoice in allInvoices" ng-class="invoice.paid?'done':''">
+                                                       <td class="project-id">
+                                                           {{invoice.id}}
+                                                       </td>
+                                                       <td class="project-title">
+                                                           <a href="#/invoicedetails">{{invoice.date}}</a>
+                                                       </td>
+                                                       <td class="project-estimation">
+                                                          <b>{{invoice.billed_time}} h</B>
+                                                       </td>
+                                                       <td class="project-estimation">
+                                                          <b>{{invoice.amount}} {{invoice.currency}}</B>
+                                                       </td>
+                                                       <!-- <td class="project-pdf">
+                                                         <a href="report-393305.pdf" target="_blank" download>report-393305.pdf</a>
+                                                       </td>
+                                                       <td class="project-pdf">
+                                                         <a href="report-393305.pdf" target="_blank" download>invoice-393305.pdf</a>
+                                                       </td> -->
+                                                       <td class="project-status" ng-if="invoice.paid">
+                                                         <span class="label label-default label-nobg"><i class="fa fa-check"></i> paid</span>
+                                                       </td>
+                                                       <td class="project-status" ng-if="!invoice.paid">
+                                                         <span class="label label-default label-nobg"> unpaid</span>
+                                                       </td>
+                                                       <td class="project-actions">
+                                                        <a href="#/invoice/report/invoice/{{invoice.id}}" class="btn btn-white btn-sm"><i class="fa fa-search"></i></a>
+                                                         <a href="#/invoicedetails/{{invoice.id}}" class="btn btn-white btn-sm"><i class="fa fa-ellipsis-h"></i></a>
+                                                       </td>
+                                                   </tr>
+
+                                                   <!-- <tr class="">
+                                                       <td class="project-id">
+                                                           00101022
+                                                       </td>
+                                                       <td class="project-title">
+                                                           <a href="#/invoicedetails">12.11.2016</a>
+                                                       </td>
+                                                       <td class="project-estimation">
+                                                          <b>65 h</B>
+                                                       </td>
+                                                       <td class="project-estimation">
+                                                          <b>€ 1808.55</B>
+                                                       </td>
+                                                       <td class="project-pdf">
+                                                         <a href="report-393305.pdf" target="_blank" download>report-393305.pdf</a>
+                                                       </td>
+                                                       <td class="project-pdf">
+                                                         <a href="report-393305.pdf" target="_blank" download>invoice-393305.pdf</a>
+                                                       </td>
+                                                       <td class="project-status">
+                                                         <a href="#" class="btn btn-primary btn-sm mr5"><i class="fa fa-arrow-right mr5"></i> pay now!</a>
+                                                       </td>
+                                                       <td class="project-actions">
+                                                         <a href="#/invoicedetails" class="btn btn-white btn-sm"><i class="fa fa-ellipsis-h"></i></a>
+                                                       </td>
+                                                   </tr>
+ -->
+                                                  
+
+                                                   </tbody>
+                                               </table>
+                                           </div>
+                                       </div>
+                                   </div>
+                                   <!-- end table project list-->
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+           <!--main-->
+
+           <!--footer-->
+           <div class="footer">
+               <div>
+                    &copy;2015 &middot; <b>flexwork.io</b> &middot; <a href="privacy-terms-fxw.html">Privacy and Terms</a> &middot; <a href="imprint-fxw.html">Imprint</a>
+               </div>
+           </div>
+           <!--end footer-->
+
+       </div>
+       <!--end page wrapper-->
+
+   </div>

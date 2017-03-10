@@ -1,0 +1,262 @@
+<div id="wrapper">
+      <div side-bar>
+      </div>
+<div id="page-wrapper" class="gray-bg">
+
+<div nav-menu></div>
+
+           <!--header title-->
+           <div class="row wrapper border-bottom white-bg page-heading">
+               <div class="col-lg-12">
+                   <h2><i class="fa fa-file"></i> Invoice Details</h2>
+                   <ol class="breadcrumb">
+                       <li>
+                           Invoice
+                       </li>
+                   </ol>
+               </div>
+           </div>
+           <!--end header title-->
+
+           <!--main-->
+           <div class="row">
+               <div class="col-lg-12">
+                   <div class="wrapper wrapper-content animated fadeInUp">
+
+                       <div class="ibox">
+                          <div class="ibox-content">
+
+                            <div class="row">
+                                <div class="col-lg-12 p0">
+                                    <div class="wrapper wrapper-content animated fadeInUp pb20">
+                                        <!-- buttons & team -->
+                                        <div class="row">
+                                            <div class="col-md-6 p0">
+                                                <a class="btn btn-default btn-bitbucket btn-m mr5" ng-click="backToInvoices()"><i class="fa fa-angle-left mr5"></i> back to invoices</a>
+                                                <a class="btn btn-default btn-bitbucket btn-m mr5 btnCopy" href="#/invoice/report/invoice/{{invoice.id}}"><i class="fa fa-search mr5"></i> see report</a>
+                                                <!-- <a class="btn btn-default btn-bitbucket btn-m mr5 btnCopy" data-clipboard-text="{{currentUrl}}"><i class="fa fa-download mr5"></i> download pdf</a> -->
+                                                <!-- <a href="#" class="btn btn-primary btn-sm mr5"><i class="fa fa-arrow-right mr5"></i> pay now!</a> -->
+                                                <span class="status-paid mr5" ng-if='invoice.paid'><i class="fa fa-check mr5"></i> paid</span>
+                                            </div>
+                                            <div class="col-md-6 p0 aright">
+                                              <h4>Invoices for {{invoice.client}} / Invoice {{invoice.id}}</h4>
+                                            </div>
+                                        </div>
+                                        <!-- end buttons & team -->
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                               <!-- main -->
+                               <div class="row invoicedetails">
+
+                                 <!-- col-md-12 -->
+                                 <div class="col-md-12 invoicelogo">
+                                   <img src="img/logo-invoice-flexwork.io@2.png" alt="flexwork.io" title="flexwork.io" height="45" width="160">
+                                 </div>
+                                 <!--// col-md-12 -->
+
+                                 <!-- col-md-12 -->
+                                 <div class="col-md-12 mb20">
+                                   <div class="col-md-6 p0">
+                                     <div class="invoice-bill-to">
+                                       <p>Billed To</p>
+                                       <h3 class="mb5">{{invoice.client}}</h3>
+                                       <p>{{invoice.address.address}}</p>
+                                       <p>{{invoice.address.zipcode}} {{invoice.address.city}}</p>
+                                     </div>
+                                   </div>
+                                   <div class="col-md-3 p0">
+                                     <div class="invoice-meta">
+                                       <span>Invoice ID</span>
+                                       <h2  ng-if="invoice.billedFrom!='Tr'">{{invoice.id}}</h2>
+                                       <h2  ng-if="invoice.billedFrom =='Tr'">n.a</h2>
+                                     </div>
+
+                                     <div class="invoice-meta">
+                                       <span>Client ID</span>
+                                       <h2>{{invoice.client_id}}</h2>
+                                     </div>
+                                   </div>
+                                   <div class="col-md-3 p0">
+                                     <div class="invoice-meta">
+                                       <span>Invoice Date</span>
+                                       <h2>{{invoice.enddate}}</h2>
+                                     </div>
+                                     <div class="invoice-meta">
+                                       <span>VAT</span>
+                                       <h2>{{invoice.vat}}</h2>
+                                     </div>
+                                   </div>
+
+                                 </div>
+                                 <!--// col-md-12 -->
+
+                                 <!-- col-md-12 -->
+                                 <div class="col-md-12" style="margin-top: 50px;">
+                                   <h2 class="mb20">{{invoice.startdate}} - {{invoice.enddate}}</h2>
+                                   <div class="project-list">
+                                       <div class="table-responsive">
+                                           <table class="table table-hover">
+                                               <tbody>
+                                                 <tr>
+                                                     <td width="150" class="inv-table">No</td>
+                                                     <td width="800" class="inv-table">Description</td>
+                                                     <td width="200" class="inv-table">Unit Price</td>
+                                                     <td width="200" class="inv-table">Quantity</td>
+                                                     <td width="200" class="inv-table aright">Amount</td>
+                                                 </tr>
+
+                                                 <tr>
+                                                     <td class="project-id">
+                                                         01
+                                                     </td>
+                                                     <td class="project-title">
+                                                        {{invoice.description}}
+                                                     </td>
+                                                     <td class="project-estimation">
+                                                        {{invoice.up}} {{invoice.currency}}
+                                                     </td>
+                                                     <td class="project-estimation">
+                                                        {{invoice.billed_time}} h
+                                                     </td>
+
+                                                     <td class="project-actions">
+                                                       <b>{{invoice.amount}} {{invoice.currency}}</b>
+                                                     </td>
+                                                 </tr>
+
+                                                 <tr>
+                                                     <td class="border"></td>
+                                                     <td class="border"></td>
+                                                     <td class="border"></td>
+                                                     <td class="border">Discount</td>
+                                                     <td class="border aright">-{{invoice.discount}} {{invoice.currency}}</td>
+                                                 </tr>
+
+                                                 <tr>
+                                                     <td class="border"></td>
+                                                     <td class="border"></td>
+                                                     <td class="border"></td>
+                                                     <td class="border">Subtotal</td>
+                                                     <td class="border aright">{{invoice.subTotal}} {{invoice.currency}}</td>
+                                                 </tr>
+
+                                                 <tr>
+                                                     <td></td>
+                                                     <td></td>
+                                                     <td></td>
+                                                     <td>Tax {{invoice.tax}}%</td>
+                                                     <td class="aright">{{invoice.taxamount}} {{invoice.currency}}</td>
+                                                 </tr>
+
+
+
+                                                 <tr>
+                                                     <td width="150" class="project-table-head"></td>
+                                                     <td width="800" class="project-table-head"></td>
+                                                     <td width="200" class="project-table-head"></td>
+                                                     <td width="200" class="project-table-head">Grand Total</td>
+                                                     <td width="200" class="project-table-head aright">{{invoice.grandTotal}} {{invoice.currency}}</td>
+                                                 </tr>
+                                               </tbody>
+                                           </table>
+                                       </div>
+                                   </div>
+                                   <span>Please transfer the amount from <b>{{invoice.grandTotal}} {{invoice.currency}}</b> until <b>{{invoice.limitdate}}</b>.</span>
+                                 </div>
+                                 <!--// col-md-12 -->
+
+                                 <div class="col-md-12 invoice-footer-area" ng-if="invoice.billedFrom == 'De'">
+                                   <div class="col-md-3 p0">
+                                     <div class="invoice-footer">
+                                        <p>flexwork.io</p>
+                                        <p>technology centre</p>
+                                        <p>emil-figge-str. 76-80</p>
+                                        <p>44227 dortmund - germany</p>
+                                      </div>
+                                   </div>
+                                   <div class="col-md-3 p0">
+                                     <div class="invoice-footer">
+                                        <p>phone: +49 231 226 186 10</p>
+                                        <p>fax: +49 231 226 186 48</p>
+                                        <p>email: invoice@flexwork.io</p>
+                                        <p>web: flexwork.io</p>
+                                     </div>
+                                   </div>
+                                   <div class="col-md-3 p0">
+                                     <div class="invoice-footer">
+                                        <p>Postbank Hannover</p>
+                                        <p>IBAN: DE25250100300923043305</p>
+                                        <p>BIC: PBNKDEFFXXX</p>
+                                     </div>
+                                   </div>
+                                   <div class="col-md-3 p0">
+                                     <div class="invoice-footer">
+                                        <p>finance office: dortmund-hörde</p>
+                                        <p>tax number: 315/5045/1636</p>
+                                        <p>ust-id:  DE 242 605 955</p>
+                                        <p>owner: Ferit Demir</p>
+                                     </div>
+                                   </div>
+                                 </div>
+                                 <div class="col-md-12 invoice-footer-area" ng-if="invoice.billedFrom == 'Tr'">
+                                   <div class="col-md-3 p0">
+                                     <div class="invoice-footer">
+                                        <p>flexwork bilişim A.Ş.</p>
+                                        <p>Maslak Mah. Dereboyu 2 Cad. </p>
+                                        <p>Nurol Plaza No: 21/A</p>
+                                        <p>34398 Sarıyer İstanbul Turkey</p>
+                                      </div>
+                                   </div>
+                                   <div class="col-md-3 p0">
+                                     <div class="invoice-footer">
+                                        <p>phone: +90 850 532 60 75</p>
+                                        <p>mobile: +90 551 131 72 80</p>
+                                        <p>email: invoice@flexwork.io</p>
+                                        <p>web: flexwork.io</p>
+                                     </div>
+                                   </div>
+                                   
+                                   <div class="col-md-3 p0">
+                                     <div class="invoice-footer">
+                                        <p>Vergi Dairesi Maslak</p>
+                                        <p>Vergi 3880808616</p>
+                                        <p>Ticaret Sicil No: 59609-5</p>
+                                        <p>Mersis No: 038808061600019</p>
+                                     </div>
+                                   </div>
+                                   <div class="col-md-3 p0">
+                                     <div class="invoice-footer">
+                                        <p>Yapı Kredi Bankası - Mecidiyeköy Sube 082</p>                                                              
+                                        <p>IBAN TL:TR280006701000000049684255</p>
+                                        <p>IBAN EUR:TR100006701000000049684288</p>
+                                        <p>IBAN USD:TR850006701000000049684490</p>
+                                        <p>Swift: YAPITRISXXX</p>
+                                     </div>
+                                   </div>
+                                 </div>
+                               </div>
+                               <!-- main-->
+
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+           <!--main-->
+
+           <!--footer-->
+           <div class="footer">
+               <div>
+                    &copy;2015 &middot; <b>flexwork.io</b> &middot; <a href="privacy-terms-fxw.html">Privacy and Terms</a> &middot; <a href="imprint-fxw.html">Imprint</a>
+               </div>
+           </div>
+           <!--end footer-->
+
+       </div>
+       <!--end page wrapper-->
+
+   </div>

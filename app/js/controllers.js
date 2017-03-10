@@ -10,7 +10,7 @@ Controllers.controller('LoginCtrl',['$scope','Login','$location',
 			if(login!=undefined && password!=undefined)
 			{
 				var successfunc=function(){
-					
+
 					$location.path('/dashboard');
 					$scope.errors="";
 					if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER"){
@@ -21,7 +21,7 @@ Controllers.controller('LoginCtrl',['$scope','Login','$location',
 						   created_at: new Date().getTime() // Signup date as a Unix timestamp
 						});
 					}
-					
+
 					setTimeout(function() {
 			                toastr.options = {
 			                    closeButton: true,
@@ -29,22 +29,22 @@ Controllers.controller('LoginCtrl',['$scope','Login','$location',
 			                    showMethod: 'slideDown',
 			                    timeOut: 4000
 			                };
-			                toastr.success('Create your project & start your task', 'Welcome to flexwork.io');
+			                toastr.success('create ticket, get estimation, start production ', 'welcome to flexwork.io');
 
 			            }, 1300);
-        
+
 				};
 				var failureFunction=function(mess)
 				{
 					$scope.errors=mess;
 					$('#loginbtn').prop('disabled', false);
 				};
-				console.log($scope.stayloggedin);	
+				console.log($scope.stayloggedin);
 				Login.doLogin(login,password,$scope.stayloggedin,successfunc,failureFunction);
 			}
 			else if(login===undefined && password!=undefined)
 			{
-				
+
 				$scope.errors="Please enter a login";
 			}
 			else if(password=="" && login!="")
@@ -53,7 +53,7 @@ Controllers.controller('LoginCtrl',['$scope','Login','$location',
 			}
 			else if(password===undefined && login===undefined)
 				$scope.errors="Please enter a login and password";
-			
+
 		}
 }]);
 Controllers.controller("MenuNavCtrl",['$scope','Login',function ($scope,Login){
@@ -71,12 +71,12 @@ Controllers.controller("MenuNavCtrl",['$scope','Login',function ($scope,Login){
 	{
 		$("body").toggleClass("mini-navbar");
 	}
-	
+
 }]);
 Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Client','Project','$location','Cuser',"Params",
 	function SideBarCtrl($rootScope,$scope,Login,Chat,Client,Project,$location,Cuser,Params)
 	{
-		
+
 		if($location.path()=="/pdetails")
 		{
 			$scope.projectactive=true;
@@ -103,8 +103,16 @@ Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Clie
 		}
 		$scope.isclient=false;
 		$scope.isClientUser=false;
+		$scope.noJiraAccount=true;
 		if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER"){
 			$scope.isclient=true;
+			if(Login.getLoggedUser().userinfo.pmtools.length >0)
+			{
+				if(Login.getLoggedUser().userinfo.pmtools.indexOf("Jira") > -1)
+				{
+					$scope.noJiraAccount=false;
+				}
+			}
 		}
 		else if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER")
 		{
@@ -160,7 +168,7 @@ Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Clie
 						clearInterval(newmessagesinterval);
 					});
 				}
-				
+
 			}
 			Project.getAllproject(successfunc);
 		}
@@ -172,7 +180,7 @@ Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Clie
 			{
 				if(chargeView){
 					$("#client_phone_code").select2("val",userinfo.phonecode);
-					
+
 					$scope.client_name=userinfo.name;
 					$scope.client_surname=userinfo.surname;
 					$scope.client_phonecode=userinfo.phonecode;
@@ -185,7 +193,7 @@ Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Clie
 						$scope.client_company_address=userinfo.address.address;
 						$scope.client_company_city=userinfo.address.city;
 						$scope.client_zipcode=userinfo.address.zipcode;
-						
+
 					}
 					if($scope.isClientUser)
 					{
@@ -278,7 +286,7 @@ Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Clie
 			{
 				messages.push("Please fill the compnay name");
 			}
-			
+
 			if($scope.client_company_address===undefined && $scope.isclient)
 			{
 				messages.push("Please fill the address field");
@@ -291,7 +299,7 @@ Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Clie
 			{
 				messages.push("Please fill the job title field");
 			}
-			
+
 			return messages;
 		}
 		$scope.updateClientProfil=function()
@@ -299,7 +307,7 @@ Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Clie
 			var messages=verifyClientForm();
 			if(messages.length>0)
 			{
-				
+
 				swal("Please fill all information",messages.join("\n"),"warning");
 			}
 			else{
@@ -317,7 +325,8 @@ Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Clie
 					user.userinfo.email=$scope.client_login;
 					if($scope.isclient){
 						user.userinfo.compnay_name=$scope.client_company_name;
-						user.userinfo.address.country=$scope.client_company_country,					user.userinfo.address.address=$scope.client_company_address;
+						user.userinfo.address.country=$scope.client_company_country;					
+						user.userinfo.address.address=$scope.client_company_address;
 						user.userinfo.address.city=$scope.client_company_city;
 						user.userinfo.address.zipcode=$scope.client_zipcode;
 					}
@@ -355,7 +364,7 @@ Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Clie
 					Cuser.addUser(client,succesfunc,failureFunction,"PUT");
 				}
 			}
-			
+
 		}
 		$scope.openclosetab=function(id)
 		{
@@ -382,11 +391,11 @@ Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Clie
 			if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_KEYACCOUNT" )
 			{
 				$scope.canAdd=true;
-				
+
 				var successfunc =function(customers)
 				{
 					$scope.clients=customers;
-					
+
 					if(customers.length>0){
 						var selectdata={"id":0,text:customers[0].companyname};
 						$("#clientselection").select2("data",selectdata);
@@ -420,14 +429,14 @@ Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Clie
 			}
 
 			$("#add-project").modal('show');
-		
+
 		}
 		$scope.$on('openProjectModal', function(event, args) {
 			openProjectModal();
 
 		});
 		$scope.openAddprojectModel=openAddprojectModal;
-		
+
 		var verifyForm=function()
 		{
 			var messages=new Array();
@@ -439,19 +448,19 @@ Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Clie
 			if($scope.briefing===undefined)
 			{
 				messages.push("Please add the project description</br>");
-				
+
 			}
 			if($scope.projectskills===undefined)
 			{
 				messages.push("Please add the project required skills</br>");
-				
+
 			}
 			if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_KEYACCOUNT")
 			{
 				if($scope.selectedClient===undefined || $scope.selectedClient===null)
 				{
 					messages.push("Please choose a client</br>");
-					
+
 				}
 			}
 			return messages;
@@ -482,17 +491,88 @@ Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Clie
 				}
 				var failureFunc=function()
 				{
-					
+
 					swal("Oops!!", "Something bad happend please try again later", "error");
 				}
 				Project.createProject(project,successFunc,failureFunc);
 			}
 		}
-		
+		verifyJiraForm=function()
+		{
+			var messages = [];
+			if($scope.jira_url==="" || $scope.jira_url === undefined)
+				messages.push("Please enter jira account link");
+			if($scope.jira_login==="" || $scope.jira_login === undefined)
+				messages.push("Please enter jira account login");
+			if($scope.Jira_passeword==="" || $scope.Jira_password === undefined)
+				messages.push("Please enter jira account password");
+			return messages;
+		}
+		$scope.saveJiraAccount=function()
+		{
+			var messages = verifyJiraForm();
+			if(messages.length >0)
+			{
+				swal("missing info",messages.join('\n'),"warning");
+			}
+			else
+			{
+				var data = {
+					"link": $scope.jira_url,
+					"creds": $scope.jira_login+":"+$scope.Jira_password
+				}
+				var errorfunc = function(status)
+				{
+					if(status === 401)
+						swal("Account not valid","The account information are not valid","error");
+					if(status === 400)
+						swal("Missing information","You entred missing information","error");
+					else
+						swal("Server error","Server error please try again later","error");
+				}
+				var succsfunc =function()
+				{
+					$scope.noJiraAccount=false;
+					$scope.openEditProfil(false);
+					var user = Login.getLoggedUser();
+					user.userinfo.pmtools.push("Jira");
+					Login.upadteLoggedinUser(user);
+					$("#jira_form").modal("hide");
+
+				}
+				var client_id = Login.getLoggedUser().userinfo.id;
+				var client_token = Login.getLoggedUser().token.token;
+				Client.linkJiraAccount(succsfunc,errorfunc,client_id,client_token,data);
+			}
+		}
+		$scope.unlikJiraAccount = function()
+		{
+			var errorfunc = function(status)
+			{
+				if(status === 401)
+					swal("Account not valid","The account information are not valid","error");
+				if(status === 400)
+					swal("Missing information","You entred missing information","error");
+				else
+					swal("Server error","Server error please try again later","error");
+			}
+			var succsfunc =function()
+			{
+				swal("Success","Account deleted successfully","success");
+				$scope.noJiraAccount=true;
+				var user = Login.getLoggedUser();
+				var index = user.userinfo.pmtools.indexOf("Jira");
+				user.userinfo.pmtools.splice(index,1);
+				Login.upadteLoggedinUser(user);
+			}
+			var client_id = Login.getLoggedUser().userinfo.id;
+			var client_token = Login.getLoggedUser().token.token;
+			Client.unlinkJiraAccount(succsfunc,errorfunc,client_id,client_token);
+		}
 	}
 ]);
 Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', function ($scope,Team,Params,$location) {
-    
+
 
     $scope.tab="operations";
     var d = new Date();
@@ -514,10 +594,10 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 			roles=data;
 		});
 		Team.getAllteamMembers(successfunc);
-		
+
   	});
-	
-   
+
+
     $scope.stateChanged=function()
 	{
 		if($scope.send)
@@ -540,7 +620,7 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
     	$scope.isexpertise=true;
     	$scope.isoperation=false;
     	$scope.isperformance=false;
-    	
+
     }
     $scope.selectPerformance=function()
     {
@@ -549,7 +629,7 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
     	$scope.isoperation=false;
     	$scope.isperformance=true;
     	$('#monthlyselect').select2();
-    	
+
     }
     $scope.selectWeek=function(week)
     {
@@ -607,7 +687,7 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 					weekdata[h]=week.days[j].totalhours;
 					found=true;
 				}
-				
+
 			}
 			if(!found)
 			{
@@ -646,8 +726,8 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 					week1=createEmptyWeek();
 					$scope.week1.push({"data":week1,"total":0,"performance":0});
 				}
-				
-				
+
+
 				if(data[i].workeddays.week2!=undefined)
 				{
 					week2=weekCreation(data[i].workeddays.week2);
@@ -658,7 +738,7 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 					week2=createEmptyWeek();
 					$scope.week2.push({"data":week2,"total":0,"performance":0});
 				}
-				
+
 				if(data[i].workeddays.week3!=undefined)
 				{
 					week3=weekCreation(data[i].workeddays.week3);
@@ -669,7 +749,7 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 					week3=createEmptyWeek();
 					$scope.week3.push({"data":week3,"total":0,"performance":0});
 				}
-				
+
 				if(data[i].workeddays.week4!=undefined)
 				{
 					week4=weekCreation(data[i].workeddays.week4);
@@ -680,7 +760,7 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 					week4=createEmptyWeek();
 					$scope.week4.push({"data":week4,"total":0,"performance":0});
 				}
-				
+
 				if(data[i].workeddays.week5!=undefined)
 				{
 					week5=weekCreation(data[i].workeddays.week5);
@@ -735,7 +815,7 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 			Team.getTeamPerformanceByMonth(sucessFunc,failureFunc,month);
 		}
 	}
-	
+
 	if(Params.getTeamMember()!=null)
 	{
 		var member=Params.getTeamMember();
@@ -851,7 +931,7 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 			}
 		}
 		return messages;
-		
+
 	}
 	$scope.hideoptions=function()
 	{
@@ -869,7 +949,7 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 	}
 	$scope.openmemberForm=function(member)
 	{
-		
+
 		var succsfunc=function(data)
 		{
 			$scope.skillsset=data;
@@ -916,7 +996,7 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 			$scope.isedit=true;
 			$scope.oldmember=member;
 
-			
+
 		}
 		else{
 			cleanForm();
@@ -933,7 +1013,7 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 		$scope.name=undefined;
 		$scope.surname=undefined;
 		$scope.capacity=undefined;
-		$scope.phonecode="+49";
+		$scope.phonecode="49";
 		$scope.phonenumber=undefined;
 		$scope.title=undefined;
 		$scope.city=undefined;
@@ -957,7 +1037,7 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 		var messages=validateForm();
 		if(messages.length>0)
 		{
-			
+
 			swal("Please Fill missing information",messages.join('\n'),"warning");
 		}
 		else
@@ -965,7 +1045,7 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 			var succesfunc=function()
 			{
 				$('#add-user').modal('hide');
-				
+
 				swal("Success","Member Added/Updated successfully","success");
 				Team.getAllteamMembers(successfunc);
 				cleanForm();
@@ -1066,7 +1146,7 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 				if($scope.role===roles.Designer.role)
 					Team.deleteDesigner(member,succesfunc,failureFunction);
 		 });
-		
+
 	}
 	$scope.uploadImage=function(member)
 	{
@@ -1091,14 +1171,14 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 		$scope.defaultimage=member.bigphoto;
 
 	}
-	
+
 }]);
 Controllers.controller('TeamProfilCtrl', ['$scope','Params', function ($scope,Params) {
 	var member=Params.getTeamMember();
 	$scope.email=member.email;
 	$scope.name=member.name;
 	$scope.surname=member.surname;
-	
+
 	$scope.title=member.title;
 	$scope.city=member.city;
 	$scope.phonenumber=member.phonenumber;
@@ -1131,7 +1211,7 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 	$scope.currentpage=1;
 	$scope.isEdit=false;
 	$scope.activateClient=function(client_id,activate)
-	{	
+	{
 		swal({
             title: "Are you sure?",
             text: 'You want to activate/desactivate client account?',
@@ -1166,18 +1246,18 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 			var pages = new Array();
 			pages.push(">>");
 			pages.push(">");
-			
+
 			for (var i = pagecount-1; i<=0; i++) {
 					pages.push(i+1);
 			};
-			
+
 			pages.push("<");
 			pages.push("<<");
 			$scope.pagecount=pages;
 		}
 		Client.getAllClients(successfunc,null,page);
 	}
-	
+
 	$scope.$on('$viewContentLoaded', function(){
 
 	   updateView($scope.currentpage);
@@ -1249,7 +1329,20 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 			$("#countryselect").select2("val",client.address.country);
 			$scope.companyname=client.companyname;
 			$scope.zipcode=client.address.zipcode;
-			
+			if(client.currency != "")
+			{
+				$scope.currency = client.currency;
+				$("#currencyselect").select2("val",client.currency);
+			}
+			if(client.tax != "")
+			{
+				$scope.tax = client.tax;
+			}
+			if(client.billedFrom != "")
+			{
+				$scope.billed_from = client.billedFrom;
+				$("#billedfromselect").select2("val",client.billedFrom);
+			}
 			var data={"id":0,text:client.keyaccount.name+" "+client.keyaccount.surname};
 			$("#keyaccountselect").select2("data",data);
 			$scope.selectedKeyaccount=client.keyaccount.id;
@@ -1272,18 +1365,22 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 		$scope.name=undefined;
 		$scope.surname=undefined;
 		$scope.vat=undefined;
-		$scope.phonecode="+49";
+		$scope.phonecode = "49";
+		$scope.currency = "EUR";
+		$scope.billed_from = "De";
 		$scope.phonenumber=undefined;
 		$scope.address=undefined;
 		$scope.city=undefined;
 		$scope.country=undefined;
 		$scope.companyname=undefined;
 		$scope.zipcode=undefined;
-		$scope.selectedKeyaccount===undefined
-		
+		$scope.selectedKeyaccount=undefined
+		$scope.tax = undefined;
 		$("#keyaccountselect").select2("data",{id:-1,text:"Key Account"});
 		$("#countryselect").select2("data",{id:-1,text:"Country"});
 		$("#phonecode").select2("val","49");
+		$("#currencyselect").select2("val","EUR");
+		$("#billedfromselect").select2("val","De");
 	}
 	var verifyForm=function()
 	{
@@ -1340,6 +1437,11 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 		{
 			messages.push("Please fill the zipcode field");
 		}
+		if($scope.tax !==undefined)
+		{
+			if(isNaN($scope.tax))
+				messages.push("Tax should be a numeric value, if you added % please remove it and try again");
+		}
 		return messages;
 	}
 	$scope.stateChanged=function()
@@ -1356,7 +1458,7 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 		var messages=verifyForm();
 		if(messages.length>0)
 		{
-			
+
 			swal("Please fill all information",messages.join("\n"),"warning");
 		}
 		else{
@@ -1377,6 +1479,9 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 				"telnumber":$scope.phonenumber,
 				"vat":$scope.vat,
 				"address":address,
+				"tax":$scope.tax,
+				"currency":$scope.currency,
+				"billedfrom":$scope.billed_from,
 				"isSent":$scope.isSent
 			};
 			if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN")
@@ -1409,7 +1514,7 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 				Client.addClient(client,succesfunc,failureFunction,"PUT");
 			}
 		}
-		
+
 	}
 	$scope.deleteClient=function(oldclient)
 	{
@@ -1432,6 +1537,19 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 Controllers.controller('CuserCtrl',['$scope','Login','Cuser','$location','Params',function($scope,Login,Cuser,$location,Params){
 	$scope.isSent=false;
 	$scope.isEdit=false;
+	function cleanForm()
+	{
+		$scope.email=undefined;
+		$scope.password=undefined;
+		$scope.name=undefined;
+		$scope.surname=undefined;
+		$scope.phonecode="49";
+		$scope.phonenumber=undefined;
+		$scope.title=undefined;
+		$("#phonecodeselect").select2("val","49");
+		$scope.issent=false;
+
+	}
 	if(Params.getCuser()!=null)
 	{
 		$scope.email=Params.getCuser().email;
@@ -1479,19 +1597,7 @@ Controllers.controller('CuserCtrl',['$scope','Login','Cuser','$location','Params
 		}
 		$('#add-user').modal('show');
 	}
-	function cleanForm()
-	{
-		$scope.email=undefined;
-		$scope.password=undefined;
-		$scope.name=undefined;
-		$scope.surname=undefined;
-		$scope.phonecode="+49";
-		$scope.phonenumber=undefined;
-		$scope.title=undefined;
-		$("#phonecodeselect").select2("val","49");
-		$scope.issent=false;
-		
-	}
+	
 	var validateForm=function()
 	{
 		var messages =[];
@@ -1524,14 +1630,14 @@ Controllers.controller('CuserCtrl',['$scope','Login','Cuser','$location','Params
 			messages.push("Please fill the password");
 		}
 		return messages;
-		
+
 	}
 	$scope.createClient=function(olduser)
 	{
 		var messages=validateForm();
 		if(messages.length>0)
 		{
-			
+
 			swal("Complete information",messages,"info");
 		}
 		else{
@@ -1556,7 +1662,7 @@ Controllers.controller('CuserCtrl',['$scope','Login','Cuser','$location','Params
 					$('#add-user').modal('hide');
 					swal("User Created", msg, "success");
 					updateView();
-					clearForm();
+					cleanForm();
 				}
 			if(olduser==null)
 			{
@@ -1571,7 +1677,7 @@ Controllers.controller('CuserCtrl',['$scope','Login','Cuser','$location','Params
 				Cuser.addUser(user,succesfunc,failureFunction,"PUT");
 			}
 		}
-		
+
 	}
 	$scope.deleteUser=function(olduser)
 	{
@@ -1622,8 +1728,8 @@ Controllers.controller('CuserCtrl',['$scope','Login','Cuser','$location','Params
 }]);
 Controllers.controller('SettingsCtrl', ['$scope','Chat', function ($scope,Chat) {
 
-	
-	
+
+
 }]);
 Controllers.controller("ChatCtrl",["$scope","$rootScope","Chat","$routeParams","Login","$location",function($scope,$rootScope,Chat,$routeParams,Login,$location){
 	$scope.loadingteam=true;
@@ -1641,7 +1747,7 @@ Controllers.controller("ChatCtrl",["$scope","$rootScope","Chat","$routeParams","
 	}
 	else
 		$('#messForm').hide();
-	
+
 	$scope.sendMessage=function()
 	{
 		if($scope.messageto!=null)
@@ -1666,7 +1772,7 @@ Controllers.controller("ChatCtrl",["$scope","$rootScope","Chat","$routeParams","
 		$scope.groupname=data.name;
 		$scope.members=data.members;
 		$scope.loadingteam=false;
-		
+
 	}
 	var failureFunc=function(msg)
 	{
@@ -1676,7 +1782,7 @@ Controllers.controller("ChatCtrl",["$scope","$rootScope","Chat","$routeParams","
 	{
 		$scope.messages=data.messages;
 		$scope.loadingmessages=false;
-		
+
 		$('.chat-discussion').slimScroll({
             scrollTo:"200px"
         });
@@ -1702,7 +1808,7 @@ Controllers.controller("ChatCtrl",["$scope","$rootScope","Chat","$routeParams","
      			{
      				$scope.messages=data.messages.concat($scope.messages);
      				$scope.loadingmessages=false;
-     				
+
      			}
      			Chat.getMessages($routeParams.channel_id,succsfunc,failureFunc,1);
      		}
@@ -1715,7 +1821,7 @@ Controllers.controller("ChatCtrl",["$scope","$rootScope","Chat","$routeParams","
 	}
 	Chat.getChannelInfo($routeParams.channel_id,succesFunc,messagingssuccsFunc,failureFunc,0);
 }]);
-Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login","Team","$location","Ticket","Params","Task",function($scope,Project,$routeParams,Login,Team,$location,Ticket,Params,Task){
+Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login","Team","$location","Ticket","Params","Task","$rootScope",function($scope,Project,$routeParams,Login,Team,$location,Ticket,Params,Task,$rootScope){
 	$scope.isclient=false;
 	$scope.isAdmin=false;
 	$scope.isTeamLeader=false;
@@ -1731,43 +1837,147 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	$scope.contractprepared=true;
     var elem_1 = document.querySelector('.js-switch_1');
     var switchery_1 = null;
+    $scope.haveJiraAccount=false;
+    $scope.jiraprojects=[];
+    $scope.linkedToJiraProject = false;
+    $scope.linkedJiraProjectName = "";
+    $scope.selectedJiraProject={item:null};
+    $scope.estimationTotal=0;
+    $scope.realtimeTotal=0;
+    $scope.ticketfiles=[];
+    $scope.$on("fileSelected", function (event, args) {
+        $scope.$apply(function () {            
+            //add the file object to the scope's files collection
+            $scope.ticketfiles.push(args.file);
+        });
+    });
+    $scope.deleteFileTicket = function(index)
+    {
+    	$scope.ticketfiles.splice(index,1);
+    }
+    $scope.linkJiraProject = function()
+    {
+    	var succesfunc = function()
+    	{
+    		$scope.linkedToJiraProject = true;
+    		$scope.linkedJiraProjectName = $scope.selectedJiraProject.name;
+    		$("#jira_link").modal("hide");
+    	}
+    	var failurefunc = function(status)
+    	{
+    		if(status === 503)
+    			swal("Flewwork api failure","Flexwork api failure, please try again later","error");
+    		else
+    			swal("Bad request","Bad request please verify the information and try again","error");
+    	}
+    	if($scope.selectedJiraProject.item!=null)
+    	{
+    		var data = {
+    			"fxw_project":project_id,
+    			"j_project":$scope.selectedJiraProject.item.project_id,
+    			"project_name":$scope.selectedJiraProject.item.name
+    		}
+    		token = Login.getLoggedUser().token.token;
+    		Project.linkJiraProject(succesfunc,failurefunc,data,token);
+    	}
+    	else
+    		swal("Choose project","Please choose a jira project to link","warning");
+    }
+    $scope.unlinkJiraProject = function()
+    {
+    	var succesfunc = function()
+    	{
+    		$scope.linkedToJiraProject = false;
+    		$scope.linkedJiraProjectName  = "";
+    		if($scope.jiraprojects.length > 0)
+    		{
+    			var selectdata={"id":-1,text:"Please choose a jira project"};
+				$("#jiraprojectselection").select2("data",selectdata);
+    		}
+    		else
+    		{
+    			var selectdata={"id":-1,text:"Couldn't load projects"};
+    			$("#jiraprojectselection").select2("data",selectdata);
+    		}
+    	}
+    	var failurefunc = function()
+    	{
+    		if(status === 503)
+    			swal("Flewwork api failure","Flexwork api failure, please try again later","error");
+    		else
+    			swal("Bad request","Bad request please verify the information and try again","error");
+    	}
+    	token = Login.getLoggedUser().token.token;
+    	Project.unLinkJiraProject(succesfunc,failurefunc,project_id,token);
+    }
+    var loadJiraProjects = function()
+    {
+    	var sucessFunc = function(data)
+    	{
+    		$scope.jiraprojects=data;
+    		var selectdata={"id":-1,text:"Please choose a jira project"};
+			$("#jiraprojectselection").select2("data",selectdata);
+    	}
+    	var failureFunc = function(status)
+    	{
+    		var selectdata="";
+    		if(status === 401)
+    		{
+    			selectdata={"id":-1,text:"Flexwork couldn't connect to jira either bad credentials or server is down"};
+    		}
+			else
+				selectdata={"id":-1,text:"Couldn't load projects"};
+			$("#jiraprojectselection").select2("data",selectdata);
+    	}
+    	var client_id = Login.getLoggedUser().userinfo.id;
+    	Project.loadJiraProjects(sucessFunc,failureFunc,client_id);
+    }
 	var filterAll=function()
 	{
-
 		result=new Array();
-		if($scope.selectedType!="all" && $scope.selectedStatus!="all" && $scope.searchWord!="")
+		var est=0;
+		var rt=0;
+		if($scope.selectedStatus === "all" && $scope.searchWord=="")
 		{
 			for(i=0;i<originalticket.length;i++)
 			{
-				if(originalticket[i].status==$scope.selectedStatus && originalticket[i].type==$scope.selectedType && originalticket[i].title.toLowerCase().indexOf($scope.searchWord.toLowerCase())!=-1 )
+				if(originalticket[i].status!=$scope.ticketStatus.Done.status)
+				{
+					if(originalticket[i].estimation!=null)
+						est+=originalticket[i].estimation;
+					if(originalticket[i].realtime!=null)
+						rt+=originalticket[i].realtime;
 					result.push(originalticket[i]);
+				}
+					
 			}
-
 		}
-		else if($scope.selectedType!="all" && $scope.selectedStatus!="all")
+		else if($scope.selectedStatus === "all" && $scope.searchWord!="")
 		{
 			for(i=0;i<originalticket.length;i++)
 			{
-				if(originalticket[i].status==$scope.selectedStatus && originalticket[i].type==$scope.selectedType  )
+				if(originalticket[i].status!=$scope.ticketStatus.Done.status && originalticket[i].title.toLowerCase().indexOf($scope.searchWord.toLowerCase())!=-1)
+				{
+					if(originalticket[i].estimation!=null)
+						est+=originalticket[i].estimation;
+					if(originalticket[i].realtime!=null)
+						rt+=originalticket[i].realtime;
 					result.push(originalticket[i]);
+				}
 			}
-
-		}
-		else if($scope.selectedType!="all"  && $scope.searchWord!="")
-		{
-			for(i=0;i<originalticket.length;i++)
-			{
-				if(originalticket[i].type==$scope.selectedType && originalticket[i].title.toLowerCase().indexOf($scope.searchWord.toLowerCase())!=-1 )
-					result.push(originalticket[i]);
-			}
-
 		}
 		else if($scope.selectedStatus!="all" && $scope.searchWord!="")
 		{
 			for(i=0;i<originalticket.length;i++)
 			{
 				if(originalticket[i].status==$scope.selectedStatus && originalticket[i].title.toLowerCase().indexOf($scope.searchWord.toLowerCase())!=-1 )
+				{
+					if(originalticket[i].estimation!=null)
+						est+=originalticket[i].estimation;
+					if(originalticket[i].realtime!=null)
+						rt+=originalticket[i].realtime;
 					result.push(originalticket[i]);
+				}
 			}
 
 		}
@@ -1776,16 +1986,13 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 			for(i=0;i<originalticket.length;i++)
 			{
 				if(originalticket[i].status==$scope.selectedStatus)
+				{
+					if(originalticket[i].estimation!=null)
+						est+=originalticket[i].estimation;
+					if(originalticket[i].realtime!=null)
+						rt+=originalticket[i].realtime;
 					result.push(originalticket[i]);
-			}
-
-		}
-		else if($scope.selectedType!="all")
-		{
-			for(i=0;i<originalticket.length;i++)
-			{
-				if(originalticket[i].type==$scope.selectedType)
-					result.push(originalticket[i]);
+				}
 			}
 
 		}
@@ -1794,7 +2001,13 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 			for(i=0;i<originalticket.length;i++)
 			{
 				if(originalticket[i].title.toLowerCase().indexOf($scope.searchWord.toLowerCase())!=-1 )
+				{
+					if(originalticket[i].estimation!=null)
+						est+=originalticket[i].estimation;
+					if(originalticket[i].realtime!=null)
+						rt+=originalticket[i].realtime;
 					result.push(originalticket[i]);
+				}
 			}
 
 		}
@@ -1802,11 +2015,13 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		{
 			result=originalticket;
 		}
+		$scope.estimationTotal=est;
+		$scope.realtimeTotal=rt;
 		return result;
 	}
-	$scope.filter=function()
+	$scope.filter=function(status)
 	{
-
+		$scope.selectedStatus = status;
 		var result=filterAll();
 		$scope.tickets=result;
 	}
@@ -1816,7 +2031,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		{
 			$scope.hasTicket=true;
 			originalticket=data;
-			$scope.tickets=filterAll();
+			$scope.tickets=filterAll($scope.selectedStatus);
 		}
 		var failureFunc=function()
 		{
@@ -1840,6 +2055,15 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	}
 	else if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER"|| Login.getLoggedUser().userinfo.roles[0]=="ROLE_KEYACCOUNT"){
 		$scope.isclient=true;
+		if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER")
+		{
+			if(Login.getLoggedUser().userinfo.pmtools.indexOf("Jira") > -1)
+			{
+				$scope.haveJiraAccount=true;
+				loadJiraProjects();
+			}
+				
+		}
 	}
 	else{
 		$scope.isMember=true;
@@ -1863,7 +2087,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		}
 		Project.disableEmailNotif(success,error,project_id,activate);
 	}
-	
+
 	var succesFunc=function(data)
 	{
 		$scope.company_name=data.customer;
@@ -1876,7 +2100,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		Params.setProject(data);
 		$scope.team=data.team;
 		originalticket=data.tickets;
-		$scope.tickets=data.tickets;
+		$scope.tickets=filterAll();
 		$scope.projectDescription=data.briefing;
 		$scope.projectrate=data.rate;
 		$scope.projectSkilss=data.skills;
@@ -1917,9 +2141,20 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 				$scope.isMember=false;
 			}
 			else
-			$scope.isTeamLeader=false;	
+			$scope.isTeamLeader=false;
 		else
 			$scope.isTeamLeader=false;
+		if(data.pmtools.length > 0)
+		{
+			for(var i = 0;i<data.pmtools.length;i++)
+			{
+				if(data.pmtools[i].tool === "Jira")
+				{
+					$scope.linkedToJiraProject = true;
+					$scope.linkedJiraProjectName = data.pmtools[i].p_name;
+				}
+			}
+		}
 	}
 	$scope.acceptContract=function()
 	{
@@ -1997,7 +2232,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		}
 		return false;
 	}
-	
+
 	$scope.changeRole=function(member,index)
 	{
 		if(index==0)
@@ -2017,7 +2252,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		{
 			var added=false;
 			if($scope.addedmember.role.role==Team.roles.Developer.role){
-				
+
 				for(i=0;i<newDevMembers.length;i++)
 				{
 					if(newDevMembers[i].id==$scope.addedmember.id)
@@ -2096,7 +2331,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 			for(i=0;i<newDevMembers.length;i++)
 			{
 				members.push(newDevMembers[i].id);
-				
+
 			}
 			var data={
 					"project_id":project_id,
@@ -2173,14 +2408,14 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 			}
 			if(isOldMember(member))
 			{
-				
+
 				if(member.role.role==Team.roles.Developer.role){
 					var data={
 						"project_id":project_id,
 						"developers":[member.id]
 					}
-					Project.deleteDeveloperFromProject(success,failure,data);				
-					
+					Project.deleteDeveloperFromProject(success,failure,data);
+
 				}
 				if(member.role.role==Team.roles.Tester.role){
 					var data={
@@ -2190,14 +2425,14 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 					Project.deleteTesterFromProject(success,failure,data);
 				}
 				if(member.role.role==Team.roles.Designer.role){
-					var data={	
+					var data={
 						"project_id":project_id,
 						"designers":[member.id]
 					}
 					Project.deleteDesignerFromProject(success,failure,data);
 				}
 				if(member.role.role==Team.roles.SysAdmin.role){
-					var data={	
+					var data={
 						"project_id":project_id,
 						"sysadmins":[member.id]
 					}
@@ -2209,7 +2444,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 				if(member.role.role==Team.roles.Developer.role){
 					var index=newDevMembers.indexOf(member);
 					newDevMembers.splice(index,1);
-					
+
 				}
 				if(member.role.role==Team.roles.Tester.role){
 					var index=newTesterMembers.indexOf(member);
@@ -2227,13 +2462,13 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 				$scope.team.splice(index,1);
 			}
 	    });
-		
+
 	}
 	$scope.closeTeamModal=function()
 	{
 		if(newDevMembers.length>0)
 		{
-			
+
 			for(i=0;i<newDevMembers.length;i++)
 			{
 				var index=$scope.team.indexOf(newDevMembers[i]);
@@ -2266,7 +2501,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 				$scope.team.splice(index, 1);
 			}
 		}
-		
+
 		for(i=0;i<$scope.team.length;i++)
 		{
 			if(oldteamlead!=null)
@@ -2364,6 +2599,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 			$scope.ticketdescription="";
 			editedTicket=null;
 			$scope.isedit=false;
+			$scope.ticketfiles=[];
 			$("#add-ticket").modal('show');
 		}
 	}
@@ -2397,7 +2633,10 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 				swal("Opss", "Something bad happen please try again later", "error");
 			}
 			if(editedTicket==null)
-				Ticket.createTicket(successFunc,failureFunc,data);
+			{
+				data.fileCount = $scope.ticketfiles.length;
+				Ticket.createTicket(successFunc,failureFunc,data,$scope.ticketfiles);
+			}
 			else
 				Ticket.updateTicket(successFunc,failureFunc,data);
 		}
@@ -2442,7 +2681,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	                confirmButtonText: "Yes, send it!",
 	                closeOnConfirm: false
 	            }, function () {
-	            	
+
 					var successFunc=function(data)
 					{
 						$('#send-to-client').modal("hide");
@@ -2454,8 +2693,8 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 						swal("Oops!","Can't send estimation to client");
 					}
 					Ticket.sendToClient(successFunc,failureFunc,ticket.id);
-						
-						
+
+
 	        });
 		}
 		else
@@ -2483,7 +2722,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
             confirmButtonText: "Yes, send it!",
             closeOnConfirm: false
 	        }, function () {
-	        	
+
 				var successFunc=function(data)
 				{
 					$('#send-to-production').modal("hide");
@@ -2495,8 +2734,8 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 					swal("Oops!","Can't send estimation to client");
 				}
 				Ticket.sendToProd(successFunc,failureFunc,ticket.id);
-						
-						
+
+
 	        });
 	}
 	$scope.openDeliverToClientModal=function(selectedticket)
@@ -2529,7 +2768,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	                confirmButtonText: "Yes, send it!",
 	                closeOnConfirm: false
 	            }, function () {
-	            	
+
 					var successFunc=function(data)
 					{
 						updateTickets();
@@ -2541,8 +2780,8 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 						swal("Oops!","Can't deliver ticket to client");
 					}
 					Ticket.deliverToClient(successFunc,failureFunc,ticket.id);
-						
-						
+
+
 	        });
 		}
 		else
@@ -2552,7 +2791,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	}
 	$scope.startEstimation=function(ticket)
 	{
-		
+
 		swal({
                 title: "You start the ticket:",
                 html: '<p><i class="fa fa-star project-type"></i>'+ticket.title+'</p>',
@@ -2568,7 +2807,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 					swal(
 	                {
 	                    title: "Great!",
-	                    text: "Your ticket is send successfully to estimation", 
+	                    text: "Your ticket is send successfully to estimation",
 	                    type: "success",
 	                    confirmButtonColor: "#1ab394",
 	                    confirmButtonText: "close"
@@ -2585,9 +2824,9 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	}
 	$scope.acceptEstimation=function(ticket)
 	{
-		
+
 		swal({
-                title: "You confirm the estimation of "+ ticket.estimation+"h for", 
+                title: "You confirm the estimation of "+ ticket.estimation+"h for",
                 html: '<p><i class="fa fa-star project-type"></i> Contracting Process</p><div class="col-lg-12 acenter mb20"><div class="checkbox checkbox-alert checkbox-primary mt-5 mb-5"><input type="checkbox" id="checkbox3"><label for="checkbox3">I accept the <a href="#" target="_blank">Terms and Conditions</a></label></div></div>',
                 type: "info",
                 showCancelButton: true,
@@ -2601,7 +2840,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 					swal(
 	                {
 	                    title: "Great!",
-	                    text: "Your ticket is send successfully to production", 
+	                    text: "Your ticket is send successfully to production",
 	                    type: "success",
 	                    confirmButtonColor: "#1ab394",
 	                    confirmButtonText: "close"
@@ -2618,9 +2857,9 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	}
 	$scope.rejectEstimation=function(ticket)
 	{
-		
+
 		swal({
-                title: "Reedit Ticket", 
+                title: "Reedit Ticket",
                 //html: '<p><i class="fa fa-star project-type"></i>'+ticket.title+'</p>',
                 text:"Your ticket will be saved as draft and you have to restart estimation after reediting this ticket.\n  Would you like to reedit the ticket now?",
                 type: "info",
@@ -2635,7 +2874,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 					swal(
 	                {
 	                    title: "Great!",
-	                    text: "Ticket is in draft now you can re-edit and start it again", 
+	                    text: "Ticket is in draft now you can re-edit and start it again",
 	                    type: "success",
 	                    confirmButtonColor: "#1ab394",
 	                    confirmButtonText: "close"
@@ -2652,9 +2891,9 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	}
 	$scope.acceptTicket=function(ticket)
 	{
-		
+
 		swal({
-                title: "You accept and close the ticket", 
+                title: "You accept and close the ticket",
                 html: '<p><i class="fa fa-star project-type"></i>'+ticket.title+'</p>',
                 type: "info",
                 showCancelButton: true,
@@ -2668,7 +2907,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 					swal(
 	                {
 	                    title: "Great!",
-	                    text: "Your ticket is successfully closed", 
+	                    text: "Your ticket is successfully closed",
 	                    type: "success",
 	                    confirmButtonColor: "#1ab394",
 	                    confirmButtonText: "close"
@@ -2696,13 +2935,13 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	}
 	$scope.rejectTicket=function(ticket)
 	{
-		
+
     	var successFunc=function()
 		{
 			swal(
             {
                  title: "Thank you!",
-                text: "Your ticket is successfully rejected", 
+                text: "Your ticket is successfully rejected",
                 type: "success",
                 confirmButtonColor: "#1ab394",
                 confirmButtonText: "close"
@@ -2724,11 +2963,11 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		}
 		var data={"ticket_id":ticket.id,"message":rejectionmessage};
         Ticket.rejectTicket(successFunc,failureFunc,data);
-           
+
 	}
 	$scope.deleteTicket=function(ticket)
 	{
-		
+
 		swal({
                 title: "Are you sure?",
                 html: '<p>You deleted it.</p>',
@@ -2743,7 +2982,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 	                swal(
 	                {
 	                    title: "Deleted!",
-	                    text: "You deleted it!", 
+	                    text: "You deleted it!",
 	                    type: "success",
 	                    confirmButtonColor: "#1ab394",
 	                    confirmButtonText: "close"
@@ -2806,7 +3045,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		$('#add-bug').modal("show");
 		$scope.storytitle="";
 		$scope.storydescription="";
-		selectedticket=ticket;	
+		selectedticket=ticket;
 	}
 	$scope.createStory=function()
 	{
@@ -2826,9 +3065,9 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 			}
 			var failureFunc=function()
 			{
-				swal("Oops","Something wrong happend please try again later","error");	
+				swal("Oops","Something wrong happend please try again later","error");
 			}
-	
+
 			data.ticket_id=selectedticket.id;
 			Task.craeteTask(successFunc,failureFunc,data);
 		}
@@ -2860,7 +3099,7 @@ Controllers.controller('KeyboxCtrl', ['$scope','KeyBox',"$routeParams","Login","
 		}
 		KeyBox.getProjectConfigs(project_id,successFunc);
 	}
-	
+
 	updateView();
 	$scope.addKeyBox=function()
 	{
@@ -2878,21 +3117,21 @@ Controllers.controller('KeyboxCtrl', ['$scope','KeyBox',"$routeParams","Login","
 	}
 	$scope.deleteKeubox=function(conf)
 	{
-		swal({   
-			title: "Are you sure?",   
+		swal({
+			title: "Are you sure?",
 			text: "Do you want to delete keybox "+conf.title,
 			type: "warning",
 			showCancelButton: true,
 			confirmButtonColor: "#DD6B55",
 			confirmButtonText: "Yes, delete it!",
-			closeOnConfirm: false }, 
+			closeOnConfirm: false },
 			function(){
 				if(conf.id==-1)
 				{
 					var index= $scope.configs.indexOf(conf);
 					$scope.configs.splice(index, 1);
 					$scope.$apply();
-					swal("Deleted!", "The Keybox was deleted", "success"); 
+					swal("Deleted!", "The Keybox was deleted", "success");
 				}
 				else
 				{
@@ -2900,7 +3139,7 @@ Controllers.controller('KeyboxCtrl', ['$scope','KeyBox',"$routeParams","Login","
 					{
 						var index =$scope.configs.indexOf(conf);
 						$scope.configs.splice(index, 1);
-						swal("Deleted!", "The Keybox was deleted", "success"); 
+						swal("Deleted!", "The Keybox was deleted", "success");
 					}
 					var failureFunc=function()
 					{
@@ -2908,7 +3147,7 @@ Controllers.controller('KeyboxCtrl', ['$scope','KeyBox',"$routeParams","Login","
 					}
 					KeyBox.deleteProjectConfig(successFunc,failureFunc,conf.id);
 				}
-				
+
 			});
 	}
 	$scope.resetKeybox=function()
@@ -2963,7 +3202,7 @@ Controllers.controller('KeyboxCtrl', ['$scope','KeyBox',"$routeParams","Login","
 		}
 	}
 
-	
+
 }]);
 Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Team','Ticket',"Task","$routeParams","Project", function ($scope,Login,Params,$location,Team,Ticket,Task,$routeParams,Project) {
 	$scope.isclient=false;
@@ -3015,8 +3254,8 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 	}
 	$scope.ticketStatus=Ticket.ticketstatus;
 	$scope.username=Login.getLoggedUser().userinfo.surname+ " "+Login.getLoggedUser().userinfo.name;
-	
-	
+
+
 	var updateView=function()
 	{
 		sucessFunc=function(data)
@@ -3041,7 +3280,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 		}
 		Task.getAllTasks(sucessFunc,failureFunc,ticket_id);
 	}
-	
+
 	var loadRoles=function(data){
 		$scope.teamroles=data;
 		loadProject();
@@ -3144,17 +3383,17 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 				{
 					swal("Realtime not set","We couldn't set the realtime please try again later","error");
 				}
-				
+
 				var data ={
 				"realtime":$scope.editrealtime,
 				"realtime_id":selectedrealtime.id
 				}
 				Task.updateRealtime(successFunc,failureFunc,data);
-				
+
 			}
 			else
 				swal("Enter a number","Please enter a number in realtime","warning");
-			
+
 		}
 	}
 	$scope.deleteRealtime=function(realtime)
@@ -3175,7 +3414,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
             		swal(
 	                {
 	                    title: "Deleted!",
-	                    text: "You deleted it!", 
+	                    text: "You deleted it!",
 	                    type: "success",
 	                    confirmButtonColor: "#1ab394",
 	                    confirmButtonText: "close"
@@ -3186,7 +3425,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
             		swal('Oops!!',"Can't delete realtime please try again later","error");
             	}
             	Task.deleteRealtime(successFunc,failureFunc,realtime.id);
-                
+
             });
 	}
 	$scope.setRealtime=function()
@@ -3208,19 +3447,19 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 				{
 					swal("Realtime not set","We couldn't set the realtime please try again later","error");
 				}
-				
+
 				var data ={
 				"realtime":$scope.realtime,
 				"task_id":selectedtask.id
 				}
 				Task.addRealtime(successFunc,failureFunc,data);
-				
+
 			}
 			else
 				swal("Enter a number","Please enter a number in realtime","warning");
-			
+
 		}
-		
+
 	}
 	$scope.deleteTask=function(task)
 	{
@@ -3239,7 +3478,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
                 	swal(
 	                {
 	                    title: "Deleted!",
-	                    text: "You deleted it!", 
+	                    text: "You deleted it!",
 	                    type: "success",
 	                    confirmButtonColor: "#1ab394",
 	                    confirmButtonText: "close"
@@ -3251,16 +3490,16 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
                 	swal(
 	                {
 	                    title: "Oops!",
-	                    text: "Task not deleted please try again later", 
+	                    text: "Task not deleted please try again later",
 	                    type: "error",
 	                    confirmButtonColor: "#1ab394",
 	                    confirmButtonText: "close"
 	                });
                 }
                 Task.deleteTask(successFunc,failureFunc,task.id);
-               
+
             });
-		
+
 	}
 	var updateStatus=function(status)
 	{
@@ -3293,7 +3532,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 	                confirmButtonText: "Yes, send it!",
 	                closeOnConfirm: false
 	            }, function () {
-	            	
+
 					var successFunc=function(data)
 					{
 						updateView();
@@ -3304,8 +3543,8 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 						swal("Oops!","Can't send estimation to client");
 					}
 					Ticket.sendToClient(successFunc,failureFunc,ticket_id);
-						
-						
+
+
 	        });
 		}
 		else
@@ -3327,7 +3566,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
             confirmButtonText: "Yes, send it!",
             closeOnConfirm: false
 	        }, function () {
-	        	
+
 				var successFunc=function(data)
 				{
 					updateView();
@@ -3338,15 +3577,15 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 					swal("Oops!","Can't send estimation to client");
 				}
 				Ticket.sendToProd(successFunc,failureFunc,ticket_id);
-						
-						
+
+
 	        });
 	}
 	$scope.acceptTicket=function()
 	{
-		
+
 		swal({
-                title: "You accept and close the ticket", 
+                title: "You accept and close the ticket",
                 type: "info",
                 showCancelButton: true,
                 cancelButtonText: "cancel",
@@ -3359,7 +3598,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 					swal(
 	                {
 	                    title: "Great!",
-	                    text: "Your ticket is successfully closed", 
+	                    text: "Your ticket is successfully closed",
 	                    type: "success",
 	                    confirmButtonColor: "#1ab394",
 	                    confirmButtonText: "close"
@@ -3376,19 +3615,19 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 	}
 	$scope.openRejectModal=function()
 	{
-		
+
 		$scope.rejectionmessage="";
 		$("#reject-ticket").modal("show");
 	}
 	$scope.rejectTicket=function()
 	{
-		
+
     	var successFunc=function()
 		{
 			swal(
             {
                  title: "Thank you!",
-                text: "Your ticket is successfully rejected", 
+                text: "Your ticket is successfully rejected",
                 type: "success",
                 confirmButtonColor: "#1ab394",
                 confirmButtonText: "close"
@@ -3411,7 +3650,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 		}
 		var data={"ticket_id":ticket_id,"message":rejectionmessage};
         Ticket.rejectTicket(successFunc,failureFunc,data);
-           
+
 	}
 	$scope.finishTask=function(task)
 	{
@@ -3505,7 +3744,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 			selectedtask=story;
 		}
 	}
-	
+
 	var verifyForm=function()
 	{
 		var messages=[];
@@ -3558,7 +3797,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 			}
 			var failureFunc=function()
 			{
-				swal("Oops","Something wrong happend please try again later","error");	
+				swal("Oops","Something wrong happend please try again later","error");
 			}
 			if($scope.isedit)
 			{
@@ -3601,10 +3840,10 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 	                confirmButtonText: "Yes, send it!",
 	                closeOnConfirm: false
 	            }, function () {
-	            	
+
 					var successFunc=function(data)
 					{
-						
+
 						updateView();
 						swal.close();
 					}
@@ -3613,8 +3852,8 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 						swal("Oops!","Can't deliver ticket to client");
 					}
 					Ticket.deliverToClient(successFunc,failureFunc,ticket_id);
-						
-						
+
+
 	        });
 		}
 		else
@@ -3624,7 +3863,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 	}
 	$scope.startEstimation=function()
 	{
-		
+
 		swal({
                 title: "You start the ticket:",
                 type: "info",
@@ -3639,7 +3878,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 					swal(
 	                {
 	                    title: "Great!",
-	                    text: "Your ticket is send successfully to estimation", 
+	                    text: "Your ticket is send successfully to estimation",
 	                    type: "success",
 	                    confirmButtonColor: "#1ab394",
 	                    confirmButtonText: "close"
@@ -3656,9 +3895,9 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 	}
 	$scope.acceptEstimation=function()
 	{
-		
+
 		swal({
-                title: "You confirm the estimation of "+ $scope.ticket_estimation+"h for", 
+                title: "You confirm the estimation of "+ $scope.ticket_estimation+"h for",
                 html: '<p><i class="fa fa-star project-type"></i> Contracting Process</p><div class="col-lg-12 acenter mb20"><div class="checkbox checkbox-alert checkbox-primary mt-5 mb-5"><input type="checkbox" id="checkbox3"><label for="checkbox3">I accept the <a href="#" target="_blank">Terms and Conditions</a></label></div></div>',
                 type: "info",
                 showCancelButton: true,
@@ -3672,7 +3911,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 					swal(
 	                {
 	                    title: "Great!",
-	                    text: "Your ticket is send successfully to production", 
+	                    text: "Your ticket is send successfully to production",
 	                    type: "success",
 	                    confirmButtonColor: "#1ab394",
 	                    confirmButtonText: "close"
@@ -3689,9 +3928,9 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 	}
 	$scope.rejectEstimation=function()
 	{
-		
+
 		swal({
-                title: "Reedit Ticket", 
+                title: "Reedit Ticket",
                 //html: '<p><i class="fa fa-star project-type"></i>'+ticket.title+'</p>',
                 text:"Your ticket will be saved as draft and you have to restart estimation after reediting this ticket. \nWould you like to reedit the ticket now?",
                 type: "info",
@@ -3706,7 +3945,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 					swal(
 	                {
 	                    title: "Great!",
-	                    text: "Your ticket is in draft now you can re-edit and start it again", 
+	                    text: "Your ticket is in draft now you can re-edit and start it again",
 	                    type: "success",
 	                    confirmButtonColor: "#1ab394",
 	                    confirmButtonText: "close"
@@ -3768,7 +4007,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
                 	swal(
 	                {
 	                    title: "Deleted!",
-	                    text: "You deleted it!", 
+	                    text: "You deleted it!",
 	                    type: "success",
 	                    confirmButtonColor: "#1ab394",
 	                    confirmButtonText: "close"
@@ -3780,14 +4019,14 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
                 	swal(
 	                {
 	                    title: "Oops!",
-	                    text: "Task not deleted please try again later", 
+	                    text: "Task not deleted please try again later",
 	                    type: "error",
 	                    confirmButtonColor: "#1ab394",
 	                    confirmButtonText: "close"
 	                });
                 }
                 Task.deleteFile(successFunc,failureFunc,file_id);
-               
+
             });
 	}
 	$scope.openAddBug=function(bug)
@@ -3845,7 +4084,7 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 		}
 		var failureFunc=function()
 		{
-			swal("Oops","Something wrong happend please try again later","error");	
+			swal("Oops","Something wrong happend please try again later","error");
 		}
 		if(accepted)
 		{
@@ -3871,16 +4110,16 @@ Controllers.controller('StoriesCtrl', ['$scope','Login','Params','$location','Te
 		}
 		var failureFunc=function()
 		{
-			swal("Oops","Something wrong happend please try again later","error");	
+			swal("Oops","Something wrong happend please try again later","error");
 		}
-		
+
 		var data={
 			"task_id":selectedtask.id,
 			"accept":false,
 			"reason":$scope.rejectionbugmessage
 		}
 		Task.acceptBug(successFunc,failureFunc,data);
-		
+
 	}
 	$scope.deliverBugs=function()
 	{
@@ -3926,7 +4165,7 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 	{
 		$scope.skills=data;
 	}
-	
+
 	var selectedPorject=null;
 	var update=null;
 	$scope.acceptContract=function(project)
@@ -4032,16 +4271,17 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 	$scope.$on('$viewContentLoaded', function(){
 
 	   updateView();
-		
+
 		Team.loadRoles(loadRoles);
   	});
-	
+
 
 	$scope.openPrepareContract=function(project)
 	{
 		$("#prepare-project").modal('show');
 		selectedproject=project;
 		$scope.projectname=project.name;
+		$scope.projectcurrency=project.currency;
 	}
 	var verifyContractForm=function()
 	{
@@ -4092,7 +4332,7 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 		$scope.selectedClient=customerid;
 		selectedproject=project;
 		if(project==null){
-			
+
 			$scope.aprojecttitle=undefined;
 			$scope.apbriefing=undefined;
 			$scope.aprojectskills=undefined;
@@ -4107,7 +4347,7 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 			$scope.iedit=true;
 		}
 		$("#admin-add-project").modal('show');
-	
+
 	}
 	var verifyForm=function()
 	{
@@ -4120,12 +4360,12 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 		if($scope.apbriefing===undefined)
 		{
 			messages.push("Please add the project description\n");
-			
+
 		}
 		if($scope.aprojectskills===undefined)
 		{
 			messages.push("Please add the project required skills\n");
-			
+
 		}
 		return messages;
 	}
@@ -4155,7 +4395,7 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 			}
 			var failureFunc=function()
 			{
-				
+
 				swal("Oops!","Something bad happen please try again later","error");
 			}
 			if(!$scope.iedit)
@@ -4226,7 +4466,7 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 		}
 		return false;
 	}
-	
+
 	$scope.changeRole=function(member,index)
 	{
 		if(index==0)
@@ -4246,7 +4486,7 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 		{
 			var added=false;
 			if($scope.addedmember.role.role==Team.roles.Developer.role){
-				
+
 				for(i=0;i<newDevMembers.length;i++)
 				{
 					if(newDevMembers[i].id==$scope.addedmember.id)
@@ -4325,7 +4565,7 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 			for(i=0;i<newDevMembers.length;i++)
 			{
 				members.push(newDevMembers[i].id);
-				
+
 			}
 			var data={
 					"project_id":selectedPorject.id,
@@ -4402,14 +4642,14 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 			}
 			if(isOldMember(member))
 			{
-				
+
 				if(member.role.role==Team.roles.Developer.role){
 					var data={
 						"project_id":selectedPorject.id,
 						"developers":[member.id]
 					}
-					Project.deleteDeveloperFromProject(success,failure,data);				
-					
+					Project.deleteDeveloperFromProject(success,failure,data);
+
 				}
 				if(member.role.role==Team.roles.Tester.role){
 					var data={
@@ -4419,14 +4659,14 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 					Project.deleteTesterFromProject(success,failure,data);
 				}
 				if(member.role.role==Team.roles.Designer.role){
-					var data={	
+					var data={
 						"project_id":selectedPorject.id,
 						"designers":[member.id]
 					}
 					Project.deleteDesignerFromProject(success,failure,data);
 				}
 				if(member.role.role==Team.roles.SysAdmin.role){
-					var data={	
+					var data={
 						"project_id":selectedPorject.id,
 						"sysadmins":[member.id]
 					}
@@ -4438,7 +4678,7 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 				if(member.role.role==Team.roles.Developer.role){
 					var index=newDevMembers.indexOf(member);
 					newDevMembers.splice(index,1);
-					
+
 				}
 				if(member.role.role==Team.roles.Tester.role){
 					var index=newTesterMembers.indexOf(member);
@@ -4456,13 +4696,13 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 				$scope.team.splice(index,1);
 			}
 	    });
-		
+
 	}
 	$scope.closeTeamModal=function()
 	{
 		if(newDevMembers.length>0)
 		{
-			
+
 			for(i=0;i<newDevMembers.length;i++)
 			{
 				var index=$scope.team.indexOf(newDevMembers[i]);
@@ -4495,7 +4735,7 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 				$scope.team.splice(index, 1);
 			}
 		}
-		
+
 		for(i=0;i<$scope.team.length;i++)
 		{
 			if(oldteamlead!=null)
@@ -4512,19 +4752,30 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 
 	}
 }]);
-Controllers.controller('ReportCtrl',['$scope','$routeParams','Project','Ticket','Login',function($scope,$routeParams,Project,Ticket,Login)
+Controllers.controller('ReportCtrl',['$scope','$routeParams','Project','Ticket','Login','Client',function($scope,$routeParams,Project,Ticket,Login,Client)
 {
-	var project_id = $routeParams.project_id;
+	var project_id = null;
 	var ticketStatus=Ticket.ticketstatus;
 	$scope.isTicketReport=true;
 	$scope.isDateReport=false;
 	var d = new Date();
 	$scope.month=d.getMonth()+1;
+	$('#selectedmonth').val($scope.month);
 	$scope.year=d.getFullYear();
-	$scope.project_name=$routeParams.pname;
+	$scope.project_name="";
 	var dataObject=null;
 	$scope.paymentstatus="all";
 	$scope.showMarker=false;
+	$scope.showClients=false;
+	$scope.showProjects=false;
+	$scope.filterData = {
+		"selectedproject":null,
+		"selectedclient" : null
+	};
+	
+	var init={id:-1,text:"selected a project"};
+	$('#selectedproject').select2("data",init);
+	
 	$scope.filterPayment=function()
 	{
 		$scope.showMarker=false;
@@ -4586,9 +4837,9 @@ Controllers.controller('ReportCtrl',['$scope','$routeParams','Project','Ticket',
 					}
 				}
 			}
-			$scope.data=filtred;	
+			$scope.data=filtred;
 		}
-		
+
 	}
 	$scope.markasAllAsbilled=function()
 	{
@@ -4675,7 +4926,97 @@ Controllers.controller('ReportCtrl',['$scope','$routeParams','Project','Ticket',
 		}
 		Project.getDateReportbyMonth(successFunc,failureFunc,month,year,project_id);
 	}
-	updateTicketView($scope.month,$scope.year);
+	var loadclients = function()
+	{
+		var successFunc = function(data)
+		{
+			$scope.clients = data;
+			$scope.filterData.selectedclient = data[0];
+			$scope.showClients = true;
+
+			loadProjects(false);
+		}
+		var failurefunc = function()
+		{
+			$scope.showClients = false;
+		}
+		Client.getAllClients(successFunc,failurefunc,1);
+
+	}
+	$scope.LoadByProject = function()
+	{
+		if($scope.filterData.selectedproject != null)
+		{
+			project_id = $scope.filterData.selectedproject.id;
+			$scope.project_name = $scope.filterData.selectedproject.name;
+			if($scope.isTicketReport)
+			{
+				updateTicketView($scope.month,$scope.year);
+			}
+			else
+			{
+				updateDateView($scope.month,$scope.year);
+			}
+		}
+	}
+	$scope.loadByClient = function()
+	{
+		
+		loadProjects(false);
+	}
+	var loadProjects = function(isclient)
+	{
+		var succesfunc = function(data)
+		{
+			hundleProjects(data,true);
+		}
+		var hundleProjects = function(data,showclient)
+		{
+			var loaddedProjects = data;
+			$scope.showClients = showclient;
+			$scope.showProjects = true;
+			$scope.projects = loaddedProjects;
+			$scope.filterData.selectedproject = loaddedProjects[0];
+			project_id = loaddedProjects[0].id;
+			$scope.project_name = loaddedProjects[0].name;
+			if($scope.isTicketReport)
+			{
+				updateTicketView($scope.month,$scope.year);
+			}
+			else
+			{
+				updateDateView($scope.month,$scope.year);
+			}
+			
+
+		}
+		if(isclient)
+		{
+			Project.getAllproject(function(data){
+				hundleProjects(data.projects,false)
+
+			});
+		}
+		else
+		{
+			var client_id = $scope.filterData.selectedclient.id;
+			var failurefunc = function ()
+			{
+				$scope.projects=[];
+				
+			}
+			Project.projectsbyclient(succesfunc,failurefunc,client_id);
+		}
+	}
+	if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER" || Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSER")
+	{
+		loadProjects(true);
+	}
+	else
+	{
+		loadclients();
+	}
+	
 }]);
 Controllers.controller('DashboardCtrl',['$scope','$routeParams','Login',function($scope,$routeParams,Login)
 {
@@ -4714,10 +5055,10 @@ Controllers.controller('clientDashCtrl',['$scope','$routeParams','Login','Dashbo
 				}
 				Params.getSkills(succsfunc);
 			$("#add-project-dash").modal('show');
-		
+
 		}
 		$scope.openAddprojectModel=openAddprojectModal;
-		
+
 		var verifyForm=function()
 		{
 			var messages=new Array();
@@ -4729,14 +5070,14 @@ Controllers.controller('clientDashCtrl',['$scope','$routeParams','Login','Dashbo
 			if($scope.briefing_dash===undefined)
 			{
 				messages.push("Please add the project description\n");
-				
+
 			}
 			if($scope.projectskills_dash===undefined)
 			{
 				messages.push("Please add the project required skills\n");
-				
+
 			}
-			
+
 			return messages;
 		}
 		$scope.createProject=function()
@@ -4761,10 +5102,128 @@ Controllers.controller('clientDashCtrl',['$scope','$routeParams','Login','Dashbo
 				}
 				var failureFunc=function()
 				{
-					
+
 					swal("Oops!!", "Something bad happend please try again later", "error");
 				}
 				Project.createProject(project,successFunc,failureFunc);
 			}
 		}
+}]);
+Controllers.controller("InvoiceCtrl",["$scope","Login","Invoice","$location","$routeParams",function($scope,Login,Invoice,$location,$routeParams)
+{
+	$scope.unpaidTickets = [];
+	$scope.unpaidInvoices = [];
+	$scope.paidInvoices = [];
+	$scope.listLoaded = false;
+	getInvoiceList = function()
+	{
+		var sucessFunc = function(data)
+		{
+			$scope.unpaidTickets = data.unbilledTicket;
+			$scope.unpaidInvoices = data.unpaidInvoices;
+			$scope.paidInvoices = data.paidInvoices;
+			$scope.listLoaded = true;
+		}
+		var failurefunc = function()
+		{
+			$scope.listLoaded = true;
+		}
+		Invoice.getUnpaidTickets(sucessFunc,failurefunc);
+	}
+	$scope.createInvoice = function(project_id,index)
+	{
+		var sucessFunc = function(data)
+		{
+			$scope.unpaidInvoices.unshift(data);
+			$scope.unpaidTickets.splice(index,1);
+		}
+		var failurefunc = function()
+		{
+			swal("Error","Can't create invoice please try again later","error");
+		}
+		Invoice.createInvoice(sucessFunc,failurefunc,project_id);
+	}
+	$scope.payInvoice = function(invoice_id,index)
+	{
+		var succsfunc = function()
+		{
+			var invoice = $scope.unpaidInvoices[index];
+			$scope.paidInvoices.unshift(invoice);
+			$scope.unpaidInvoices.splice(index,1);
+		}
+		var failurefunc = function()
+		{
+			swal("Error","Can't mark invoice as payed please try again later","error");
+		}
+		Invoice.payInvoice(succsfunc,failurefunc,invoice_id);
+	}
+	$scope.backToInvoices = function()
+	{
+		window.history.back();
+	}
+	if($location.url() == "/admininvoicepaids" || $location.url() == "/invoice")
+	{
+		var d = new Date();
+		$scope.month = d.getMonth()+1;
+		$scope.year = d.getFullYear();
+		$("#selectedmonth").val($scope.month);
+		$scope.allInvoices = [];
+		var loadList = function()
+		{
+			var succsfunc = function(data)
+			{
+				$scope.allInvoices = data;
+			}
+			Invoice.getAllInvoiceList(succsfunc,$scope.month,$scope.year);
+		}
+		loadList();
+		$scope.changeDate = function()
+		{
+			loadList();
+		}
+	}
+	if($location.url().startsWith("/invoicedetails"))
+	{
+		$scope.invoice = {};
+		var invoice_id = $routeParams.invoiceid;
+		var succesfunc = function(data)
+		{
+			$scope.invoice = data;
+		}
+		var failurefunc = function()
+		{
+			swal("Error","Couldn't load invoice details please try again later");
+			window.history.back();
+		}
+		Invoice.loadInvoiceInfo(succesfunc,failurefunc,invoice_id);
+	}
+	if($location.url().startsWith("/invoice/report/"))
+	{
+		$scope.totalestimation = 0;
+		$scope.totalrealtime = 0;
+		$scope.btime=0;
+		$scope.data=[];
+		var successFunc=function(data)
+		{
+			$scope.data=data.data;
+			dataObject=data;
+			$scope.totalestimation=data.totalestimated;
+			$scope.totalrealtime=data.totalrealtime;
+			$scope.btime=data.btime;
+		}
+		var failurefunc = function()
+		{
+			swal("Error","Couldn't load invoice report please try again later");
+			window.history.back();
+		}
+		var id = $routeParams.id;
+		var isInvoice = false;
+		if($routeParams.invoice == "invoice")
+			var isInvoice = true;
+		Invoice.loadInvoiceReport(successFunc,failurefunc,id,isInvoice);
+	}
+	if(Login.getLoggedUser().userinfo.roles[0] === "ROLE_ADMIN")
+	{
+		getInvoiceList();
+	}
 }]);

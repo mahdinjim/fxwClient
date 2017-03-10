@@ -108,6 +108,17 @@ services.factory("Links",[function(){
 	var adminDashboardLink=baseUrl+path+"/private/super/dashboard";
 	var disableEmailNotifLink=baseUrl+path+"/private/project/emailnotif/disable/";
 	var desactivateClientLink=baseUrl+path+"/private/client/desactivate/";
+	var linkJiraAccountLink = baseUrl+path+"/private/jira/account/add/";
+	var getJiraProjectLink=baseUrl+path+"/private/jira/project/";
+	var unlinkJiraAccountLink = baseUrl+path+"/private/jira/account/unlink/";
+	var linkJiraProjectLink = baseUrl + path +"/private/jira/project/link/";
+	var unlinkJiraProjectLink = baseUrl + path +"/private/jira/project/unlink/";
+	var unbilledticketLink = baseUrl + path +"/private/super/invoice/list";
+	var createBillLink = baseUrl + path + "/private/super/invoice/new/";
+	var payBillLink = baseUrl + path + "/private/super/invoice/pay/";
+	var getAllInvoiceLink = baseUrl + path + "/private/invoice/list/";
+	var invoiceDetailLink = baseUrl + path + "/private/invoice/detail/";
+	var invoiceReportLink = baseUrl + path + "/private/invoice/report/";
 	this.getLoginLink=function()
 	{
 		return LoginLink;
@@ -530,13 +541,57 @@ services.factory("Links",[function(){
 	{
 		return desactivateClientLink;
 	}
+	this.getLinkJiraAccountLink=function()
+	{
+		return linkJiraAccountLink;
+	}
+	this.getGetJiraProjectLink=function()
+	{
+		return getJiraProjectLink;
+	}
+	this.getunlinkJiraAccountLink = function()
+	{
+		return unlinkJiraAccountLink;
+	}
+	this.getLinkJiraProjectLink = function()
+	{
+		return linkJiraProjectLink;
+	}
+	this.getUnLinkJiraProjectLink = function()
+	{
+		return unlinkJiraProjectLink;
+	}
+	this.getUnbilledticketLink = function()
+	{
+		return unbilledticketLink;
+	}
+	this.getCreateBillLink = function()
+	{
+		return createBillLink;
+	}
+	this.getPayInvoice = function()
+	{
+		return payBillLink;
+	}
+	this.getGetAllInvoiceLink = function()
+	{
+		return getAllInvoiceLink;
+	}
+	this.getInvoiceDetailLink = function()
+	{
+		return invoiceDetailLink;
+	}
+	this.getInvoiceReportLink = function()
+	{
+		return invoiceReportLink;
+	}
 	return this;
 }]);
 services.factory("Login",['$http','$location','$cookies',"$route","Links",
 	function($http,$location,$cookies,$route,Links){
 		var lastlink=null;
-		var Admin_Access=["","/login","/dashboard","/client","/teamprofile","/team","/messaging","/pdetails","/keybox","/stories","/clientprojects","/report"];
-		var Client_Access=["","/login","/dashboard","/cuser","/cuserprofile","/messaging","/pdetails","/keybox","/stories","/acceptcontract","/report"];
+		var Admin_Access=["","/login","/dashboard","/client","/teamprofile","/team","/messaging","/pdetails","/keybox","/stories","/clientprojects","/report","/invoiceadmin", "/admininvoicepaids","/invoice","/invoicedetails"];
+		var Client_Access=["","/login","/dashboard","/cuser","/cuserprofile","/messaging","/pdetails","/keybox","/stories","/acceptcontract","/report","/invoice","/invoicedetails"];
 		var KeyAccount_Access=["","/login","/dashboard","/pdetails","/client","/keybox","/stories","/clientprojects","/report"];
 		var TeamLeader_Access=["","/login","/dashboard","/pdetails","/keybox","/stories"];
 		var TeamMember_Access=["","/login","/dashboard","/pdetails","/keybox","/stories"];
@@ -549,7 +604,7 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 			if(this.getLoggedUser())
 			{
 				$http({
-					method:"PUT", 
+					method:"PUT",
 					url:Links.getChangePasswordLink(),
 					data:data,
 					headers: {'x-crm-access-token': this.getLoggedUser().token.token}
@@ -561,7 +616,7 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 	            	else
 	            		failurefunc("Something bad happen please try again later");
 	            });
-				
+
 			}
 		}
 		this.contractSigned=function()
@@ -582,11 +637,11 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 			if(user)
 			{
 				$http({
-					method:"GET", 
+					method:"GET",
 					url:Links.getAcceptContractLink()+"/"+customer_id,
 					headers: {'x-crm-access-token': this.getLoggedUser().token.token}
 				}).success(function (data, status, headers, config) {
-					
+
 					user.userinfo.signed=true;
 					me.upadteLoggedinUser(user);
 					successFunc();
@@ -596,7 +651,7 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 	            	else
 	            		failureFunc();
 	            });
-				
+
 			}
 		}
 		this.upadteLoggedinUser=function(user)
@@ -613,9 +668,9 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 				"stayloggedin":stayloggedin
 			};
 			$http({
-				method:"POST", 
+				method:"POST",
 				url:Links.getLoginLink(),
-				data:postdata, 
+				data:postdata,
 				headers: {'Content-Type': 'application/json'}
 			}).success(function (data, status, headers, config) {
 				var user={};
@@ -627,14 +682,14 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 				CurrentDate.setMonth(CurrentDate.getMonth() + 12);
 				$cookies.put('loggeduser', JSON.stringify(user),{expires:CurrentDate});
 				funcsucess();
-               
+
             }).error(function (data, status, headers, config) {
             	if(status==403)
                		funcfailure(data.errors);
                	else
                		funcfailure("Please try again later");
             });
-		
+
 		}
 		this.getLoggedUser=function(){
 			if($cookies.get("loggeduser")!=undefined)
@@ -652,13 +707,13 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 		}
 		this.logout=function(savelast){
 			$http({
-				method:"GET", 
+				method:"GET",
 				url:Links.getLogoutLink(),
 				headers: {'x-crm-access-token': this.getLoggedUser().token.token}
-				
+
 			}).success(function (data, status, headers, config) {
-				
-				
+
+
             }).error(function (data, status, headers, config) {
             });
             $cookies.remove("loggeduser");
@@ -676,7 +731,7 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 				}
 				else
 					$location.url("/login");
-			
+
 		}
 		this.haveAccess=function(path)
 		{
@@ -746,7 +801,7 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 			if(loggedUser)
 			{
 				$http({
-					method:"GET", 
+					method:"GET",
 					url:Links.getIsExpiredLink(),
 					headers: {'x-crm-access-token': this.getLoggedUser().token.token}
 				}).success(function (data, status, headers, config) {
@@ -754,7 +809,7 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 	            }).error(function (data, status, headers, config) {
 	            	me.logout();
 	            });
-				
+
 			}
 			else
 				$location.url("/login");
@@ -769,7 +824,7 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 
 services.factory("Team",['$http','$location','$cookieStore',"Login","Links",function($http,$location,$cookieStore,Login,Links){
 		this.roles=null;
-		this.loadRoles=function(successFunc){ 
+		this.loadRoles=function(successFunc){
 			if(localStorage.roles!=null)
 			{
 				successFunc(JSON.parse(localStorage.roles))
@@ -780,7 +835,7 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",func
 				if(Login.getLoggedUser() && this.roles==null)
 				{
 					$http({
-						method:"GET", 
+						method:"GET",
 						url:Links.getGetRolesLink(),
 						headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 					}).success(function (data, status, headers, config) {
@@ -790,11 +845,11 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",func
 		            }).error(function (data, status, headers, config) {
 		            	if(status==403)
 	        				Login.logout();
-	        	
+
 		            });
 		        }
 			}
-			
+
 		 }
 	    this.getRoles=function()
 	    {
@@ -805,7 +860,7 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",func
 			if(Login.getLoggedUser())
 			{
 				$http({
-					method:"GET", 
+					method:"GET",
 					url:Links.getAllteamMembersLink(),
 					headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 				}).success(function (data, status, headers, config) {
@@ -818,7 +873,7 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",func
 	            }).error(function (data, status, headers, config) {
 	            	if(status==403)
         				Login.logout();
-        	
+
 	            });
 	        }
 		}
@@ -827,7 +882,7 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",func
 			if(Login.getLoggedUser())
 			{
 				$http({
-					method:"GET", 
+					method:"GET",
 					url:Links.getAllDevTeamMemberLink(),
 					headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 				}).success(function (data, status, headers, config) {
@@ -845,7 +900,7 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",func
         			else{
         				funcfailure();
         			}
-        	
+
 	            });
 	        }
 		}
@@ -854,7 +909,7 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",func
 			if(Login.getLoggedUser())
 			{
 				$http({
-					method:"GET", 
+					method:"GET",
 					url:Links.getTeamPerformanceLink()+"/"+month,
 					headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 				}).success(function (data, status, headers, config) {
@@ -862,7 +917,7 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",func
 	            }).error(function (data, status, headers, config) {
 	            	if(status==403)
         				Login.logout();
-        	
+
 	            });
 	        }
 		}
@@ -944,9 +999,9 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",func
 			{
 
 				$http({
-					method:method, 
+					method:method,
 					url:link,
-					data:member, 
+					data:member,
 					headers: {'Content-Type': 'application/json','x-crm-access-token': Login.getLoggedUser().token.token}
 				}).success(function (data, status, headers, config) {
 					successFunc();
@@ -964,7 +1019,7 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",func
 			{
 
 				$http({
-					method:"delete", 
+					method:"delete",
 					url:link+"/"+member.id,
 					headers: {'Content-Type': 'application/json','x-crm-access-token': Login.getLoggedUser().token.token}
 				}).success(function (data, status, headers, config) {
@@ -983,7 +1038,7 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",func
 			{
 
 				$http({
-					method:"post", 
+					method:"post",
 					url:Links.getImageUplaodLink()+"/"+id+"/"+role,
 					data:image,
 					headers: {'Content-Type': 'application/json','x-crm-access-token': Login.getLoggedUser().token.token}
@@ -1025,7 +1080,7 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",func
 // 				var apiurl="https://slack.com/api/oauth.access?client_id="+client_id+"&redirect_uri="+redirecturl+"&client_secret="+client_secret+"&code="+code;
 // 				console.log(apiurl);
 // 				$http({
-// 					method:"GET", 
+// 					method:"GET",
 // 					url:apiurl,
 // 				}).success(function (data, status, headers, config) {
 // 					if(data.ok)
@@ -1035,9 +1090,9 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",func
 // 						$location.search("code",null);
 // 						$location.search("state",null);
 // 					}
-					
+
 // 	            }).error(function (data, status, headers, config) {
-	            	
+
 // 	            });
 // 			}
 // 		}
@@ -1060,17 +1115,17 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",func
 // 	{
 // 		var url="https://slack.com/api/channels.list?token="+$cookieStore.get("access_token");
 // 		$http({
-// 					method:"GET", 
+// 					method:"GET",
 // 					url:url,
 // 				}).success(function (data, status, headers, config) {
-					
+
 // 					if(data.ok)
 // 					{
 // 						var channels=data.channels;
 // 					}
-					
+
 // 	            }).error(function (data, status, headers, config) {
-	            	
+
 // 	            });
 
 // 	}
@@ -1078,17 +1133,17 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",func
 // 	{
 // 		var url="https://slack.com/api/chat.postMessage?token="+$cookieStore.get("access_token")+"&channel="channel_id+"&text="+msg+"&as_user=true";
 // 		$http({
-// 					method:"GET", 
+// 					method:"GET",
 // 					url:url,
 // 				}).success(function (data, status, headers, config) {
-					
+
 // 					if(data.ok)
 // 					{
 // 						console.log(data);
 // 					}
-					
+
 // 	            }).error(function (data, status, headers, config) {
-	            	
+
 // 	            });
 // 	}*/
 // 	this.generateString=function(){
@@ -1100,17 +1155,53 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",func
 // 	}
 // 	return this;
 // }]);
-services.factory('Client', ['$http','Login',"Links",function ($http,Login,Links) {
-	
+services.factory('Client', ['$http','Login',"Links",function ($http,Login,Links) {	
+	this.unlinkJiraAccount=function(successfunc,failurefunc,client_id,token)
+	{
+		if(Login.getLoggedUser())
+		{
+			$http({
+					method:"get", 
+					url:Links.getunlinkJiraAccountLink()+client_id+"/"+token,
+					headers: {'Content-Type': 'application/json','x-crm-access-token': Login.getLoggedUser().token.token}
+				}).success(function (data, status, headers, config) {
+					successfunc();
+				}).error(function (data, status, headers, config) {
+					if(status==403)
+        				Login.logout()
+        			else
+	            		failurefunc(status);
+	            });
+		}
+	}
+	this.linkJiraAccount=function(successfunc,failurefunc,client_id,token,data)
+	{
+		if(Login.getLoggedUser())
+		{
+			$http({
+					method:"post", 
+					url:Links.getLinkJiraAccountLink()+client_id+"/"+token,
+					data:data,
+					headers: {'Content-Type': 'application/json','x-crm-access-token': Login.getLoggedUser().token.token}
+				}).success(function (data, status, headers, config) {
+					successfunc();
+				}).error(function (data, status, headers, config) {
+					if(status==403)
+        				Login.logout()
+        			else
+	            		failurefunc(status);
+	            });
+		}
+	}
 	this.desactivateClient = function(successfunc,failurefunc,client_id,activate)
 	{
 		if(Login.getLoggedUser())
 		{
 			$http({
-				method:"GET", 
+				method:"GET",
 				url:Links.getDesactivateClientLink()+client_id+"/"+activate,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
-			}).success(function (data, status, headers, config) {	
+			}).success(function (data, status, headers, config) {
                 successfunc();
             }).error(function (data, status, headers, config) {
             	if(status==403)
@@ -1125,11 +1216,11 @@ services.factory('Client', ['$http','Login',"Links",function ($http,Login,Links)
 		if(Login.getLoggedUser())
 			{
 				$http({
-					method:"GET", 
+					method:"GET",
 					url:Links.getAccountManagersListLink()+"/"+page,
 					headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 				}).success(function (data, status, headers, config) {
-					
+
 	                successFunc(data.users);
 	            }).error(function (data, status, headers, config) {
 	            	if(status==403)
@@ -1148,9 +1239,9 @@ services.factory('Client', ['$http','Login',"Links",function ($http,Login,Links)
 				else
 					var link=Links.getUpdateCustomerLink();
 				$http({
-					method:method, 
+					method:method,
 					url:link,
-					data:client, 
+					data:client,
 					headers: {'Content-Type': 'application/json','x-crm-access-token': Login.getLoggedUser().token.token}
 				}).success(function (data, status, headers, config) {
 					if(method=="POST")
@@ -1170,17 +1261,17 @@ services.factory('Client', ['$http','Login',"Links",function ($http,Login,Links)
 		if(Login.getLoggedUser())
 			{
 				$http({
-					method:"GET", 
+					method:"GET",
 					url:Links.getListCustomersLink()+"/"+page,
 					headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 				}).success(function (data, status, headers, config) {
-					
+
 	                successFunc(data.users,data.totalpages,data.current_page);
 	            }).error(function (data, status, headers, config) {
 	            	if(status==403)
         				Login.logout();
-        	
-	            	
+
+
 	            });
 	        }
 	}
@@ -1190,7 +1281,7 @@ services.factory('Client', ['$http','Login',"Links",function ($http,Login,Links)
 			{
 
 				$http({
-					method:"delete", 
+					method:"delete",
 					url:Links.getDeleteClientLink()+"/"+client.id,
 					headers: {'Content-Type': 'application/json','x-crm-access-token': Login.getLoggedUser().token.token}
 				}).success(function (data, status, headers, config) {
@@ -1215,9 +1306,9 @@ services.factory("Cuser",["$http",'Login','Links',function($http,Login,Links){
 				else
 					var link=Links.getUpdateCuserLink();
 				$http({
-					method:method, 
+					method:method,
 					url:link,
-					data:user, 
+					data:user,
 					headers: {'Content-Type': 'application/json','x-crm-access-token': Login.getLoggedUser().token.token}
 				}).success(function (data, status, headers, config) {
 					if(method=="POST")
@@ -1237,7 +1328,7 @@ services.factory("Cuser",["$http",'Login','Links',function($http,Login,Links){
 			if(Login.getLoggedUser())
 				{
 					$http({
-						method:"GET", 
+						method:"GET",
 						url:Links.getListCuserLink()+"/"+page,
 						headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 					}).success(function (data, status, headers, config) {
@@ -1252,7 +1343,7 @@ services.factory("Cuser",["$http",'Login','Links',function($http,Login,Links){
 		            }).error(function (data, status, headers, config) {
 		            	if(status==403)
         					Login.logout();
-        	
+
 		            });
 		        }
 		}
@@ -1262,7 +1353,7 @@ services.factory("Cuser",["$http",'Login','Links',function($http,Login,Links){
 				{
 
 					$http({
-						method:"delete", 
+						method:"delete",
 						url:Links.getdeleteCuserLink()+"/"+user.id,
 						headers: {'Content-Type': 'application/json','x-crm-access-token': Login.getLoggedUser().token.token}
 					}).success(function (data, status, headers, config) {
@@ -1281,7 +1372,7 @@ services.factory("Cuser",["$http",'Login','Links',function($http,Login,Links){
 			{
 
 				$http({
-					method:"post", 
+					method:"post",
 					url:Links.getCuserUploadPhotoLink()+"/"+id,
 					data:image,
 					headers: {'Content-Type': 'application/json','x-crm-access-token': Login.getLoggedUser().token.token}
@@ -1352,7 +1443,7 @@ services.factory('Params',["$http",function($http){
 			if(this.skills==null)
 			{
 				$http({
-				method:"get", 
+				method:"get",
 				url:"locals/skills.txt",
 				}).success(function (data, status, headers, config) {
 					var array = data.split('\n');
@@ -1367,7 +1458,7 @@ services.factory('Params',["$http",function($http){
 			{
 				success(this.skills);
 			}
-			
+
 		}
 	}
 }]);
@@ -1382,7 +1473,7 @@ services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
 		{
 			var me=this;
 			$http({
-				method:"GET", 
+				method:"GET",
 				url:Links.getChannelInfoLink()+"/"+channel_id,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 			}).success(function (data, status, headers, config) {
@@ -1411,7 +1502,7 @@ services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
 			{
 				data.messages[i]=mess.message;
 			}
-			
+
 		}
 		for(i=0;i<deletedItems.length;i++)
 		{
@@ -1467,13 +1558,13 @@ services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
 					message.text=message.text.replace("<@"+this.team[j].id+"|"+this.team[j].name+">","@"+"<a>"+this.team[j].name+"</a>");
 				}
 			}
-			else 
+			else
 			{
 				mustdelete=true;
 			}
 		}
-			
-		
+
+
 		return {"message":message,"mustdelete":mustdelete};
 	}
 	this.getMessages=function(channel_id,successFunc,failureFunc,start)
@@ -1489,7 +1580,7 @@ services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
 		{
 			var me =this;
 			$http({
-				method:"GET", 
+				method:"GET",
 				url:Links.getMessagesLink()+"/40/"+channel_id+"/"+start,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 			}).success(function (data, status, headers, config) {
@@ -1517,7 +1608,7 @@ services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
 		{
 			var me =this;
 			$http({
-				method:"GET", 
+				method:"GET",
 				url:Links.getNewMessagesLink()+"/"+channel_id+"/"+last,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 			}).success(function (data, status, headers, config) {
@@ -1537,14 +1628,14 @@ services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
 		{
 			var me =this;
 			$http({
-				method:"GET", 
+				method:"GET",
 				url:Links.getMakreadmessagesLink()+"/"+channel_id+"/"+mess,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 			}).success(function (data, status, headers, config) {
             }).error(function (data, status, headers, config) {
             	if(status==403)
             		Login.logout();
-            	
+
             });
         }
 	}
@@ -1552,10 +1643,10 @@ services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
 	{
 		if(Login.getLoggedUser())
 		{
-			
+
 			var me =this;
 			$http({
-				method:"POST", 
+				method:"POST",
 				url:Links.getNewMessageNumberLink(),
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token},
 				data:data
@@ -1564,7 +1655,7 @@ services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
             }).error(function (data, status, headers, config) {
             	if(status==403)
             		Login.logout();
-            	
+
             });
         }
 	}
@@ -1579,7 +1670,7 @@ services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
 				"client":username
 			}
 			$http({
-				method:"POST", 
+				method:"POST",
 				data:postdata,
 				url:Links.getSendMessageLink()+"/"+group,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
@@ -1590,7 +1681,7 @@ services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
             }).error(function (data, status, headers, config) {
             	if(status==403)
             		Login.logout();
-            	
+
             });
         }
 
@@ -1598,29 +1689,85 @@ services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
 	return this;
 }]);
 services.factory('Project',["$http","Login",'Links',function($http,Login,Links){
+	this.lastLoadedProject=[];
+	this.unLinkJiraProject = function(successfunc,failurefunc,project_id,token)
+	{
+		if(Login.getLoggedUser())
+		{
+			$http({
+				method:"GET",
+				url:Links.getUnLinkJiraProjectLink()+project_id+"/"+token,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+				successfunc();
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failurefunc(status);
+            });
+
+		}
+	}
+	this.linkJiraProject = function(successfunc,failurefunc,data,token)
+	{
+		$http({
+			method:"POST",
+			data:data,
+			url:Links.getLinkJiraProjectLink()+token,
+			headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+		}).success(function (data, status, headers, config) {
+			successfunc();
+        }).error(function (data, status, headers, config) {
+        	if(status==403)
+        		Login.logout();
+        	else
+        		failurefunc(status);
+        });
+	}
+	this.loadJiraProjects=function(successfunc,failurefunc,client_id)
+	{
+		if(Login.getLoggedUser())
+		{
+			$http({
+				method:"GET",
+				url:Links.getGetJiraProjectLink()+client_id,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+				successfunc(data);
+
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failurefunc(status);
+            });
+
+		}
+	}
 	this.acceptContract=function(successFunc,failureFunc,project_id){
 		if(Login.getLoggedUser())
 		{
 			$http({
-				method:"GET", 
+				method:"GET",
 				url:Links.getAcceptProjectContractLink()+"/"+project_id,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 			}).success(function (data, status, headers, config) {
 				successFunc();
-				
+
             }).error(function (data, status, headers, config) {
             	if(status==403)
             		Login.logout();
             	else
             		failureFunc();
             });
-			
+
 		}
 	}
 	this.assignProjectEstimation=function(successfunc,failurefunc,data)
 	{
 		$http({
-			method:"POST", 
+			method:"POST",
 			data:data,
 			url:Links.getassignEstimationProjectLink(),
 			headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
@@ -1638,19 +1785,19 @@ services.factory('Project',["$http","Login",'Links',function($http,Login,Links){
 		if(Login.getLoggedUser())
 		{
 			$http({
-				method:"GET", 
+				method:"GET",
 				url:Links.getTicketReportByMonthLink()+"/"+month+"/"+year+"/"+project_id,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 			}).success(function (data, status, headers, config) {
 				successFunc(data);
-				
+
             }).error(function (data, status, headers, config) {
             	if(status==403)
             		Login.logout();
             	else
             		failureFunc();
             });
-			
+
 		}
 	}
 	this.getDateReportbyMonth=function(successFunc,failureFunc,month,year,project_id)
@@ -1658,25 +1805,25 @@ services.factory('Project',["$http","Login",'Links',function($http,Login,Links){
 		if(Login.getLoggedUser())
 		{
 			$http({
-				method:"GET", 
+				method:"GET",
 				url:Links.getDateReportByMonthLink()+"/"+month+"/"+year+"/"+project_id,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 			}).success(function (data, status, headers, config) {
 				successFunc(data);
-				
+
             }).error(function (data, status, headers, config) {
             	if(status==403)
             		Login.logout();
             	else
             		failureFunc();
             });
-			
+
 		}
 	}
 	this.createProject=function(postdata,successfunc,failurefunc)
 	{
 		$http({
-			method:"POST", 
+			method:"POST",
 			data:postdata,
 			url:Links.getCreateProjectLink(),
 			headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
@@ -1692,7 +1839,7 @@ services.factory('Project',["$http","Login",'Links',function($http,Login,Links){
 	this.updateProject=function(postdata,successfunc,failurefunc)
 	{
 		$http({
-			method:"PUT", 
+			method:"PUT",
 			data:postdata,
 			url:Links.getUpdateProjectLink(),
 			headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
@@ -1707,22 +1854,24 @@ services.factory('Project',["$http","Login",'Links',function($http,Login,Links){
 	}
 	this.getAllproject=function(successfunc)
 	{
+		var me = this;
 		$http({
-			method:"GET", 
+			method:"GET",
 			url:Links.getListProjectLink()+"/1/all",
 			headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 		}).success(function (data, status, headers, config) {
 			successfunc(data);
+			me.lastLoadedProject=data;
         }).error(function (data, status, headers, config) {
         	if(status==403)
         		Login.logout();
-        	
+
         });
 	}
 	this.getProjectDetails=function(project_id,successFunc,failureFunc)
 	{
 		$http({
-			method:"GET", 
+			method:"GET",
 			url:Links.getProjectDetailLink()+"/"+project_id,
 			headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 		}).success(function (data, status, headers, config) {
@@ -1732,7 +1881,7 @@ services.factory('Project',["$http","Login",'Links',function($http,Login,Links){
         		Login.logout();
         	else
         		failureFunc("error");
-        	
+
         });
 	}
 
@@ -1775,7 +1924,7 @@ services.factory('Project',["$http","Login",'Links',function($http,Login,Links){
 	this.ProjectMember=function(url,data,successFunc,failureFunc)
 	{
 		$http({
-			method:"POST", 
+			method:"POST",
 			url:url,
 			data:data,
 			headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
@@ -1788,7 +1937,7 @@ services.factory('Project',["$http","Login",'Links',function($http,Login,Links){
         		Login.logout();
         	else
         		failureFunc("error");
-        	
+
         });
 	}
 	this.assignProjectBudget=function(successFunc,failureFunc,data)
@@ -1796,7 +1945,7 @@ services.factory('Project',["$http","Login",'Links',function($http,Login,Links){
 		if(Login.getLoggedUser())
 		{
 			$http({
-				method:"POST", 
+				method:"POST",
 				url:Links.getAssignBudgetLink(),
 				data:data,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
@@ -1809,7 +1958,7 @@ services.factory('Project',["$http","Login",'Links',function($http,Login,Links){
 	        		Login.logout();
 	        	else
 	        		failureFunc("error");
-	        	
+
 	        });
 	    }
 	}
@@ -1818,7 +1967,7 @@ services.factory('Project',["$http","Login",'Links',function($http,Login,Links){
 		if(Login.getLoggedUser())
 		{
 			$http({
-				method:"POST", 
+				method:"POST",
 				url:Links.getAssignRateLink(),
 				data:data,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
@@ -1831,7 +1980,7 @@ services.factory('Project',["$http","Login",'Links',function($http,Login,Links){
 	        		Login.logout();
 	        	else
 	        		failureFunc("error");
-	        	
+
 	        });
 	    }
 	}
@@ -1840,19 +1989,19 @@ services.factory('Project',["$http","Login",'Links',function($http,Login,Links){
 		if(Login.getLoggedUser())
 		{
 			$http({
-				method:"GET", 
+				method:"GET",
 				url:Links.getListProjectByClientLink()+"/"+client_id,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 			}).success(function (data, status, headers, config) {
-				successFunc(data);
-				
+				succesFunc(data);
+
             }).error(function (data, status, headers, config) {
             	if(status==403)
             		Login.logout();
             	else
             		failureFunc();
             });
-			
+
 		}
 	}
 	this.disableEmailNotif=function(succesFunc,failureFunc,project_id,activate)
@@ -1860,19 +2009,19 @@ services.factory('Project',["$http","Login",'Links',function($http,Login,Links){
 		if(Login.getLoggedUser())
 		{
 			$http({
-				method:"GET", 
+				method:"GET",
 				url:Links.getDisableEmailNotifLink()+project_id+"/"+activate,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 			}).success(function (data, status, headers, config) {
 				succesFunc(data);
-				
+
             }).error(function (data, status, headers, config) {
             	if(status==403)
             		Login.logout();
             	else
             		failureFunc();
             });
-			
+
 		}
 	}
 	this.prepareContract=function(successFunc,failureFunc,data)
@@ -1880,7 +2029,7 @@ services.factory('Project',["$http","Login",'Links',function($http,Login,Links){
 		if(Login.getLoggedUser())
 		{
 			$http({
-				method:"POST", 
+				method:"POST",
 				url:Links.getPrepareContractLink(),
 				data:data,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
@@ -1893,7 +2042,7 @@ services.factory('Project',["$http","Login",'Links',function($http,Login,Links){
 	        		Login.logout();
 	        	else
 	        		failureFunc("error");
-	        	
+
 	        });
 	    }
 	}
@@ -1903,12 +2052,12 @@ services.factory('Project',["$http","Login",'Links',function($http,Login,Links){
 services.factory('KeyBox', ["$http","Login","Links",function ($http,Login,Links) {
 	this.getProjectConfigs=function(project_id,successFunc,failureFunc)
 	{
-		
+
 		if(Login.getLoggedUser())
 		{
 			var me =this;
 			$http({
-				method:"GET", 
+				method:"GET",
 				url:Links.getProjectConfigsListLink()+"/"+project_id,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 			}).success(function (data, status, headers, config) {
@@ -1927,7 +2076,7 @@ services.factory('KeyBox', ["$http","Login","Links",function ($http,Login,Links)
 		{
 			var me =this;
 			$http({
-				method:"DELETE", 
+				method:"DELETE",
 				url:Links.getDeleteProjectConfigLink()+"/"+config_id,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 			}).success(function (data, status, headers, config) {
@@ -1946,7 +2095,7 @@ services.factory('KeyBox', ["$http","Login","Links",function ($http,Login,Links)
 		{
 			var me =this;
 			$http({
-				method:"POST", 
+				method:"POST",
 				url:Links.getCreateProjectConfigLink(),
 				data:data,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
@@ -1966,7 +2115,7 @@ services.factory('KeyBox', ["$http","Login","Links",function ($http,Login,Links)
 		{
 			var me =this;
 			$http({
-				method:"PUT", 
+				method:"PUT",
 				url:Links.getUpdateProjectConfigLink(),
 				data:data,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
@@ -1983,7 +2132,7 @@ services.factory('KeyBox', ["$http","Login","Links",function ($http,Login,Links)
 	return this;
 }]);
 services.service('Ticket', ["$http","Login","Links",function ($http,Login,Links) {
-	
+
 	this.ticketypes=null;
 	this.ticketstatus={
 		"All":{"status":"all","text":"All status"},
@@ -2003,13 +2152,13 @@ services.service('Ticket', ["$http","Login","Links",function ($http,Login,Links)
 	var me=this;
 	this.loadTicketTypes=function(successFunc)
 	{
-		
+
 		if(Login.getLoggedUser())
 			{
 				if(localStorage.tickettypes==null)
 				{
 					$http({
-						method:"GET", 
+						method:"GET",
 						url:Links.getTicketTypesLink(),
 						headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 					}).success(function (data, status, headers, config) {
@@ -2018,7 +2167,7 @@ services.service('Ticket', ["$http","Login","Links",function ($http,Login,Links)
 		            }).error(function (data, status, headers, config) {
 		            	if(status==403)
 	        				Login.logout();
-	        	
+
 		            });
 		        }
 		        else
@@ -2029,15 +2178,28 @@ services.service('Ticket', ["$http","Login","Links",function ($http,Login,Links)
 	{
 		return JSON.parse(localStorage.ticketypes);
 	}
-	this.createTicket=function(successFunc,failureFunc,data)
+	this.createTicket=function(successFunc,failureFunc,data,ticketfiles)
 	{
 		if(Login.getLoggedUser())
 			{
 				$http({
-					method:"POST", 
-					data:data,
+					method:"POST",
+					transformRequest: function (data) {
+		                var formData = new FormData();
+		                //need to convert our json object to a string version of json otherwise
+		                // the browser will do a 'toString()' on the object which will result 
+		                // in the value '[Object object]' on the server.
+		                formData.append("ticket", angular.toJson(data.ticket));
+		                //now add all of the assigned files
+		                for (var i = 0; i < data.files.length; i++) {
+		                    //add each file to the form data and iteratively name them
+		                    formData.append("file" + i, data.files[i]);
+		                }
+		                return formData;
+		            },
+					data:{ticket : data,files:ticketfiles},
 					url:Links.getCreateTicketLink(),
-					headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+					headers: {'x-crm-access-token': Login.getLoggedUser().token.token,'Content-Type':undefined}
 				}).success(function (data, status, headers, config) {
 					successFunc();
 	            }).error(function (data, status, headers, config) {
@@ -2046,16 +2208,16 @@ services.service('Ticket', ["$http","Login","Links",function ($http,Login,Links)
         			else
         				failureFunc();
 
-        	
+
 	            });
-	        }	
+	        }
 	}
 	this.getTicketList=function(successFunc,failureFunc,project_id)
 	{
 		if(Login.getLoggedUser())
 		{
 			$http({
-				method:"GET", 
+				method:"GET",
 				url:Links.getTicketListLink()+"/"+project_id,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 			}).success(function (data, status, headers, config) {
@@ -2066,11 +2228,11 @@ services.service('Ticket', ["$http","Login","Links",function ($http,Login,Links)
     			else
     				failureFunc();
 
-    	
+
             });
-        }	
+        }
 	}
-	
+
 	this.sendToClient=function(successFunc,failureFunc,ticket_id)
 	{
 		this.changeTicketStatus(successFunc,failureFunc,ticket_id,Links.GetSendToClientLink());
@@ -2103,7 +2265,7 @@ services.service('Ticket', ["$http","Login","Links",function ($http,Login,Links)
 		if(Login.getLoggedUser())
 		{
 			$http({
-				method:"POST", 
+				method:"POST",
 				url:Links.getRejectionTicketLink(),
 				data:data,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
@@ -2115,16 +2277,16 @@ services.service('Ticket', ["$http","Login","Links",function ($http,Login,Links)
     			else
     				failureFunc();
 
-    	
+
             });
-        }	
+        }
 	}
 	this.updateTicket=function(successFunc,failureFunc,data)
 	{
 		if(Login.getLoggedUser())
 			{
 				$http({
-					method:"PUT", 
+					method:"PUT",
 					data:data,
 					url:Links.getUpdateTicketLink(),
 					headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
@@ -2136,15 +2298,15 @@ services.service('Ticket', ["$http","Login","Links",function ($http,Login,Links)
         			else
         				failureFunc();
 
-        	
+
 	            });
-	        }	
+	        }
 	}
 	this.deleteTicket=function(successFunc,failureFunc,ticket_id){
 		if(Login.getLoggedUser())
 		{
 			$http({
-				method:"DELETE", 
+				method:"DELETE",
 				url:Links.getDeleteTicketLink()+"/"+ticket_id,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 			}).success(function (data, status, headers, config) {
@@ -2155,7 +2317,7 @@ services.service('Ticket', ["$http","Login","Links",function ($http,Login,Links)
     			else
     				failureFunc();
 
-    	
+
             });
         }
 	}
@@ -2164,7 +2326,7 @@ services.service('Ticket', ["$http","Login","Links",function ($http,Login,Links)
 		if(Login.getLoggedUser())
 		{
 			$http({
-				method:"GET", 
+				method:"GET",
 				url:link+"/"+ticket_id,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 			}).success(function (data, status, headers, config) {
@@ -2175,16 +2337,16 @@ services.service('Ticket', ["$http","Login","Links",function ($http,Login,Links)
     			else
     				failureFunc();
 
-    	
+
             });
-        }	
+        }
 	}
 	this.markAsbilled=function(successfunc,failurefunc,ticket_id)
 	{
 		if(Login.getLoggedUser())
 		{
 			$http({
-				method:"GET", 
+				method:"GET",
 				url:Links.getMarkBilledLink()+"/"+ticket_id,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 			}).success(function (data, status, headers, config) {
@@ -2195,7 +2357,7 @@ services.service('Ticket', ["$http","Login","Links",function ($http,Login,Links)
     			else
     				failurefunc();
 
-    	
+
             });
         }
 	}
@@ -2204,7 +2366,7 @@ services.service('Ticket', ["$http","Login","Links",function ($http,Login,Links)
 		if(Login.getLoggedUser())
 		{
 			$http({
-				method:"GET", 
+				method:"GET",
 				url:Links.getMarkPayedLink()+"/"+ticket_id,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 			}).success(function (data, status, headers, config) {
@@ -2215,7 +2377,7 @@ services.service('Ticket', ["$http","Login","Links",function ($http,Login,Links)
     			else
     				failurefunc();
 
-    	
+
             });
         }
 	}
@@ -2224,7 +2386,7 @@ services.service('Ticket', ["$http","Login","Links",function ($http,Login,Links)
 		if(Login.getLoggedUser())
 		{
 			$http({
-				method:"POST", 
+				method:"POST",
 				url:Links.getMarkmanyBilledLink(),
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token},
 				data:tickets
@@ -2236,7 +2398,7 @@ services.service('Ticket', ["$http","Login","Links",function ($http,Login,Links)
     			else
     				failurefunc();
 
-    	
+
             });
         }
 	}
@@ -2250,7 +2412,7 @@ services.service('Task', ["$http","Login","Links",function ($http,Login,Links) {
 	{
 		this.execute(successFunc,failureFunc,data,"PUT",Links.getUpdatetaskLink());
 	}
-	
+
 	this.setEstimation=function(successFunc,failureFunc,data)
 	{
 		this.execute(successFunc,failureFunc,data,"POST",Links.getEstimationLink());
@@ -2273,7 +2435,7 @@ services.service('Task', ["$http","Login","Links",function ($http,Login,Links) {
 		{
 			var me =this;
 			$http({
-				method:"DELETE", 
+				method:"DELETE",
 				url:Links.getDeleteRealtimeLink()+"/"+realtime_id,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 			}).success(function (data, status, headers, config) {
@@ -2292,7 +2454,7 @@ services.service('Task', ["$http","Login","Links",function ($http,Login,Links) {
 		{
 			var me =this;
 			$http({
-				method:"GET", 
+				method:"GET",
 				url:Links.getAllRealtimesLink()+"/"+task_id,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 			}).success(function (data, status, headers, config) {
@@ -2311,7 +2473,7 @@ services.service('Task', ["$http","Login","Links",function ($http,Login,Links) {
 		{
 			var me =this;
 			$http({
-				method:method, 
+				method:method,
 				url:link,
 				data:data,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
@@ -2331,7 +2493,7 @@ services.service('Task', ["$http","Login","Links",function ($http,Login,Links) {
 		{
 			var me =this;
 			$http({
-				method:"GET", 
+				method:"GET",
 				url:Links.getListTasksLink()+"/"+ticket_id,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 			}).success(function (data, status, headers, config) {
@@ -2350,7 +2512,7 @@ services.service('Task', ["$http","Login","Links",function ($http,Login,Links) {
 		{
 			var me =this;
 			$http({
-				method:"GET", 
+				method:"GET",
 				url:Links.getStartTaskLink()+"/"+task_id,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 			}).success(function (data, status, headers, config) {
@@ -2369,7 +2531,7 @@ services.service('Task', ["$http","Login","Links",function ($http,Login,Links) {
 		{
 			var me =this;
 			$http({
-				method:"GET", 
+				method:"GET",
 				url:Links.getDeliverBugToClientLink()+ticket_id,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 			}).success(function (data, status, headers, config) {
@@ -2388,9 +2550,9 @@ services.service('Task', ["$http","Login","Links",function ($http,Login,Links) {
 		{
 			var me =this;
 			$http({
-				method:"GET", 
+				method:"GET",
 				url:Links.getFinishTaskLink()+"/"+task_id,
-				
+
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 			}).success(function (data, status, headers, config) {
                 successFunc(data);
@@ -2408,7 +2570,7 @@ services.service('Task', ["$http","Login","Links",function ($http,Login,Links) {
 		{
 			var me =this;
 			$http({
-				method:"DELETE", 
+				method:"DELETE",
 				url:Links.getDeleteTaskLink()+"/"+task_id,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 			}).success(function (data, status, headers, config) {
@@ -2427,7 +2589,7 @@ services.service('Task', ["$http","Login","Links",function ($http,Login,Links) {
 		{
 			var me =this;
 			$http({
-				method:"POST", 
+				method:"POST",
 				url:Links.getUplaodfileLink()+"/"+ticket_id,
 				transformRequest: angular.identity,
 				data:data,
@@ -2448,7 +2610,7 @@ services.service('Task', ["$http","Login","Links",function ($http,Login,Links) {
 		{
 			var me =this;
 			$http({
-				method:"DELETE", 
+				method:"DELETE",
 				url:Links.getDeleteFileLink()+"/"+file_id,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 			}).success(function (data, status, headers, config) {
@@ -2463,12 +2625,12 @@ services.service('Task', ["$http","Login","Links",function ($http,Login,Links) {
 	}
 	this.listFiles=function(successFunc,project_id)
 	{
-		
+
 		if(Login.getLoggedUser())
 		{
 			var me =this;
 			$http({
-				method:"GET", 
+				method:"GET",
 				url:Links.getDocumentslistLink()+"/"+project_id,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 			}).success(function (data, status, headers, config) {
@@ -2486,7 +2648,7 @@ services.service('Task', ["$http","Login","Links",function ($http,Login,Links) {
 				if(sessionStorage.tickettypes==null)
 				{
 					$http({
-						method:"GET", 
+						method:"GET",
 						url:Links.getTaskTypesLink(),
 						headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 					}).success(function (data, status, headers, config) {
@@ -2495,7 +2657,7 @@ services.service('Task', ["$http","Login","Links",function ($http,Login,Links) {
 		            }).error(function (data, status, headers, config) {
 		            	if(status==403)
 	        				Login.logout();
-	        	
+
 		            });
 		        }
 		        else
@@ -2507,7 +2669,7 @@ services.service('Task', ["$http","Login","Links",function ($http,Login,Links) {
 		if(Login.getLoggedUser())
 		{
 			$http({
-				method:"POST", 
+				method:"POST",
 				url:Links.getAcceptBugLink(),
 				data:data,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token,'Content-Type': undefined}
@@ -2529,11 +2691,120 @@ services.service('Dashboard', ["$http","Login","Links",function ($http,Login,Lin
 		{
 			var me =this;
 			$http({
-				method:"GET", 
+				method:"GET",
 				url:Links.getAdminDashboardLink(),
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
 			}).success(function (data, status, headers, config) {
                 successFunc(data);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failurefunc();
+            });
+        }
+	}
+}]);
+services.service("Invoice",["$http","Login","Links",function($http,Login,Links) {
+	this.getUnpaidTickets = function(successfunc,failurefunc)
+	{
+		if(Login.getLoggedUser())
+		{
+			var me =this;
+			$http({
+				method:"GET",
+				url:Links.getUnbilledticketLink(),
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			}).success(function (data, status, headers, config) {
+                successfunc(data);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failurefunc();
+            });
+        }
+	}
+	this.createInvoice = function(successfunc,failurefunc,project_id)
+	{
+		if(Login.getLoggedUser())
+		{
+			$http({
+				method:"GET",
+				url:Links.getCreateBillLink()+project_id,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token,'Content-Type': undefined}
+			}).success(function (data, status, headers, config) {
+                successfunc(data);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failurefunc();
+            });
+        }
+	}
+	this.payInvoice = function(successfunc,failurefunc,invoice_id)
+	{
+		if(Login.getLoggedUser())
+		{
+			$http({
+				method:"GET",
+				url:Links.getPayInvoice()+invoice_id,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token,'Content-Type': undefined}
+			}).success(function (data, status, headers, config) {
+                successfunc(data);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failurefunc();
+            });
+        }
+	}
+	this.getAllInvoiceList = function(successfunc,month,year)
+	{
+		if(Login.getLoggedUser())
+		{
+			$http({
+				method:"GET",
+				url:Links.getGetAllInvoiceLink()+year+"/"+month,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token,'Content-Type': undefined}
+			}).success(function (data, status, headers, config) {
+                successfunc(data);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            });
+        }
+	}
+	this.loadInvoiceInfo = function(successfunc,failurefunc,invoice_id)
+	{
+		if(Login.getLoggedUser())
+		{
+			$http({
+				method:"GET",
+				url:Links.getInvoiceDetailLink()+invoice_id,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token,'Content-Type': undefined}
+			}).success(function (data, status, headers, config) {
+                successfunc(data);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failurefunc();
+            });
+        }
+	}
+	this.loadInvoiceReport = function(successfunc,failurefunc,id,isinvoice)
+	{
+		if(Login.getLoggedUser())
+		{
+			$http({
+				method:"GET",
+				url:Links.getInvoiceReportLink()+isinvoice+"/"+id,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token,'Content-Type': undefined}
+			}).success(function (data, status, headers, config) {
+                successfunc(data);
             }).error(function (data, status, headers, config) {
             	if(status==403)
             		Login.logout();
