@@ -1013,7 +1013,7 @@ Controllers.controller('TeamCtrl', ['$scope','Team','Params','$location', functi
 		$scope.name=undefined;
 		$scope.surname=undefined;
 		$scope.capacity=undefined;
-		$scope.phonecode="+49";
+		$scope.phonecode="49";
 		$scope.phonenumber=undefined;
 		$scope.title=undefined;
 		$scope.city=undefined;
@@ -1314,7 +1314,6 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 	}
 	$scope.OpenCreateModal=function(client)
 	{
-		debugger;
 		if(client!=null)
 		{
 			$scope.email=client.email;
@@ -1463,7 +1462,6 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 			swal("Please fill all information",messages.join("\n"),"warning");
 		}
 		else{
-			debugger;
 			var address={
 			"city":$scope.city,
 			"country":$scope.country,
@@ -1486,7 +1484,6 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 				"billedfrom":$scope.billed_from,
 				"isSent":$scope.isSent
 			};
-			debugger;
 			if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN")
 			{
 				client.keyaccount_id=$scope.selectedKeyaccount;
@@ -1546,7 +1543,7 @@ Controllers.controller('CuserCtrl',['$scope','Login','Cuser','$location','Params
 		$scope.password=undefined;
 		$scope.name=undefined;
 		$scope.surname=undefined;
-		$scope.phonecode="+49";
+		$scope.phonecode="49";
 		$scope.phonenumber=undefined;
 		$scope.title=undefined;
 		$("#phonecodeselect").select2("val","49");
@@ -1847,6 +1844,17 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
     $scope.selectedJiraProject={item:null};
     $scope.estimationTotal=0;
     $scope.realtimeTotal=0;
+    $scope.ticketfiles=[];
+    $scope.$on("fileSelected", function (event, args) {
+        $scope.$apply(function () {            
+            //add the file object to the scope's files collection
+            $scope.ticketfiles.push(args.file);
+        });
+    });
+    $scope.deleteFileTicket = function(index)
+    {
+    	$scope.ticketfiles.splice(index,1);
+    }
     $scope.linkJiraProject = function()
     {
     	var succesfunc = function()
@@ -2591,6 +2599,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 			$scope.ticketdescription="";
 			editedTicket=null;
 			$scope.isedit=false;
+			$scope.ticketfiles=[];
 			$("#add-ticket").modal('show');
 		}
 	}
@@ -2624,7 +2633,10 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 				swal("Opss", "Something bad happen please try again later", "error");
 			}
 			if(editedTicket==null)
-				Ticket.createTicket(successFunc,failureFunc,data);
+			{
+				data.fileCount = $scope.ticketfiles.length;
+				Ticket.createTicket(successFunc,failureFunc,data,$scope.ticketfiles);
+			}
 			else
 				Ticket.updateTicket(successFunc,failureFunc,data);
 		}
@@ -4171,7 +4183,6 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 	{
 		successFunc=function(data)
 		{
-			debugger;
 			$scope.projects=data;
 			if(update===null)
 			{

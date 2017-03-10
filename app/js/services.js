@@ -2178,15 +2178,28 @@ services.service('Ticket', ["$http","Login","Links",function ($http,Login,Links)
 	{
 		return JSON.parse(localStorage.ticketypes);
 	}
-	this.createTicket=function(successFunc,failureFunc,data)
+	this.createTicket=function(successFunc,failureFunc,data,ticketfiles)
 	{
 		if(Login.getLoggedUser())
 			{
 				$http({
 					method:"POST",
-					data:data,
+					transformRequest: function (data) {
+		                var formData = new FormData();
+		                //need to convert our json object to a string version of json otherwise
+		                // the browser will do a 'toString()' on the object which will result 
+		                // in the value '[Object object]' on the server.
+		                formData.append("ticket", angular.toJson(data.ticket));
+		                //now add all of the assigned files
+		                for (var i = 0; i < data.files.length; i++) {
+		                    //add each file to the form data and iteratively name them
+		                    formData.append("file" + i, data.files[i]);
+		                }
+		                return formData;
+		            },
+					data:{ticket : data,files:ticketfiles},
 					url:Links.getCreateTicketLink(),
-					headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+					headers: {'x-crm-access-token': Login.getLoggedUser().token.token,'Content-Type':undefined}
 				}).success(function (data, status, headers, config) {
 					successFunc();
 	            }).error(function (data, status, headers, config) {
