@@ -16,9 +16,6 @@
                             clients
                         </li>
                         <li>
-                            adnatives
-                        </li>
-                        <li>
                             project details
                         </li>
                     </ol>
@@ -86,7 +83,7 @@
                                     <div class="col-md-12">
                                         <div class="project-list">
                                             <div class="table-responsive">
-                                                <table class="table table-hover">
+                                                <table class="table table-hover" ng-if="!isPartner">
                                                     <tbody>
                                                     <tr>
                                                         <td width="50" class="project-table-head"></td>
@@ -150,6 +147,62 @@
                                                         <td class="project-actions">
                                                             <button type="button" class="btn btn-white btn-sm" ng-click="openAddprojectModelFromclient(project)"><i class="fa fa-pencil"></i> </button>
                                                             <button type="button" class="btn btn-white btn-sm" ng-click="openAddMember(project)"><i class="fa fa-users"></i> </button>
+                                                            <a href="#/pdetails/{{project.id}}" class="btn btn-default btn-sm" target="_self"><i class="fa fa-sign-in"></i></a>
+                                                        </td>
+                                                    </tr>
+
+
+
+
+                                                    </tbody>
+                                                </table>
+                                                <table class="table table-hover" ng-if="isPartner">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td width="50" class="project-table-head"></td>
+                                                        <td width="150" class="project-table-head">ID</td>
+                                                        <td width="600" class="project-table-head">Title</td>
+                                                        <td width="250" class="project-table-head">Tickets</td>
+                                                        <td width="900" class="project-table-head">Team</td>
+                                                        <td width="150" class="project-table-head">Rate</td>
+                                                        <td width="400" class="project-table-head">EST | REAL | BT</td>
+                                                        <td width="500" class="project-table-head aright" ng-if="isManager">Action</td>
+                                                    </tr>
+
+                                                    <tr ng-repeat="project in projects">
+                                                        <td class="project-type">
+                                                            <i class="fa fa-angle-right"></i>
+                                                        </td>
+                                                        <td class="project-id">
+                                                            {{project.id}}
+                                                        </td>
+                                                        <td class="project-title">
+                                                            <a href="ticket-details-team-tracking-fxw.html">{{project.name}}</a>
+                                                            <small>created at {{project.creationdate}}</small>
+                                                        </td>
+                                                        <td class="project-client-projects">
+                                                            <i class="fa fa-angle-right ml5"></i><span class="client-tickets">{{project.ticketcount}} Tickets</span>
+                                                        </td>
+                                                        <td class="notification-avatar">
+                                                            <div class="project-people aleft" ng-if="project.team.length>0">
+                                                                 <a href="" class="team-lead" ng-repeat="member in project.team" ng-if='member.isTeamLeader' ><img src="{{member.photo}}" class="img-circle" alt="{{member.name}}" ng-if='member.photo!=null'>
+                                                                <img src="img/users/profile_default_small.jpg" class="img-circle" alt="{{member.name}}" ng-if='member.photo==null'></a>
+                                                                <a href="" ng-repeat="member in project.team" ng-if='!member.isTeamLeader'><img src="{{member.photo}}" class="img-circle" alt="{{member.name}}" ng-if='member.photo!=null'>
+                                                                <img src="img/users/profile_default_small.jpg" class="img-circle" alt="{{member.name}}" ng-if='member.photo==null'></a>
+
+                                                            </div>
+                                                        </td>
+
+                                                        <td class="project-status">
+                                                            <span class="rate" ng-if="project.rate!=null"></i> {{project.rate}} {{project.currency}}</span>
+                                                            <button type="button" class="btn btn-danger btn-xs" ng-click="openRate(project)" ng-if="project.rate==null && isManager"><i class="fa fa-plus"></i> add</button>
+                                                        </td>
+                                                        <td class="project-status">
+                                                            <span><i class="fa"></i> {{project.estimated}} h | {{project.realtime}} H | {{project.billedTime}} h</span>
+                                                           
+                                                        </td>
+                                                        <td class="project-actions" ng-if="isManager">
+                                                            <button type="button" class="btn btn-white btn-sm" ng-click="openAddprojectModelFromclient(project)"><i class="fa fa-pencil"></i> </button>
                                                             <a href="#/pdetails/{{project.id}}" class="btn btn-default btn-sm" target="_self"><i class="fa fa-sign-in"></i></a>
                                                         </td>
                                                     </tr>

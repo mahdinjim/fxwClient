@@ -6,7 +6,7 @@ directives.directive('sideBar', function() {
 });
 directives.directive('navMenu', function() {
 	return {
-    	templateUrl: 'partials/nav-menu.html?v=1.1'
+    	templateUrl: 'partials/nav-menu.html?v=1.2'
   		};
 });
 directives.directive('rightSide', function() {

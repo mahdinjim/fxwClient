@@ -1,219 +1,193 @@
-  <script>
-        $(document).ready(function() {
-            $('.footable').footable();
+  <script type="text/javascript">
+  var $image = $(".image-crop > img")
+    $($image).cropper({
+        aspectRatio:  1/1,
+        preview: ".img-preview",
+        done: function(data) {
+          
+        }
+    });
+
+    var $inputImage = $("#inputImage");
+    if (window.FileReader) {
+        $inputImage.change(function() {
+            var fileReader = new FileReader(),
+                    files = this.files,
+                    file;
+
+            if (!files.length) {
+                return;
+            }
+
+            file = files[0];
+
+            if (/^image\/\w+$/.test(file.type)) {
+                fileReader.readAsDataURL(file);
+                fileReader.onload = function () {
+                    $inputImage.val("");
+                    $image.cropper("reset", true).cropper("replace", this.result);
+                };
+            } else {
+                showMessage("Please choose an image file.");
+            }
         });
-    </script>
- <div id="wrapper">
- 	 <div side-bar></div>
+    } else {
+        $inputImage.addClass("hide");
+    }
 
- 	 <div id="page-wrapper" class="gray-bg">
- 	 	<div nav-menu></div>
- 	 	 <!--header title-->
-            <div class="row wrapper border-bottom white-bg page-heading">
-                <div class="col-lg-12">
-                    <h2><i class="fa fa fa-building"></i> Client</h2>
-                    <ol class="breadcrumb" ng-if="!isadmin">
-                        <li>
-                            flexwork.io
-                        </li>
-                        <li>
-                            Client
-                        </li>
-                    </ol>
-                    <ol class="breadcrumb" ng-if="isadmin">
-                        <li>
-                            administrator
-                        </li>
-                        <li>
-                            clients
-                        </li>
-                    </ol>
-                </div>
+    $("#download").click(function() {
+        window.open($image.cropper("getDataURL"));
+    });
+
+    $("#zoomIn").click(function() {
+        $image.cropper("zoom", 0.1);
+    });
+
+    $("#zoomOut").click(function() {
+        $image.cropper("zoom", -0.1);
+    });
+
+    $("#rotateLeft").click(function() {
+        $image.cropper("rotate", 45);
+    });
+
+    $("#rotateRight").click(function() {
+        $image.cropper("rotate", -45);
+    });
+
+    $("#setDrag").click(function() {
+        $image.cropper("setDragMode", "crop");
+    });
+
+    $('#data_5 .input-daterange').datepicker({
+        keyboardNavigation: false,
+        forceParse: false,
+        autoclose: true
+    });
+
+    var elem_3 = document.querySelector('.js-switch_3');
+    var switchery_3 = new Switchery(elem_3, { color: '#1AB394' });
+    var elem_4 = document.querySelector('.js-switch_4');
+    var switchery_4 = new Switchery(elem_4, { color: '#1AB394' });
+    
+
+    $('#datepicker').datepicker({
+    format: "dd/mm/yyyy"
+    });
+  </script>
+<div id="wrapper">
+       <div side-bar>
+       </div>
+    <div id="page-wrapper" class="gray-bg">   
+        <div nav-menu></div>
+             <!--header title-->
+        <div class="row wrapper border-bottom white-bg page-heading">
+            <div class="col-lg-9">
+                <h2><i class="fa fa-users"></i> Partners</h2>
+                <ol class="breadcrumb">
+                    <li>
+                        administrator
+                    </li>
+                    <li>
+                        partner
+                    </li>
+                </ol>
             </div>
-            <!--end header title-->
-    <!--main content-->
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="wrapper wrapper-content animated fadeInUp">
+        </div>
+        <!--end header title-->
+        <!--main-->
+        <div class="row">
+           
+            <div class="col-lg-12">
+                <div class="wrapper wrapper-content animated fadeInUp">
 
-                        <!-- buttons & team -->
-                        <div class="row mb20">
-                            <div class="col-md-12">
-                                <button class="btn btn-primary btn-bitbucket btn-m mr5" type="button" ng-click="OpenCreateModal(null)"><i class="fa fa-plus mr5"></i> add client</button>
-                                 <button class="btn btn-primary btn-bitbucket btn-m mr5" type="button" data-toggle="modal" data-target="#credit-calculator"ng-if="isPartner"><i class="fa fa-building mr5"></i>credit calculator</button>
-                            </div>
+                    <!-- buttons & team -->
+                    <div class="row mb20">
+                        <div class="col-md-6">
+                            <button class="btn btn-primary btn-bitbucket btn-m mr5" type="button" ng-click="openmemberForm(null)"><i class="fa fa-plus mr5"></i> add partner</button>
                         </div>
-                    <div class="ibox">
-                        <div class="ibox-content">
-
-                            <!--  <input type="text" class="form-control input-sm m-b-xs" id="filter"
-                                   placeholder="Search in table" ng-if="!isadmin"/> -->
-
-                            <table class="footable table table-stripped" data-page-size="10" data-filter=#filter ng-if="!isadmin">
-                                <thead>
-                                <tr>
-                                    <th data-hide="phone" data-sort-ignore="true" width="100">ID</th>
-                                    <th data-hide="" data-sort-ignore="true">Client</th>
-                                    <th data-hide="phone" data-sort-ignore="true">Name</th>
-                                    <th data-hide="" data-sort-ignore="true">Email</th>
-                                    <th data-hide="phone" data-sort-ignore="true">Telephone</th>
-                                    <th data-hide="" data-sort-ignore="true" width="250">Projects / Tickets</th>
-                                    <th data-hide="" data-sort-ignore="true" width="100">Users</th>
-                                    <th data-hide="" data-sort-ignore="true" width="100" ng-if="isPartner">status</th>
-                                    <th data-hide="phone" class="text-right" width="250" data-sort-ignore="true">Action</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-
-                                    <!--customer item-->
-                                    <tr  ng-repeat="client in customers">
-                                        <td>
-                                           {{client.id}}
-                                        </td>
-                                        <td>
-                                            {{client.companyname}}
-                                        </td>
-                                        <td>
-                                            {{client.name}} {{client.surname}}
-                                        </td>
-                                        <td>
-                                            {{client.email}}
-                                        </td>
-                                        <td>
-                                            +{{client.phonecode}} {{client.telnumber}}
-                                        </td>
-                                        <td>
-                                            <span class="label label-default"><i class="fa fa-square-o"></i> {{client.projectNumber}}/{{client.ticketnumber}}</span>
-                                        </td>
-                                         <td>
-                                            <span class="label label-default"><i class="fa fa-users"></i> {{client.userNumber}}</span>
-                                        </td>
-                                        <td ng-if="isPartner">
-                                            <span class="label label-default" ng-if="client.isManager">Managed</span>
-                                            <span class="label label-default" ng-if="!client.isManager">Refered</span>
-                                        </td>
-                                        <td class="text-right">
-                                             <div class="btn-table-mobile">
-                                                 <button type="button" class="btn btn-white btn-sm" ng-click="OpenCreateModal(client)"><i class="fa fa-pencil"></i> </button>
-                                        <a href="#/clientprojects/{{client.id}}" class="btn btn-white btn-sm"><i class="fa fa-search"></i> details</a>
-                                                <button type="button" class="btn btn-danger" ng-click="activateClient(client.id,false)" ng-if="client.active && !isPartner"> des</button>
-                                        <button type="button" class="btn btn-primary" ng-click="activateClient(client.id,true)" ng-if="!client.active && !isPartner"> act</button>
-                                            </div>
-                                        </td>
+                        <div style="clear:both;"></div>
+                    </div>
+                     <!-- end buttons & team -->
+                     <!-- table project list -->
+                    <div class="col-md-12">
+                        <div class="project-list">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <tbody>
+                                    
+                                    <!-- member 1-->
+                                    <tr>
+                                        <td width="50" class="project-table-head"></td>
+                                        <td width="600" class="project-table-head">Name</td>
+                                        <td width="600" class="project-table-head">Clients</td>
+                                        <td width="550" class="project-table-head">Project</td>
+                                     
+                                        <td width="200" class="project-table-head">Managed Projects#</td>
+                                        <td width="500" class="project-table-head aright">Action</td>
                                     </tr>
 
-                                </tbody>
-                                <!-- <tfoot>
-                                <tr>
-                                    <td colspan="8">
-                                        <ul class="pagination pagination-sm pull-right" ng-repeat="page in pagecount">
-                                            
-                                            <li ng-if="page==currentpage" class="active">
-                                                <a ng-if="page=='<<'" ng-click="firstpage()">{{page}}</a>
-                                                <a ng-if="page=='<'" ng-click="prevouispage()">{{page}}</a>
-                                                <a ng-if="page=='>'" ng-click="nextpage()">{{page}}</a>
-                                                 <a ng-if="page=='>>'" ng-click="lastpage()">{{page}}</a>
-                                                 <a ng-if="page!='>>' && page!='>' && page!='<' && page!='<<'" ng-click="navigatetopage(page)">{{page}}</a>
-                                            </li>
-                                            <li ng-if="page!=currentpage"><a ng-if="page=='<<'" ng-click="firstpage()">{{page}}</a>
-                                                <a ng-if="page=='<'" ng-click="prevouispage()">{{page}}</a>
-                                                <a ng-if="page=='>'" ng-click="nextpage()">{{page}}</a>
-                                                 <a ng-if="page=='>>'" ng-click="lastpage()">{{page}}</a>
-                                                 <a ng-if="page!='>>' && page!='>' && page!='<' && page!='<<'" ng-click="navigatetopage(page)">{{page}}</a></li>
-                                                                                     
-                                        </ul>
-                                    </td>
-                                </tr>
-                                </tfoot> -->
-                            </table>
-                            <table class="table table-hover" ng-if="isadmin">
-                                <tbody>
-                                <tr>
-                                    <td width="50" class="project-table-head"></td>
-                                    <td width="150" class="project-table-head">ID</td>
-                                    <td width="600" class="project-table-head">Title</td>
-                                    <td width="600" class="project-table-head">Projcts / Tickets</td>
-                                    <td width="150" class="project-table-head">Users</td>
-                                    <td width="450" class="project-table-head">Assign to</td>
-                                    <td width="600" class="project-table-head aright">Action</td>
-                                </tr>
+                                    <tr ng-repeat="member in partners">
+                                        <td class="notification-avatar">
+                                            <img alt="image" class="img-circle mr5" src="{{member.photo}}">
+                                        </td>
 
-                                <tr ng-repeat="client in customers">
-                                    <td class="project-type">
-                                        <i class="fa fa-angle-right"></i>
-                                    </td>
-                                    <td class="project-id">
-                                        {{client.id}}
-                                    </td>
-                                    <td class="project-title">
-                                        <a href="client-admin-adnatives-project-details-fxw.html">{{client.companyname}}</a>
-                                        <small>created at {{client.creationdate}}</small>
-                                    </td>
-                                    <td class="project-client-projects">
-                                        <i class="fa fa-clone"></i><span class="client-projects">{{client.projectNumber}} Projects</span>  
-                                        <i class="fa fa-angle-right ml5"></i><span class="client-tickets">{{client.ticketnumber}} Tickets</span>
-                                    </td>
-                                    <td class="project-status">
-                                        <a class="btn btn-default btn-xs"><i class="fa fa-users"></i> {{client.userNumber}}</a>
-                                    </td>
-                                    <td class="notification-avatar"><img src="{{client.keyaccount.photo}}" class="img-circle mr5" alt="image"> {{client.keyaccount.name}}  {{client.keyaccount.surname}}</td>
-                                    <td class="project-actions">
-                                        <button type="button" class="btn btn-white btn-sm" ng-click="OpenCreateModal(client)"><i class="fa fa-pencil"></i> </button>
-                                        <a href="#/clientprojects/{{client.id}}" class="btn btn-white btn-sm"><i class="fa fa-search"></i> details</a>
-                                        <button type="button" class="btn btn-danger" ng-click="activateClient(client.id,false)" ng-if="client.active"> des</button>
-                                        <button type="button" class="btn btn-primary" ng-click="activateClient(client.id,true)" ng-if="!client.active"> act</button>
-                                    </td> 
-                                </tr>
+                                        <td class="project-title">
+                                            <a href="team-admin-profile-fxw.html">{{member.name}} {{member.surname}}</a> 
+                                            <small>{{member.city}}, {{member.country}}</small>
+                                        </td>
+                                        
+                                   
+                                        <td class="bold">
+                                            <i class="fa fa-clone mr5"></i> {{member.totalClients}}
+                                        </td>
+                                        <td class="bold">
+                                            <i class="fa fa-square-o mr5"></i> {{member.totalProjects}}
 
-                                
-                                                                                    
-                                </tbody>
-                            </table>
+                                        </td>
+                                        <td class="bold">
+                                            <i class="fa fa-square-o mr5"></i> {{member.totalManagedProjects}}
 
+                                        </td>
+                                        <td class="project-actions">
+                                            <button type="button" class="btn btn-white btn-sm"  ng-click="openmemberForm(member)"><i class="fa fa-pencil"></i> </button>
+                                            <button type="button" class="btn btn-white btn-sm"  ng-click="openImageUplaoder(member)"><i class="fa fa-camera"></i> </button>
+                                        </td> 
+                                    </tr>
+
+                                                                                        
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
+                    <!-- end table project list-->
                 </div>
             </div>
         </div>
-            <!--end main content-->
-
-            <!--footer-->
-            <div class="footer">
-                <div>
-                     &copy;2015 &middot; <b>flexwork.io</b> &middot; <a href="privacy-terms-fxw.html">Privacy and Terms</a> &middot; <a href="imprint-fxw.html">Imprint</a>
-                </div>
-            </div>
-            <!--end footer-->
-   
-        </div>
-        <!--end page wrapper-->
-
     </div>
-    <!--modal add client-->
-    <div class="modal inmodal fade" id="add-client" role="dialog"  aria-hidden="true">
+</div>
+<div class="modal inmodal fade" id="add-user"  role="dialog"  aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title" ng-if="!isEdit"><i class="fa fa-user-plus modal-fa-icon"></i> Add Client</h4>
-                    <h4 class="modal-title" ng-if="isEdit"><i class="fa fa-user-plus modal-fa-icon"></i> Edit Client</h4>
+                    <h4 class="modal-title" ng-if="!isedit"><i class="fa fa-user-plus modal-fa-icon" ></i> Add Partner</h4>
+                    <h4 class="modal-title" ng-if="isedit"><i class="fa fa-user-plus modal-fa-icon" ></i> Edit Partner</h4>
                 </div>
                 <div class="modal-body">
                      <div class="row">
                         <div class="col-md-6">
                             <h4>Contact</h4>
                             <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Company Name" required="" ng-model="companyname">
-                            </div>
-                            <div class="form-group">
                                 <input type="text" class="form-control login-first-name" placeholder="First Name" required="" ng-model="name">
                                 <input type="text" class="form-control login-last-name" placeholder="Last Name" required="" ng-model="surname">
                                 <div class="clear-both"></div>
                             </div>
-                            <div class="form-group m-0">
+                            <div class="form-group">
                                 <!--select-->
                                 <div class="select-option f-left m-0" style="width: 30%; margin-right: 2.5% ! important;" >
-                                    <select class="select2" ng-model="phonecode" id="phonecode">
+                                    <select class="select2" ng-model="phonecode" id="phonecodeselect">
                                         <option value="43">+43</option>
                                         <option value="49">+49</option>
                                         <option value="41">+41</option>
@@ -429,53 +403,21 @@
                                         <option value="263">+263</option>
                                     </select>
                                 </div>
-                                <input type="text" class="form-control" ng-model="phonenumber" placeholder="Telephone" style="width: 67.5%;">
+                                <input type="text" class="form-control" placeholder="Telephone" style="width: 67.5%;" ng-model="phonenumber">
                             </div>
-                            <h4 style="margin-top: 20px;">Billing information</h4>
-                            <div class="form-group">
-                                <input type="text" class="form-control login-first-name" placeholder="Vat" required="" ng-model="vat">
-                                <input type="number" class="form-control login-last-name" placeholder="Tax eg 19" required="" ng-model="tax">
-                                <div class="clear-both"></div>
-                            </div>
-                            <div class="form-group">
-                                 
-                                    <select id="billedfromselect" select-two required="" ng-model="billed_from">
-                                        <option value="De">Germany</option>
-                                        <option value="Tr">Turkey</option>
-                                    </select>
-                                
-                                <div class="clear-both"></div>
-                            </div>
-                             <div class="form-group">
-                                 
-                                    <select id="currencyselect" select-two required="" ng-model="currency">
-                                        <option value="EUR">Euro</option>
-                                        <option value="USD">US dollar</option>
-                                        <option value="TL">Tuskish lira</option>
-                                    </select>
-                                
-                                <div class="clear-both"></div>
-                            </div>
-                            
-
-                        </div><!--col-md-->
-
-                        <div class="col-md-6">
-                            <h4>Location</h4>
                             <div class="form-group">
                                 <input type="text" class="form-control" placeholder="City" required="" ng-model="city">
-                            </div> 
-                            <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Zip" required="" ng-model="zipcode">
-                            </div> 
-                            <div class="form-group">
+                            </div>  
+                             <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Company name" ng-model="companyname">
+                            </div>  
+                            <div class="form-group mb-0">
                                 <div class="select-option m-0" style="width: 100%;">
                                     <select select-two ng-model="country" id="countryselect">
                                         <optgroup label="Commonly">
-                                        <option value="AUT">Austria</option>
                                         <option value="DEU">Germany</option>
-                                        <option value="CHE">Switzerland</option>
                                         <option value="TUR">Turkey</option>
+                                        <option value="TUN">Tunisia</option>
                                         </optgroup>
                                         <optgroup label="Worldwide">
                                         <option value="AFG">Afghanistan</option>
@@ -731,14 +673,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group mb-0">
-                                <textarea class="form-control" placeholder="Address" style="height:83px;" ng-model="address"></textarea>
-                            </div> 
                         </div><!--col-md-->
-
-                        <div class="col-md-12">
-                            <div class="hr-line-solid"></div>
-                        </div>
 
                         <div class="col-md-6">
                             <h4>Access</h4>
@@ -747,153 +682,123 @@
                                 <input type="email" class="form-control" placeholder="Email" required="" ng-model="email">
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Password" required="" ng-model="password">
+                                <input type="password" class="form-control" placeholder="Password" required="" ng-model="password">
                             </div>
 
-                            <div class="form-group m-0">
-                                <!--select-->
-                                <div class="select-option m-0" style="width: 100%;">
-                                    <select class="select2" disabled="disabled">
-                                        <option>Role</option>
-                                        <option selected="selected">Administrator</option>
-                                    </select>
-                                </div>
-                            </div>
+                           
                         </div><!--col-md-->
 
-                        <div class="col-md-6">
-                            <h4>Key Account</h4>
-                            <div class="form-group mb-0">
-                                <div class="select-option m-0" style="width: 100%;" ng-if="!isPartner">
-                                    <select select-two id="keyaccountselect" ng-model="keyaccount.selectedKeyaccount">
-                                        <option ng-repeat="keyaccount in keyaccounts" value="{{keyaccount.id}}">{{keyaccount.name}} {{keyaccount.surname}}</option>
+                        <div class="col-md-12">
+                            <div class="hr-line-solid"></div>
+                        </div>
+                       
+                            <div class="col-md-6 mt20 pt10">
+                                <div class="select-option m-0" style="width: 100%;">
+                                    <div class="form-group">
+                                <div class="select-option m-0" style="width: 100%;">
+                                    <select class="select2" ng-model="level" id="levelselect">
+                                        <option>Level</option>
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
                                     </select>
                                 </div>
-                                <div class="checkbox checkbox-primary mt-5 mb-5" ng-if="isPartner">
-                                    <input type="checkbox" id="checkbox4" ng-model="referer.manageClient" value="manage" checked>
-                                    <label for="checkbox4">Manage client projects</label>
+                            </div>
+                                  
                                 </div>
                             </div>
-                            </div>
                             
+                        
+                         <div class="col-md-12">
+                            <div class="hr-line-solid"></div>
                         </div>
+
+                        <div class="col-md-12">
+                            <h4>Language</h4>
+                            <div class="form-group m-0">
+                                <select data-placeholder="Select Language" class="select2 chosen-select" multiple style="width:100%;" tabindex="2" ng-model="language" id="luanguageselect">
+                                    <option value="English">English</option>
+                                    <option value="German">German</option>
+                                    <option value="Turkish">Turkish</option>
+                                    <option value="French">French</option>
+                                    <option value="Arabic">Arabic</option>
+                                </select>
+                            </div>
+                        </div><!--col-md-->
                      </div><!--row-->
                 </div>
                 <div class="modal-footer">
-                    <div class="row" ng-if="!isEdit">
+
+                    <div class="row" ng-if="!isedit">
                         <div class="col-md-6">
                             <div class="input-group">
                                 <div class="checkbox checkbox-primary mt-5 mb-5">
-                                    <input type="checkbox" id="checkbox3" ng-model="isSent" value="true" ng-change="stateChanged()">
+                                    <input type="checkbox" id="checkbox3" ng-model="send" ng-click="stateChanged()">
                                     <label for="checkbox3">Send login information to user</label>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" ng-click="createClient(null)">Save</button>
+                            <button type="button" class="btn btn-primary" ng-click="createTeamMember(null)">Save</button>
                         </div>
                     </div>
-                     <div ng-if="isEdit">
-                        <a class="f-left mt-5" data-toggle="modal" data-target="#delete"><small>Delete Account</small></a>
+                    <div ng-if="isedit">
+                        <a class="f-left mt-5" ng-click="deleteMember(oldmember)"><small>Delete Account</small></a>
                         <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" ng-click="createClient(oldclient)">Save</button>
+                        <button type="button" class="btn btn-primary" ng-click="createTeamMember(oldmember)">Save</button>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div> 
-<!--success modal-->
-    <div class="modal inmodal fade" id="success" tabindex="-1" role="dialog"  aria-hidden="true" style="top:150px;">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <div class="modal-title"><i class="glyphicon glyphicon-ok-circle"> Alright :)</i></div>
-                </div>
-                <div class="modal-body">
-                   <p class="modal-content-center m-0"></p>
-                </div>
-                
-            </div>
-        </div>
-    </div> 
-<!--failure modal-->
-    <div class="modal inmodal fade" id="failure" tabindex="-1" role="dialog"  aria-hidden="true" style="top:150px;">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <div class="modal-title"><i class="glyphicon glyphicon-remove-circle"> Oopss :(</i></div>
-                </div>
-                <div class="modal-body">
-                   <p class="modal-content-center m-0"></p>
-                </div>
-                
-            </div>
-        </div>
-    </div> 
-<!--warning modal-->
-    <div class="modal inmodal fade" id="warning" tabindex="-1" role="dialog"  aria-hidden="true" style="top:150px;">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <div class="modal-title"><i class="glyphicon glyphicon-warning-sign"> Hey hey!!</i></div>
-                </div>
-                <div class="modal-body">
-                   <p class="modal-content-center m-0"></p>
-                </div>
-                
-            </div>
-        </div>
-    </div> 
- <!--modal delete-->
-    <div class="modal inmodal fade" id="delete" tabindex="-1" role="dialog"  aria-hidden="true" style="top:150px;">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title"><i class="fa fa-trash modal-fa-icon"></i> Delete</h4>
-                </div>
-                <div class="modal-body">
-                   <p class="modal-content-center m-0">Do you really want to delete it?</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" ng-click="deleteClient(oldclient)">Delete</button>
-                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div> 
-<div class="modal inmodal fade" id="credit-calculator" tabindex="-1" role="dialog"  aria-hidden="true" style="top:150px;">
-     <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title"><i class="fa fa-building modal-fa-icon"></i> Credit calculator</h4>
-                </div>
-                <div class="modal-body">
-                 <div class="form-group">
-                    <input type="number" class="form-control" placeholder="Hours" required="" ng-model="hournumber" any-key="calculateCredit()">
-                </div>
-                 <div class="form-group">
-                    <input type="number" class="form-control" placeholder="Rate" required="" ng-model="ratenumber" any-key="calculateCredit()">
-                </div>
-                 <div class="checkbox checkbox-primary mt-5 mb-5">
-                                    <input type="checkbox" id="checkbox10" ng-model="includemanagement" value="manage" ng-change="calculateCredit()">
-                                    <label for="checkbox10">include management</label>
-                                </div>
-                            </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Credit" required="" ng-model="amountnumber" disabled>
-                </div>
-                 <div class="laoder" height="22">
-                  <img src="img/ring.gif" height="20" width="20" ng-if='isCalculatingCredit'>
-                </div>
-                </div>
-                <div class="modal-footer">
                 </div>
             </div>
         </div>
 </div>
+ <!--modal change picture-->
+    <div class="modal inmodal fade" id="change-picture" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"><i class="fa fa-camera modal-fa-icon"></i> Change Picture</h4>
+                </div>
+                <div class="modal-body">
+                   <div class="row">
+                        <div class="col-md-6">
+                                <div class="image-crop">
+                                    <img src="{{defaultimage}}" style="height:300px;width:300px">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h4>Preview image</h4>
+                                <div class="img-preview img-preview-lg" style="height:80px;width:80px"></div>
+                                <h4>Comon method</h4>
+                                <p>
+                                    You can upload new image to crop container and easy download new cropped image.
+                                </p>
+                                <div class="btn-group">
+                                    <label title="Upload image file" for="inputImage" class="btn btn-primary">
+                                        <input type="file" accept="image/*" name="file" id="inputImage" class="hide">
+                                        Upload new image
+                                    </label>
+                                    <label title="Donload image" id="download" class="btn btn-primary">Download</label>
+                                </div>
+                                <h4>Other method</h4>
+                                <p>
+                                    You may set cropper options with <code>$({image}).cropper(options)</code>
+                                </p>
+                                <div class="btn-group">
+                                    <button class="btn btn-white" id="zoomIn" type="button">Zoom In</button>
+                                    <button class="btn btn-white" id="zoomOut" type="button">Zoom Out</button>
+                                    <button class="btn btn-white" id="rotateLeft" type="button">Rotate Left</button>
+                                    <button class="btn btn-white" id="rotateRight" type="button">Rotate Right</button>
+                                    <button class="btn btn-warning" id="setDrag" type="button">New crop</button>
+                                </div>
+                            </div>
+                   </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" ng-click="uploadImage(oldmember)">Save</button>
+                </div>
+            </div>
+        </div>
+    </div> 

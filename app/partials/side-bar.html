@@ -166,7 +166,12 @@
                     <li ng-class="{'active':(teamactive)}" activate-tab>
                         <a href="#/team"><i class="fa fa-users"></i> <span class="nav-label">Teams</span></a>
                     </li>
-
+                    <li ng-class="{'active':(partneractive)}" activate-tab>
+                        <a href="#/partners"><i class="fa fa-users"></i> <span class="nav-label">Partners</span></a>
+                    </li>
+                    <li ng-class="{'active':(adcommactive)}" activate-tab>
+                        <a href="#/admin/credit"><i class="fa fa-file"></i> <span class="nav-label">Credits</span></a>
+                    </li>
                     <li ng-class="{'active':(clientactive)}" activate-tab>
                         <a href="#/client"><i class="fa fa-building"></i> <span class="nav-label">Clients</span></a>
                     </li>
@@ -251,6 +256,9 @@
 
                     <li  ng-click="openclosetab('reportab')" ng-class="{'active':(reportactive)}" activate-tab>
                         <a href="#/report"><i class="fa fa-search"></i> <span class="nav-label">Reports</span></a>
+                    </li>
+                    <li ng-class="{'active':(adcommactive)}" activate-tab ng-if="isPartner">
+                        <a href="#/credit"><i class="fa fa-file"></i> <span class="nav-label">credits</span></a>
                     </li>
                 </ul>
                 <ul class="nav metismenu" id="side-menu" ng-if="isMember">

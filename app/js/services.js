@@ -85,7 +85,7 @@ services.factory("Links",[function(){
 	var acceptContractLink=baseUrl+path+"/private/customer/contract/accept";
 	var acceptProjectContractLink=baseUrl+path+"/private/project/restricted/accept";
 	var listProjectByClientLink=baseUrl+path+"/private/management/project/client/list";
-	var assignRateLink=baseUrl+path+"/private/super/project/rate";
+	var assignRateLink=baseUrl+path+"/private/keyaccount/project/rate";
 	var updateprojectLink=baseUrl+path+"/private/project/restricted/update";
 	var addRealtimeLink=baseUrl+path+"/private/project/task/realtime/create";
 	var updateRealtimeLink=baseUrl+path+"/private/project/task/realtime/update";
@@ -119,6 +119,12 @@ services.factory("Links",[function(){
 	var getAllInvoiceLink = baseUrl + path + "/private/invoice/list/";
 	var invoiceDetailLink = baseUrl + path + "/private/invoice/detail/";
 	var invoiceReportLink = baseUrl + path + "/private/invoice/report/";
+	var partnersListLink=baseUrl+path+'/private/super/partner/all';
+	var adminCommissionListLink=baseUrl+path+'/private/super/commission/all';
+	var partnerCommissionListLink = baseUrl + path + "/private/keyaccount/commission/all/";
+	var uploadCommissionInvoiceLink = baseUrl + path + "/private/keyaccount/commission/invoice";
+	var calculateCommissionLink = baseUrl + path + "/private/keyaccount/commission/calculate/";
+	var paycommissionLink = baseUrl + path + "/private/super/commission/pay/";
 	this.getLoginLink=function()
 	{
 		return LoginLink;
@@ -585,14 +591,38 @@ services.factory("Links",[function(){
 	{
 		return invoiceReportLink;
 	}
+	this.getPartnersListLink = function()
+	{
+		return partnersListLink;
+	}
+	this.getAdminCommissionListLink = function()
+	{
+		return adminCommissionListLink;
+	}
+	this.getPartnerCommissionListLink = function()
+	{
+		return partnerCommissionListLink;
+	}
+	this.getUploadCommissionInvoiceLink = function()
+	{
+		return uploadCommissionInvoiceLink;
+	}
+	this.getCalculateCommissionLink = function()
+	{
+		return calculateCommissionLink;
+	}
+	this.getPaycommissionLink = function()
+	{
+		return paycommissionLink;
+	}
 	return this;
 }]);
 services.factory("Login",['$http','$location','$cookies',"$route","Links",
 	function($http,$location,$cookies,$route,Links){
 		var lastlink=null;
-		var Admin_Access=["","/login","/dashboard","/client","/teamprofile","/team","/messaging","/pdetails","/keybox","/stories","/clientprojects","/report","/invoiceadmin", "/admininvoicepaids","/invoice","/invoicedetails"];
+		var Admin_Access=["","/login","/dashboard","/client","/teamprofile","/team","/messaging","/pdetails","/keybox","/stories","/clientprojects","/report","/invoiceadmin", "/admininvoicepaids","/invoice","/invoicedetails","/partners","/admin/credit","/admin/credit/list"];
 		var Client_Access=["","/login","/dashboard","/cuser","/cuserprofile","/messaging","/pdetails","/keybox","/stories","/acceptcontract","/report","/invoice","/invoicedetails"];
-		var KeyAccount_Access=["","/login","/dashboard","/pdetails","/client","/keybox","/stories","/clientprojects","/report"];
+		var KeyAccount_Access=["","/login","/dashboard","/pdetails","/client","/keybox","/stories","/clientprojects","/report","/credit"];
 		var TeamLeader_Access=["","/login","/dashboard","/pdetails","/keybox","/stories"];
 		var TeamMember_Access=["","/login","/dashboard","/pdetails","/keybox","/stories"];
 		this.setLastLink=function(path)
@@ -824,6 +854,28 @@ services.factory("Login",['$http','$location','$cookies',"$route","Links",
 
 services.factory("Team",['$http','$location','$cookieStore',"Login","Links",function($http,$location,$cookieStore,Login,Links){
 		this.roles=null;
+		this.getPartnersList = function(successfunc)
+		{
+					if(Login.getLoggedUser())
+			{
+				$http({
+					method:"GET",
+					url:Links.	getPartnersListLink(),
+					headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+				}).success(function (data, status, headers, config) {
+					for(i=0;i<data.length;i++)
+					{
+						if(data[i].photo==null)
+							data[i].photo="img/users/profile_default_small.jpg"
+					}
+	                successfunc(data);
+	            }).error(function (data, status, headers, config) {
+	            	if(status==403)
+        				Login.logout();
+
+	            });
+	        }
+		}
 		this.loadRoles=function(successFunc){
 			if(localStorage.roles!=null)
 			{
@@ -1156,6 +1208,24 @@ services.factory("Team",['$http','$location','$cookieStore',"Login","Links",func
 // 	return this;
 // }]);
 services.factory('Client', ['$http','Login',"Links",function ($http,Login,Links) {	
+	this.calculateCommission = function(successfunc,failurefunc,hours,rate,includePM)
+	{
+		if(Login.getLoggedUser())
+		{
+			$http({
+					method:"get", 
+					url:Links.getCalculateCommissionLink()+rate+"/"+hours+"/"+includePM,
+					headers: {'Content-Type': 'application/json','x-crm-access-token': Login.getLoggedUser().token.token}
+				}).success(function (data, status, headers, config) {
+					successfunc(data);
+				}).error(function (data, status, headers, config) {
+					if(status==403)
+        				Login.logout()
+        			else
+	            		failurefunc(status);
+	            });
+		}
+	}
 	this.unlinkJiraAccount=function(successfunc,failurefunc,client_id,token)
 	{
 		if(Login.getLoggedUser())
@@ -2802,6 +2872,81 @@ services.service("Invoice",["$http","Login","Links",function($http,Login,Links) 
 			$http({
 				method:"GET",
 				url:Links.getInvoiceReportLink()+isinvoice+"/"+id,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token,'Content-Type': undefined}
+			}).success(function (data, status, headers, config) {
+                successfunc(data);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failurefunc();
+            });
+        }
+	}
+}]);
+services.service('Commission', ["$http","Login","Links",function ($http,Login,Links) {
+	this.loadAdminList = function(successfunc,failurefunc)
+	{
+		if(Login.getLoggedUser())
+		{
+			$http({
+				method:"GET",
+				url:Links.getAdminCommissionListLink(),
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token,'Content-Type': undefined}
+			}).success(function (data, status, headers, config) {
+                successfunc(data);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failurefunc();
+            });
+        }
+	}
+	this.getAllCommList = function(successfunc,month,year)
+	{
+		if(Login.getLoggedUser())
+		{
+			$http({
+				method:"GET",
+				url:Links.getPartnerCommissionListLink()+year+"/"+month,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token,'Content-Type': undefined}
+			}).success(function (data, status, headers, config) {
+                successfunc(data);
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            });
+        }
+	}
+	this.uploadCommInvoice = function(successFunc,failurefunc,data,comm_id)
+	{
+		if(Login.getLoggedUser())
+		{
+			var me =this;
+			$http({
+				method:"POST",
+				url:Links.getUploadCommissionInvoiceLink()+"/"+comm_id,
+				transformRequest: angular.identity,
+				data:data,
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token,'Content-Type': undefined}
+			}).success(function (data, status, headers, config) {
+                successFunc();
+            }).error(function (data, status, headers, config) {
+            	if(status==403)
+            		Login.logout();
+            	else
+            		failurefunc();
+            });
+        }
+	}
+	this.payCommission = function(successfunc,failurefunc,comm_id)
+	{
+		if(Login.getLoggedUser())
+		{
+			$http({
+				method:"GET",
+				url:Links.getPaycommissionLink()+comm_id,
 				headers: {'x-crm-access-token': Login.getLoggedUser().token.token,'Content-Type': undefined}
 			}).success(function (data, status, headers, config) {
                 successfunc(data);

@@ -1,0 +1,149 @@
+<div id="wrapper">
+      <div side-bar>
+      </div>
+<div id="page-wrapper" class="gray-bg">
+
+<div nav-menu></div>
+
+           <!--header title-->
+           <div class="row wrapper border-bottom white-bg page-heading">
+               <div class="col-lg-12">
+                   <h2><i class="fa fa-file"></i> Credits</h2>
+                   <ol class="breadcrumb">
+                       <li>
+                          Credits
+                       </li>
+                   </ol>
+               </div>
+           </div>
+           <!--end header title-->
+
+           <!--main-->
+           <div class="row">
+               <div class="col-lg-12">
+                   <div class="wrapper wrapper-content animated fadeInUp">
+
+                       <div class="ibox">
+                          <div class="ibox-content">
+                               <div class="row">
+                                 <!-- filter-->
+                                 <div class="col-md-12 pb10">
+                                     <div class="col-md-8 p0">
+                                         <div class="form-group fleft mr10 mb10">
+                                             <div class="select-option select-project m-0" style="width: 150px;">
+                                                 <select select-two ng-model="year" ng-change="changeDate()">
+                                                     <option selected="selected">2017</option>
+                                                     <option >2016</option>
+                                                     <option>2015</option>
+                                                 </select>
+                                             </div>
+                                          </div>
+                                     </div>
+                                     <div class="col-md-4 p0"></div>
+                                     <div style="clear:both;"></div>
+                                 </div>
+                                 <!-- end filter-->
+
+                                   <!-- table project list -->
+                                   <div class="col-md-12">
+                                       <div class="project-list">
+                                           <div class="table-responsive">
+                                               <table class="table table-hover">
+                                                   <tbody>
+                                                   <tr>
+                                                      <td width="250" class="project-table-head">Date</td>
+                                                       <td width="250" class="project-table-head">Client</td>
+                                                       <td width="150" class="project-table-head">Project</td>
+                                                       <td width="150" class="project-table-head">Billable Time</td>
+                                                       <td width="450" class="project-table-head">Details</td>
+                                                       <td width="200" class="project-table-head">Total ammount</td>
+                                                       <td width="150" class="project-table-head">Status</td>
+                                                       <td width="150" class="project-table-head aright">Invoice us</td>
+                                                   </tr>
+
+                                                   <tr ng-repeat="comm in commissions" ng-class="comm.ispayed ?'done':''">
+                                                      <td class="project-estimation">
+                                                           {{comm.date}}
+                                                       </td>
+                                                       <td class="project-estimation">
+                                                           {{comm.client}}
+                                                       </td>
+                                                       
+                                                       <td class="project-estimation">
+                                                          <b>{{comm.project}}</b>
+                                                       </td>
+                                                       <td class="project-estimation">
+                                                          <b>{{comm.total_hours}} h</b>
+                                                       </td>
+                                                       <td class="project-estimation" >
+                                                        <div ng-repeat="detail in comm.details">
+                                                          {{detail}} 
+                                                        </div>
+                                                       </td>
+                                                       <td class="project-estimation">
+                                                          <b>{{comm.total_ammount}} {{comm.currency}}</b>
+                                                       </td>
+                                                       <td class="project-status" ng-if="comm.ispayed">
+                                                         <span class="label label-default label-nobg"><i class="fa fa-check"></i> paid</span>
+                                                       </td>
+                                                       <td class="project-status" ng-if="!comm.ispayed">
+                                                         <span class="label label-default label-nobg"> unpaid</span>
+                                                       </td>
+                                                       <td class="project-actions">
+                                                         <input type="button" class="btn btn-primary btn-xs" ng-click="openUploadInvoice(comm)" value="upload invoice" ng-if="!comm.ispayed"/>
+                                                        <div ng-if="comm.invoice != null">
+                                                          <a href="{{comm.invoice}}"target="__blanc" class="fxwlink">{{comm.invoice_name}}</a>
+                                                        </div> 
+                                                       </td>
+                                                   </tr>
+                                                   </tbody>
+                                               </table>
+                                           </div>
+                                       </div>
+                                   </div>
+                                   <!-- end table project list-->
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+           <!--main-->
+
+           <!--footer-->
+           <div class="footer">
+               <div>
+                    &copy;2015 &middot; <b>flexwork.io</b> &middot; <a href="privacy-terms-fxw.html">Privacy and Terms</a> &middot; <a href="imprint-fxw.html">Imprint</a>
+               </div>
+           </div>
+           <!--end footer-->
+
+       </div>
+       <!--end page wrapper-->
+
+   </div>
+<div class="modal inmodal fade" id="upload-file" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-m">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title"><i class="fa fa-upload modal-fa-icon" ></i> Upload invoice</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb10 aleft">
+
+                        <div class="fileUpload btn btn-primary btn-xs">
+                          <span><i class="fa fa-plus"></i> add file</span>
+                          <input class="upload" id="upfiles" name="Datei" type="file" file-upload accept="pdf/*"/>
+                        </div>                                  
+                        <div>{{selectedinvoice.name}}
+                    </div><!--row-->
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" ng-click="uploadInvoice()">upload</button>
+                </div>
+            </div>
+        </div>
+</div>

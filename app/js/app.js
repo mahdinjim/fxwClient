@@ -87,6 +87,22 @@ crmapp.config(["$routeProvider",
 				templateUrl:'partials/adminInvoicePaids.html',
 				controller:"InvoiceCtrl"
 			}).
+			when('/partners',{
+				templateUrl:'partials/partners.html',
+				controller:"PartnerCtrl"
+			}).
+			when('/admin/credit',{
+				templateUrl:'partials/adminCommission.html',
+				controller:"CommissionCtrl"
+			}).
+			when('/admin/credit/list',{
+				templateUrl:'partials/admincommlist.html',
+				controller:"CommissionCtrl"
+			}).
+			when('/credit',{
+				templateUrl:'partials/partnercommlist.html',
+				controller:"CommissionCtrl"
+			}).
 			otherwise({
         		redirectTo: '/dashboard'
       		});

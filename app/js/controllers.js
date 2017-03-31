@@ -101,6 +101,18 @@ Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Clie
 		{
 			$scope.reportactive=true;
 		}
+		if($location.path()=="/partners")
+		{
+			$scope.partneractive=true;
+		}
+		if($location.path()=="/admin/credit")
+		{
+			$scope.adcommactive=true;
+		}
+		if($location.path()=="/credit")
+		{
+			$scope.adcommactive=true;
+		}
 		$scope.isclient=false;
 		$scope.isClientUser=false;
 		$scope.noJiraAccount=true;
@@ -125,6 +137,8 @@ Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Clie
 		else if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_KEYACCOUNT")
 		{
 			$scope.isKeyAccount=true;
+			if(Login.getLoggedUser().userinfo.roles.indexOf("ROLE_PARTNER"))
+				$scope.isPartner = true;
 		}
 		else
 		{
@@ -1210,6 +1224,32 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 	$scope.isSent=false;
 	$scope.currentpage=1;
 	$scope.isEdit=false;
+	$scope.isPartner = false;
+	$scope.referer= {manageClient : true};
+	$scope.keyaccount={selectedKeyaccount:null};
+	$scope.isCalculatingCredit = false;
+	$scope.includemanagement = false;
+	$scope.calculateCredit = function()
+	{
+		
+		var succesfunc = function(data)
+		{
+			$scope.amountnumber = data.ammount;
+			$scope.isCalculatingCredit = false;
+		}
+		var failurefunc = function(data)
+		{
+			$scope.amountnumber = "error";
+			$scope.isCalculatingCredit = false;
+		}
+		if(!isNaN($scope.hournumber) && $scope.hournumber >0 && !isNaN($scope.ratenumber) && $scope.ratenumber >0)
+		{
+			$scope.isCalculatingCredit = true;
+			Client.calculateCommission(succesfunc,failurefunc,$scope.hournumber,$scope.ratenumber,$scope.includemanagement);
+		}
+		else
+			$scope.amountnumber = "";
+	}
 	$scope.activateClient=function(client_id,activate)
 	{
 		swal({
@@ -1236,6 +1276,10 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 	if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN")
 	{
 		$scope.isadmin=true;
+	}
+	if(Login.getLoggedUser().userinfo.roles.indexOf("ROLE_PARTNER")>-1)
+	{
+		$scope.isPartner = true;
 	}
 	var updateView=function(page){
 		var successfunc=function(customers,pagecount,currentpage)
@@ -1329,6 +1373,7 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 			$("#countryselect").select2("val",client.address.country);
 			$scope.companyname=client.companyname;
 			$scope.zipcode=client.address.zipcode;
+			$scope.referer.manageClient = client.isManager;
 			if(client.currency != "")
 			{
 				$scope.currency = client.currency;
@@ -1345,7 +1390,7 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 			}
 			var data={"id":0,text:client.keyaccount.name+" "+client.keyaccount.surname};
 			$("#keyaccountselect").select2("data",data);
-			$scope.selectedKeyaccount=client.keyaccount.id;
+			$scope.keyaccount.selectedKeyaccount=client.keyaccount.id;
 			$("#phonecode").select2("val",client.phonecode);
 			//$("#countryselect").select2("data",{id:-1,text:client.address.country});
 			$scope.isEdit=true;
@@ -1374,13 +1419,14 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 		$scope.country=undefined;
 		$scope.companyname=undefined;
 		$scope.zipcode=undefined;
-		$scope.selectedKeyaccount=undefined
+		$scope.keyaccount.selectedKeyaccount=undefined
 		$scope.tax = undefined;
 		$("#keyaccountselect").select2("data",{id:-1,text:"Key Account"});
 		$("#countryselect").select2("data",{id:-1,text:"Country"});
 		$("#phonecode").select2("val","49");
 		$("#currencyselect").select2("val","EUR");
 		$("#billedfromselect").select2("val","De");
+		$scope.referer= {manageClient : ""};
 	}
 	var verifyForm=function()
 	{
@@ -1425,7 +1471,7 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 		{
 			messages.push("Please fill the compnay name");
 		}
-		if($scope.selectedKeyaccount===undefined && Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN")
+		if($scope.keyaccount.selectedKeyaccount===undefined && Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN")
 		{
 			messages.push("Please choose a key account");
 		}
@@ -1486,9 +1532,13 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 			};
 			if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_ADMIN")
 			{
-				client.keyaccount_id=$scope.selectedKeyaccount;
+				client.keyaccount_id=$scope.keyaccount.selectedKeyaccount;
 			}
-
+			if($scope.isPartner)
+			{
+				client.createdByPartner = true;
+				client.managedbyPartner = $scope.referer.manageClient;
+			}
 			var failureFunction=function(msg)
 			{
 				swal("Oops!!", msg, "error");
@@ -4156,6 +4206,12 @@ Controllers.controller('ContractCtrl', ['$scope',"Login","$routeParams","$locati
 }]);
 Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","Project","$location","Team","Params",function ($scope,Login,$routeParams,Project,$location,Team,Params) {
 	var customerid=$routeParams.cid;
+	$scope.isPartner = false;
+	$scope.isManager = false;
+	if(Login.getLoggedUser().userinfo.roles.indexOf("ROLE_PARTNER")>-1)
+	{
+		$scope.isPartner = true;
+	}
 	if(customerid==undefined)
 		$location.path("/client");
 	var loadRoles=function(data){
@@ -4183,7 +4239,8 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 	{
 		successFunc=function(data)
 		{
-			$scope.projects=data;
+			$scope.projects=data.data;
+			$scope.isManager = data.isManaged;
 			if(update===null)
 			{
 				var update=setInterval(updateView(), 5000);
@@ -4279,6 +4336,8 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 	$scope.openPrepareContract=function(project)
 	{
 		$("#prepare-project").modal('show');
+		if(project.rate!=null)
+			$scope.prate=project.rate;
 		selectedproject=project;
 		$scope.projectname=project.name;
 		$scope.projectcurrency=project.currency;
@@ -4762,7 +4821,7 @@ Controllers.controller('ReportCtrl',['$scope','$routeParams','Project','Ticket',
 	$scope.month=d.getMonth()+1;
 	$('#selectedmonth').val($scope.month);
 	$scope.year=d.getFullYear();
-	$scope.project_name="";
+	$scope.project_name="No projects";
 	var dataObject=null;
 	$scope.paymentstatus="all";
 	$scope.showMarker=false;
@@ -4770,7 +4829,7 @@ Controllers.controller('ReportCtrl',['$scope','$routeParams','Project','Ticket',
 	$scope.showProjects=false;
 	$scope.filterData = {
 		"selectedproject":null,
-		"selectedclient" : null
+		"selectedclient" : {"companyname":"No clients added yet"}
 	};
 	
 	var init={id:-1,text:"selected a project"};
@@ -4911,7 +4970,8 @@ Controllers.controller('ReportCtrl',['$scope','$routeParams','Project','Ticket',
 		{
 			year=d.getFullYear();
 		}
-		Project.getTicketReportbyMonth(successFunc,failureFunc,month,year,project_id);
+		if(project_id!=null)
+			Project.getTicketReportbyMonth(successFunc,failureFunc,month,year,project_id);
 	}
 	var updateDateView=function(month,year)
 	{
@@ -4924,17 +4984,21 @@ Controllers.controller('ReportCtrl',['$scope','$routeParams','Project','Ticket',
 		{
 			year=d.getFullYear();
 		}
-		Project.getDateReportbyMonth(successFunc,failureFunc,month,year,project_id);
+		if(project_id!=null)
+			Project.getDateReportbyMonth(successFunc,failureFunc,month,year,project_id);
 	}
 	var loadclients = function()
 	{
 		var successFunc = function(data)
 		{
-			$scope.clients = data;
-			$scope.filterData.selectedclient = data[0];
-			$scope.showClients = true;
-
-			loadProjects(false);
+			if(data.length > 0)
+			{
+				$scope.clients = data;
+				$scope.filterData.selectedclient = data[0];
+				$scope.showClients = true;
+				loadProjects(false);
+			}
+			
 		}
 		var failurefunc = function()
 		{
@@ -4968,7 +5032,8 @@ Controllers.controller('ReportCtrl',['$scope','$routeParams','Project','Ticket',
 	{
 		var succesfunc = function(data)
 		{
-			hundleProjects(data,true);
+			if(data.data.length > 0)
+				hundleProjects(data.data,true);
 		}
 		var hundleProjects = function(data,showclient)
 		{
@@ -5225,5 +5290,341 @@ Controllers.controller("InvoiceCtrl",["$scope","Login","Invoice","$location","$r
 	if(Login.getLoggedUser().userinfo.roles[0] === "ROLE_ADMIN")
 	{
 		getInvoiceList();
+	}
+}]);
+Controllers.controller("PartnerCtrl",["$scope","Login","Team","$location","$routeParams",function($scope,Login,Team,$location,$routeParams)
+{
+	$scope.partners = [];
+	$scope.send=false;
+	$scope.stateChanged=function()
+	{
+		if($scope.send)
+		{
+			$scope.send=false;
+		}
+		else
+			$scope.send=true;
+	}
+	var updateAdminView = function()
+	{
+		var successfunc = function(data)
+		{
+			$scope.partners = data;
+		} 
+		Team.getPartnersList(successfunc);
+	}
+	if(Login.getLoggedUser().userinfo.roles[0] === "ROLE_ADMIN")
+	{
+		updateAdminView();
+	}
+	var validateForm=function()
+	{
+		var messages =[];
+		if($scope.surname===undefined)
+		{
+			messages.push("Please fill the surname");
+		}
+		if($scope.name===undefined)
+		{
+			messages.push("Please fill the name");
+		}
+		if($scope.phonecode===undefined)
+		{
+			messages.push("Please fill the phone code");
+		}
+		if($scope.phonenumber===undefined)
+		{
+			messages.push("Please fill the phone number");
+		}
+		if($scope.email===undefined)
+		{
+			messages.push("Please fill the email");
+		}
+		if($scope.password===undefined)
+		{
+			messages.push("Please fill the password");
+		}
+		if($scope.city===undefined)
+		{
+			messages.push("Please fill the city");
+		}
+		if($scope.country===undefined)
+		{
+			messages.push("Please fill the country");
+		}
+		if($scope.level===undefined)
+		{
+			messages.push("Please fill the level");
+		}
+		if($scope.language===undefined)
+		{
+			messages.push("Please fill the language");
+		}
+		return messages;
+
+	}
+	$scope.openmemberForm=function(member)
+	{
+		if(member!=null)
+		{
+			$scope.email=member.email;
+			$scope.password="******";
+			$scope.name=member.name;
+			$scope.surname=member.surname;
+			$scope.city=member.city;
+			$scope.phonenumber=member.phonenumber;
+			$scope.phonecode=member.phonecode;
+			$("#phonecodeselect").select2("val",member.phonecode);
+			$scope.country=member.country;
+			$("#countryselect").select2("val",member.country);
+			$scope.language=member.language.split(',');
+			$("#luanguageselect").select2("val",member.language.split(','));
+			$scope.level=member.level;
+			$("#levelselect").select2("val",member.level);
+			$scope.isedit=true;
+			if(member.companyname != null)
+				$scope.companyname = member.companyname;
+			$scope.oldmember=member;
+
+
+		}
+		else{
+			cleanForm();
+			$scope.isedit=false;
+			$("#countryselect").select2("data",{id:-1,"text":"Country"});
+
+		}
+		$('#add-user').modal('show');
+	}
+	function cleanForm()
+	{
+		$scope.email=undefined;
+		$scope.password=undefined;
+		$scope.name=undefined;
+		$scope.surname=undefined;
+		$scope.phonecode="+49";
+		$scope.phonenumber=undefined;
+		$scope.city=undefined;
+		$scope.country=undefined;
+		$scope.language=undefined;
+		$scope.level=undefined;
+		$scope.companyname=undefined;
+		$("#levelselect").select2("val","Level");
+		$("#phonecodeselect").select2("val","49");
+		$("#countryselect").select2("val","Country");
+	}
+	$scope.createTeamMember=function(oldmember)
+	{
+		var messages=validateForm();
+		if(messages.length>0)
+		{
+
+			swal("Please Fill missing information",messages.join('\n'),"warning");
+		}
+		else
+		{
+			var succesfunc=function()
+			{
+				$('#add-user').modal('hide');
+
+				swal("Success","Member Added/Updated successfully","success");
+				updateAdminView();
+				cleanForm();
+
+			}
+			var failureFunction=function(msg)
+			{
+				swal("Oops!","Can't add team member please try again later","error");
+			}
+			var member={
+				"email":$scope.email,
+				"login":$scope.email,
+				"name":$scope.name,
+				"surname":$scope.surname,
+				"phonecode":$scope.phonecode,
+				"phonenumber":$scope.phonenumber,
+				"city":$scope.city,
+				"country":$scope.country,
+				"dosend":$scope.send,
+				"language":""+$scope.language,
+				"level":$scope.level,
+				"ispartner":true
+			};
+			if($scope.companyname!="")
+				member.companyname=$scope.companyname;
+			if($scope.password!="******")
+				member.password=$scope.password;
+			if(oldmember==null){
+					Team.createKeyAccount(member,succesfunc,failureFunction);
+			}
+			else
+			{
+				member["id"]=oldmember.id;
+				Team.updateKeyAccount(member,succesfunc,failureFunction);
+			}
+		}
+	}
+	$scope.deleteMember=function(member)
+	{
+		swal({
+                title: "Are you sure?",
+                text: 'You deleted it.',
+                type: "warning",
+                showCancelButton: true,
+                cancelButtonText: "cancel",
+                confirmButtonColor: "#ed5565",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false
+            }, function () {
+            	var succesfunc=function()
+				{
+					$('#delete').modal('hide');
+					$('#add-user').modal('hide');
+					swal("Success","Member deleted successfully","success");
+					updateAdminView();
+					cleanForm();
+					swal.close();
+
+				}
+				var failureFunction=function(msg)
+				{
+					swal("Oops!","Can't delete team member please try again later","error");
+				}
+				Team.deleteKeyAccount(member,succesfunc,failureFunction);
+		 });
+
+	}
+	$scope.uploadImage=function(member)
+	{
+		  var $image = $(".image-crop > img")
+		  var successFunc=function()
+		  {
+		  	$("#change-picture").modal("hide");
+		  	updateAdminView();
+		  }
+		  var failurefunc=function(msg)
+		  {
+		  	swal("Oops!","Can't upload team member please try again later","error");
+		  }
+		  $scope.photo=$image.cropper("getDataURL");
+		  Team.uploadMemberImage(member.id,member.role.role,$image.cropper("getDataURL"),successFunc,failurefunc)
+
+	}
+	$scope.openImageUplaoder=function(member)
+	{
+		$("#change-picture").modal("show");
+		$scope.oldmember=member;
+		$scope.defaultimage=member.bigphoto;
+
+	}
+}]);
+Controllers.controller("CommissionCtrl",["$scope","Login","Commission","$location","$routeParams",function($scope,Login,Commission,$location,$routeParams)
+{
+	$scope.uninvoiced = [];
+	$scope.unpaids = [];
+	$scope.paids = [];
+	$scope.listLoaded = false;
+	
+
+	getAdminData = function()
+	{
+		var succesfunc =  function(data)
+		{
+			$scope.uninvoiced = data.uninvoiced;
+			$scope.unpaids = data.unpaid;
+			$scope.paids =  data.paid;
+			$scope.listLoaded = true;
+		}
+		var failurefunc = function()
+		{
+			$scope.listLoaded = true;
+		}
+		Commission.loadAdminList(succesfunc,failurefunc);
+
+	}
+	$scope.payCommission = function(comm,index)
+	{
+		var succesfunc = function()
+		{
+			$scope.unpaids.splice(index,1);
+			$scope.paids.unshift(comm);
+		}
+		var failurefunc = function()
+		{
+			swal("Flexwork error","Can't pay the credit please try again later","error");
+		}
+		Commission.payCommission(succesfunc,failurefunc,comm.id);
+	}
+	if($location.url() == "/admin/credit/list" || $location.url() == "/credit")
+	{
+		var d = new Date();
+		$scope.month = d.getMonth()+1;
+		$scope.year = d.getFullYear();
+		$("#selectedmonth").val($scope.month);
+		$scope.commissions = [];
+		selectedCommission = null;
+		$scope.selectedinvoice=null;
+	    $scope.$on("fileSelected", function (event, args) {
+	        $scope.$apply(function () {
+	        	var extension = args.file.name.split('.').pop().toLowerCase();
+	        	if(extension === "pdf")
+	            	$scope.selectedinvoice = args.file;
+	            else
+	            	swal("Wrong format","please upload pdf files only","warning");
+	        });
+	    });
+		var loadList = function()
+		{
+			var succsfunc = function(data)
+			{
+				$scope.commissions = data;
+			}
+			Commission.getAllCommList(succsfunc,$scope.month,$scope.year);
+		}
+		loadList();
+		$scope.changeDate = function()
+		{
+			loadList();
+		}
+		$scope.openUploadInvoice = function(commission)
+		{
+			selectedCommission = commission;
+			$scope.selectedinvoice=null;
+			$("#upload-file").modal("show");
+		}
+		$scope.uploadInvoice = function()
+		{
+			if($scope.selectedinvoice != null)
+			{
+				var formData = new FormData();
+	        	formData.append('file',  $scope.selectedinvoice);
+				var succsfunc = function()
+				{
+					loadList();
+					$("#upload-file").modal("hide");
+				}
+				var failureFunc = function()
+				{
+					swal("Invoice not uploaded","We couldn't upload your invoice please try again later","error");
+				}
+				if(selectedCommission != null)
+					Commission.uploadCommInvoice(succsfunc,failureFunc,formData,selectedCommission.id);
+				else
+				{
+					swal("No commission selected","Please select a commission to upload invoice","warning");
+					$("#upload-file").modal("hide");
+				}
+			}
+			else
+			{
+				swal("No file selected","Please select a invoice file before uploading","warning");
+			}
+			
+				
+		} 
+	}
+	if(Login.getLoggedUser().userinfo.roles[0] === "ROLE_ADMIN")
+	{
+		getAdminData();
 	}
 }]);
