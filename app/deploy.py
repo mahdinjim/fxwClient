@@ -28,7 +28,7 @@ except (IOError):
 	print("can't find configuration file please create deploy.json file")
 	exit()
 #create javascript config file
-if target=="production":
+if target=="staging":
 	settings="var globalSeetings={\nbaseUrl:'"+data[target]['baseUrl']+"',\npath:'"+data[target]['path']+"'\n}"
 print settings
 #first step connect to ssh make sure you have a public/private key configured
@@ -50,7 +50,7 @@ try:
 	    s.sendline("grunt")
 	    s.prompt()
 	    #we copy file to production
-	    s.sendline("cp -rf production/* /var/www")
+	    s.sendline("cp -rf production/* "+ data[target]['target_folder'])
 	    print s.before
 	    #production ready
 	    s.logout()

@@ -7,7 +7,19 @@
 		"git_password":"_a13021988",
 		"git_branch":"master",
 		"baseUrl":"http://app.fxw.io",
-		"path":"/backend/web/api"
+		"path":"/backend/web/api",
+		"target_folder":"/var/www"
+	},
+	"staging":{
+		"serverip":"139.59.143.222",
+		"ssh_username":"root",
+		"project_folder":"~/clientcode/fxwClient/staging/app",
+		"git_user":"njimmahdi@gmail.com",
+		"git_password":"_a13021988",
+		"git_branch":"dev",
+		"baseUrl":"http://app.fxw.io",
+		"path":"/abcd/staging/backend/web/api",
+		"target_folder":"/var/www/abcd/staging"
 	}
 	
 }
