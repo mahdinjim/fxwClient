@@ -21,18 +21,6 @@ Controllers.controller('LoginCtrl',['$scope','Login','$location',
 						   created_at: new Date().getTime() // Signup date as a Unix timestamp
 						});
 					}
-
-					setTimeout(function() {
-			                toastr.options = {
-			                    closeButton: true,
-			                    progressBar: true,
-			                    showMethod: 'slideDown',
-			                    timeOut: 4000
-			                };
-			                toastr.success('create ticket, get estimation, start production ', 'welcome to flexwork.io');
-
-			            }, 1300);
-
 				};
 				var failureFunction=function(mess)
 				{
@@ -73,8 +61,8 @@ Controllers.controller("MenuNavCtrl",['$scope','Login',function ($scope,Login){
 	}
 
 }]);
-Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Client','Project','$location','Cuser',"Params",
-	function SideBarCtrl($rootScope,$scope,Login,Chat,Client,Project,$location,Cuser,Params)
+Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Client','Project','$location','Cuser',"Params","Team",
+	function SideBarCtrl($rootScope,$scope,Login,Chat,Client,Project,$location,Cuser,Params,Team)
 	{
 
 		if($location.path()=="/pdetails")
@@ -215,6 +203,25 @@ Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Clie
 					}
 				}
 				$("#edit-profile-client").modal("show");
+			}
+			if($scope.isPartner)
+			{
+				if(chargeView)
+				{
+					$("#partner_phonecodeselect").select2("val",userinfo.phonecode);
+					$scope.partner_name=userinfo.name;
+					$scope.partner_surname=userinfo.surname;
+					$scope.partner_phonecode=userinfo.phonecode;
+					$scope.partner_phonenumber=userinfo.telnumber;
+					$scope.partner_email=userinfo.email;
+					$("#partner_countryselect").select2("val",userinfo.country);
+					$scope.partner_companyname=userinfo.compnay_name;
+					$scope.partner_country=userinfo.country;
+					$scope.partner_city=userinfo.city;
+					$scope.partner_language = userinfo.languages.split(',');
+					$("#partner_luanguageselect").select2("val",userinfo.languages.split(','));;
+					$("#edit-partner-profile").modal("show");
+				}
 			}
 		}
 		var varifypasswordForm=function()
@@ -379,6 +386,96 @@ Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Clie
 				}
 			}
 
+		}
+		var validatePartnerForm=function()
+		{
+			var messages =[];
+			if($scope.partner_surname===undefined)
+			{
+				messages.push("Please fill the surname");
+			}
+			if($scope.partner_name===undefined)
+			{
+				messages.push("Please fill the name");
+			}
+			if($scope.partner_phonecode===undefined)
+			{
+				messages.push("Please fill the phone code");
+			}
+			if($scope.partner_phonenumber===undefined)
+			{
+				messages.push("Please fill the phone number");
+			}
+			if($scope.partner_email===undefined)
+			{
+				messages.push("Please fill the email");
+			}
+			if($scope.partner_city===undefined)
+			{
+				messages.push("Please fill the city");
+			}
+			if($scope.partner_country===undefined)
+			{
+				messages.push("Please fill the country");
+			}
+			if($scope.partner_language===undefined)
+			{
+				messages.push("Please fill the language");
+			}
+			return messages;
+
+		}
+		$scope.updatePartnerProfile=function()
+		{
+			var messages=validatePartnerForm();
+			if(messages.length>0)
+			{
+
+				swal("Please Fill missing information",messages.join('\n'),"warning");
+			}
+			else
+			{
+				var succesfunc=function()
+				{
+					var user=Login.getLoggedUser();
+					user.userinfo.name=$scope.partner_name;
+					user.userinfo.surname=$scope.partner_surname;
+					user.userinfo.phonecode=$scope.partner_phonecode;
+					user.userinfo.telnumber=$scope.partner_phonenumber;
+					user.userinfo.email = $scope.partner_email;
+					user.userinfo.compnay_name = $scope.partner_companyname;
+					user.userinfo.city = $scope.partner_city;
+					user.userinfo.country = $scope.partner_country;
+					user.userinfo.languages = ""+$scope.partner_language;
+					Login.upadteLoggedinUser(user);
+					$scope.name=user.userinfo.name;
+					$scope.surname=user.userinfo.surname;
+					$scope.company=user.userinfo.compnay_name;
+					$("#edit-partner-profile").modal("hide");
+					
+				}
+				var failureFunction=function(msg)
+				{
+					swal("Oops!","Can't add team member please try again later","error");
+				}
+				var member={
+					"email":$scope.partner_email,
+					"login":$scope.partner_email,
+					"name":$scope.partner_name,
+					"surname":$scope.partner_surname,
+					"phonecode":$scope.partner_phonecode,
+					"phonenumber":$scope.partner_phonenumber,
+					"city":$scope.partner_city,
+					"country":$scope.partner_country,
+					"language":""+$scope.partner_language,
+					"ispartner":true
+				};
+				if($scope.partner_companyname!="")
+					member.companyname=$scope.partner_companyname;
+				member["id"]=Login.getLoggedUser().userinfo.id;
+				Team.updateKeyAccount(member,succesfunc,failureFunction);
+				
+			}
 		}
 		$scope.openclosetab=function(id)
 		{
@@ -1229,6 +1326,11 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 	$scope.keyaccount={selectedKeyaccount:null};
 	$scope.isCalculatingCredit = false;
 	$scope.includemanagement = false;
+	$scope.canDelete = true;
+	if(Login.getLoggedUser().userinfo.canmanage != undefined)
+		$scope.canmanage = Login.getLoggedUser().userinfo.canmanage;
+	else
+		$scope.canmanage = true;
 	$scope.calculateCredit = function()
 	{
 		
@@ -1395,6 +1497,7 @@ Controllers.controller('ClientCtrl', ['$scope','Client','Login', function ($scop
 			//$("#countryselect").select2("data",{id:-1,text:client.address.country});
 			$scope.isEdit=true;
 			$scope.oldclient=client;
+			$scope.canDelete = client.candelete;
 		}
 		else
 		{
@@ -4194,7 +4297,6 @@ Controllers.controller('ContractCtrl', ['$scope',"Login","$routeParams","$locati
 	{
 		var sucessFunc=function()
 		{
-			swal("Congratulation","Welcome to flexwork please login again to start using flexwork tool","info");
 			$location.url("/dashboard");
 		}
 		var failureFunc=function()
@@ -5305,6 +5407,7 @@ Controllers.controller("PartnerCtrl",["$scope","Login","Team","$location","$rout
 		else
 			$scope.send=true;
 	}
+	$scope.canmanage=false;
 	var updateAdminView = function()
 	{
 		var successfunc = function(data)
@@ -5352,10 +5455,6 @@ Controllers.controller("PartnerCtrl",["$scope","Login","Team","$location","$rout
 		{
 			messages.push("Please fill the country");
 		}
-		if($scope.level===undefined)
-		{
-			messages.push("Please fill the level");
-		}
 		if($scope.language===undefined)
 		{
 			messages.push("Please fill the language");
@@ -5379,11 +5478,11 @@ Controllers.controller("PartnerCtrl",["$scope","Login","Team","$location","$rout
 			$("#countryselect").select2("val",member.country);
 			$scope.language=member.language.split(',');
 			$("#luanguageselect").select2("val",member.language.split(','));
-			$scope.level=member.level;
-			$("#levelselect").select2("val",member.level);
 			$scope.isedit=true;
 			if(member.companyname != null)
 				$scope.companyname = member.companyname;
+			debugger;
+			$scope.canmanage = member.canmanage;
 			$scope.oldmember=member;
 
 
@@ -5391,6 +5490,7 @@ Controllers.controller("PartnerCtrl",["$scope","Login","Team","$location","$rout
 		else{
 			cleanForm();
 			$scope.isedit=false;
+			$scope.canmanage=false;
 			$("#countryselect").select2("data",{id:-1,"text":"Country"});
 
 		}
@@ -5409,7 +5509,7 @@ Controllers.controller("PartnerCtrl",["$scope","Login","Team","$location","$rout
 		$scope.language=undefined;
 		$scope.level=undefined;
 		$scope.companyname=undefined;
-		$("#levelselect").select2("val","Level");
+		$scope.canmanage=false;
 		$("#phonecodeselect").select2("val","49");
 		$("#countryselect").select2("val","Country");
 	}
@@ -5447,8 +5547,8 @@ Controllers.controller("PartnerCtrl",["$scope","Login","Team","$location","$rout
 				"country":$scope.country,
 				"dosend":$scope.send,
 				"language":""+$scope.language,
-				"level":$scope.level,
-				"ispartner":true
+				"ispartner":true,
+				"canmanage":$scope.canmanage
 			};
 			if($scope.companyname!="")
 				member.companyname=$scope.companyname;

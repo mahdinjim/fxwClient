@@ -406,11 +406,12 @@
                                 <input type="text" class="form-control" placeholder="Telephone" style="width: 67.5%;" ng-model="phonenumber">
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" placeholder="City" required="" ng-model="city">
-                            </div>  
-                             <div class="form-group">
                                 <input type="text" class="form-control" placeholder="Company name" ng-model="companyname">
                             </div>  
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="City" required="" ng-model="city">
+                            </div>  
+                             
                             <div class="form-group mb-0">
                                 <div class="select-option m-0" style="width: 100%;">
                                     <select select-two ng-model="country" id="countryselect">
@@ -688,27 +689,6 @@
                            
                         </div><!--col-md-->
 
-                        <div class="col-md-12">
-                            <div class="hr-line-solid"></div>
-                        </div>
-                       
-                            <div class="col-md-6 mt20 pt10">
-                                <div class="select-option m-0" style="width: 100%;">
-                                    <div class="form-group">
-                                <div class="select-option m-0" style="width: 100%;">
-                                    <select class="select2" ng-model="level" id="levelselect">
-                                        <option>Level</option>
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                    </select>
-                                </div>
-                            </div>
-                                  
-                                </div>
-                            </div>
-                            
-                        
                          <div class="col-md-12">
                             <div class="hr-line-solid"></div>
                         </div>
@@ -724,7 +704,23 @@
                                     <option value="Arabic">Arabic</option>
                                 </select>
                             </div>
+                           
                         </div><!--col-md-->
+                         <div class="col-md-12">
+                            <div class="hr-line-solid"></div>
+                        </div>
+                        <div class="col-md-12">
+                             <h4>Client management</h4>
+                            <div class="input-group">
+                                <div class="checkbox checkbox-primary mt-5 mb-5">
+                                    <input type="checkbox" id="checkbox5" ng-model="canmanage">
+                                    <label for="checkbox5">Partner can manage</label>
+                                </div>
+                            </div>
+                        </div>
+                          <div class="col-md-12">
+                            <div class="hr-line-solid"></div>
+                        </div>
                      </div><!--row-->
                 </div>
                 <div class="modal-footer">

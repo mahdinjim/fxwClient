@@ -769,9 +769,12 @@
                                         <option ng-repeat="keyaccount in keyaccounts" value="{{keyaccount.id}}">{{keyaccount.name}} {{keyaccount.surname}}</option>
                                     </select>
                                 </div>
-                                <div class="checkbox checkbox-primary mt-5 mb-5" ng-if="isPartner">
+                                <div class="checkbox checkbox-primary mt-5 mb-5" ng-if="isPartner && canmanage">
                                     <input type="checkbox" id="checkbox4" ng-model="referer.manageClient" value="manage" checked>
-                                    <label for="checkbox4">Manage client projects</label>
+                                    <label for="checkbox4">I will manage the project</label>
+                                </div>
+                                <div ng-if="isPartner && !canmanage">
+                                    Key account will be assigned by flexwork system
                                 </div>
                             </div>
                             </div>
@@ -795,7 +798,7 @@
                         </div>
                     </div>
                      <div ng-if="isEdit">
-                        <a class="f-left mt-5" data-toggle="modal" data-target="#delete"><small>Delete Account</small></a>
+                        <a class="f-left mt-5" data-toggle="modal" data-target="#delete" ng-if="canDelete"><small>Delete Account</small></a>
                         <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary" ng-click="createClient(oldclient)">Save</button>
                     </div>
@@ -880,9 +883,9 @@
                  <div class="form-group">
                     <input type="number" class="form-control" placeholder="Rate" required="" ng-model="ratenumber" any-key="calculateCredit()">
                 </div>
-                 <div class="checkbox checkbox-primary mt-5 mb-5">
-                                    <input type="checkbox" id="checkbox10" ng-model="includemanagement" value="manage" ng-change="calculateCredit()">
-                                    <label for="checkbox10">include management</label>
+                 <div class="checkbox checkbox-primary mt-5 mb-5" ng-if="canmanage">
+                                    <input type="checkbox" id="checkbox10" ng-model="$parent.includemanagement" value="manage" ng-change="calculateCredit()">
+                                    <label for="checkbox10">I will manage the project</label>
                                 </div>
                             </div>
                 <div class="form-group">
