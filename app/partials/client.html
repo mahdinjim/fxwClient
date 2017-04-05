@@ -433,8 +433,8 @@
                             </div>
                             <h4 style="margin-top: 20px;">Billing information</h4>
                             <div class="form-group">
-                                <input type="text" class="form-control login-first-name" placeholder="Vat" required="" ng-model="vat">
-                                <input type="number" class="form-control login-last-name" placeholder="Tax eg 19" required="" ng-model="tax">
+                                <input type="text" class="form-control login-first-name" placeholder="Tax Number" required="" ng-model="vat">
+                                <input type="number" class="form-control login-last-name" placeholder="VAT without %" required="" ng-model="tax">
                                 <div class="clear-both"></div>
                             </div>
                             <div class="form-group">
@@ -449,9 +449,9 @@
                              <div class="form-group">
                                  
                                     <select id="currencyselect" select-two required="" ng-model="currency">
-                                        <option value="EUR">Euro</option>
-                                        <option value="USD">US dollar</option>
-                                        <option value="TL">Tuskish lira</option>
+                                        <option value="EUR">EUR</option>
+                                        <option value="USD">USD</option>
+                                        <option value="TL">TL</option>
                                     </select>
                                 
                                 <div class="clear-both"></div>
@@ -774,7 +774,7 @@
                                     <label for="checkbox4">I will manage the project</label>
                                 </div>
                                 <div ng-if="isPartner && !canmanage">
-                                    Key account will be assigned by flexwork system
+                                    Client will be managed by flexwork
                                 </div>
                             </div>
                             </div>
@@ -878,10 +878,10 @@
                 </div>
                 <div class="modal-body">
                  <div class="form-group">
-                    <input type="number" class="form-control" placeholder="Hours" required="" ng-model="hournumber" any-key="calculateCredit()">
+                    <input type="number" class="form-control" placeholder="Estimated Hours" required="" ng-model="hournumber" any-key="calculateCredit()">
                 </div>
                  <div class="form-group">
-                    <input type="number" class="form-control" placeholder="Rate" required="" ng-model="ratenumber" any-key="calculateCredit()">
+                    <input type="number" class="form-control" placeholder="Estimated Rate" required="" ng-model="ratenumber" any-key="calculateCredit()">
                 </div>
                  <div class="checkbox checkbox-primary mt-5 mb-5" ng-if="canmanage">
                                     <input type="checkbox" id="checkbox10" ng-model="$parent.includemanagement" value="manage" ng-change="calculateCredit()">
@@ -894,6 +894,9 @@
                  <div class="laoder" height="22">
                   <img src="img/ring.gif" height="20" width="20" ng-if='isCalculatingCredit'>
                 </div>
+                        <div class="col-md-12">
+                           *This is not a binding calculation, it is based on your estimation.
+                        </div>
                 </div>
                 <div class="modal-footer">
                 </div>
