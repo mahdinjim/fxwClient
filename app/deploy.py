@@ -28,8 +28,7 @@ except (IOError):
 	print("can't find configuration file please create deploy.json file")
 	exit()
 #create javascript config file
-if target=="staging":
-	settings="var globalSeetings={\nbaseUrl:'"+data[target]['baseUrl']+"',\npath:'"+data[target]['path']+"'\n}"
+settings="var globalSeetings={\nbaseUrl:'"+data[target]['baseUrl']+"',\npath:'"+data[target]['path']+"'\n}"
 print settings
 #first step connect to ssh make sure you have a public/private key configured
 try:
