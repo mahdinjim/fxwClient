@@ -104,6 +104,7 @@ Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Clie
 		$scope.isclient=false;
 		$scope.isClientUser=false;
 		$scope.noJiraAccount=true;
+		$scope.isCreating = false;
 		if(Login.getLoggedUser().userinfo.roles[0]=="ROLE_CUSTOMER"){
 			$scope.isclient=true;
 			if(Login.getLoggedUser().userinfo.pmtools.length >0)
@@ -585,6 +586,7 @@ Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Clie
 			}
 			else
 			{
+				$scope.isCreating = true;
 				var project={
 					"name":$scope.projecttitle,
 					"briefing":$scope.briefing,
@@ -598,11 +600,12 @@ Controllers.controller("SideBarCtrl",['$rootScope','$scope','Login','Chat','Clie
 				{
 					$("#add-project").modal('hide');
 					swal("Project Created", "Project added successfully", "success");
+					$scope.isCreating = false;
 					getprojects();
 				}
 				var failureFunc=function()
 				{
-
+					$scope.isCreating = false;
 					swal("Oops!!", "Something bad happend please try again later", "error");
 				}
 				Project.createProject(project,successFunc,failureFunc);
@@ -4310,6 +4313,7 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 	var customerid=$routeParams.cid;
 	$scope.isPartner = false;
 	$scope.isManager = false;
+	$scope.isCreating = false;
 	if(Login.getLoggedUser().userinfo.roles.indexOf("ROLE_PARTNER")>-1)
 	{
 		$scope.isPartner = true;
@@ -4539,6 +4543,7 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 		}
 		else
 		{
+			$scope.isCreating = true;
 			var project={
 				"name":$scope.aprojecttitle,
 				"briefing":$scope.apbriefing,
@@ -4550,13 +4555,14 @@ Controllers.controller('ClientProjectsCtrl', ['$scope',"Login","$routeParams","P
 			}
 			var successFunc=function()
 			{
+				$scope.isCreating = false;
 				$("#admin-add-project").modal('hide');
 				swal("Project added","Project added/updated successfully","success");
 				updateView();
 			}
 			var failureFunc=function()
 			{
-
+				$scope.isCreating = false;
 				swal("Oops!","Something bad happen please try again later","error");
 			}
 			if(!$scope.iedit)
@@ -5214,6 +5220,7 @@ Controllers.controller('adminDashCtrl',['$scope','$routeParams','Login','Dashboa
 Controllers.controller('clientDashCtrl',['$scope','$routeParams','Login','Dashboard','Params',"Project","$location",function($scope,$routeParams,Login,Dashboard,Params,Project,$location)
 {
 	$scope.name=Login.getLoggedUser().userinfo.name;
+	$scope.isCreating = false;
 	var openAddprojectModal=function()
 		{
 			var succsfunc=function(data)
@@ -5256,6 +5263,7 @@ Controllers.controller('clientDashCtrl',['$scope','$routeParams','Login','Dashbo
 			}
 			else
 			{
+				$scope.isCreating = true;
 				var project={
 					"name":$scope.projecttitle_dash,
 					"briefing":$scope.briefing_dash,
@@ -5263,13 +5271,15 @@ Controllers.controller('clientDashCtrl',['$scope','$routeParams','Login','Dashbo
 				}
 				var successFunc=function(data)
 				{
+					$scope.isCreating = false;
 					$("#add-project-dash").modal('hide');
 					$location.url("/pdetails/"+data.project_id);
+					window.location.reload(false);
 
 				}
 				var failureFunc=function()
 				{
-
+					$scope.isCreating = false;
 					swal("Oops!!", "Something bad happend please try again later", "error");
 				}
 				Project.createProject(project,successFunc,failureFunc);
