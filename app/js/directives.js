@@ -1,7 +1,7 @@
 var directives = angular.module("directives", []);
 directives.directive('sideBar', function() {
 	return {
-    	templateUrl: 'partials/side-bar.html?v=1.31'
+    	templateUrl: 'partials/side-bar.html?v=1.32'
   		};
 });
 directives.directive('navMenu', function() {

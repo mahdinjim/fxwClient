@@ -6,7 +6,7 @@
 		"git_user":"njimmahdi@gmail.com",
 		"git_password":"_a13021988",
 		"git_branch":"master",
-		"baseUrl":"http://app.fxw.io",
+		"baseUrl":"https://app.fxw.io",
 		"path":"/backend/web/api",
 		"target_folder":"/var/www"
 	},
@@ -17,7 +17,7 @@
 		"git_user":"njimmahdi@gmail.com",
 		"git_password":"_a13021988",
 		"git_branch":"dev",
-		"baseUrl":"http://app.fxw.io",
+		"baseUrl":"https://app.fxw.io",
 		"path":"/abcd/staging/backend/web/api",
 		"target_folder":"/var/www/abcd/staging"
 	}
