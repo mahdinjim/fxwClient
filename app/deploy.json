@@ -18,7 +18,7 @@
 		"git_password":"_a13021988",
 		"git_branch":"dev",
 		"baseUrl":"https://app.fxw.io",
-		"path":"/abcd/staging/backend/web/api",
+		"path":"/abcd/staging/backend/web/app_dev.php/api",
 		"target_folder":"/var/www/abcd/staging"
 	}
 	
