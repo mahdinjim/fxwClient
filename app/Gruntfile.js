@@ -64,6 +64,7 @@ module.exports = function(grunt) {
                     {expand: true, src: ['./css/animate.min.css'], dest: './production/'},
                     {expand: true, src: ['./css/animate.min.css'], dest: './production/'},
                     {expand: true, src: ['./css/bootstrap.min.css'], dest: './production/'},
+                    {expand: true, src: ['./css/style-print.css'], dest: './production/'},
                     {expand: true, src: ['./lib/jquery-2.1.1.js'], dest: './production/'},
                     {expand: true, src: ['./lib/bootstrap.min.js'], dest: './production/'},
                     {expand: true, src: ['./lib/inspinia.js'], dest: './production/'},

@@ -2864,8 +2864,9 @@ label.label3:before {
   color: #ed5565;
 }
 .invoicedetails{
-  padding: 50px !important;
+  padding: 50px;
   border: 1px solid #eee;
+  height: 29.7cm;
 }
 .invoicelogo{
   margin-bottom: 50px;
@@ -2891,7 +2892,6 @@ label.label3:before {
 .invoice-footer p{
   margin-bottom: 3px;
   color: #aaa;
-  font-size: 10px;
 }
 .invoice-footer-area{
   margin-top: 50px;
@@ -2975,16 +2975,14 @@ label.label3:before {
 }
 .bill-times span.bt{
   font-size: 12px;
-  font-weight: normal !important;
-  text-transform: uppercase;
 }
 .bill-times span.esthours,
 .bill-times span.rthours{
-  font-size: 12px;
+  font-size: 16px;
   color: #bbbbbb;
 }
 .bill-times span.bthours{
-  font-size: 12px;
+  font-size: 16px;
   font-weight: bold;
 }
 .bill-times .bill-realtime{
@@ -3310,8 +3308,8 @@ Triangle breadcrumb
   }
   .cd-breadcrumb.triangle li::after, .cd-breadcrumb.triangle li > *::after {
     /*
-    	li > *::after is the colored triangle after each item
-    	li::after is the white separator between two items
+      li > *::after is the colored triangle after each item
+      li::after is the white separator between two items
     */
     content: '';
     position: absolute;
@@ -3326,8 +3324,8 @@ Triangle breadcrumb
   }
   .cd-breadcrumb.triangle li.all::after, .cd-breadcrumb.triangle li.all > *::after {
     /*
-    	li > *::after is the colored triangle after each item
-    	li::after is the white separator between two items
+      li > *::after is the colored triangle after each item
+      li::after is the white separator between two items
     */
     content: '';
     position: absolute;
@@ -3591,22 +3589,3 @@ Add a counter to the multi-steps indicator
     padding-top: 34px;
   }
 }
-
-/*upload files*/
-.fileUpload {
-    position: relative;
-    overflow: hidden;
-    margin: 0px 0px 10px;
-}
-.fileUpload input.upload {
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin: 0;
-    padding: 0;
-    font-size: 20px;
-    cursor: pointer;
-    opacity: 0;
-    filter: alpha(opacity=0);
-}
-
