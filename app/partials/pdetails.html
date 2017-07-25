@@ -247,9 +247,11 @@
                                                         </td>
                                                         <td class="project-status" ng-if="ticket.status==ticketStatus.Accept.status">
                                                             <button type="button" class="btn btn-primary btn-xs fxw-alert-accept-ticket" ng-click="acceptTicket(ticket)" ng-if="!ticket.bugopen"><i class="fa fa-chevron-right" ></i> acccept</button>
+
                                                             <button type="button" class="btn btn-danger btn-xs fxw-alert-reject-ticket" ng-click="openAddBug(ticket)"><i class="fa fa-plus"></i> add bug</button>
                                                             <small ng-if="!ticket.bugopen">please accept &amp; close ticket</small>
                                                             <small ng-if="ticket.bugopen">bugs solving in progress</small>
+                                                            <small ng-if="ticket.remaining">ticket will be closed automatically in {{ticket.remaining}}</small>
                                                         </td>
                                                          <td class="project-status" ng-if="ticket.status==ticketStatus.Done.status && isKeyAccount">
                                                             <span class="label label-default label-nobg" ng-if="ticket.open"><i class="fa fa-check"></i> done / not billed</span>
@@ -346,7 +348,7 @@
                                                         <td class="project-status" ng-if="ticket.status==ticketStatus.Accept.status">
 
                                                            <span class="label label-default label-nobg"><img src="img/ellipsis.gif" width="15" height="15"> in acceptance</span>
-
+                                                           <small ng-if="ticket.remaining">ticket will be closed in {{ticket.remaining}}</small>
                                                         </td>
                                                         <td class="project-status" ng-if="ticket.status==ticketStatus.Done.status && isAdmin">
                                                             <span class="label label-default label-nobg" ng-if="ticket.open"><i class="fa fa-check"></i> done / not billed</span>
@@ -433,7 +435,7 @@
                                                         <td class="project-status" ng-if="ticket.status==ticketStatus.Accept.status">
 
                                                            <span class="label label-default label-nobg"><img src="img/ellipsis.gif" width="15" height="15"> in acceptance</span>
-
+                                                           <small ng-if="ticket.remaining">ticket will be closed automatically in {{ticket.remaining}}</small>
                                                         </td>
 
                                                         <td class="project-status" ng-if="ticket.status==ticketStatus.Done.status">
@@ -473,7 +475,7 @@
             <!--end footer-->
     </div>
      <!--modal add member-->
-    <div class="modal inmodal fade" id="add-member" role="dialog"  aria-hidden="true">
+    <div class="modal inmodal fade" id="add-member" role="dialog"  aria-hidden="false" data-backdrop="static">
         <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
@@ -546,7 +548,7 @@
         </div>
     </div>
  <!--success modal-->
-    <div class="modal inmodal fade" id="teamsuccess" tabindex="-1" role="dialog"  aria-hidden="true" style="top:150px;">
+    <div class="modal inmodal fade" id="teamsuccess" tabindex="-1" role="dialog"  aria-hidden="false" data-backdrop="static" style="top:150px;">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
@@ -561,7 +563,7 @@
         </div>
     </div>
     <!--failure modal-->
-    <div class="modal inmodal fade" id="teamfailure" tabindex="-1" role="dialog"  aria-hidden="true" style="top:150px;">
+    <div class="modal inmodal fade" id="teamfailure" tabindex="-1" role="dialog"  aria-hidden="false" data-backdrop="static" style="top:150px;">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
@@ -576,7 +578,7 @@
         </div>
     </div>
 <!--warning modal-->
-    <div class="modal inmodal fade" id="teamwarning" tabindex="100" role="dialog"  aria-hidden="true" style="top:150px;">
+    <div class="modal inmodal fade" id="teamwarning" tabindex="100" role="dialog"  aria-hidden="false" data-backdrop="static" style="top:150px;">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
@@ -591,7 +593,7 @@
         </div>
     </div>
     <!--modal project description-->
-    <div class="modal inmodal fade" id="project-description" role="dialog"  aria-hidden="true">
+    <div class="modal inmodal fade" id="project-description" role="dialog"  aria-hidden="false" data-backdrop="static">
         <div class="modal-dialog modal-m">
             <div class="modal-content">
                 <div class="modal-header">
@@ -618,7 +620,7 @@
         </div>
     </div>
         <!--modal link jira-->
-    <div class="modal inmodal fade" id="jira_link" role="dialog"  aria-hidden="true">
+    <div class="modal inmodal fade" id="jira_link" role="dialog"  aria-hidden="false" data-backdrop="static">
         <div class="modal-dialog modal-m">
             <div class="modal-content">
                 <div class="modal-header">
@@ -659,7 +661,7 @@
         </div>
     </div>
     <!--modal notifications-->
-    <div class="modal inmodal fade" id="notifications" role="dialog"  aria-hidden="true">
+    <div class="modal inmodal fade" id="notifications" role="dialog"  aria-hidden="false" data-backdrop="static">
         <div class="modal-dialog modal-m">
             <div class="modal-content">
                 <div class="modal-header">
@@ -687,7 +689,7 @@
             </div>
         </div>
     </div>
-    <div class="modal inmodal fade" id="budgetlimit" role="dialog"  aria-hidden="true">
+    <div class="modal inmodal fade" id="budgetlimit" role="dialog"  aria-hidden="false" data-backdrop="static">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
@@ -710,7 +712,7 @@
         </div>
     </div>
      <!--modal add ticket-->
-    <div class="modal inmodal fade" id="add-ticket" role="dialog"  aria-hidden="true">
+    <div class="modal inmodal fade" id="add-ticket" role="dialog"  aria-hidden="false" data-backdrop="static">
         <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
@@ -748,7 +750,7 @@
             </div>
         </div>
     </div>
-     <div class="modal inmodal fade" id="bug-info" role="dialog"  aria-hidden="true">
+     <div class="modal inmodal fade" id="bug-info" role="dialog"  aria-hidden="false" data-backdrop="static">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
@@ -764,7 +766,7 @@
             </div>
         </div>
     </div>
-    <div class="modal inmodal fade" id="reject-ticket" role="dialog"  aria-hidden="true">
+    <div class="modal inmodal fade" id="reject-ticket" role="dialog"  aria-hidden="false" data-backdrop="static">
         <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
@@ -785,7 +787,7 @@
             </div>
         </div>
     </div>
-     <div class="modal inmodal fade" id="bug-info" role="dialog"  aria-hidden="true">
+     <div class="modal inmodal fade" id="bug-info" role="dialog" aria-hidden="false" data-backdrop="static">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
@@ -804,7 +806,7 @@
 
     </div>
 </div>
-<div class="modal inmodal fade" id="estimation-details" role="dialog"  aria-hidden="true">
+<div class="modal inmodal fade" id="estimation-details" role="dialog"  aria-hidden="false" data-backdrop="static">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -873,7 +875,7 @@
         </div>
     </div>
  <!--modal send to client-->
-    <div class="modal inmodal fade" id="send-to-client" role="dialog"  aria-hidden="true">
+    <div class="modal inmodal fade" id="send-to-client" role="dialog"  aria-hidden="false" data-backdrop="static">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -942,7 +944,7 @@
         </div>
     </div>
 <!--modal send-to-production chrome safari bug-->
-    <div class="modal inmodal fade" id="send-to-production" role="dialog"  aria-hidden="true">
+    <div class="modal inmodal fade" id="send-to-production" role="dialog"  aria-hidden="false" data-backdrop="static">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -1001,7 +1003,7 @@
         </div>
     </div>
  <!--modal deliver ticket-->
-    <div class="modal inmodal fade" id="deliver-ticket" role="dialog"  aria-hidden="true">
+    <div class="modal inmodal fade" id="deliver-ticket" role="dialog"  aria-hidden="false" data-backdrop="static">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -1068,7 +1070,7 @@
         </div>
     </div>
 <!--modal see reject messages-->
-    <div class="modal inmodal fade" id="reject-messages" role="dialog"  aria-hidden="true">
+    <div class="modal inmodal fade" id="reject-messages" role="dialog"  aria-hidden="false" data-backdrop="static">
         <div class="modal-dialog modal-m">
             <div class="modal-content">
                 <div class="modal-header">
@@ -1108,7 +1110,7 @@
             </div>
         </div>
     </div>
-    <div class="modal inmodal fade" id="add-bug" role="dialog" aria-hidden="true">
+    <div class="modal inmodal fade" id="add-bug" role="dialog" aria-hidden="false" data-backdrop="static">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
@@ -1137,7 +1139,7 @@
         </div>
 
 </div>
-<div class="modal inmodal fade" id="see-contract" role="dialog"  aria-hidden="true">
+<div class="modal inmodal fade" id="see-contract" role="dialog"  aria-hidden="false" data-backdrop="static">
         <div class="modal-dialog modal-m">
             <div class="modal-content">
                 <div class="modal-header">
