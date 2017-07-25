@@ -47,7 +47,7 @@
                                         <div class="bill-times">
                                           <div class="bill-estimation">
                                             <span class="est">RATE</span>
-                                            <span class="esthours">{{unbilled.rate}}</span>
+                                            <span class="esthours">{{unbilled.rate}} {{unbilled.currency}}</span>
                                           </div>
                                           <div class="bill-estimation">
                                             <span class="est">EST</span>
@@ -57,11 +57,14 @@
                                             <span class="rt">RT</span>
                                             <span class="rthours">{{unbilled.realtime}} h</span>
                                           </div>
-                                          <div class="bill-realtime">
+                                          <div class="bill-billabletime">
                                             <span class="bt">BT</span>
                                             <span class="bthours">{{unbilled.billed_time}} h</span>
                                           </div>
-                                           <div class="bill-billabletime">
+                                           
+                                        </div>
+                                        <div class="bill-times">
+                                          <div class="bill-billabletime">
                                             <span class="bt">Amount</span>
                                             <span class="bthours">{{unbilled.ammount}} {{unbilled.currency}}</span>
                                           </div>
@@ -98,7 +101,7 @@
                                         <div class="bill-times">
                                           <div class="bill-estimation">
                                             <span class="est">RATE</span>
-                                            <span class="esthours">{{unpaid.rate}}</span>
+                                            <span class="esthours">{{unpaid.rate}} {{unpaid.currency}}</span>
                                           </div>
                                           <div class="bill-realtime">
                                             <span class="rt">BT</span>
@@ -149,7 +152,7 @@
                                         <div class="bill-times">
                                           <div class="bill-estimation">
                                             <span class="est">RATE</span>
-                                            <span class="esthours">{{unpaid.rate}} </span>
+                                            <span class="esthours">{{unpaid.rate}} {{unpaid.currency}}</span>
                                           </div>
                                           <div class="bill-realtime">
                                             <span class="rt">BT</span>
