@@ -51,7 +51,7 @@
 
                             <div class="col-sm-5">
 
-                                <button class="btn btn-primary btn-bitbucket btn-m mr5" type="button" ng-click="openCreateTicket(null)" ng-if="isclient"><i class="fa fa-plus mr5"></i> add ticket</button>
+                                <button class="btn btn-primary btn-bitbucket btn-m mr5" type="button" ng-click="openCreateTicket(null)" ng-if="isclient || isAdmin || isTeamLeader"><i class="fa fa-plus mr5"></i> add ticket</button>
                                <div class="dropdown" style="display: inline-block;">
                                  <button class="btn btn-white dropdown-toggle" type="button" data-toggle="dropdown" style="width:36px;"><i class="fa fa-ellipsis-h"></i></button>
                                  <ul class="dropdown-menu">
@@ -311,7 +311,8 @@
                                                             <a ng-click="openBuginfo(ticket.description)"><small>see details</small></a>
                                                         </td>
                                                         <td class="project-status" ng-if="ticket.status==ticketStatus.Draft.status">
-                                                            <span class="label label-default label-nobg"><i class="fa fa-genderless"></i> draft</span>
+                                                            <button type="button" class="btn btn-primary btn-xs fxw-alert-start-estimation" ng-click="startEstimation(ticket)"><i class="fa fa-chevron-right" ></i> start</button>
+                                                            <small>please start estimation</small>
                                                         </td>
                                                         <td class="project-status" ng-if="ticket.status==ticketStatus.Estimation.status && ticket.type!=tickettypes[2].type">
                                                             <button type="button" class="btn btn-primary btn-xs" ng-click="openStoriesView(ticket)"><i class="fa fa-chevron-right"></i> estimation</button>

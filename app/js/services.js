@@ -60,9 +60,9 @@ services.factory("Links",[function(){
 	var createProjectConfigLink=baseUrl+path+"/private/project/restricted/config/create";
 	var updateProjectConfigLink=baseUrl+path+"/private/project/restricted/config/update";
 	var tickettypesLink=baseUrl+path+"/private/ticket/types";
-	var createTicketLink=baseUrl+path+"/private/project/restricted/ticket/create";
+	var createTicketLink=baseUrl+path+"/private/project/ticket/create";
 	var listTicketLink=baseUrl+path+"/private/ticket/list";
-	var startEstimationLink=baseUrl+path+"/private/project/restricted/ticket/startestipamtion";
+	var startEstimationLink=baseUrl+path+"/private/project/ticket/startestipamtion";
 	var acceptEstimationLink=baseUrl+path+"/private/project/restricted/ticket/acceptestipamtion";
 	var rejectEstimationLink=baseUrl+path+"/private/project/restricted/ticket/rejectestipamtion";
 	var acceptTicketLink=baseUrl+path+"/private/project/restricted/ticket/accept";
