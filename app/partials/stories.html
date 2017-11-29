@@ -646,7 +646,7 @@
                             <div class="form-group">
                                 <input type="text" class="form-control" placeholder="Story Title" ng-model="storytitle">
                             </div>
-                            <div class="form-group">
+                            <div class="form-group"  ng-if='isTeamLeader'>
                                 <div class="select-option m-0" style="width:100%;">
                                        <select class="select2" ng-model="assignto" id="selectassign" ng-options="[member.name,' ',member.surname,', ',member.role.Text].join('') for member in team track by member.order">
                                     </select>
