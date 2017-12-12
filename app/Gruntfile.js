@@ -85,6 +85,8 @@ module.exports = function(grunt) {
                     {expand: true, src: ['./lib/angular/angular-resource.min.js'], dest: './production/'},
                     {expand: true, src: ['./lib/angular/angular-cookies.min.js'], dest: './production/'},
                     {expand: true, src: ['./lib/angular/angular-sanitize.min.js'], dest: './production/'},
+                    {expand: true, src: ['./lib/angular/angular-sanitize.min.js'], dest: './production/'},
+                    {expand: true, src: ['./lib/ui-sortable/src/sortable.js'], dest: './production/'},
                     {expand: true, src: ['./lib/node_modules/clipboard/dist/clipboard.min.js'], dest: './production/'},
                     {expand: true, src: ['./lib/node_modules/textangular/dist/textAngular-rangy.min.js'], dest: './production/'},
                     {expand: true, src: ['./lib/node_modules/textangular/dist/textAngular.min.js'], dest: './production/'},
