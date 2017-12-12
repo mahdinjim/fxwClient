@@ -5,7 +5,8 @@ var crmapp=angular.module("crmapp",[
 	'ngCookies',
 	'directives',
 	'Controllers',
-	'textAngular'
+	'textAngular',
+	'ui.sortable'
 	]);
 crmapp.config(["$routeProvider",
 	function($routeProvider){

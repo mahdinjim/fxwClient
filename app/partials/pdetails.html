@@ -175,8 +175,9 @@
                                     <div class="col-md-12">
                                         <div class="project-list">
                                             <div class="table-responsive">
-                                                <table class="table table-hover">
-                                                    <tbody>
+                                                <table class="table table-hover" ng-if="isclient">
+                                                    <tbody ui-sortable="sortableOptions" ng-model="tickets">
+
                                                     <tr>
                                                         <td width="50" class="project-table-head"></td>
                                                         <td width="150" class="project-table-head">ID</td>
@@ -192,7 +193,7 @@
                                                         <td width="300" class="project-table-head aright">Action</td>
                                                     </tr>
 
-                                                    <tr ng-if="isclient" ng-repeat="ticket in tickets">
+                                                    <tr  ng-repeat="ticket in tickets">
                                                         <td class="project-type">
                                                             <i class="fa fa-star" ng-if="ticket.type==tickettypes[1].type"></i>
                                                             <i class="fa fa-bug" ng-if="ticket.type==tickettypes[2].type"></i>
@@ -204,7 +205,10 @@
                                                         </td>
                                                         <td class="project-title">
                                                             <a ng-click="openStoriesView(ticket)">{{ticket.title}} <span class="draft" ng-if="ticket.status==ticketStatus.Draft.status">(Draft)</span></a>
-                                                            <small>{{ticket.createdby}} created at {{ticket.creationdate}}</small>
+                                                            <small ng-if="ticket.startedBy==null && ticket.confirmedBy==null && ticket.accptedBy==null">{{ticket.createdby}} created at {{ticket.creationdate}}</small>
+                                                            <small ng-if="ticket.startedBy!=null && ticket.confirmedBy==null && ticket.accptedBy==null">{{ticket.startedBy}} started at {{ticket.startedDate}}</small>
+                                                            <small ng-if="ticket.confirmedBy!=null && ticket.accptedBy==null">{{ticket.confirmedBy}} confirmed estimation at {{ticket.confirmDate}}</small>
+                                                            <small ng-if="ticket.accptedBy!=null">{{ticket.accptedBy}} accepted at {{ticket.acceptDate}}</small>
                                                         </td>
                                                         <td class="project-estimation" ng-if="ticket.type!=tickettypes[2].type && ticket.estimation!=null">
                                                             {{ticket.estimation}}h
@@ -279,6 +283,27 @@
                                                             <a ng-click="openStoriesView(ticket)" class="btn btn-white btn-sm mb5"><i class="fa fa-ellipsis-h"></i> </a>
                                                         </td>
                                                     </tr>
+                                                    
+                                                    
+                                                    </tbody>
+                                                </table>
+                                                <table class="table table-hover" ng-if="!isclient" >
+                                                    <tbody >
+
+                                                    <tr>
+                                                        <td width="50" class="project-table-head"></td>
+                                                        <td width="150" class="project-table-head">ID</td>
+                                                        <td width="800" class="project-table-head">
+                                                          <div class="input-group project-search">
+                                                              <i class="fa fa-search"></i>
+                                                              <input type="text" placeholder="Search by title" class="input-sm form-control" ng-model="$parent.searchWord" any-key="filter(selectedStatus)">
+                                                          </div>
+                                                        </td>
+                                                        <td width="100" class="project-table-head">Estimation</td>
+                                                        <td width="200" class="project-table-head">REAL TIME</td>
+                                                        <td width="300" class="project-table-head">Status</td>
+                                                        <td width="300" class="project-table-head aright">Action</td>
+                                                    </tr>
                                                     <tr ng-if="isAdmin || isTeamLeader" ng-repeat="ticket in tickets">
                                                         <td class="project-type">
                                                             <i class="fa fa-star" ng-if="ticket.type==tickettypes[1].type"></i>
@@ -291,7 +316,10 @@
                                                         </td>
                                                         <td class="project-title">
                                                             <a ng-click="openStoriesView(ticket)">{{ticket.title}} <span class="draft" ng-if="ticket.status==ticketStatus.Draft.status">(Draft)</span></a>
-                                                            <small>{{ticket.createdby}} created at {{ticket.creationdate}}</small>
+                                                            <small ng-if="ticket.startedBy==null && ticket.confirmedBy==null && ticket.accptedBy==null">{{ticket.createdby}} created at {{ticket.creationdate}}</small>
+                                                            <small ng-if="ticket.startedBy!=null && ticket.confirmedBy==null && ticket.accptedBy==null">{{ticket.startedBy}} started at {{ticket.startedDate}}</small>
+                                                            <small ng-if="ticket.confirmedBy!=null && ticket.accptedBy==null">{{ticket.confirmedBy}} confirmed estimation at {{ticket.confirmDate}}</small>
+                                                            <small ng-if="ticket.accptedBy!=null">{{ticket.accptedBy}} accepted at {{ticket.acceptDate}}</small>
                                                         </td>
                                                         <td class="project-estimation" ng-if="ticket.type!=tickettypes[2].type && ticket.estimation!=null">
                                                             {{ticket.estimation}}h
@@ -383,7 +411,10 @@
                                                         </td>
                                                         <td class="project-title">
                                                             <a ng-click="openStoriesView(ticket)">{{ticket.title}} <span class="draft" ng-if="ticket.status==ticketStatus.Draft.status">(Draft)</span></a>
-                                                            <small>{{ticket.createdby}} created at {{ticket.creationdate}}</small>
+                                                            <small ng-if="ticket.startedBy==null && ticket.confirmedBy==null && ticket.accptedBy==null">{{ticket.createdby}} created at {{ticket.creationdate}}</small>
+                                                            <small ng-if="ticket.startedBy!=null && ticket.confirmedBy==null && ticket.accptedBy==null">{{ticket.startedBy}} started at {{ticket.startedDate}}</small>
+                                                            <small ng-if="ticket.confirmedBy!=null && ticket.accptedBy==null">{{ticket.confirmedBy}} confirmed estimation at {{ticket.confirmDate}}</small>
+                                                            <small ng-if="ticket.accptedBy!=null">{{ticket.accptedBy}} accepted at {{ticket.acceptDate}}</small>
                                                         </td>
                                                         <td class="project-estimation" ng-if="ticket.type!=tickettypes[2].type && ticket.estimation!=null">
                                                             {{ticket.estimation}}h

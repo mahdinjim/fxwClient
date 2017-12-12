@@ -125,6 +125,7 @@ services.factory("Links",[function(){
 	var uploadCommissionInvoiceLink = baseUrl + path + "/private/keyaccount/commission/invoice";
 	var calculateCommissionLink = baseUrl + path + "/private/keyaccount/commission/calculate/";
 	var paycommissionLink = baseUrl + path + "/private/super/commission/pay/";
+	var setPrioLink = baseUrl + path + "/private/restricted/ticket/prio";
 	this.getLoginLink=function()
 	{
 		return LoginLink;
@@ -614,6 +615,10 @@ services.factory("Links",[function(){
 	this.getPaycommissionLink = function()
 	{
 		return paycommissionLink;
+	}
+	this.getSetPrioLink = function()
+	{
+		return setPrioLink;
 	}
 	return this;
 }]);
@@ -1760,6 +1765,18 @@ services.factory('Chat', ["$http",'Login','Links',function($http,Login,Links){
 }]);
 services.factory('Project',["$http","Login",'Links',function($http,Login,Links){
 	this.lastLoadedProject=[];
+	this.setTicketsPrio = function(tickets)
+	{
+		if(Login.getLoggedUser())
+		{
+			$http({
+				method:"POST",
+				data:{"tickets":tickets},
+				url:Links.getSetPrioLink(),
+				headers: {'x-crm-access-token': Login.getLoggedUser().token.token}
+			});
+		}
+	}
 	this.unLinkJiraProject = function(successfunc,failurefunc,project_id,token)
 	{
 		if(Login.getLoggedUser())

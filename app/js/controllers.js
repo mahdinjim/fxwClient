@@ -2001,12 +2001,40 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
     $scope.estimationTotal=0;
     $scope.realtimeTotal=0;
     $scope.ticketfiles=[];
+    var timer = null;
     $scope.$on("fileSelected", function (event, args) {
         $scope.$apply(function () {            
             //add the file object to the scope's files collection
             $scope.ticketfiles.push(args.file);
         });
     });
+    $scope.sortableOptions={
+    	stop: function(e,ui)
+    	{
+    		changeListPrio();
+    	},
+    	update:function(e,ui)
+    	{
+    		if(!$scope.isclient || $scope.selectedStatus!="all")
+    		{
+    			swal("Can't change priority",'You can only change priority in "all active" mode',"warning");
+    			ui.item.sortable.cancel();
+    		}
+    			
+    	}
+    }
+    changeListPrio = function()
+    {
+    	var tickets = [];
+    	for(i=0;i<$scope.tickets.length;i++)
+    	{
+    		tickets.push({
+    			'id':$scope.tickets[i].displayId,
+    			'prio':$scope.tickets.length-i
+    		})
+    	}
+    	Project.setTicketsPrio(tickets);
+    }
     $scope.deleteFileTicket = function(index)
     {
     	$scope.ticketfiles.splice(index,1);
@@ -2256,6 +2284,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		Params.setProject(data);
 		$scope.team=data.team;
 		originalticket=data.tickets;
+		$scope.originalticket = originalticket;
 		$scope.tickets=filterAll();
 		$scope.projectDescription=data.briefing;
 		$scope.projectrate=data.rate;
@@ -2277,7 +2306,7 @@ Controllers.controller("ProjectCtrl",["$scope","Project","$routeParams","Login",
 		else
 		{
 			$scope.hasTicket=true;
-			ticketupdater=setInterval(updateTickets, 10000);
+			ticketupdater=setInterval(updateTickets, 20000);
 			$scope.$on('$routeChangeStart',function(){
 					clearInterval(ticketupdater);
 				});
